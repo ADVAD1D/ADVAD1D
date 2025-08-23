@@ -10,3 +10,6 @@ func _process(_delta: float) -> void:
 
 func add_score(points):
 	score += points
+
+func reset_score() -> void:
+	score = 0

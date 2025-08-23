@@ -417,6 +417,10 @@ player_target = NodePath("../CharacterBody2D")
 [node name="UILayer" type="CanvasLayer" parent="."]
 
 [node name="HUD" parent="UILayer" instance=ExtResource("7_6bp64")]
+offset_left = -25.0
+offset_top = 7.0
+offset_right = -25.0
+offset_bottom = 7.0
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]

@@ -6,6 +6,8 @@ extends CharacterBody2D
 @export var safe_radius: float = 400.0
 @export var friction: float = 1.0
 
+signal died
+
 var show_debug: bool = false
 
 var laser_scene = preload("res://Scenes/laser.tscn")
@@ -74,4 +76,6 @@ func _draw() -> void:
 
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("asteroides"):
-		queue_free() # Replace with function body.
+		died.emit()
+		hide()
+		$CollisionShape2D.set_deferred("disabled", true) # Replace with function body.
