@@ -1,12 +1,38 @@
 extends Node2D
 
 @onready var player = $CharacterBody2D
+@onready var crt_material: ShaderMaterial = $UILayer/ColorRect.material
+@onready var glitch_sound: AudioStreamPlayer2D = $GlitchSound
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	reset_shader_parameters()
 	player.died.connect(_on_player_died) # Replace with function body.
+	
+func play_glitch_effect():
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN_OUT)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+	tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.2, 0.2)
+	tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.3, 0.2)
+
+	tween.chain().tween_property(crt_material, "shader_parameter/aberration", 1.0, 0.1)
+	tween.chain().tween_property(crt_material, "shader_parameter/aberration", -1.0, 0.1)
+	tween.chain().tween_property(crt_material, "shader_parameter/aberration", 0.5, 0.05)
+	
+	tween.parallel().tween_property(crt_material, "shader_parameter/aberration", 0.03, 0.4)
+	tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.05, 0.4)
+	tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.06, 0.4)
+
+	return tween
+	
+	
+func reset_shader_parameters():
+	if is_instance_valid(crt_material):
+		crt_material.set_shader_parameter("aberration", 0.03)
+		crt_material.set_shader_parameter("distort_intensity", 0.05)
+		crt_material.set_shader_parameter("static_noise_intensity", 0.06)
+
 func _process(_delta: float) -> void:
 	pass
 
@@ -20,5 +46,10 @@ func _on_laser_zone_area_entered(area: Area2D) -> void:
 		area.queue_free() # Replace with function body.
 		
 func _on_player_died() -> void:
+	glitch_sound.play()
+	GameManager.stop_scoring()
+	var glitch_tween = play_glitch_effect()
+	await  glitch_tween.finished
+	await get_tree().create_timer(0.02).timeout
 	GameManager.reset_score()
 	get_tree().call_deferred("reload_current_scene")

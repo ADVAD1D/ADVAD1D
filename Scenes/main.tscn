@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=52 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scenes/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scenes/camera_2d.gd" id="6_21xkr"]
 [ext_resource type="PackedScene" uid="uid://d1eonx56vybhy" path="res://Scenes/UI/hud.tscn" id="7_6bp64"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="8_344ge"]
+[ext_resource type="AudioStream" uid="uid://iavnej1hm2io" path="res://Assets/Audio/195491__alienxxx__glitch_001.wav" id="9_ynf5e"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bo1nx"]
 size = Vector2(7.72908, 201.723)
@@ -306,7 +307,7 @@ asteroid_scene = ExtResource("4_kry3j")
 player_node = NodePath("../CharacterBody2D")
 
 [node name="Timer" type="Timer" parent="AsteroidSpawner"]
-wait_time = 0.2
+wait_time = 0.1
 autostart = true
 
 [node name="DeathZone" type="Area2D" parent="."]
@@ -470,6 +471,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="GlitchSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("9_ynf5e")
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]

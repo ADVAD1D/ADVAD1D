@@ -16,11 +16,16 @@ var laser_scene = preload("res://Scenes/laser.tscn")
 
 var can_shoot: bool = true
 
+var player_died: bool = false
+
 func _ready() -> void:
 	var player_score = GameManager.score
 	print(player_score)
 
 func _physics_process(delta: float) -> void:
+	
+	if player_died:
+		return
 	
 	if Input.is_action_just_pressed("Shoot") and can_shoot:
 			shoot()
@@ -78,7 +83,10 @@ func _draw() -> void:
 
 
 func _on_hitbox_area_entered(area: Area2D) -> void:
+	if player_died:
+		return
 	if area.is_in_group("asteroides"):
+		player_died = true
 		died.emit()
 		hide()
 		$CollisionShape2D.set_deferred("disabled", true) # Replace with function body.
