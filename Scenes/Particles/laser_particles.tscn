@@ -1,3 +1,34 @@
-[gd_scene format=3 uid="uid://dohhwkxxtna34"]
+[gd_scene load_steps=7 format=3 uid="uid://dohhwkxxtna34"]
 
-[node name="Node2D" type="Node2D"]
+[ext_resource type="Texture2D" uid="uid://c4nc6xv4hc424" path="res://Assets/Sprites/shoot.png" id="1_bwm2k"]
+
+[sub_resource type="Gradient" id="Gradient_3rj2p"]
+colors = PackedColorArray(0.483338, 0.649368, 1, 1, 0.342533, 1, 0.915341, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_xx037"]
+gradient = SubResource("Gradient_3rj2p")
+
+[sub_resource type="Gradient" id="Gradient_fhi5n"]
+colors = PackedColorArray(0.192157, 1, 0.945098, 1, 7.89344e-06, 0.75654, 0.986403, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_1krf0"]
+gradient = SubResource("Gradient_fhi5n")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7w0fy"]
+particle_flag_disable_z = true
+spread = 18.685
+flatness = 0.287
+initial_velocity_min = 30.0
+initial_velocity_max = 80.0
+gravity = Vector3(0, 0, 0)
+color_ramp = SubResource("GradientTexture1D_1krf0")
+color_initial_ramp = SubResource("GradientTexture1D_xx037")
+
+[node name="GPUParticles2D" type="GPUParticles2D"]
+emitting = false
+amount = 15
+texture = ExtResource("1_bwm2k")
+lifetime = 1.02
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_7w0fy")

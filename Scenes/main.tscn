@@ -1,8 +1,10 @@
-[gd_scene load_steps=52 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=54 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scenes/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
+[ext_resource type="PackedScene" uid="uid://dohhwkxxtna34" path="res://Scenes/Particles/laser_particles.tscn" id="2_hptm8"]
 [ext_resource type="Texture2D" uid="uid://xyy3jp1ba0lv" path="res://Assets/Sprites/gauntlet1.png" id="2_kry3j"]
+[ext_resource type="PackedScene" uid="uid://df8hpgwrn52l8" path="res://Scenes/Particles/particles.tscn" id="3_d1ilt"]
 [ext_resource type="Script" uid="uid://bia82e1gl8v0j" path="res://Scenes/asteroid_spawner.gd" id="3_jjvhh"]
 [ext_resource type="PackedScene" uid="uid://bthfvcj4v47xh" path="res://Scenes/asteroid.tscn" id="4_kry3j"]
 [ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scenes/camera_2d.gd" id="6_21xkr"]
@@ -159,6 +161,8 @@ shader_parameter/vignette_opacity = 1.0
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_kry3j")
+laser_explosion_particles = ExtResource("2_hptm8")
+asteroids_explosion_particles = ExtResource("3_d1ilt")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-13, 1461)
