@@ -17,5 +17,6 @@ texture = ExtResource("2_a2bka")
 position = Vector2(9, -3)
 scale = Vector2(2.6659, 2.6659)
 shape = SubResource("CircleShape2D_bi0dy")
+debug_color = Color(0.996414, 0, 0.187186, 0.42)
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

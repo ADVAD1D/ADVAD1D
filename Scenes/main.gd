@@ -19,7 +19,6 @@ func _on_laser_zone_area_entered(area: Area2D) -> void:
 	if area.is_in_group("lasers"):
 		area.queue_free() # Replace with function body.
 		
-		
 func _on_player_died() -> void:
 	GameManager.reset_score()
-	get_tree().reload_current_scene()
+	get_tree().call_deferred("reload_current_scene")

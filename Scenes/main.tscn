@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=51 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scenes/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bthfvcj4v47xh" path="res://Scenes/asteroid.tscn" id="4_kry3j"]
 [ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scenes/camera_2d.gd" id="6_21xkr"]
 [ext_resource type="PackedScene" uid="uid://d1eonx56vybhy" path="res://Scenes/UI/hud.tscn" id="7_6bp64"]
+[ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="8_344ge"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bo1nx"]
 size = Vector2(7.72908, 201.723)
@@ -124,6 +125,36 @@ size = Vector2(212.932, 30)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_aqgau"]
 size = Vector2(212.382, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8cuat"]
+size = Vector2(134, 23)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o1aky"]
+size = Vector2(164.5, 20)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_344ge"]
+shader = ExtResource("8_344ge")
+shader_parameter/overlay = false
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/brightness = 1.4
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.0
+shader_parameter/grille_opacity = 0.0
+shader_parameter/roll = true
+shader_parameter/roll_speed = 3.0
+shader_parameter/roll_size = 9.04
+shader_parameter/roll_variation = 1.8
+shader_parameter/distort_intensity = 0.007
+shader_parameter/aberration = -0.026
+shader_parameter/noise_opacity = 0.4
+shader_parameter/noise_speed = 5.0
+shader_parameter/static_noise_intensity = 0.0
+shader_parameter/pixelate = false
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.52
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.5
+shader_parameter/vignette_opacity = 0.0
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_kry3j")
@@ -397,11 +428,21 @@ rotation = 0.760653
 shape = SubResource("RectangleShape2D_536cc")
 debug_color = Color(0.953185, 6.73831e-07, 0.554854, 0.42)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LaserZone"]
+[node name="bottomCorner1" type="CollisionShape2D" parent="LaserZone"]
 position = Vector2(242, 1169)
 rotation = -0.82537
 shape = SubResource("RectangleShape2D_aqgau")
 debug_color = Color(0.944658, 5.67943e-06, 0.596061, 0.42)
+
+[node name="upCorner" type="CollisionShape2D" parent="LaserZone"]
+position = Vector2(-650, -161.5)
+shape = SubResource("RectangleShape2D_8cuat")
+debug_color = Color(0.961248, 0, 0.511433, 0.42)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LaserZone"]
+position = Vector2(651.75, -157)
+shape = SubResource("RectangleShape2D_o1aky")
+debug_color = Color(0.970663, 0, 0.45321, 0.42)
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player_target")]
 zoom = Vector2(0.3, 0.3)
@@ -421,6 +462,14 @@ offset_left = -25.0
 offset_top = 7.0
 offset_right = -25.0
 offset_bottom = 7.0
+
+[node name="ColorRect" type="ColorRect" parent="UILayer"]
+material = SubResource("ShaderMaterial_344ge")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]

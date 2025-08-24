@@ -2,9 +2,11 @@ extends CharacterBody2D
 
 @export var speed: float
 @export var acceleration: float = 5.0
-@export var shoot_timerate: float = 0.01
+@export var shoot_timerate: float = 0.1
 @export var safe_radius: float = 400.0
 @export var friction: float = 1.0
+
+@onready var lsrsound = $Lasersnd
 
 signal died
 
@@ -44,6 +46,7 @@ func _physics_process(delta: float) -> void:
 			
 func shoot():
 	can_shoot = false
+	lsrsound.play()
 	var laser_instance = laser_scene.instantiate()
 	laser_instance.global_position = $Muzzle.global_position
 	laser_instance.start(rotation)

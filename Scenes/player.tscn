@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://4pkkj4yusrj7"]
+[gd_scene load_steps=6 format=3 uid="uid://4pkkj4yusrj7"]
 
 [ext_resource type="Script" uid="uid://d3j8sct0cu046" path="res://Scenes/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://f2d5cwauvjt6" path="res://Assets/Sprites/Ship1.png" id="1_v0iea"]
+[ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="3_6t5aa"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_v0iea"]
 radius = 6.0
@@ -36,5 +37,10 @@ position = Vector2(-0.540216, -13.5054)
 position = Vector2(-0.540216, 3.2413)
 shape = SubResource("RectangleShape2D_cvnsp")
 debug_color = Color(0.996388, 0, 0.187683, 0.42)
+
+[node name="Lasersnd" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_6t5aa")
+volume_db = -7.005
+pitch_scale = 2.72
 
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
