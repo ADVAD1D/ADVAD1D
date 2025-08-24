@@ -3,6 +3,8 @@ extends Area2D
 var speed: float
 var direction: Vector2
 
+@export var explosion_scene: PackedScene
+
 func _ready() -> void:
 	speed = randf_range(500.0, 800.0)
 	scale = Vector2.ZERO
@@ -20,5 +22,8 @@ func _process(delta: float) -> void:
 
 func _on_area_entered(area: Area2D) -> void:
 	if area.is_in_group("lasers"):
+		var asteroid_explosion = explosion_scene.instantiate()
+		add_sibling(asteroid_explosion)
+		asteroid_explosion.position = position
 		GameManager.add_score(10)
 		queue_free() # Replace with function body.

@@ -1,0 +1,38 @@
+[gd_scene load_steps=9 format=3 uid="uid://bbelrdyw55r5m"]
+
+[ext_resource type="Texture2D" uid="uid://cpuho512n86v" path="res://Assets/Sprites/asteroidparticle.png" id="1_o7s8e"]
+
+[sub_resource type="Gradient" id="Gradient_p0upy"]
+colors = PackedColorArray(1, 0.700211, 0.461945, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_k4hqv"]
+gradient = SubResource("Gradient_p0upy")
+
+[sub_resource type="Gradient" id="Gradient_xti1x"]
+colors = PackedColorArray(0.87451, 0.329412, 0, 1, 0.947885, 0.905383, 0.953292, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_7cmwn"]
+gradient = SubResource("Gradient_xti1x")
+
+[sub_resource type="Curve" id="Curve_c5rdd"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.432692, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_1cx5h"]
+curve = SubResource("Curve_c5rdd")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_8nfw2"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 30.0
+initial_velocity_max = 80.0
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_1cx5h")
+color_ramp = SubResource("GradientTexture1D_7cmwn")
+color_initial_ramp = SubResource("GradientTexture1D_k4hqv")
+
+[node name="AsteroidsExplosion" type="GPUParticles2D"]
+amount = 25
+texture = ExtResource("1_o7s8e")
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_8nfw2")

@@ -30,8 +30,8 @@ func play_glitch_effect():
 func reset_shader_parameters():
 	if is_instance_valid(crt_material):
 		crt_material.set_shader_parameter("aberration", 0.03)
-		crt_material.set_shader_parameter("distort_intensity", 0.05)
-		crt_material.set_shader_parameter("static_noise_intensity", 0.06)
+		crt_material.set_shader_parameter("distort_intensity", 0.03)
+		crt_material.set_shader_parameter("static_noise_intensity", 0.02)
 
 func _process(_delta: float) -> void:
 	pass
