@@ -3,10 +3,12 @@ extends CharacterBody2D
 @export var speed: float
 @export var acceleration: float = 5.0
 @export var shoot_timerate: float = 0.1
-@export var safe_radius: float = 400.0
+@export var safe_radius: float = 200.0
 @export var friction: float = 1.0
 
 @onready var lsrsound = $Lasersnd
+
+@export var ship_explosion_particles: PackedScene
 
 signal died
 
@@ -86,6 +88,9 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 	if player_died:
 		return
 	if area.is_in_group("asteroides"):
+		var ship_exp_instance = ship_explosion_particles.instantiate()
+		add_sibling(ship_exp_instance)
+		ship_exp_instance.position = position
 		player_died = true
 		died.emit()
 		hide()

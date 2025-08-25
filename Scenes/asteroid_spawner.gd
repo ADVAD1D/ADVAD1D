@@ -1,10 +1,10 @@
 extends Marker2D
 
 @export var asteroid_scene: PackedScene 
-@export var spawn_margin: float = 1580.0
+@export var spawn_margin: float = 1180.0
 @export var target_radius: float = 250.0
 @export var player_node: CharacterBody2D
-@export var safe_radius: float = 400.0
+@export var safe_radius: float = 200.0
 
 var screen_size: Vector2
 

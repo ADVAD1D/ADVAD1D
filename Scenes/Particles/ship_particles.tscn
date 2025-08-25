@@ -1,0 +1,47 @@
+[gd_scene load_steps=10 format=3 uid="uid://d1y6lma6f3pit"]
+
+[ext_resource type="Texture2D" uid="uid://di4x68imfa2f" path="res://Assets/Sprites/alanave.png" id="1_q1ine"]
+[ext_resource type="Script" uid="uid://be4wdfbd8u1y2" path="res://Scenes/Particles/ship_particles.gd" id="2_qmjxr"]
+
+[sub_resource type="Gradient" id="Gradient_hmwly"]
+colors = PackedColorArray(0, 0.758253, 0.888323, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_65o23"]
+gradient = SubResource("Gradient_hmwly")
+
+[sub_resource type="Gradient" id="Gradient_3lkht"]
+colors = PackedColorArray(0, 1, 1, 1, 1.29953e-06, 0.381716, 0.513336, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6yxf3"]
+gradient = SubResource("Gradient_3lkht")
+
+[sub_resource type="Curve" id="Curve_q1ine"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.75641, 0.703452), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_qmjxr"]
+curve = SubResource("Curve_q1ine")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_endfr"]
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(2, 2, 1)
+angle_min = 1.07288e-05
+angle_max = 508.4
+spread = 180.0
+initial_velocity_min = 30.0
+initial_velocity_max = 80.0
+gravity = Vector3(0, 0, 0)
+scale_min = 3.0
+scale_max = 5.0
+scale_curve = SubResource("CurveTexture_qmjxr")
+color_ramp = SubResource("GradientTexture1D_6yxf3")
+color_initial_ramp = SubResource("GradientTexture1D_65o23")
+
+[node name="ShipParticles" type="GPUParticles2D"]
+z_index = 2
+emitting = false
+texture = ExtResource("1_q1ine")
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_endfr")
+script = ExtResource("2_qmjxr")

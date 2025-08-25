@@ -17,7 +17,7 @@ gradient = SubResource("Gradient_fhi5n")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7w0fy"]
 particle_flag_disable_z = true
-spread = 35.527
+spread = 180.0
 flatness = 0.761
 initial_velocity_min = 60.0
 initial_velocity_max = 120.0
@@ -32,5 +32,6 @@ texture = ExtResource("1_bwm2k")
 lifetime = 1.02
 one_shot = true
 explosiveness = 1.0
+trail_enabled = true
 process_material = SubResource("ParticleProcessMaterial_7w0fy")
 script = ExtResource("2_3rj2p")
