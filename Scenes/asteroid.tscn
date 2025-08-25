@@ -8,6 +8,7 @@
 radius = 14.0
 
 [node name="Asteroid" type="Area2D" groups=["asteroides"]]
+z_index = 1
 script = ExtResource("1_a2bka")
 explosion_scene = ExtResource("2_rvlwq")
 
