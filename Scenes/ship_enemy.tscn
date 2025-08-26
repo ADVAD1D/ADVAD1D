@@ -37,7 +37,7 @@ position = Vector2(-0.38571, -18.8998)
 scale = Vector2(39.2115, 143.279)
 
 [node name="ShootTimer" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 0.2
 one_shot = true
 
 [node name="EnemyLsrSound" type="AudioStreamPlayer2D" parent="."]

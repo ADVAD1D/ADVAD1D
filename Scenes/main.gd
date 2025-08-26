@@ -16,16 +16,16 @@ func play_glitch_effect():
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN_OUT)
 
-	tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.2, 0.2)
-	tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.2, 0.2)
+	tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.1, 0.1)
+	tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.1, 0.1)
 
 	tween.chain().tween_property(crt_material, "shader_parameter/aberration", 1.0, 0.1)
 	tween.chain().tween_property(crt_material, "shader_parameter/aberration", -1.0, 0.1)
-	tween.chain().tween_property(crt_material, "shader_parameter/aberration", 0.3, 0.03)
+	tween.chain().tween_property(crt_material, "shader_parameter/aberration", 0.1, 0.01)
 	
-	tween.parallel().tween_property(crt_material, "shader_parameter/aberration", 0.03, 0.2)
-	tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.05, 0.4)
-	tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.04, 0.4)
+	tween.parallel().tween_property(crt_material, "shader_parameter/aberration", 0.01, 0.1)
+	tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.01, 0.1)
+	tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.01, 0.1)
 
 	return tween
 	

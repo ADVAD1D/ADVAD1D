@@ -1,13 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://1nr18jnk4v4l"]
+[gd_scene load_steps=5 format=3 uid="uid://1nr18jnk4v4l"]
 
 [ext_resource type="Texture2D" uid="uid://c8m6laqobfju7" path="res://Assets/Sprites/enemy_laser.png" id="1_s2mcl"]
 [ext_resource type="Script" uid="uid://b28jbyyal1ilg" path="res://Scenes/enemy_laser.gd" id="1_wss2q"]
+[ext_resource type="PackedScene" uid="uid://ct5mpwv8axj52" path="res://Scenes/Particles/enemy_ship_particles.tscn" id="2_swast"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wss2q"]
 size = Vector2(15, 25)
 
 [node name="enemyLaser" type="Area2D" groups=["enemy_laser"]]
 script = ExtResource("1_wss2q")
+enemy_laser_particles = ExtResource("2_swast")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = -1.57181
@@ -19,3 +21,5 @@ z_index = 2
 position = Vector2(1.5, -3.5)
 shape = SubResource("RectangleShape2D_wss2q")
 debug_color = Color(0.943307, 7.70092e-06, 0.602222, 0.42)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
