@@ -115,7 +115,7 @@ size = Vector2(3080, 66)
 size = Vector2(483.916, 30)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r33sp"]
-size = Vector2(518, 20)
+size = Vector2(518, 28.2032)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hdf80"]
 size = Vector2(517, 34.9496)
@@ -159,8 +159,8 @@ shader_parameter/pixelate = false
 shader_parameter/discolor = false
 shader_parameter/warp_amount = 0.492
 shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 0.33
-shader_parameter/vignette_opacity = 0.0
+shader_parameter/vignette_intensity = 0.12
+shader_parameter/vignette_opacity = 1.0
 
 [sub_resource type="Gradient" id="Gradient_d1ilt"]
 offsets = PackedFloat32Array(0, 0.482517, 1)
@@ -197,12 +197,12 @@ asteroids_explosion_particles = ExtResource("3_d1ilt")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-13, 1461)
-scale = Vector2(26.9527, 27.2861)
+scale = Vector2(19.3172, 19.5562)
 texture = ExtResource("2_kry3j")
 
 [node name="Walls" type="Node2D" parent="."]
-position = Vector2(9.42776, -1213.57)
-scale = Vector2(1.84278, 1.84278)
+position = Vector2(3.98833, -460.012)
+scale = Vector2(1.29883, 1.29883)
 
 [node name="WallLeft1" type="StaticBody2D" parent="Walls" groups=["colisiones"]]
 
@@ -335,8 +335,8 @@ shape = SubResource("RectangleShape2D_e08e2")
 debug_color = Color(1.46799e-06, 0.650471, 0.0903933, 0.42)
 
 [node name="AsteroidSpawner" type="Marker2D" parent="." node_paths=PackedStringArray("player_node")]
-position = Vector2(9.42776, -1213.57)
-scale = Vector2(1.84278, 1.84278)
+position = Vector2(3.98833, -460.012)
+scale = Vector2(1.29883, 1.29883)
 script = ExtResource("3_jjvhh")
 asteroid_scene = ExtResource("4_kry3j")
 player_node = NodePath("../CharacterBody2D")
@@ -346,8 +346,8 @@ wait_time = 0.1
 autostart = true
 
 [node name="DeathZone" type="Area2D" parent="."]
-position = Vector2(9.42776, -1213.57)
-scale = Vector2(1.84278, 1.84278)
+position = Vector2(3.98833, -460.012)
+scale = Vector2(1.29883, 1.29883)
 
 [node name="upzone" type="CollisionShape2D" parent="DeathZone"]
 position = Vector2(-5, -867)
@@ -375,8 +375,8 @@ shape = SubResource("RectangleShape2D_3pmx8")
 debug_color = Color(0.997114, 0, 0.172964, 0.42)
 
 [node name="LaserZone" type="Area2D" parent="."]
-position = Vector2(9.42776, -1213.57)
-scale = Vector2(1.84278, 1.84278)
+position = Vector2(3.98833, -460.012)
+scale = Vector2(1.29883, 1.29883)
 
 [node name="bridgeleft" type="CollisionShape2D" parent="LaserZone"]
 position = Vector2(-220.243, 2473.95)
@@ -442,7 +442,7 @@ shape = SubResource("RectangleShape2D_neg2b")
 debug_color = Color(0.961914, 0, 0.507611, 0.42)
 
 [node name="upInside1" type="CollisionShape2D" parent="LaserZone"]
-position = Vector2(-19, -530)
+position = Vector2(-18.2829, -543.657)
 shape = SubResource("RectangleShape2D_r33sp")
 debug_color = Color(0.950352, 0.0944094, 0.507302, 0.42)
 
@@ -486,10 +486,10 @@ debug_color = Color(0.970663, 0, 0.45321, 0.42)
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player_target")]
 zoom = Vector2(0.25, 0.25)
-limit_left = -2575
-limit_top = -2550
-limit_right = 2850
-limit_bottom = 5363
+limit_left = -1915
+limit_top = -1420
+limit_right = 1870
+limit_bottom = 4200
 limit_smoothed = true
 position_smoothing_enabled = true
 script = ExtResource("6_21xkr")
@@ -513,6 +513,7 @@ grow_vertical = 2
 
 [node name="GlitchSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("9_ynf5e")
+volume_db = 5.927
 pitch_scale = 0.38
 
 [node name="AmbientParticles" type="GPUParticles2D" parent="."]
@@ -524,39 +525,21 @@ process_material = SubResource("ParticleProcessMaterial_d1ilt")
 script = ExtResource("12_6iyac")
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("2_8gbba")]
-position = Vector2(-18, 275)
+position = Vector2(-15, 9.99994)
 speed = 700.0
 
 [node name="ShipEnemy" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(-28, -2026)
-speed = 300.0
+position = Vector2(-808, 487)
+speed = 500.0
 
 [node name="ShipEnemy2" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(-19, 986)
+position = Vector2(901, -436)
 
 [node name="ShipEnemy3" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(-810, 304)
+position = Vector2(-835, -490)
 
 [node name="ShipEnemy4" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(767, 287)
-
-[node name="ShipEnemy5" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(-568, 772)
-
-[node name="ShipEnemy6" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(552, 681)
-
-[node name="ShipEnemy7" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(-1418, -479)
-
-[node name="ShipEnemy8" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(1451, -521)
-
-[node name="ShipEnemy9" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(-1140, -1402)
-
-[node name="ShipEnemy10" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(1175, -1399)
+position = Vector2(832, 452)
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]

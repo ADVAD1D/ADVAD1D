@@ -48,19 +48,16 @@ func _on_death_zone_area_entered(area: Area2D) -> void:
 		area.queue_free()
 
 func _on_laser_zone_area_entered(area: Area2D) -> void:
-	# Si el área es un láser del JUGADOR...
+	
 	if area.is_in_group("lasers"):
-		# ...instancia las partículas del jugador.
-		if laser_explosion_particles: # Buena práctica comprobar si está asignada
+		if laser_explosion_particles:
 			var laser_exp_instance = laser_explosion_particles.instantiate()
 			add_child(laser_exp_instance)
 			laser_exp_instance.global_position = area.global_position
 		
 		area.queue_free()
 	
-	# O si no, si el área es un láser ENEMIGO...
 	elif area.is_in_group("enemy_laser"):
-		# ...instancia las partículas del enemigo.
 		if enemy_laser_explosion:
 			var enemy_laser_exp_instance = enemy_laser_explosion.instantiate()
 			add_child(enemy_laser_exp_instance)

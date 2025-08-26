@@ -42,7 +42,7 @@ debug_color = Color(0.996388, 0, 0.187683, 0.42)
 
 [node name="Lasersnd" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_6t5aa")
-volume_db = -19.399
+volume_db = -19.938
 pitch_scale = 2.72
 
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

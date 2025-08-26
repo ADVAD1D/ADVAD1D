@@ -37,12 +37,12 @@ position = Vector2(-0.38571, -18.8998)
 scale = Vector2(39.2115, 143.279)
 
 [node name="ShootTimer" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.1
 one_shot = true
 
 [node name="EnemyLsrSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_f0gle")
-volume_db = -25.865
+volume_db = -18.32
 pitch_scale = 0.48
 
 [connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_area_entered"]
