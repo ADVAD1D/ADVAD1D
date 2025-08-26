@@ -23,7 +23,7 @@ GameManager="*res://Autoloads/game_manager.gd"
 
 window/size/viewport_width=520
 window/size/viewport_height=270
-window/size/mode=3
+window/size/mode=2
 window/stretch/mode="canvas_items"
 
 [global_group]
@@ -31,6 +31,9 @@ window/stretch/mode="canvas_items"
 asteroides=""
 lasers=""
 colisiones=""
+player=""
+enemy_laser=""
+enemigos=""
 
 [input]
 

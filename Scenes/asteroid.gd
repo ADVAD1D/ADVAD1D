@@ -4,6 +4,7 @@ var speed: float
 var direction: Vector2
 
 @export var explosion_scene: PackedScene
+@export var asteroid_explosion_sound: PackedScene
 
 func _ready() -> void:
 	speed = randf_range(500.0, 800.0)
@@ -22,8 +23,27 @@ func _process(delta: float) -> void:
 
 func _on_area_entered(area: Area2D) -> void:
 	if area.is_in_group("lasers"):
-		var asteroid_explosion = explosion_scene.instantiate()
-		add_sibling(asteroid_explosion)
-		asteroid_explosion.position = position
+		if explosion_scene:
+			var asteroid_explosion = explosion_scene.instantiate()
+			add_sibling(asteroid_explosion)
+			asteroid_explosion.position = position
+		
+		if asteroid_explosion_sound:
+			var sound_instance = asteroid_explosion_sound.instantiate()
+			get_parent().add_child(sound_instance)
+			sound_instance.position = position
+		
 		GameManager.add_score(10)
 		queue_free() # Replace with function body.
+		
+	if area.is_in_group("enemy_laser"):
+		if explosion_scene:
+			var asteroid_explosion = explosion_scene.instantiate()
+			add_sibling(asteroid_explosion)
+			asteroid_explosion.position = position
+		
+		if asteroid_explosion_sound:
+			var sound_instance = asteroid_explosion_sound.instantiate()
+			get_parent().add_child(sound_instance)
+			sound_instance.position = position
+		queue_free()

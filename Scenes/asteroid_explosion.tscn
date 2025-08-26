@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhplufrn7721i"]
+
+[ext_resource type="AudioStream" uid="uid://bypgsu47yqvma" path="res://Assets/Audio/253169__suntemple__retro-game-sfx-explosion.wav" id="1_044gi"]
+[ext_resource type="Script" uid="uid://el8dhge4oc8t" path="res://Scenes/asteroid_explosion.gd" id="2_xnurx"]
+
+[node name="AsteroidExplosion" type="AudioStreamPlayer2D"]
+stream = ExtResource("1_044gi")
+script = ExtResource("2_xnurx")
+
+[connection signal="finished" from="." to="." method="_on_finished"]

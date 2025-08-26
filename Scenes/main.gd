@@ -47,7 +47,7 @@ func _on_death_zone_area_entered(area: Area2D) -> void:
 		area.queue_free()
 
 func _on_laser_zone_area_entered(area: Area2D) -> void:
-	if area.is_in_group("lasers"):
+	if area.is_in_group("lasers") or area.is_in_group("enemy_laser"):
 		var laser_exp_instance = laser_explosion_particles.instantiate()
 		add_child(laser_exp_instance)
 		laser_exp_instance.global_position = area.global_position

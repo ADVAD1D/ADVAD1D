@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://bthfvcj4v47xh"]
+[gd_scene load_steps=6 format=3 uid="uid://bthfvcj4v47xh"]
 
 [ext_resource type="Script" uid="uid://ba81yr6dbyf7q" path="res://Scenes/asteroid.gd" id="1_a2bka"]
 [ext_resource type="Texture2D" uid="uid://b134s4euq80t8" path="res://Assets/Sprites/Asteroidbad.png" id="2_a2bka"]
 [ext_resource type="PackedScene" uid="uid://df8hpgwrn52l8" path="res://Scenes/Particles/particles.tscn" id="2_rvlwq"]
+[ext_resource type="PackedScene" uid="uid://bhplufrn7721i" path="res://Scenes/asteroid_explosion.tscn" id="3_bi0dy"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bi0dy"]
 radius = 14.0
@@ -11,6 +12,7 @@ radius = 14.0
 z_index = 1
 script = ExtResource("1_a2bka")
 explosion_scene = ExtResource("2_rvlwq")
+asteroid_explosion_sound = ExtResource("3_bi0dy")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(2.77554, 2.77554)

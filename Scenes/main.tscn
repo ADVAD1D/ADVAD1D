@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=61 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scenes/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -12,6 +12,7 @@
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="8_344ge"]
 [ext_resource type="AudioStream" uid="uid://iavnej1hm2io" path="res://Assets/Audio/195491__alienxxx__glitch_001.wav" id="9_ynf5e"]
 [ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scenes/ambient_particles.gd" id="12_6iyac"]
+[ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="13_fdnlq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bo1nx"]
 size = Vector2(7.72908, 201.723)
@@ -199,7 +200,13 @@ texture = ExtResource("2_kry3j")
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("2_8gbba")]
 position = Vector2(-18, 275)
-speed = 400.0
+speed = 500.0
+
+[node name="ShipEnemy" parent="." instance=ExtResource("13_fdnlq")]
+position = Vector2(0, -425)
+scale = Vector2(2.59262, 2.59262)
+speed = 300.0
+fire_range = 1000.0
 
 [node name="Walls" type="Node2D" parent="."]
 
@@ -515,6 +522,21 @@ amount = 200
 lifetime = 10.0
 process_material = SubResource("ParticleProcessMaterial_d1ilt")
 script = ExtResource("12_6iyac")
+
+[node name="ShipEnemy2" parent="." instance=ExtResource("13_fdnlq")]
+position = Vector2(-19, 986)
+
+[node name="ShipEnemy3" parent="." instance=ExtResource("13_fdnlq")]
+position = Vector2(-810, 304)
+
+[node name="ShipEnemy4" parent="." instance=ExtResource("13_fdnlq")]
+position = Vector2(767, 287)
+
+[node name="ShipEnemy5" parent="." instance=ExtResource("13_fdnlq")]
+position = Vector2(-568, 772)
+
+[node name="ShipEnemy6" parent="." instance=ExtResource("13_fdnlq")]
+position = Vector2(552, 681)
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]

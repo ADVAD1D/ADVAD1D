@@ -12,7 +12,7 @@ height = 20.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
 size = Vector2(15.1261, 28.0913)
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="CharacterBody2D" type="CharacterBody2D" groups=["player"]]
 z_index = 2
 scale = Vector2(1.85111, 1.85111)
 motion_mode = 1
