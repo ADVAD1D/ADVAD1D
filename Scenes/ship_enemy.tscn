@@ -12,6 +12,7 @@ size = Vector2(11, 24)
 size = Vector2(10.4142, 20)
 
 [node name="ShipEnemy" type="CharacterBody2D" groups=["enemigos"]]
+z_index = 2
 scale = Vector2(2.59262, 2.59262)
 script = ExtResource("1_exykt")
 
@@ -36,6 +37,7 @@ position = Vector2(-0.38571, -18.8998)
 scale = Vector2(39.2115, 143.279)
 
 [node name="ShootTimer" type="Timer" parent="."]
+wait_time = 0.5
 one_shot = true
 
 [node name="EnemyLsrSound" type="AudioStreamPlayer2D" parent="."]

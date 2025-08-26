@@ -29,7 +29,7 @@ func _physics_process(delta: float) -> void:
 	if player_died:
 		return
 	
-	if Input.is_action_just_pressed("Shoot") and can_shoot:
+	if Input.is_action_pressed("Shoot") and can_shoot:
 			shoot()
 	
 	var direction = Input.get_vector("Move_Left", "Move_Right", "Move_Up", "Move_Down")
@@ -90,7 +90,6 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("asteroides") or area.is_in_group("enemy_laser"):
 		if area.is_in_group("enemy_laser"):
 			area.queue_free()
-			GameManager.add_score(20)
 		var ship_exp_instance = ship_explosion_particles.instantiate()
 		add_sibling(ship_exp_instance)
 		ship_exp_instance.position = position

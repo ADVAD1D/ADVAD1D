@@ -4,17 +4,18 @@
 [ext_resource type="Script" uid="uid://b28jbyyal1ilg" path="res://Scenes/enemy_laser.gd" id="1_wss2q"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wss2q"]
-size = Vector2(11, 20.716)
+size = Vector2(15, 25)
 
 [node name="enemyLaser" type="Area2D" groups=["enemy_laser"]]
 script = ExtResource("1_wss2q")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = -1.57181
-scale = Vector2(2.517, 2.517)
+scale = Vector2(3.18738, 3.18738)
 texture = ExtResource("1_s2mcl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(1, -2)
+z_index = 2
+position = Vector2(1.5, -3.5)
 shape = SubResource("RectangleShape2D_wss2q")
 debug_color = Color(0.943307, 7.70092e-06, 0.602222, 0.42)

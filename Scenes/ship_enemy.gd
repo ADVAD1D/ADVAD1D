@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 @export var speed: float = 250.0
 @export var ideal_distance: float = 100.0
-@export var fire_range: float = 500.0 
+@export var fire_range: float = 1000.0 
 @export var distance_margin: float = 50.0
 @export var strafe_speed: float = 150.0
 @export var strafe_influence: float = 0.6
@@ -76,4 +76,5 @@ func _draw() -> void:
 		draw_circle(Vector2.ZERO, fire_range, circle_color)
 
 func _on_hit() -> void:
+	GameManager.add_score(20)
 	queue_free()
