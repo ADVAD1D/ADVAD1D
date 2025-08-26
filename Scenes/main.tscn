@@ -1,4 +1,4 @@
-[gd_scene load_steps=61 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=62 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scenes/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://xyy3jp1ba0lv" path="res://Assets/Sprites/gauntlet1.png" id="2_kry3j"]
 [ext_resource type="PackedScene" uid="uid://df8hpgwrn52l8" path="res://Scenes/Particles/particles.tscn" id="3_d1ilt"]
 [ext_resource type="Script" uid="uid://bia82e1gl8v0j" path="res://Scenes/asteroid_spawner.gd" id="3_jjvhh"]
+[ext_resource type="PackedScene" uid="uid://ct5mpwv8axj52" path="res://Scenes/Particles/enemy_ship_particles.tscn" id="3_jkdf5"]
 [ext_resource type="PackedScene" uid="uid://bthfvcj4v47xh" path="res://Scenes/asteroid.tscn" id="4_kry3j"]
 [ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scenes/camera_2d.gd" id="6_21xkr"]
 [ext_resource type="PackedScene" uid="uid://d1eonx56vybhy" path="res://Scenes/UI/hud.tscn" id="7_6bp64"]
@@ -191,6 +192,7 @@ color_initial_ramp = SubResource("GradientTexture1D_6iyac")
 [node name="Main" type="Node2D"]
 script = ExtResource("1_kry3j")
 laser_explosion_particles = ExtResource("2_hptm8")
+enemy_laser_explosion = ExtResource("3_jkdf5")
 asteroids_explosion_particles = ExtResource("3_d1ilt")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

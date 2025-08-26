@@ -4,13 +4,13 @@
 [ext_resource type="Script" uid="uid://c56mbp7t8fey7" path="res://Scenes/Particles/enemy_ship_particles.gd" id="2_1wrnq"]
 
 [sub_resource type="Gradient" id="Gradient_3rj2p"]
-colors = PackedColorArray(1, 0, 0.0166664, 1, 0.485608, 0.0994698, 0.119944, 1)
+colors = PackedColorArray(0.999768, 0, 0.0497675, 1, 1, 0.33, 0.33, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_xx037"]
 gradient = SubResource("Gradient_3rj2p")
 
 [sub_resource type="Gradient" id="Gradient_fhi5n"]
-colors = PackedColorArray(0.999786, 0.192677, 0.164461, 1, 0.933148, 0, 0.0142629, 1)
+colors = PackedColorArray(0.908173, 0.0208752, 3.85046e-07, 1, 0.526707, 0, 0.00405328, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_1krf0"]
 gradient = SubResource("Gradient_fhi5n")
@@ -22,7 +22,7 @@ point_count = 2
 [sub_resource type="CurveTexture" id="CurveTexture_6rrr5"]
 curve = SubResource("Curve_1wrnq")
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7w0fy"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1wrnq"]
 particle_flag_disable_z = true
 spread = 180.0
 flatness = 0.761
@@ -39,5 +39,5 @@ texture = ExtResource("1_1wrnq")
 lifetime = 1.02
 explosiveness = 1.0
 trail_enabled = true
-process_material = SubResource("ParticleProcessMaterial_7w0fy")
+process_material = SubResource("ParticleProcessMaterial_1wrnq")
 script = ExtResource("2_1wrnq")
