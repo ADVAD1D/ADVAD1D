@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=64 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scenes/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -13,7 +13,8 @@
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="8_344ge"]
 [ext_resource type="AudioStream" uid="uid://iavnej1hm2io" path="res://Assets/Audio/195491__alienxxx__glitch_001.wav" id="9_ynf5e"]
 [ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scenes/ambient_particles.gd" id="12_6iyac"]
-[ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="13_fdnlq"]
+[ext_resource type="Script" uid="uid://cn624xhs3jj2a" path="res://Scenes/enemy_spawner.gd" id="14_wsu2k"]
+[ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="15_wsu2k"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bo1nx"]
 size = Vector2(7.72908, 201.723)
@@ -159,7 +160,7 @@ shader_parameter/pixelate = false
 shader_parameter/discolor = false
 shader_parameter/warp_amount = 0.492
 shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 0.12
+shader_parameter/vignette_intensity = 0.15
 shader_parameter/vignette_opacity = 1.0
 
 [sub_resource type="Gradient" id="Gradient_d1ilt"]
@@ -188,6 +189,12 @@ scale_min = 20.0
 scale_max = 30.0
 color_ramp = SubResource("GradientTexture1D_jkdf5")
 color_initial_ramp = SubResource("GradientTexture1D_6iyac")
+
+[sub_resource type="Curve2D" id="Curve2D_wsu2k"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -736, -668, 0, 0, 0, 0, -342, -1104, 0, 0, 0, 0, 283, -1112, 0, 0, 0, 0, 672, -666, 0, 0, 0, 0, 877, -590, 0, 0, 0, 0, 1108, -95, 0, 0, 0, 0, 672, 898, 0, 0, 0, 0, 418, 878, 0, 0, 0, 0, 208, 1064, 0, 0, 0, 0, -267, 1041, 0, 0, 0, 0, -415, 904, 0, 0, 0, 0, -653, 880, 0, 0, 0, 0, -1125, -77, 0, 0, 0, 0, -739, -673)
+}
+point_count = 14
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_kry3j")
@@ -528,18 +535,18 @@ script = ExtResource("12_6iyac")
 position = Vector2(-15, 9.99994)
 speed = 700.0
 
-[node name="ShipEnemy" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(-808, 487)
-speed = 500.0
+[node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node")]
+script = ExtResource("14_wsu2k")
+enemy_scene = ExtResource("15_wsu2k")
+player_node = NodePath("../CharacterBody2D")
+spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
-[node name="ShipEnemy2" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(901, -436)
+[node name="EnemySpawnPath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_wsu2k")
 
-[node name="ShipEnemy3" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(-835, -490)
-
-[node name="ShipEnemy4" parent="." instance=ExtResource("13_fdnlq")]
-position = Vector2(832, 452)
+[node name="EnemySpawnLocator" type="PathFollow2D" parent="EnemySpawnPath"]
+position = Vector2(-736, -668)
+rotation = -0.835957
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]

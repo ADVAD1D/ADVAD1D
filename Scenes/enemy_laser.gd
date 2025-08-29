@@ -1,6 +1,6 @@
 extends Area2D
 
-@export var speed = 1600
+@export var speed = 1400
 @export var enemy_laser_particles: PackedScene
 var direction = Vector2.ZERO
 

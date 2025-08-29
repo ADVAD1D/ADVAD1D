@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@export var speed: float = 250.0
+@export var speed: float = 300.0
 @export var ideal_distance: float = 100.0
 @export var fire_range: float = 1500.0 
 @export var distance_margin: float = 50.0
@@ -8,6 +8,8 @@ extends CharacterBody2D
 @export var strafe_influence: float = 0.6
 @export var acceleration: float = 4.0
 @export var friction: float = 2.0
+
+signal died
 
 @onready var hitbox: Area2D = $Hitbox
 @onready var laser_sound: AudioStreamPlayer2D = $EnemyLsrSound
@@ -21,6 +23,8 @@ var player: Node2D
 func _ready() -> void:
 	player = get_tree().get_first_node_in_group("player")
 	hitbox.hit.connect(_on_hit)
+	var tween = create_tween()
+	tween.tween_property(self, "scale", Vector2(2.5, 2.5), 0.2).from(Vector2.ZERO)
 	
 func _physics_process(delta: float) -> void:
 	if not is_instance_valid(player):
@@ -77,4 +81,5 @@ func _draw() -> void:
 
 func _on_hit() -> void:
 	GameManager.add_score(20)
+	died.emit()
 	queue_free()
