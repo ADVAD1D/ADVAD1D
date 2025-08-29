@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://rfr1b2fb0o4q"]
 
-[ext_resource type="Script" uid="uid://tvn1ktkbvk13" path="res://Scenes/ship_enemy.gd" id="1_exykt"]
+[ext_resource type="Script" uid="uid://tvn1ktkbvk13" path="res://Scripts/ship_enemy.gd" id="1_exykt"]
 [ext_resource type="Texture2D" uid="uid://cx73ri0pr6pa5" path="res://Assets/Sprites/ship_enemy.png" id="1_nlnte"]
-[ext_resource type="Script" uid="uid://drwkj4b838jx8" path="res://Scenes/hitbox.gd" id="2_bscg7"]
+[ext_resource type="Script" uid="uid://drwkj4b838jx8" path="res://Scripts/hitbox.gd" id="2_bscg7"]
 [ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="4_f0gle"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exykt"]

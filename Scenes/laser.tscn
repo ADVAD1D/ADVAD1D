@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://v5arx5syj7j2"]
 
-[ext_resource type="Script" uid="uid://ojvg56v1p8d4" path="res://Scenes/laser.gd" id="1_mou6w"]
+[ext_resource type="Script" uid="uid://ojvg56v1p8d4" path="res://Scripts/laser.gd" id="1_mou6w"]
 [ext_resource type="Texture2D" uid="uid://c4nc6xv4hc424" path="res://Assets/Sprites/shoot.png" id="2_3pc01"]
 [ext_resource type="PackedScene" uid="uid://ct5mpwv8axj52" path="res://Scenes/Particles/enemy_ship_particles.tscn" id="2_c8ure"]
 

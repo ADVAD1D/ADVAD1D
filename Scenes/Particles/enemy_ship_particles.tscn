@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://ct5mpwv8axj52"]
 
 [ext_resource type="Texture2D" uid="uid://c8m6laqobfju7" path="res://Assets/Sprites/enemy_laser.png" id="1_1wrnq"]
-[ext_resource type="Script" uid="uid://c56mbp7t8fey7" path="res://Scenes/Particles/enemy_ship_particles.gd" id="2_1wrnq"]
+[ext_resource type="Script" uid="uid://c56mbp7t8fey7" path="res://Scripts/enemy_ship_particles.gd" id="2_1wrnq"]
 
 [sub_resource type="Gradient" id="Gradient_3rj2p"]
 colors = PackedColorArray(0.999768, 0, 0.0497675, 1, 1, 0.33, 0.33, 1)

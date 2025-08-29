@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://d1y6lma6f3pit"]
 
 [ext_resource type="Texture2D" uid="uid://di4x68imfa2f" path="res://Assets/Sprites/alanave.png" id="1_q1ine"]
-[ext_resource type="Script" uid="uid://be4wdfbd8u1y2" path="res://Scenes/Particles/ship_particles.gd" id="2_qmjxr"]
+[ext_resource type="Script" uid="uid://be4wdfbd8u1y2" path="res://Scripts/ship_particles.gd" id="2_qmjxr"]
 
 [sub_resource type="Gradient" id="Gradient_hmwly"]
 colors = PackedColorArray(0, 0.758253, 0.888323, 1, 1, 1, 1, 1)

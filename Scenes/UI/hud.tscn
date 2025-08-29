@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://d1eonx56vybhy"]
 
 [ext_resource type="LabelSettings" uid="uid://c6nid3mbrqux8" path="res://Resources/Pixel_blue1.tres" id="1_sprlj"]
-[ext_resource type="Script" uid="uid://cao0bar753xfq" path="res://Scenes/UI/score_label.gd" id="2_ny26j"]
+[ext_resource type="Script" uid="uid://cao0bar753xfq" path="res://Scripts/score_label.gd" id="2_ny26j"]
 [ext_resource type="AudioStream" uid="uid://4fccknlgqyae" path="res://Assets/Audio/171696__nenadsimic__picked-coin-echo.wav" id="3_fdl0h"]
 
 [node name="HUD" type="Control"]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://dohhwkxxtna34"]
 
 [ext_resource type="Texture2D" uid="uid://c4nc6xv4hc424" path="res://Assets/Sprites/shoot.png" id="1_bwm2k"]
-[ext_resource type="Script" uid="uid://buu2wviubuh2m" path="res://Scenes/Particles/laser_particles.gd" id="2_3rj2p"]
+[ext_resource type="Script" uid="uid://buu2wviubuh2m" path="res://Scripts/laser_particles.gd" id="2_3rj2p"]
 
 [sub_resource type="Gradient" id="Gradient_bwm2k"]
 offsets = PackedFloat32Array(0, 0.975524, 1)

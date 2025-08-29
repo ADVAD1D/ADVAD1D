@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://1nr18jnk4v4l"]
 
 [ext_resource type="Texture2D" uid="uid://c8m6laqobfju7" path="res://Assets/Sprites/enemy_laser.png" id="1_s2mcl"]
-[ext_resource type="Script" uid="uid://b28jbyyal1ilg" path="res://Scenes/enemy_laser.gd" id="1_wss2q"]
+[ext_resource type="Script" uid="uid://b28jbyyal1ilg" path="res://Scripts/enemy_laser.gd" id="1_wss2q"]
 [ext_resource type="PackedScene" uid="uid://ct5mpwv8axj52" path="res://Scenes/Particles/enemy_ship_particles.tscn" id="2_swast"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wss2q"]

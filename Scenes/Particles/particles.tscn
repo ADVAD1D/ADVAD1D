@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://df8hpgwrn52l8"]
 
 [ext_resource type="Texture2D" uid="uid://cepnfb4qe6mjq" path="res://Assets/Sprites/asteroidparticlebig.png" id="1_bilbs"]
-[ext_resource type="Script" uid="uid://3ifsbbn0rkik" path="res://Scenes/Particles/particles.gd" id="2_d1cxn"]
+[ext_resource type="Script" uid="uid://3ifsbbn0rkik" path="res://Scripts/particles.gd" id="2_d1cxn"]
 
 [sub_resource type="Gradient" id="Gradient_p0upy"]
 colors = PackedColorArray(0.976471, 0.615686, 0.137255, 1, 1, 0.736108, 0.730742, 1)

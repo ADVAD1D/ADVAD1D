@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://4pkkj4yusrj7"]
 
-[ext_resource type="Script" uid="uid://d3j8sct0cu046" path="res://Scenes/player.gd" id="1_cvnsp"]
+[ext_resource type="Script" uid="uid://d3j8sct0cu046" path="res://Scripts/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://f2d5cwauvjt6" path="res://Assets/Sprites/Ship1.png" id="1_v0iea"]
 [ext_resource type="PackedScene" uid="uid://d1y6lma6f3pit" path="res://Scenes/Particles/ship_particles.tscn" id="2_vgqql"]
 [ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="3_6t5aa"]
