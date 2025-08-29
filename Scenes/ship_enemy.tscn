@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://rfr1b2fb0o4q"]
+[gd_scene load_steps=8 format=3 uid="uid://rfr1b2fb0o4q"]
 
 [ext_resource type="Script" uid="uid://tvn1ktkbvk13" path="res://Scenes/ship_enemy.gd" id="1_exykt"]
 [ext_resource type="Texture2D" uid="uid://cx73ri0pr6pa5" path="res://Assets/Sprites/ship_enemy.png" id="1_nlnte"]
@@ -11,9 +11,13 @@ size = Vector2(11, 24)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bscg7"]
 size = Vector2(10.4142, 20)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_f0gle"]
+radius = 21.2339
+
 [node name="ShipEnemy" type="CharacterBody2D" groups=["enemigos"]]
 z_index = 2
 scale = Vector2(2.5, 2.5)
+collision_layer = 9
 script = ExtResource("1_exykt")
 
 [node name="Hitbox" type="Area2D" parent="."]
@@ -44,5 +48,14 @@ one_shot = true
 stream = ExtResource("4_f0gle")
 volume_db = -18.32
 pitch_scale = 0.48
+
+[node name="SeparationArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SeparationArea"]
+position = Vector2(0, 0.8)
+shape = SubResource("CircleShape2D_f0gle")
+debug_color = Color(0.904106, 0.000141889, 0.750942, 0.42)
 
 [connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_area_entered"]

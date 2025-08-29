@@ -8,11 +8,13 @@ extends CharacterBody2D
 @export var strafe_influence: float = 0.6
 @export var acceleration: float = 4.0
 @export var friction: float = 2.0
+@export var separation_strength: float = 100.0
 
 signal died
 
 @onready var hitbox: Area2D = $Hitbox
 @onready var laser_sound: AudioStreamPlayer2D = $EnemyLsrSound
+@onready var separation_area = $SeparationArea
 
 var show_debug: bool = false
 
@@ -48,10 +50,6 @@ func _physics_process(delta: float) -> void:
 	else:
 		target_velocity = vector_to_player.orthogonal().normalized() * strafe_speed
 		shoot()
-		
-	velocity = velocity.lerp(target_velocity, acceleration * delta)
-	
-	move_and_slide()
 	
 	if distance_to_player < fire_range:
 		shoot()
@@ -59,6 +57,20 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("debug"):
 		show_debug = not show_debug
 		queue_redraw()
+	
+	var separation_vector: Vector2 = Vector2.ZERO
+	var neighbors = separation_area.get_overlapping_bodies()
+	
+	if not neighbors.is_empty():
+		for neighbor in neighbors:
+			separation_vector += (neighbor.global_position - global_position)
+		
+		separation_vector = -separation_vector.normalized()
+
+	target_velocity += separation_vector * separation_strength
+	
+	velocity = velocity.lerp(target_velocity, acceleration * delta)
+	move_and_slide()
 	
 func shoot() -> void:
 	if $ShootTimer.is_stopped():
