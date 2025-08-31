@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=66 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -15,6 +15,8 @@
 [ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scripts/ambient_particles.gd" id="12_6iyac"]
 [ext_resource type="Script" uid="uid://cn624xhs3jj2a" path="res://Scripts/enemy_spawner.gd" id="14_wsu2k"]
 [ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="15_wsu2k"]
+[ext_resource type="Script" uid="uid://ddvbqopxphvow" path="res://Scripts/saw_spawner.gd" id="16_k12tt"]
+[ext_resource type="PackedScene" uid="uid://cljshiwenhoau" path="res://Scenes/saw.tscn" id="17_h1bgf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bo1nx"]
 size = Vector2(7.72908, 201.723)
@@ -160,7 +162,7 @@ shader_parameter/pixelate = false
 shader_parameter/discolor = false
 shader_parameter/warp_amount = 0.75
 shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 0.2
+shader_parameter/vignette_intensity = 0.3
 shader_parameter/vignette_opacity = 1.0
 
 [sub_resource type="Gradient" id="Gradient_d1ilt"]
@@ -542,6 +544,12 @@ speed = 700.0
 [node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node")]
 script = ExtResource("14_wsu2k")
 enemy_scene = ExtResource("15_wsu2k")
+player_node = NodePath("../CharacterBody2D")
+spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+
+[node name="SawSpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node")]
+script = ExtResource("16_k12tt")
+saw_scene = ExtResource("17_h1bgf")
 player_node = NodePath("../CharacterBody2D")
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
