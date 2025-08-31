@@ -87,12 +87,14 @@ func _draw() -> void:
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if player_died:
 		return
-	if area.is_in_group("asteroides") or area.is_in_group("enemy_laser"):
+	if area.is_in_group("asteroides") or area.is_in_group("enemy_laser") or area.is_in_group("saws"):
 		if area.is_in_group("enemy_laser"):
 			area.queue_free()
+			
 		var ship_exp_instance = ship_explosion_particles.instantiate()
 		add_sibling(ship_exp_instance)
 		ship_exp_instance.position = position
+		
 		player_died = true
 		died.emit()
 		hide()

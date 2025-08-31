@@ -34,6 +34,7 @@ colisiones=""
 player=""
 enemy_laser=""
 enemigos=""
+saws=""
 
 [input]
 
@@ -74,6 +75,7 @@ debug={
 
 [layer_names]
 
+2d_render/layer_3="sierras"
 2d_render/layer_4="enemies"
 
 [rendering]

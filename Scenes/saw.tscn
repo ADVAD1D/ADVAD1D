@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://cljshiwenhoau"]
+
+[ext_resource type="Script" uid="uid://d1yd1goxj7d46" path="res://Scripts/saw.gd" id="1_4qbox"]
+[ext_resource type="Texture2D" uid="uid://dqsxneaiwnn5c" path="res://Assets/Sprites/saw.png" id="2_mk2w8"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1kxu7"]
+radius = 66.1211
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4qbox"]
+radius = 166.012
+
+[node name="Saw" type="Area2D" groups=["saws"]]
+collision_layer = 5
+script = ExtResource("1_4qbox")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(1.67728, 1.67728)
+texture = ExtResource("2_mk2w8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = 5
+shape = SubResource("CircleShape2D_1kxu7")
+debug_color = Color(0.96652, 0.113815, 0.368096, 0.42)
+
+[node name="SeparationArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SeparationArea"]
+shape = SubResource("CircleShape2D_4qbox")
+debug_color = Color(0.802253, 0.41887, 0, 0.42)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
