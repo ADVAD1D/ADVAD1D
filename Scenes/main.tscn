@@ -69,6 +69,24 @@ size = Vector2(206.815, 26.1516)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e08e2"]
 size = Vector2(210.381, 24.8502)
 
+[sub_resource type="Gradient" id="Gradient_h1bgf"]
+offsets = PackedFloat32Array(0.318182, 0.639394)
+colors = PackedColorArray(0.0117647, 0.65098, 0.713726, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_b3802"]
+gradient = SubResource("Gradient_h1bgf")
+fill = 1
+fill_from = Vector2(0.470085, 0.508547)
+
+[sub_resource type="Gradient" id="Gradient_b3802"]
+offsets = PackedFloat32Array(0.321212, 0.715151)
+colors = PackedColorArray(0, 0.827451, 0.827451, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fevyy"]
+gradient = SubResource("Gradient_b3802")
+fill = 1
+fill_from = Vector2(0.491453, 0.495726)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fdnlq"]
 size = Vector2(3385, 65)
 
@@ -191,24 +209,6 @@ scale_min = 20.0
 scale_max = 60.0
 color_ramp = SubResource("GradientTexture1D_jkdf5")
 color_initial_ramp = SubResource("GradientTexture1D_6iyac")
-
-[sub_resource type="Gradient" id="Gradient_h1bgf"]
-offsets = PackedFloat32Array(0.318182, 0.639394)
-colors = PackedColorArray(0.0117647, 0.65098, 0.713726, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_b3802"]
-gradient = SubResource("Gradient_h1bgf")
-fill = 1
-fill_from = Vector2(0.470085, 0.508547)
-
-[sub_resource type="Gradient" id="Gradient_b3802"]
-offsets = PackedFloat32Array(0.321212, 0.715151)
-colors = PackedColorArray(0, 0.827451, 0.827451, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_fevyy"]
-gradient = SubResource("Gradient_b3802")
-fill = 1
-fill_from = Vector2(0.491453, 0.495726)
 
 [sub_resource type="Curve2D" id="Curve2D_wsu2k"]
 _data = {
@@ -360,6 +360,27 @@ position = Vector2(243.108, 1172.34)
 rotation = -0.786687
 shape = SubResource("RectangleShape2D_e08e2")
 debug_color = Color(1.46799e-06, 0.650471, 0.0903933, 0.42)
+
+[node name="MainLight2D" type="PointLight2D" parent="."]
+position = Vector2(-6, -475)
+scale = Vector2(22.56, 33.52)
+texture = SubResource("GradientTexture2D_b3802")
+
+[node name="Rightlight" type="PointLight2D" parent="MainLight2D"]
+position = Vector2(60.1507, 9.72554)
+rotation = -3.12224
+scale = Vector2(0.276885, 0.347391)
+skew = -0.00183356
+energy = 2.5
+texture = SubResource("GradientTexture2D_fevyy")
+
+[node name="Leftlight" type="PointLight2D" parent="MainLight2D"]
+position = Vector2(-59.2199, 10.2029)
+rotation = 1.58322
+scale = Vector2(0.303801, 0.275041)
+skew = -0.00679803
+energy = 2.5
+texture = SubResource("GradientTexture2D_fevyy")
 
 [node name="AsteroidSpawner" type="Marker2D" parent="." node_paths=PackedStringArray("player_node")]
 position = Vector2(3.98833, -460.012)
@@ -558,27 +579,6 @@ script = ExtResource("12_6iyac")
 [node name="CharacterBody2D" parent="." instance=ExtResource("2_8gbba")]
 position = Vector2(-15, 9.99994)
 speed = 900.0
-
-[node name="MainLight2D" type="PointLight2D" parent="."]
-position = Vector2(-6, -475)
-scale = Vector2(22.56, 33.52)
-texture = SubResource("GradientTexture2D_b3802")
-
-[node name="Rightlight" type="PointLight2D" parent="MainLight2D"]
-position = Vector2(60.1507, 9.72554)
-rotation = -3.12224
-scale = Vector2(0.276885, 0.347391)
-skew = -0.00183356
-energy = 2.5
-texture = SubResource("GradientTexture2D_fevyy")
-
-[node name="Leftlight" type="PointLight2D" parent="MainLight2D"]
-position = Vector2(-59.2199, 10.2029)
-rotation = 1.58322
-scale = Vector2(0.303801, 0.275041)
-skew = -0.00679803
-energy = 2.5
-texture = SubResource("GradientTexture2D_fevyy")
 
 [node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node")]
 script = ExtResource("14_wsu2k")
