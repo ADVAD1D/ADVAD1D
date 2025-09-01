@@ -4,6 +4,7 @@ extends Node2D
 @export var max_enemies: int = 5
 @export var spawn_locator_node: PathFollow2D
 @export var safe_spawn_radius: float = 100.0
+@export var spawn_timeout: float = 0.5
 
 var current_enemy_count: int = 0
 var screen_size: Vector2
@@ -39,4 +40,5 @@ func spawn_enemy():
 	
 func _on_enemy_died():
 	current_enemy_count -= 1
+	await get_tree().create_timer(spawn_timeout).timeout
 	spawn_enemy()

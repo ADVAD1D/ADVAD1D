@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://v5arx5syj7j2"]
+[gd_scene load_steps=7 format=3 uid="uid://v5arx5syj7j2"]
 
 [ext_resource type="Script" uid="uid://ojvg56v1p8d4" path="res://Scripts/laser.gd" id="1_mou6w"]
 [ext_resource type="Texture2D" uid="uid://c4nc6xv4hc424" path="res://Assets/Sprites/shoot.png" id="2_3pc01"]
@@ -6,6 +6,15 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mou6w"]
 size = Vector2(26.5655, 8.75005)
+
+[sub_resource type="Gradient" id="Gradient_3pc01"]
+offsets = PackedFloat32Array(0, 0.715151)
+colors = PackedColorArray(0, 0.9, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_c8ure"]
+gradient = SubResource("Gradient_3pc01")
+fill = 1
+fill_from = Vector2(0.491453, 0.470085)
 
 [node name="laser" type="Area2D" groups=["lasers"]]
 script = ExtResource("1_mou6w")
@@ -22,5 +31,10 @@ position = Vector2(0.969518, -5.71723)
 rotation = -1.5708
 scale = Vector2(1.03299, 2.01279)
 shape = SubResource("RectangleShape2D_mou6w")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(1, -1)
+scale = Vector2(0.74, 0.99)
+texture = SubResource("GradientTexture2D_c8ure")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
