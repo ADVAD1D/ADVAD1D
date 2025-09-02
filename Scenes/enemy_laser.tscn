@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://1nr18jnk4v4l"]
+[gd_scene load_steps=7 format=3 uid="uid://1nr18jnk4v4l"]
 
 [ext_resource type="Texture2D" uid="uid://c8m6laqobfju7" path="res://Assets/Sprites/enemy_laser.png" id="1_s2mcl"]
 [ext_resource type="Script" uid="uid://b28jbyyal1ilg" path="res://Scripts/enemy_laser.gd" id="1_wss2q"]
@@ -6,6 +6,15 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wss2q"]
 size = Vector2(15, 25)
+
+[sub_resource type="Gradient" id="Gradient_swast"]
+offsets = PackedFloat32Array(0.49697, 0.769697)
+colors = PackedColorArray(1, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vxa5s"]
+gradient = SubResource("Gradient_swast")
+fill = 1
+fill_from = Vector2(0.495726, 0.470085)
 
 [node name="enemyLaser" type="Area2D" groups=["enemy_laser"]]
 script = ExtResource("1_wss2q")
@@ -21,5 +30,11 @@ z_index = 2
 position = Vector2(1.5, -3.5)
 shape = SubResource("RectangleShape2D_wss2q")
 debug_color = Color(0.943307, 7.70092e-06, 0.602222, 0.42)
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(2, 1.90735e-06)
+scale = Vector2(1.0625, 1.1875)
+energy = 2.66
+texture = SubResource("GradientTexture2D_vxa5s")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
