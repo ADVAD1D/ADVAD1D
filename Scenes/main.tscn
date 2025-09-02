@@ -367,17 +367,17 @@ scale = Vector2(22.56, 33.52)
 texture = SubResource("GradientTexture2D_b3802")
 
 [node name="Rightlight" type="PointLight2D" parent="MainLight2D"]
-position = Vector2(60.1507, 9.72554)
+position = Vector2(64.8136, 9.81579)
 rotation = -3.12224
-scale = Vector2(0.276885, 0.347391)
+scale = Vector2(0.422627, 0.347391)
 skew = -0.00183356
 energy = 2.5
 texture = SubResource("GradientTexture2D_fevyy")
 
 [node name="Leftlight" type="PointLight2D" parent="MainLight2D"]
-position = Vector2(-59.2199, 10.2029)
+position = Vector2(-64.0479, 10.1757)
 rotation = 1.58322
-scale = Vector2(0.303801, 0.275041)
+scale = Vector2(0.303801, 0.425917)
 skew = -0.00679803
 energy = 2.5
 texture = SubResource("GradientTexture2D_fevyy")
