@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=72 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -86,6 +86,15 @@ colors = PackedColorArray(0, 0.827451, 0.827451, 1, 0, 0, 0, 1)
 gradient = SubResource("Gradient_b3802")
 fill = 1
 fill_from = Vector2(0.491453, 0.495726)
+
+[sub_resource type="Gradient" id="Gradient_fevyy"]
+offsets = PackedFloat32Array(0.181818, 0.754545)
+colors = PackedColorArray(0, 0.8, 0.8, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_hibaj"]
+gradient = SubResource("Gradient_fevyy")
+fill = 1
+fill_from = Vector2(0.495726, 0.508547)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fdnlq"]
 size = Vector2(3385, 65)
@@ -381,6 +390,22 @@ scale = Vector2(0.303801, 0.425917)
 skew = -0.00679803
 energy = 2.5
 texture = SubResource("GradientTexture2D_fevyy")
+
+[node name="UpLightRight" type="PointLight2D" parent="MainLight2D"]
+position = Vector2(31.6489, -17.5418)
+rotation = -0.00507933
+scale = Vector2(0.36698, 0.184983)
+skew = 0.292145
+energy = 3.07
+texture = SubResource("GradientTexture2D_hibaj")
+
+[node name="UpLightLeft" type="PointLight2D" parent="MainLight2D"]
+position = Vector2(-31.383, -18.7948)
+rotation = -3.09272
+scale = Vector2(0.392089, -0.154698)
+skew = -0.251327
+energy = 3.07
+texture = SubResource("GradientTexture2D_hibaj")
 
 [node name="AsteroidSpawner" type="Marker2D" parent="." node_paths=PackedStringArray("player_node")]
 position = Vector2(3.98833, -460.012)
