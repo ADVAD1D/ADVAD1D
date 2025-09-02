@@ -14,7 +14,7 @@ var current_velocity: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	player = get_tree().get_first_node_in_group("player")
-	rotation_speed = randf_range(1000.0, 1200.0)
+	rotation_speed = randf_range(1200.0, 1400.0)
 	speed = randf_range(700.0, 1000.0)
 	var tween = create_tween()
 	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.2).from(Vector2.ZERO)

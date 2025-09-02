@@ -8,7 +8,7 @@
 size = Vector2(26.5655, 8.75005)
 
 [sub_resource type="Gradient" id="Gradient_3pc01"]
-offsets = PackedFloat32Array(0, 0.715151)
+offsets = PackedFloat32Array(0.369697, 0.715151)
 colors = PackedColorArray(0, 0.9, 1, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_c8ure"]
@@ -33,8 +33,8 @@ scale = Vector2(1.03299, 2.01279)
 shape = SubResource("RectangleShape2D_mou6w")
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
-position = Vector2(1, -1)
-scale = Vector2(0.74, 0.99)
+position = Vector2(2, -0.500001)
+scale = Vector2(1.125, 1.54688)
 texture = SubResource("GradientTexture2D_c8ure")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
