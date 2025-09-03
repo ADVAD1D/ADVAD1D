@@ -174,14 +174,14 @@ shader_parameter/overlay = true
 shader_parameter/resolution = Vector2(640, 480)
 shader_parameter/brightness = 1.3
 shader_parameter/scanlines_opacity = 0.0
-shader_parameter/scanlines_width = 0.003
-shader_parameter/grille_opacity = 0.18
+shader_parameter/scanlines_width = 0.03
+shader_parameter/grille_opacity = 0.2
 shader_parameter/roll = true
 shader_parameter/roll_speed = 3.0
 shader_parameter/roll_size = 5.084
 shader_parameter/roll_variation = 0.5
-shader_parameter/distort_intensity = 0.018
-shader_parameter/aberration = 0.00800005
+shader_parameter/distort_intensity = 0.02
+shader_parameter/aberration = 0.00100005
 shader_parameter/noise_opacity = 0.311
 shader_parameter/noise_speed = 2.0
 shader_parameter/static_noise_intensity = 0.0
@@ -189,7 +189,7 @@ shader_parameter/pixelate = false
 shader_parameter/discolor = false
 shader_parameter/warp_amount = 0.75
 shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 0.5
+shader_parameter/vignette_intensity = 0.6
 shader_parameter/vignette_opacity = 1.0
 
 [sub_resource type="Gradient" id="Gradient_d1ilt"]
