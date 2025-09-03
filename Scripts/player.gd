@@ -7,6 +7,7 @@ extends CharacterBody2D
 @export var friction: float = 1.0
 
 @onready var lsrsound = $Lasersnd
+@onready var engine_trail: GPUParticles2D = $EngineTrail
 
 @export var ship_explosion_particles: PackedScene
 
@@ -33,6 +34,8 @@ func _physics_process(delta: float) -> void:
 			shoot()
 	
 	var direction = Input.get_vector("Move_Left", "Move_Right", "Move_Up", "Move_Down")
+	engine_trail.emitting = (direction != Vector2.ZERO)
+	
 	if direction != Vector2.ZERO:
 		velocity = velocity.lerp(direction * speed, acceleration * delta)
 		var target_rotation = direction.angle() + PI/2
