@@ -99,7 +99,7 @@ pitch_scale = 2.72
 [node name="EngineTrail" type="GPUParticles2D" parent="."]
 position = Vector2(-1.08043, 28.6315)
 amount = 10
-lifetime = 0.7
+lifetime = 0.3
 preprocess = 0.45
 explosiveness = 0.25
 trail_lifetime = 0.5
