@@ -1,4 +1,4 @@
-[gd_scene load_steps=74 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=75 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -13,6 +13,7 @@
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="8_344ge"]
 [ext_resource type="AudioStream" uid="uid://iavnej1hm2io" path="res://Assets/Audio/195491__alienxxx__glitch_001.wav" id="9_ynf5e"]
 [ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scripts/ambient_particles.gd" id="12_6iyac"]
+[ext_resource type="AudioStream" uid="uid://dlu22wl4fxr36" path="res://Assets/Audio/783832__chungus43a__milling-machine-motor.wav" id="12_b3802"]
 [ext_resource type="Script" uid="uid://cn624xhs3jj2a" path="res://Scripts/enemy_spawner.gd" id="14_wsu2k"]
 [ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="15_wsu2k"]
 [ext_resource type="Script" uid="uid://ddvbqopxphvow" path="res://Scripts/saw_spawner.gd" id="16_k12tt"]
@@ -181,10 +182,10 @@ size = Vector2(164.5, 20)
 shader = ExtResource("8_344ge")
 shader_parameter/overlay = true
 shader_parameter/resolution = Vector2(640, 480)
-shader_parameter/brightness = 1.3
+shader_parameter/brightness = 1.2
 shader_parameter/scanlines_opacity = 0.0
 shader_parameter/scanlines_width = 0.03
-shader_parameter/grille_opacity = 0.2
+shader_parameter/grille_opacity = 0.0
 shader_parameter/roll = true
 shader_parameter/roll_speed = 3.0
 shader_parameter/roll_size = 5.084
@@ -607,6 +608,9 @@ stream = ExtResource("9_ynf5e")
 volume_db = 5.927
 pitch_scale = 0.38
 
+[node name="SawSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("12_b3802")
+
 [node name="AmbientParticles" type="GPUParticles2D" parent="."]
 z_index = 3
 position = Vector2(-4, 219)
@@ -623,12 +627,14 @@ speed = 1000.0
 script = ExtResource("14_wsu2k")
 enemy_scene = ExtResource("15_wsu2k")
 player_node = NodePath("../CharacterBody2D")
+max_enemies = 3
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="SawSpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node")]
 script = ExtResource("16_k12tt")
 saw_scene = ExtResource("17_h1bgf")
 player_node = NodePath("../CharacterBody2D")
+max_enemies = 1
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="EnemySpawnPath" type="Path2D" parent="."]

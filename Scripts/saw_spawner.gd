@@ -1,3 +1,5 @@
+class_name SawSpawner 
+
 extends Node2D
 @export var saw_scene: PackedScene
 @export var player_node: CharacterBody2D
@@ -8,6 +10,10 @@ extends Node2D
 
 var current_enemy_count: int = 0
 var screen_size: Vector2
+
+signal first_saw_spawner
+
+var has_emitted_first_spawn_signal: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -34,6 +40,10 @@ func spawn_enemy():
 	
 	var enemy_instance = saw_scene.instantiate()
 	get_parent().call_deferred("add_child", enemy_instance)
+	if not has_emitted_first_spawn_signal:
+		has_emitted_first_spawn_signal = true
+		first_saw_spawner.emit.call_deferred()
+	
 	enemy_instance.global_position = spawn_position
 	enemy_instance.died.connect(_on_enemy_died)
 	current_enemy_count += 1
