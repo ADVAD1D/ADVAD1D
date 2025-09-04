@@ -1,13 +1,23 @@
-[gd_scene load_steps=5 format=3 uid="uid://cljshiwenhoau"]
+[gd_scene load_steps=8 format=3 uid="uid://cljshiwenhoau"]
 
 [ext_resource type="Script" uid="uid://d1yd1goxj7d46" path="res://Scripts/saw.gd" id="1_4qbox"]
 [ext_resource type="Texture2D" uid="uid://cyee8cnydhuoa" path="res://Assets/Sprites/saw1.png" id="2_4qbox"]
+[ext_resource type="AudioStream" uid="uid://c6g46xp8qj5n0" path="res://Assets/Audio/418194__deleted_user_3656686__hard-glass-impact.wav" id="3_mk2w8"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1kxu7"]
 radius = 66.1211
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4qbox"]
 radius = 166.012
+
+[sub_resource type="Gradient" id="Gradient_4qbox"]
+offsets = PackedFloat32Array(0.509091, 0.806061, 1)
+colors = PackedColorArray(0.940362, 5.34251e-06, 3.85046e-07, 1, 0.0199471, 1.13326e-07, 8.16763e-09, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_mk2w8"]
+gradient = SubResource("Gradient_4qbox")
+fill = 1
+fill_from = Vector2(0.491453, 0.478632)
 
 [node name="Saw" type="Area2D" groups=["saws"]]
 collision_layer = 5
@@ -29,5 +39,15 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SeparationArea"]
 shape = SubResource("CircleShape2D_4qbox")
 debug_color = Color(0.802253, 0.41887, 0, 0.42)
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+scale = Vector2(2.91489, 2.91489)
+energy = 10.62
+texture = SubResource("GradientTexture2D_mk2w8")
+
+[node name="MetalSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_mk2w8")
+volume_db = -6.466
+pitch_scale = 0.5
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

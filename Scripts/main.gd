@@ -4,6 +4,8 @@ extends Node2D
 @onready var crt_material: ShaderMaterial = $UILayer/ColorRect.material
 @onready var glitch_sound: AudioStreamPlayer2D = $GlitchSound
 @onready var cam: Camera2D = $Camera2D
+@onready var saw_spawner: SawSpawner = $SawSpawner
+@onready var saw_sound: AudioStreamPlayer2D = $SawSound
 
 var base_zoom: Vector2
 @export var laser_explosion_particles: PackedScene
@@ -16,6 +18,7 @@ func _ready() -> void:
 	base_zoom = cam.zoom
 	player.died.connect(_on_player_died) # Replace with function body.
 	player.connect("dash", Callable(self, "_on_player_dashed"))
+	saw_spawner.first_saw_spawner.connect(saw_sound.play, CONNECT_ONE_SHOT)
 	
 func play_glitch_effect():
 	var tween = create_tween()

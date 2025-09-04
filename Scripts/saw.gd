@@ -8,13 +8,15 @@ extends Area2D
 signal died
 
 @onready var separation_area: Area2D = $SeparationArea
+@onready var metal_sound: AudioStreamPlayer2D = $MetalSound
 
 var player: Node2D
 var current_velocity: Vector2 = Vector2.ZERO
+var is_dying: bool = false
 
 func _ready() -> void:
 	player = get_tree().get_first_node_in_group("player")
-	rotation_speed = randf_range(1200.0, 1400.0)
+	rotation_speed = randf_range(1400.0, 1600.0)
 	speed = randf_range(900.0, 1000.0)
 	var tween = create_tween()
 	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.2).from(Vector2.ZERO)
@@ -41,7 +43,18 @@ func _physics_process(delta: float) -> void:
 	current_velocity = current_velocity.lerp(target_velocity, acceleration * delta)
 	global_position += current_velocity * delta
 
+
 func _on_area_entered(area: Area2D) -> void:
-	if area.is_in_group("lasers"):
+	if area.is_in_group("lasers") and not is_dying:
+		area.queue_free()
+		is_dying = true
+		
+		hide()
+		$CollisionShape2D.set_deferred("disabled", true) 
+		
+		metal_sound.play()
 		died.emit()
+		
+		await metal_sound.finished 
+		
 		queue_free()
