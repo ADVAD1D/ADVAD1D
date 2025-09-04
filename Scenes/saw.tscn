@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cljshiwenhoau"]
 
 [ext_resource type="Script" uid="uid://d1yd1goxj7d46" path="res://Scripts/saw.gd" id="1_4qbox"]
-[ext_resource type="Texture2D" uid="uid://dqsxneaiwnn5c" path="res://Assets/Sprites/saw.png" id="2_mk2w8"]
+[ext_resource type="Texture2D" uid="uid://cyee8cnydhuoa" path="res://Assets/Sprites/saw1.png" id="2_4qbox"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1kxu7"]
 radius = 66.1211
@@ -14,8 +14,8 @@ collision_layer = 5
 script = ExtResource("1_4qbox")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(1.67728, 1.67728)
-texture = ExtResource("2_mk2w8")
+scale = Vector2(3.13572, 3.13572)
+texture = ExtResource("2_4qbox")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 z_index = 5
