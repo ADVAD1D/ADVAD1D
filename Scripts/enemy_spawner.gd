@@ -4,7 +4,7 @@ extends Node2D
 @export var max_enemies: int = 7
 @export var spawn_locator_node: PathFollow2D
 @export var safe_spawn_radius: float = 100.0
-@export var spawn_timeout: float = 0.5
+@export var spawn_timeout: float = 1.0
 
 var current_enemy_count: int = 0
 var screen_size: Vector2

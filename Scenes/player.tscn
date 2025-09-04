@@ -57,8 +57,8 @@ radial_velocity_max = 16.45
 gravity = Vector3(0, 98, 0)
 radial_accel_min = -5.23
 radial_accel_max = 65.36
-scale_min = 10.0
-scale_max = 20.0
+scale_min = 20.0
+scale_max = 30.0
 scale_curve = SubResource("CurveTexture_gymyn")
 color_ramp = SubResource("GradientTexture1D_f1ek2")
 color_initial_ramp = SubResource("GradientTexture1D_3smsa")
@@ -98,6 +98,7 @@ pitch_scale = 2.72
 
 [node name="EngineTrail" type="GPUParticles2D" parent="."]
 position = Vector2(-1.08043, 28.6315)
+scale = Vector2(7.82663, 6.55636)
 amount = 10
 lifetime = 0.3
 preprocess = 0.45
