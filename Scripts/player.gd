@@ -5,7 +5,7 @@ extends CharacterBody2D
 @export var shoot_timerate: float = 0.1
 @export var safe_radius: float = 200.0
 @export var friction: float = 1.0
-@export var dash_speed_multiplier: float = 2.0
+@export var dash_speed_multiplier: float = 1.7
 @export var dash_duration: float = 0.1
 @export var dash_cooldown: float = 1.0
 
@@ -17,6 +17,7 @@ extends CharacterBody2D
 @export var ship_explosion_particles: PackedScene
 
 signal died
+signal dash
 
 var show_debug: bool = false
 
@@ -112,6 +113,7 @@ func do_dash(direction: Vector2):
 	is_dashing = true
 	can_dash = false
 	velocity = direction * speed * dash_speed_multiplier
+	dash.emit()
 	
 	var tween = create_tween()
 	tween.tween_property(sprite, "modulate", Color(2, 2, 2, 1), 0.4).set_ease(Tween.EASE_OUT)
