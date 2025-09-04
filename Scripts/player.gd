@@ -17,7 +17,7 @@ extends CharacterBody2D
 @export var ship_explosion_particles: PackedScene
 
 signal died
-signal dash
+signal dash(direction: Vector2)
 
 var show_debug: bool = false
 
@@ -113,7 +113,7 @@ func do_dash(direction: Vector2):
 	is_dashing = true
 	can_dash = false
 	velocity = direction * speed * dash_speed_multiplier
-	dash.emit()
+	dash.emit(direction)
 	
 	var tween = create_tween()
 	tween.tween_property(sprite, "modulate", Color(2, 2, 2, 1), 0.4).set_ease(Tween.EASE_OUT)

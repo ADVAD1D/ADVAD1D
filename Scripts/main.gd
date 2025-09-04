@@ -34,11 +34,6 @@ func play_glitch_effect():
 
 	return tween
 	
-func _on_player_dashed():
-	var tween = get_tree().create_tween()
-	tween.tween_property(cam, "zoom", base_zoom * 1.1, 0.1).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	tween.tween_property(cam, "zoom", base_zoom, 0.25).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	
 func reset_shader_parameters():
 	if is_instance_valid(crt_material):
 		crt_material.set_shader_parameter("aberration", 0.02)
