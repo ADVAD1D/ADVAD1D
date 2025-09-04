@@ -94,7 +94,7 @@ func can_start_dash(direction: Vector2) -> bool:
 		
 	var target_rotation = direction.angle() + PI/2
 	var diff = abs(wrapf(rotation - target_rotation, -PI, PI))
-	return diff < deg_to_rad(5) 
+	return diff < deg_to_rad(6) 
 
 func shoot():
 	can_shoot = false
