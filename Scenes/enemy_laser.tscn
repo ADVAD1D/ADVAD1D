@@ -33,7 +33,7 @@ debug_color = Color(0.943307, 7.70092e-06, 0.602222, 0.42)
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
 position = Vector2(2, 1.90735e-06)
-scale = Vector2(1.32383, 1.47958)
+scale = Vector2(1.66209, 1.85764)
 energy = 2.66
 texture = SubResource("GradientTexture2D_vxa5s")
 

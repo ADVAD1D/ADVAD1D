@@ -3,7 +3,9 @@ extends Node2D
 @onready var player = $CharacterBody2D
 @onready var crt_material: ShaderMaterial = $UILayer/ColorRect.material
 @onready var glitch_sound: AudioStreamPlayer2D = $GlitchSound
+@onready var cam: Camera2D = $Camera2D
 
+var base_zoom: Vector2
 @export var laser_explosion_particles: PackedScene
 @export var enemy_laser_explosion: PackedScene
 @export var asteroids_explosion_particles: PackedScene
@@ -11,7 +13,9 @@ extends Node2D
 
 func _ready() -> void:
 	reset_shader_parameters()
+	base_zoom = cam.zoom
 	player.died.connect(_on_player_died) # Replace with function body.
+	player.connect("dash", Callable(self, "_on_player_dashed"))
 	
 func play_glitch_effect():
 	var tween = create_tween()
@@ -30,6 +34,10 @@ func play_glitch_effect():
 
 	return tween
 	
+func _on_player_dashed():
+	var tween = get_tree().create_tween()
+	tween.tween_property(cam, "zoom", base_zoom * 1.1, 0.1).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_property(cam, "zoom", base_zoom, 0.25).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	
 func reset_shader_parameters():
 	if is_instance_valid(crt_material):
