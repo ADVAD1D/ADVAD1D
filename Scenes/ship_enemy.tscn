@@ -19,6 +19,7 @@ z_index = 2
 scale = Vector2(2.5, 2.5)
 collision_layer = 9
 script = ExtResource("1_exykt")
+metadata/_edit_group_ = true
 
 [node name="Hitbox" type="Area2D" parent="."]
 script = ExtResource("2_bscg7")

@@ -1,13 +1,13 @@
-[gd_scene load_steps=72 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=74 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
 [ext_resource type="PackedScene" uid="uid://dohhwkxxtna34" path="res://Scenes/Particles/laser_particles.tscn" id="2_hptm8"]
-[ext_resource type="Texture2D" uid="uid://xyy3jp1ba0lv" path="res://Assets/Sprites/gauntlet1.png" id="2_kry3j"]
 [ext_resource type="PackedScene" uid="uid://df8hpgwrn52l8" path="res://Scenes/Particles/particles.tscn" id="3_d1ilt"]
 [ext_resource type="Script" uid="uid://bia82e1gl8v0j" path="res://Scripts/asteroid_spawner.gd" id="3_jjvhh"]
 [ext_resource type="PackedScene" uid="uid://ct5mpwv8axj52" path="res://Scenes/Particles/enemy_ship_particles.tscn" id="3_jkdf5"]
 [ext_resource type="PackedScene" uid="uid://bthfvcj4v47xh" path="res://Scenes/asteroid.tscn" id="4_kry3j"]
+[ext_resource type="Texture2D" uid="uid://fgrdo302rioh" path="res://Assets/Sprites/gauntlet11.png" id="5_h1bgf"]
 [ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scripts/camera_2d.gd" id="6_21xkr"]
 [ext_resource type="PackedScene" uid="uid://d1eonx56vybhy" path="res://Scenes/UI/hud.tscn" id="7_6bp64"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="8_344ge"]
@@ -96,6 +96,15 @@ gradient = SubResource("Gradient_fevyy")
 fill = 1
 fill_from = Vector2(0.495726, 0.508547)
 
+[sub_resource type="Gradient" id="Gradient_hibaj"]
+offsets = PackedFloat32Array(0.466667, 0.715151)
+colors = PackedColorArray(0, 0.690196, 0.690196, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_pdsj5"]
+gradient = SubResource("Gradient_hibaj")
+fill = 1
+fill_from = Vector2(0.517094, 0.495726)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fdnlq"]
 size = Vector2(3385, 65)
 
@@ -175,7 +184,7 @@ shader_parameter/resolution = Vector2(640, 480)
 shader_parameter/brightness = 1.3
 shader_parameter/scanlines_opacity = 0.0
 shader_parameter/scanlines_width = 0.03
-shader_parameter/grille_opacity = 0.0
+shader_parameter/grille_opacity = 0.2
 shader_parameter/roll = true
 shader_parameter/roll_speed = 3.0
 shader_parameter/roll_size = 5.084
@@ -234,7 +243,7 @@ asteroids_explosion_particles = ExtResource("3_d1ilt")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-13, 1461)
 scale = Vector2(19.3172, 19.5562)
-texture = ExtResource("2_kry3j")
+texture = ExtResource("5_h1bgf")
 
 [node name="Walls" type="Node2D" parent="."]
 position = Vector2(3.98833, -460.012)
@@ -406,6 +415,11 @@ scale = Vector2(0.392089, -0.154698)
 skew = -0.251327
 energy = 3.07
 texture = SubResource("GradientTexture2D_hibaj")
+
+[node name="BottomLight" type="PointLight2D" parent="MainLight2D"]
+position = Vector2(-0.132979, 26.7005)
+scale = Vector2(1.39539, 0.648821)
+texture = SubResource("GradientTexture2D_pdsj5")
 
 [node name="AsteroidSpawner" type="Marker2D" parent="." node_paths=PackedStringArray("player_node")]
 position = Vector2(3.98833, -460.012)
@@ -581,10 +595,10 @@ material = SubResource("ShaderMaterial_344ge")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1951.0
-offset_top = -1480.0
-offset_right = 1370.0
-offset_bottom = 4031.0
+offset_left = -1930.0
+offset_top = -1573.0
+offset_right = 1391.0
+offset_bottom = 3938.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -603,7 +617,7 @@ script = ExtResource("12_6iyac")
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("2_8gbba")]
 position = Vector2(-15, 9.99994)
-speed = 900.0
+speed = 1000.0
 
 [node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node")]
 script = ExtResource("14_wsu2k")
