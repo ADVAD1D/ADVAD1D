@@ -9,6 +9,8 @@
 [sub_resource type="LabelSettings" id="LabelSettings_vsu76"]
 font = ExtResource("4_8glcj")
 font_size = 25
+outline_size = 10
+outline_color = Color(0, 0.716667, 1, 1)
 
 [node name="HUD" type="Control"]
 layout_mode = 3

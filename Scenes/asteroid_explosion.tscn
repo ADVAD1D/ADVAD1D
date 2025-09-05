@@ -5,7 +5,7 @@
 
 [node name="AsteroidExplosion" type="AudioStreamPlayer2D"]
 stream = ExtResource("1_044gi")
-volume_db = 3.772
+volume_db = 10.777
 pitch_scale = 0.49
 script = ExtResource("2_xnurx")
 
