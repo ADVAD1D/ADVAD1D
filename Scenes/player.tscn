@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://4pkkj4yusrj7"]
+[gd_scene load_steps=18 format=3 uid="uid://4pkkj4yusrj7"]
 
 [ext_resource type="Script" uid="uid://d3j8sct0cu046" path="res://Scripts/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://f2d5cwauvjt6" path="res://Assets/Sprites/Ship1.png" id="1_v0iea"]
@@ -63,6 +63,15 @@ scale_curve = SubResource("CurveTexture_gymyn")
 color_ramp = SubResource("GradientTexture1D_f1ek2")
 color_initial_ramp = SubResource("GradientTexture1D_3smsa")
 
+[sub_resource type="Gradient" id="Gradient_vgqql"]
+offsets = PackedFloat32Array(0.00662252, 0.692053)
+colors = PackedColorArray(0, 1, 0.94902, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fkybt"]
+gradient = SubResource("Gradient_vgqql")
+fill = 1
+fill_from = Vector2(0.491453, 0.5)
+
 [node name="CharacterBody2D" type="CharacterBody2D" groups=["player"]]
 z_index = 2
 scale = Vector2(1.85111, 1.85111)
@@ -105,5 +114,9 @@ preprocess = 0.45
 explosiveness = 0.25
 trail_lifetime = 0.5
 process_material = SubResource("ParticleProcessMaterial_pu2lt")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+scale = Vector2(1.60317, 1.60317)
+texture = SubResource("GradientTexture2D_fkybt")
 
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

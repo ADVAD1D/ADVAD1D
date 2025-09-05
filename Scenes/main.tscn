@@ -605,7 +605,7 @@ grow_vertical = 2
 
 [node name="GlitchSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("9_ynf5e")
-volume_db = 5.927
+volume_db = 9.16
 pitch_scale = 0.38
 
 [node name="SawSound" type="AudioStreamPlayer2D" parent="."]
@@ -627,14 +627,13 @@ speed = 1000.0
 script = ExtResource("14_wsu2k")
 enemy_scene = ExtResource("15_wsu2k")
 player_node = NodePath("../CharacterBody2D")
-max_enemies = 3
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="SawSpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node")]
 script = ExtResource("16_k12tt")
 saw_scene = ExtResource("17_h1bgf")
 player_node = NodePath("../CharacterBody2D")
-max_enemies = 1
+max_enemies = 7
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="EnemySpawnPath" type="Path2D" parent="."]
