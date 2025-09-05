@@ -182,10 +182,10 @@ size = Vector2(164.5, 20)
 shader = ExtResource("8_344ge")
 shader_parameter/overlay = true
 shader_parameter/resolution = Vector2(640, 480)
-shader_parameter/brightness = 1.2
+shader_parameter/brightness = 1.4
 shader_parameter/scanlines_opacity = 0.0
 shader_parameter/scanlines_width = 0.03
-shader_parameter/grille_opacity = 0.0
+shader_parameter/grille_opacity = 0.2
 shader_parameter/roll = true
 shader_parameter/roll_speed = 3.0
 shader_parameter/roll_size = 5.084
@@ -430,7 +430,7 @@ asteroid_scene = ExtResource("4_kry3j")
 player_node = NodePath("../CharacterBody2D")
 
 [node name="Timer" type="Timer" parent="AsteroidSpawner"]
-wait_time = 0.1
+wait_time = 0.2
 autostart = true
 
 [node name="DeathZone" type="Area2D" parent="."]
