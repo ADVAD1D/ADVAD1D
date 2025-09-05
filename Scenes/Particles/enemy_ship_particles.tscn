@@ -43,3 +43,5 @@ explosiveness = 1.0
 trail_enabled = true
 process_material = SubResource("ParticleProcessMaterial_1wrnq")
 script = ExtResource("2_1wrnq")
+
+[connection signal="finished" from="." to="." method="_on_finished"]

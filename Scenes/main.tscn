@@ -158,7 +158,7 @@ size = Vector2(483.916, 30)
 size = Vector2(518, 28.2032)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hdf80"]
-size = Vector2(517, 34.9496)
+size = Vector2(517, 352.273)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jwpg7"]
 size = Vector2(193.5, 30)
@@ -173,7 +173,7 @@ size = Vector2(212.932, 30)
 size = Vector2(212.382, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8cuat"]
-size = Vector2(134, 23)
+size = Vector2(134, 197.996)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o1aky"]
 size = Vector2(164.5, 20)
@@ -535,7 +535,7 @@ shape = SubResource("RectangleShape2D_r33sp")
 debug_color = Color(0.950352, 0.0944094, 0.507302, 0.42)
 
 [node name="upInside2" type="CollisionShape2D" parent="LaserZone"]
-position = Vector2(416, -340)
+position = Vector2(533.509, -446.608)
 rotation = 0.833997
 shape = SubResource("RectangleShape2D_hdf80")
 debug_color = Color(0.933796, 2.05037e-05, 0.643196, 0.42)
@@ -563,11 +563,11 @@ shape = SubResource("RectangleShape2D_aqgau")
 debug_color = Color(0.944658, 5.67943e-06, 0.596061, 0.42)
 
 [node name="upCorner" type="CollisionShape2D" parent="LaserZone"]
-position = Vector2(-650, -161.5)
+position = Vector2(-650, -248.998)
 shape = SubResource("RectangleShape2D_8cuat")
 debug_color = Color(0.961248, 0, 0.511433, 0.42)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LaserZone"]
+[node name="upCorner1" type="CollisionShape2D" parent="LaserZone"]
 position = Vector2(651.75, -157)
 shape = SubResource("RectangleShape2D_o1aky")
 debug_color = Color(0.970663, 0, 0.45321, 0.42)
@@ -596,10 +596,10 @@ material = SubResource("ShaderMaterial_344ge")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1930.0
-offset_top = -1573.0
-offset_right = 1391.0
-offset_bottom = 3938.0
+offset_left = -1814.0
+offset_top = -1673.0
+offset_right = 1507.0
+offset_bottom = 3838.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -633,7 +633,6 @@ spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 script = ExtResource("16_k12tt")
 saw_scene = ExtResource("17_h1bgf")
 player_node = NodePath("../CharacterBody2D")
-max_enemies = 7
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="EnemySpawnPath" type="Path2D" parent="."]
