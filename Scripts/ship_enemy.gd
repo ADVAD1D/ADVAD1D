@@ -92,6 +92,6 @@ func _draw() -> void:
 		draw_circle(Vector2.ZERO, fire_range, circle_color)
 
 func _on_hit() -> void:
-	GameManager.add_score(20)
+	GameManager.add_score(100)
 	died.emit()
 	queue_free()
