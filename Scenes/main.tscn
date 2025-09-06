@@ -188,7 +188,7 @@ shader_parameter/scanlines_width = 0.03
 shader_parameter/grille_opacity = 0.2
 shader_parameter/roll = true
 shader_parameter/roll_speed = 3.0
-shader_parameter/roll_size = 5.084
+shader_parameter/roll_size = 5.0
 shader_parameter/roll_variation = 0.5
 shader_parameter/distort_intensity = 0.02
 shader_parameter/aberration = 0.00200005
@@ -431,7 +431,6 @@ player_node = NodePath("../CharacterBody2D")
 
 [node name="Timer" type="Timer" parent="AsteroidSpawner"]
 wait_time = 0.2
-autostart = true
 
 [node name="DeathZone" type="Area2D" parent="."]
 position = Vector2(3.98833, -460.012)
@@ -627,12 +626,14 @@ speed = 1000.0
 script = ExtResource("14_wsu2k")
 enemy_scene = ExtResource("15_wsu2k")
 player_node = NodePath("../CharacterBody2D")
+max_enemies = 0
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="SawSpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node")]
 script = ExtResource("16_k12tt")
 saw_scene = ExtResource("17_h1bgf")
 player_node = NodePath("../CharacterBody2D")
+max_enemies = 0
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="EnemySpawnPath" type="Path2D" parent="."]
