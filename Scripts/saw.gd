@@ -51,6 +51,7 @@ func _on_area_entered(area: Area2D) -> void:
 		
 		hide()
 		$CollisionShape2D.set_deferred("disabled", true) 
+		GameManager.add_score(200)
 		
 		metal_sound.play()
 		died.emit()

@@ -33,7 +33,7 @@ func _on_area_entered(area: Area2D) -> void:
 			get_parent().add_child(sound_instance)
 			sound_instance.position = position
 		
-		GameManager.add_score(10)
+		GameManager.add_score(50)
 		queue_free() # Replace with function body.
 		
 	if area.is_in_group("enemy_laser"):
