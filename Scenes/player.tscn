@@ -1,9 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://4pkkj4yusrj7"]
+[gd_scene load_steps=19 format=3 uid="uid://4pkkj4yusrj7"]
 
 [ext_resource type="Script" uid="uid://d3j8sct0cu046" path="res://Scripts/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://f2d5cwauvjt6" path="res://Assets/Sprites/Ship1.png" id="1_v0iea"]
 [ext_resource type="PackedScene" uid="uid://d1y6lma6f3pit" path="res://Scenes/Particles/ship_particles.tscn" id="2_vgqql"]
 [ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="3_6t5aa"]
+[ext_resource type="AudioStream" uid="uid://cnhegchkuvlii" path="res://Assets/Audio/714258__qubodup__cloud-poof.wav" id="5_fkybt"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_v0iea"]
 radius = 6.0
@@ -104,6 +105,11 @@ debug_color = Color(0.996388, 0, 0.187683, 0.42)
 stream = ExtResource("3_6t5aa")
 volume_db = -12.933
 pitch_scale = 2.72
+
+[node name="Dashsnd" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_fkybt")
+volume_db = 4.648
+pitch_scale = 0.76
 
 [node name="EngineTrail" type="GPUParticles2D" parent="."]
 position = Vector2(-1.08043, 28.6315)
