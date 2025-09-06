@@ -431,6 +431,7 @@ player_node = NodePath("../CharacterBody2D")
 
 [node name="Timer" type="Timer" parent="AsteroidSpawner"]
 wait_time = 0.2
+autostart = true
 
 [node name="DeathZone" type="Area2D" parent="."]
 position = Vector2(3.98833, -460.012)

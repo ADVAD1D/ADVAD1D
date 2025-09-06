@@ -36,8 +36,11 @@ var dash_buffered: bool = false
 
 var buffered_direction: Vector2 = Vector2.ZERO
 
+var main_camera: Camera2D
+
 func _ready() -> void:
 	var player_score = GameManager.score
+	main_camera = get_viewport().get_camera_2d()
 	print(player_score)
 
 func _physics_process(delta: float) -> void:
@@ -110,6 +113,8 @@ func shoot():
 	can_shoot = true
 	
 func do_dash(direction: Vector2):
+	if main_camera:
+		main_camera.shake(15.0, dash_duration)
 	rotation = direction.angle() + PI/2
 	is_dashing = true
 	can_dash = false
