@@ -34,6 +34,7 @@ shape = SubResource("CircleShape2D_1kxu7")
 debug_color = Color(0.96652, 0.113815, 0.368096, 0.42)
 
 [node name="SeparationArea" type="Area2D" parent="."]
+scale = Vector2(1.4712, 1.4712)
 collision_layer = 0
 collision_mask = 4
 
