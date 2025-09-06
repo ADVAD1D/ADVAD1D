@@ -7,6 +7,17 @@ extends Camera2D
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.	
+	
+	
+func shake(strength: float, duration: float):
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_ELASTIC)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	
+	tween.tween_property(self, "offset", Vector2(randf_range(-strength, strength), randf_range(-strength, strength)), duration * 0.1)
+	tween.tween_property(self, "offset", Vector2(randf_range(-strength, strength), randf_range(-strength, strength)), duration * 0.1)
+	tween.tween_property(self, "offset", Vector2(randf_range(-strength, strength), randf_range(-strength, strength)), duration * 0.1)
+	tween.tween_property(self, "offset", Vector2.ZERO, duration * 0.4)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
