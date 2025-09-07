@@ -17,6 +17,7 @@ fill = 1
 fill_from = Vector2(0.491453, 0.470085)
 
 [node name="laser" type="Area2D" groups=["lasers"]]
+collision_layer = 17
 script = ExtResource("1_mou6w")
 enemy_laser_particles = ExtResource("2_c8ure")
 
