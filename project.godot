@@ -82,6 +82,7 @@ dash={
 
 2d_render/layer_3="sierras"
 2d_render/layer_4="enemies"
+2d_render/layer_5="lasers"
 
 [rendering]
 
