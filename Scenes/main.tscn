@@ -246,6 +246,10 @@ position = Vector2(-13, 1461)
 scale = Vector2(19.3172, 19.5562)
 texture = ExtResource("5_h1bgf")
 
+[node name="PlayerInstance" parent="." instance=ExtResource("2_8gbba")]
+position = Vector2(-15, 9.99994)
+speed = 1000.0
+
 [node name="Walls" type="Node2D" parent="."]
 position = Vector2(3.98833, -460.012)
 scale = Vector2(1.29883, 1.29883)
@@ -427,7 +431,7 @@ position = Vector2(3.98833, -460.012)
 scale = Vector2(1.29883, 1.29883)
 script = ExtResource("3_jjvhh")
 asteroid_scene = ExtResource("4_kry3j")
-player_node = NodePath("../CharacterBody2D")
+player_node = NodePath("../PlayerInstance")
 
 [node name="Timer" type="Timer" parent="AsteroidSpawner"]
 wait_time = 0.2
@@ -581,7 +585,7 @@ limit_bottom = 4200
 limit_smoothed = true
 position_smoothing_enabled = true
 script = ExtResource("6_21xkr")
-player_target = NodePath("../CharacterBody2D")
+player_target = NodePath("../PlayerInstance")
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 
@@ -619,21 +623,17 @@ lifetime = 10.0
 process_material = SubResource("ParticleProcessMaterial_d1ilt")
 script = ExtResource("12_6iyac")
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("2_8gbba")]
-position = Vector2(-15, 9.99994)
-speed = 1000.0
-
 [node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node")]
 script = ExtResource("14_wsu2k")
 enemy_scene = ExtResource("15_wsu2k")
-player_node = NodePath("../CharacterBody2D")
+player_node = NodePath("../PlayerInstance")
 max_enemies = 5
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="SawSpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node")]
 script = ExtResource("16_k12tt")
 saw_scene = ExtResource("17_h1bgf")
-player_node = NodePath("../CharacterBody2D")
+player_node = NodePath("../PlayerInstance")
 max_enemies = 3
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
