@@ -1,51 +1,52 @@
-[gd_scene load_steps=10 format=3 uid="uid://boyyce08lcwad"]
+[gd_scene load_steps=10 format=3 uid="uid://5r1c4072iu8o"]
 
-[ext_resource type="Texture2D" uid="uid://c1rqsrajwiy7i" path="res://Assets/Sprites/sawparticle.png" id="1_uacgd"]
-[ext_resource type="Script" uid="uid://s7id8fmyorqg" path="res://saw_particles.gd" id="2_5lcct"]
+[ext_resource type="Texture2D" uid="uid://o81fbjmikfi0" path="res://Assets/Sprites/sawparticle.png" id="1_a7ldg"]
+[ext_resource type="Script" uid="uid://cs70fd85pixj5" path="res://Scripts/saw_particles.gd" id="2_uacgd"]
+
+[sub_resource type="Gradient" id="Gradient_uacgd"]
+colors = PackedColorArray(0.697047, 0, 0.0873725, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_5lcct"]
+gradient = SubResource("Gradient_uacgd")
 
 [sub_resource type="Gradient" id="Gradient_6k584"]
-colors = PackedColorArray(0.65, 0.65, 0.65, 1, 1, 1, 1, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.965179, 0.0350339, 5.77569e-07, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_xins3"]
 gradient = SubResource("Gradient_6k584")
 
-[sub_resource type="Gradient" id="Gradient_7b2c0"]
-colors = PackedColorArray(0.8, 1, 0.94, 1, 0.9, 0, 0.0149998, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_x2ebu"]
-gradient = SubResource("Gradient_7b2c0")
-
-[sub_resource type="Curve" id="Curve_3gmql"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.693662, 0.228654), 0.0, 0.0, 0, 0]
+[sub_resource type="Curve" id="Curve_7b2c0"]
+_data = [Vector2(0.0323887, 0.62013), 0.0, 0.0, 0, 0, Vector2(0.773279, 0.0810345), -1.35029, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_e3h2e"]
-curve = SubResource("Curve_3gmql")
+[sub_resource type="CurveTexture" id="CurveTexture_x2ebu"]
+curve = SubResource("Curve_7b2c0")
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wn4er"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xwjug"]
 particle_flag_disable_z = true
+emission_shape_offset = Vector3(1, 0, 0)
+emission_shape = 2
+emission_sphere_radius = 1.0
 angle_min = 1.07288e-05
-angle_max = 360.0
+angle_max = 720.0
 spread = 180.0
-initial_velocity_min = 5.0
-initial_velocity_max = 15.0
+initial_velocity_min = 100.0
+initial_velocity_max = 120.0
 gravity = Vector3(0, 0, 0)
-radial_accel_min = 10.0
-radial_accel_max = 40.0
-scale_min = 5.0
-scale_max = 7.0
-scale_curve = SubResource("CurveTexture_e3h2e")
-color_ramp = SubResource("GradientTexture1D_x2ebu")
-color_initial_ramp = SubResource("GradientTexture1D_xins3")
+scale_min = 7.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_x2ebu")
+color_ramp = SubResource("GradientTexture1D_xins3")
+color_initial_ramp = SubResource("GradientTexture1D_5lcct")
 
 [node name="SawParticles" type="GPUParticles2D"]
-scale = Vector2(16.1995, 16.1995)
-texture = ExtResource("1_uacgd")
-preprocess = 0.91
+scale = Vector2(2, 2)
+emitting = false
+texture = ExtResource("1_a7ldg")
+lifetime = 0.7
+one_shot = true
 explosiveness = 1.0
-collision_base_size = 11.23
-trail_lifetime = 0.01
-process_material = SubResource("ParticleProcessMaterial_wn4er")
-script = ExtResource("2_5lcct")
+process_material = SubResource("ParticleProcessMaterial_xwjug")
+script = ExtResource("2_uacgd")
 
 [connection signal="finished" from="." to="." method="_on_finished"]

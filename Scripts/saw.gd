@@ -4,11 +4,7 @@ extends Area2D
 @export var acceleration: float = 3.0
 @export var rotation_speed: float = 1000.0
 @export var separation_strength: float = 150.0
-
-#typing the type of the variable
-#the scene contains a gpuparticle
-
-@export var saw_explosion_particles: PackedScene
+@export var saw_particles: PackedScene
 
 signal died
 
@@ -50,28 +46,21 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_area_entered(area: Area2D) -> void:
-	if area == separation_area:
-		return
-		
 	if area.is_in_group("lasers") and not is_dying:
-		is_dying = true
 		area.queue_free()
-		_start_death_sequence()
-
-func _start_death_sequence() -> void:
-	hide()
-	$CollisionShape2D.set_deferred("disabled", true)
-	set_physics_process(false)
-	
-	died.emit()
-	GameManager.add_score(200)
-
-	if saw_explosion_particles:
-		var particles_instance = saw_explosion_particles.instantiate()
-		add_sibling(particles_instance)
-		particles_instance.global_position = global_position
-	
-	metal_sound.play()
-	await metal_sound.finished
-	
-	queue_free()
+		is_dying = true
+		
+		var saw_particles_instance = saw_particles.instantiate()
+		add_sibling(saw_particles_instance)
+		saw_particles_instance.position = position
+		
+		hide()
+		$CollisionShape2D.set_deferred("disabled", true) 
+		GameManager.add_score(200)
+		
+		metal_sound.play()
+		died.emit()
+		
+		await metal_sound.finished 
+		
+		queue_free()
