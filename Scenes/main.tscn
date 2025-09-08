@@ -600,10 +600,10 @@ material = SubResource("ShaderMaterial_344ge")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1814.0
-offset_top = -1673.0
-offset_right = 1507.0
-offset_bottom = 3838.0
+offset_left = -1928.0
+offset_top = -1680.0
+offset_right = 1393.0
+offset_bottom = 3831.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -627,14 +627,13 @@ script = ExtResource("12_6iyac")
 script = ExtResource("14_wsu2k")
 enemy_scene = ExtResource("15_wsu2k")
 player_node = NodePath("../PlayerInstance")
-max_enemies = 0
+max_enemies = 5
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="SawSpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node")]
 script = ExtResource("16_k12tt")
 saw_scene = ExtResource("17_h1bgf")
 player_node = NodePath("../PlayerInstance")
-max_enemies = 3
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="EnemySpawnPath" type="Path2D" parent="."]
