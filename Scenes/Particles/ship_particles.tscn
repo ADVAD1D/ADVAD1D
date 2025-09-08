@@ -45,3 +45,5 @@ one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_endfr")
 script = ExtResource("2_qmjxr")
+
+[connection signal="finished" from="." to="." method="_on_finished"]
