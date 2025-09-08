@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var player = $CharacterBody2D
+@onready var player = $PlayerInstance
 @onready var crt_material: ShaderMaterial = $UILayer/ColorRect.material
 @onready var glitch_sound: AudioStreamPlayer2D = $GlitchSound
 @onready var cam: Camera2D = $Camera2D
