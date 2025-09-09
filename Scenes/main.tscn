@@ -1,4 +1,4 @@
-[gd_scene load_steps=75 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=76 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -177,6 +177,9 @@ size = Vector2(134, 30.1529)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o1aky"]
 size = Vector2(164.5, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kwxat"]
+size = Vector2(385.732, 45.4165)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_344ge"]
 shader = ExtResource("8_344ge")
@@ -576,6 +579,12 @@ position = Vector2(651.75, -157)
 shape = SubResource("RectangleShape2D_o1aky")
 debug_color = Color(0.970663, 0, 0.45321, 0.42)
 
+[node name="StartBridge" type="CollisionShape2D" parent="LaserZone"]
+position = Vector2(-15.7745, 1258.83)
+scale = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_kwxat")
+debug_color = Color(0.887305, 0.000282046, 0.802346, 0.42)
+
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player_target")]
 zoom = Vector2(0.25, 0.25)
 limit_left = -1915
@@ -601,9 +610,9 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -1928.0
-offset_top = -1680.0
+offset_top = -1501.0
 offset_right = 1393.0
-offset_bottom = 3831.0
+offset_bottom = 4010.0
 grow_horizontal = 2
 grow_vertical = 2
 
