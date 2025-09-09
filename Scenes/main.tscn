@@ -199,7 +199,7 @@ shader_parameter/pixelate = false
 shader_parameter/discolor = false
 shader_parameter/warp_amount = 0.75
 shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 0.2
+shader_parameter/vignette_intensity = 0.3
 shader_parameter/vignette_opacity = 1.0
 
 [sub_resource type="Gradient" id="Gradient_d1ilt"]
