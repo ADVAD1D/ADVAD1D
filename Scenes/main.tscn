@@ -1,4 +1,4 @@
-[gd_scene load_steps=76 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=77 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -180,6 +180,9 @@ size = Vector2(164.5, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kwxat"]
 size = Vector2(385.732, 45.4165)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_aa8k8"]
+size = Vector2(494, 96)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_344ge"]
 shader = ExtResource("8_344ge")
@@ -584,6 +587,14 @@ position = Vector2(-15.7745, 1258.83)
 scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_kwxat")
 debug_color = Color(0.887305, 0.000282046, 0.802346, 0.42)
+
+[node name="EnemiesDeathZone" type="Area2D" parent="." groups=["enemies_death"]]
+position = Vector2(11, -34)
+
+[node name="Bridge" type="CollisionShape2D" parent="EnemiesDeathZone"]
+position = Vector2(-20, 1211)
+shape = SubResource("RectangleShape2D_aa8k8")
+debug_color = Color(1, 0.0470588, 0, 0.419608)
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player_target")]
 zoom = Vector2(0.25, 0.25)

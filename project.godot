@@ -35,6 +35,7 @@ player=""
 enemy_laser=""
 enemigos=""
 saws=""
+enemies_death=""
 
 [input]
 

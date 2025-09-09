@@ -46,9 +46,11 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_area_entered(area: Area2D) -> void:
-	if area.is_in_group("lasers") and not is_dying:
-		area.queue_free()
+	if (area.is_in_group("lasers") or area.is_in_group("enemies_death")) and not is_dying:
 		is_dying = true
+		
+		if area.is_in_group("lasers"):
+			area.queue_free()
 		
 		var saw_particles_instance = saw_particles.instantiate()
 		add_sibling(saw_particles_instance)
