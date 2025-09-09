@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://bia82e1gl8v0j" path="res://Scripts/asteroid_spawner.gd" id="3_jjvhh"]
 [ext_resource type="PackedScene" uid="uid://ct5mpwv8axj52" path="res://Scenes/Particles/enemy_ship_particles.tscn" id="3_jkdf5"]
 [ext_resource type="PackedScene" uid="uid://bthfvcj4v47xh" path="res://Scenes/asteroid.tscn" id="4_kry3j"]
-[ext_resource type="Texture2D" uid="uid://fgrdo302rioh" path="res://Assets/Sprites/gauntlet11.png" id="5_h1bgf"]
+[ext_resource type="Texture2D" uid="uid://bt7mf1rtgr7gf" path="res://Assets/Sprites/gauntlet2.png" id="5_b3802"]
 [ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scripts/camera_2d.gd" id="6_21xkr"]
 [ext_resource type="PackedScene" uid="uid://d1eonx56vybhy" path="res://Scenes/UI/hud.tscn" id="7_6bp64"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="8_344ge"]
@@ -199,7 +199,7 @@ shader_parameter/pixelate = false
 shader_parameter/discolor = false
 shader_parameter/warp_amount = 0.75
 shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 0.3
+shader_parameter/vignette_intensity = 0.2
 shader_parameter/vignette_opacity = 1.0
 
 [sub_resource type="Gradient" id="Gradient_d1ilt"]
@@ -244,7 +244,7 @@ asteroids_explosion_particles = ExtResource("3_d1ilt")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-13, 1461)
 scale = Vector2(19.3172, 19.5562)
-texture = ExtResource("5_h1bgf")
+texture = ExtResource("5_b3802")
 
 [node name="PlayerInstance" parent="." instance=ExtResource("2_8gbba")]
 position = Vector2(-15, 9.99994)
