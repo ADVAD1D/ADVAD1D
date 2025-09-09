@@ -9,7 +9,7 @@ size = Vector2(15, 25)
 
 [sub_resource type="Gradient" id="Gradient_swast"]
 offsets = PackedFloat32Array(0.49697, 0.769697)
-colors = PackedColorArray(1, 0, 0, 1, 0, 0, 0, 1)
+colors = PackedColorArray(1, 0.0405029, 0.0223527, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_vxa5s"]
 gradient = SubResource("Gradient_swast")
@@ -33,8 +33,8 @@ debug_color = Color(0.943307, 7.70092e-06, 0.602222, 0.42)
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
 position = Vector2(2, 1.90735e-06)
-scale = Vector2(1.66209, 1.85764)
-energy = 2.66
+scale = Vector2(2.14949, 2.40239)
+energy = 8.96
 texture = SubResource("GradientTexture2D_vxa5s")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
