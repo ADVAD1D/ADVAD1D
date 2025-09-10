@@ -443,7 +443,6 @@ player_node = NodePath("../PlayerInstance")
 
 [node name="Timer" type="Timer" parent="AsteroidSpawner"]
 wait_time = 0.2
-autostart = true
 
 [node name="DeathZone" type="Area2D" parent="."]
 position = Vector2(3.98833, -460.012)
@@ -655,7 +654,7 @@ spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 script = ExtResource("16_k12tt")
 saw_scene = ExtResource("17_h1bgf")
 player_node = NodePath("../PlayerInstance")
-max_enemies = 3
+max_enemies = 0
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="EnemySpawnPath" type="Path2D" parent="."]

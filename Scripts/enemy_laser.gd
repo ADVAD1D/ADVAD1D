@@ -14,5 +14,5 @@ func _process(delta: float) -> void:
 	position += direction * speed *      delta
   
 func _on_area_entered(area: Area2D) -> void:
-	if area.is_in_group("lasers"):
+	if (area.is_in_group("lasers") or area.is_in_group("enemies_death")):
 		queue_free() # Replace with function body.
