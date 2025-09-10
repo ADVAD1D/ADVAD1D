@@ -65,7 +65,7 @@ color_ramp = SubResource("GradientTexture1D_f1ek2")
 color_initial_ramp = SubResource("GradientTexture1D_3smsa")
 
 [sub_resource type="Gradient" id="Gradient_vgqql"]
-offsets = PackedFloat32Array(0.00662252, 0.692053)
+offsets = PackedFloat32Array(0.044898, 0.692053)
 colors = PackedColorArray(0, 1, 0.94902, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_fkybt"]
@@ -122,7 +122,8 @@ trail_lifetime = 0.5
 process_material = SubResource("ParticleProcessMaterial_pu2lt")
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
-scale = Vector2(1.60317, 1.60317)
+scale = Vector2(1.87453, 1.87453)
+energy = 3.03
 texture = SubResource("GradientTexture2D_fkybt")
 
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
