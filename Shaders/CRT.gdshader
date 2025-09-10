@@ -124,9 +124,9 @@ void fragment() {
 
     // Apply CRT grille
     if (grille_opacity > 0.0) {
-        float gr = smoothstep(0.85, 0.95, abs(sin(uv.x * (resolution.x * 3.14159265))));
-        float gg = smoothstep(0.85, 0.95, abs(sin(1.05 + uv.x * (resolution.x * 3.14159265))));
-        float gb = smoothstep(0.85, 0.95, abs(sin(2.1 + uv.x * (resolution.x * 3.14159265))));
+        float gr = smoothstep(0.85, 0.95, abs(sin(uv.y * (resolution.y * 3.14159265))));
+        float gg = smoothstep(0.85, 0.95, abs(sin(1.05 + uv.y * (resolution.y * 3.14159265))));
+        float gb = smoothstep(0.85, 0.95, abs(sin(2.1 + uv.y * (resolution.y * 3.14159265))));
 
         text.r = mix(text.r, text.r * gr, grille_opacity);
         text.g = mix(text.g, text.g * gg, grille_opacity);
