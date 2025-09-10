@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://bia82e1gl8v0j" path="res://Scripts/asteroid_spawner.gd" id="3_jjvhh"]
 [ext_resource type="PackedScene" uid="uid://ct5mpwv8axj52" path="res://Scenes/Particles/enemy_ship_particles.tscn" id="3_jkdf5"]
 [ext_resource type="PackedScene" uid="uid://bthfvcj4v47xh" path="res://Scenes/asteroid.tscn" id="4_kry3j"]
-[ext_resource type="Texture2D" uid="uid://bt7mf1rtgr7gf" path="res://Assets/Sprites/gauntlet2.png" id="5_b3802"]
+[ext_resource type="Texture2D" uid="uid://dqq4a5yat8jsw" path="res://Assets/Sprites/gauntletdefinitivo3.png" id="5_b3802"]
 [ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scripts/camera_2d.gd" id="6_21xkr"]
 [ext_resource type="PackedScene" uid="uid://d1eonx56vybhy" path="res://Scenes/UI/hud.tscn" id="7_6bp64"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="8_344ge"]
@@ -248,8 +248,8 @@ enemy_laser_explosion = ExtResource("3_jkdf5")
 asteroids_explosion_particles = ExtResource("3_d1ilt")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(-13, 1461)
-scale = Vector2(19.3172, 19.5562)
+position = Vector2(-15, 1446)
+scale = Vector2(9.67856, 9.7983)
 texture = ExtResource("5_b3802")
 
 [node name="PlayerInstance" parent="." instance=ExtResource("2_8gbba")]
@@ -393,6 +393,7 @@ debug_color = Color(1.46799e-06, 0.650471, 0.0903933, 0.42)
 [node name="MainLight2D" type="PointLight2D" parent="."]
 position = Vector2(-6, -475)
 scale = Vector2(22.56, 33.52)
+energy = 1.3
 texture = SubResource("GradientTexture2D_b3802")
 
 [node name="Rightlight" type="PointLight2D" parent="MainLight2D"]
@@ -400,7 +401,7 @@ position = Vector2(64.8136, 9.81579)
 rotation = -3.12224
 scale = Vector2(0.422627, 0.347391)
 skew = -0.00183356
-energy = 2.5
+energy = 4.31
 texture = SubResource("GradientTexture2D_fevyy")
 
 [node name="Leftlight" type="PointLight2D" parent="MainLight2D"]
@@ -430,6 +431,7 @@ texture = SubResource("GradientTexture2D_hibaj")
 [node name="BottomLight" type="PointLight2D" parent="MainLight2D"]
 position = Vector2(-0.132979, 26.7005)
 scale = Vector2(1.39539, 0.648821)
+energy = 1.5
 texture = SubResource("GradientTexture2D_pdsj5")
 
 [node name="AsteroidSpawner" type="Marker2D" parent="." node_paths=PackedStringArray("player_node")]
@@ -584,7 +586,6 @@ debug_color = Color(0.970663, 0, 0.45321, 0.42)
 
 [node name="StartBridge" type="CollisionShape2D" parent="LaserZone"]
 position = Vector2(-15.7745, 1258.83)
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_kwxat")
 debug_color = Color(0.887305, 0.000282046, 0.802346, 0.42)
 
@@ -620,9 +621,9 @@ material = SubResource("ShaderMaterial_344ge")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1928.0
+offset_left = -1927.0
 offset_top = -1501.0
-offset_right = 1393.0
+offset_right = 1394.0
 offset_bottom = 4010.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -654,6 +655,7 @@ spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 script = ExtResource("16_k12tt")
 saw_scene = ExtResource("17_h1bgf")
 player_node = NodePath("../PlayerInstance")
+max_enemies = 3
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="EnemySpawnPath" type="Path2D" parent="."]
