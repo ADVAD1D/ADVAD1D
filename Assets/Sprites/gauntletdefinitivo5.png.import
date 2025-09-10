@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bt7mf1rtgr7gf"
-path="res://.godot/imported/gauntlet2.png-e53f5fd74d42bffb233e2e07f340d210.ctex"
+uid="uid://b1a1jkid5r5ef"
+path="res://.godot/imported/gauntletdefinitivo5.png-7801fad01da328dfdbb9080ddf351e75.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/gauntlet2.png"
-dest_files=["res://.godot/imported/gauntlet2.png-e53f5fd74d42bffb233e2e07f340d210.ctex"]
+source_file="res://Assets/Sprites/gauntletdefinitivo5.png"
+dest_files=["res://.godot/imported/gauntletdefinitivo5.png-7801fad01da328dfdbb9080ddf351e75.ctex"]
 
 [params]
 
