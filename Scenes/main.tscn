@@ -391,9 +391,10 @@ shape = SubResource("RectangleShape2D_e08e2")
 debug_color = Color(1.46799e-06, 0.650471, 0.0903933, 0.42)
 
 [node name="MainLight2D" type="PointLight2D" parent="."]
+texture_filter = 2
 position = Vector2(-6, -475)
 scale = Vector2(22.56, 33.52)
-energy = 1.3
+energy = 1.83
 texture = SubResource("GradientTexture2D_b3802")
 
 [node name="Rightlight" type="PointLight2D" parent="MainLight2D"]
@@ -429,9 +430,10 @@ energy = 3.07
 texture = SubResource("GradientTexture2D_hibaj")
 
 [node name="BottomLight" type="PointLight2D" parent="MainLight2D"]
+texture_filter = 2
 position = Vector2(-0.132979, 26.7005)
 scale = Vector2(1.39539, 0.648821)
-energy = 1.5
+energy = 2.56
 texture = SubResource("GradientTexture2D_pdsj5")
 
 [node name="AsteroidSpawner" type="Marker2D" parent="." node_paths=PackedStringArray("player_node")]
@@ -443,6 +445,7 @@ player_node = NodePath("../PlayerInstance")
 
 [node name="Timer" type="Timer" parent="AsteroidSpawner"]
 wait_time = 0.2
+autostart = true
 
 [node name="DeathZone" type="Area2D" parent="."]
 position = Vector2(3.98833, -460.012)
@@ -654,7 +657,7 @@ spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 script = ExtResource("16_k12tt")
 saw_scene = ExtResource("17_h1bgf")
 player_node = NodePath("../PlayerInstance")
-max_enemies = 0
+max_enemies = 3
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="EnemySpawnPath" type="Path2D" parent="."]
