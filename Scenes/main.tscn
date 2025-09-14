@@ -394,7 +394,7 @@ debug_color = Color(1.46799e-06, 0.650471, 0.0903933, 0.42)
 texture_filter = 2
 position = Vector2(-6, -475)
 scale = Vector2(22.56, 33.52)
-energy = 1.83
+energy = 1.3
 texture = SubResource("GradientTexture2D_b3802")
 
 [node name="Rightlight" type="PointLight2D" parent="MainLight2D"]
@@ -433,7 +433,7 @@ texture = SubResource("GradientTexture2D_hibaj")
 texture_filter = 2
 position = Vector2(-0.132979, 26.7005)
 scale = Vector2(1.39539, 0.648821)
-energy = 2.56
+energy = 1.6
 texture = SubResource("GradientTexture2D_pdsj5")
 
 [node name="AsteroidSpawner" type="Marker2D" parent="." node_paths=PackedStringArray("player_node")]
