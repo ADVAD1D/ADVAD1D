@@ -34,7 +34,8 @@ shape = SubResource("RectangleShape2D_mou6w")
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
 position = Vector2(2, -0.500001)
-scale = Vector2(1.24555, 1.71263)
+scale = Vector2(1.64555, 2.26263)
+energy = 2.5
 texture = SubResource("GradientTexture2D_c8ure")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
