@@ -17,9 +17,12 @@ extends CharacterBody2D
 
 @export var ship_explosion_particles: PackedScene
 
+
+#signals
 signal died
 signal dash(direction: Vector2)
 
+#init script variables
 var show_debug: bool = false
 
 var laser_scene = preload("res://Scenes/laser.tscn")
@@ -37,6 +40,8 @@ var dash_buffered: bool = false
 var buffered_direction: Vector2 = Vector2.ZERO
 
 var main_camera: Camera2D
+
+var dash_camera_shake: float = 35.0
 
 func _ready() -> void:
 	var player_score = GameManager.score
@@ -114,7 +119,7 @@ func shoot():
 	
 func do_dash(direction: Vector2):
 	if main_camera:
-		main_camera.shake(35.0, dash_duration)
+		main_camera.shake(dash_camera_shake, dash_duration)
 	rotation = direction.angle() + PI/2
 	is_dashing = true
 	can_dash = false
