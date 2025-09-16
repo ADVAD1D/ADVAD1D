@@ -59,4 +59,5 @@ func _on_area_entered(area: Area2D) -> void:
 			var sound_instance = asteroid_explosion_sound.instantiate()
 			get_parent().add_child(sound_instance)
 			sound_instance.position = position
+			
 		queue_free()
