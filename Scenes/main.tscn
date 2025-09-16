@@ -1,4 +1,4 @@
-[gd_scene load_steps=77 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=88 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://b1a1jkid5r5ef" path="res://Assets/Sprites/gauntletdefinitivo5.png" id="5_b3802"]
 [ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scripts/camera_2d.gd" id="6_21xkr"]
 [ext_resource type="PackedScene" uid="uid://d1eonx56vybhy" path="res://Scenes/UI/hud.tscn" id="7_6bp64"]
+[ext_resource type="Texture2D" uid="uid://bxi55qpsnclqv" path="res://Assets/Sprites/laserwall.png" id="7_fevyy"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="8_344ge"]
 [ext_resource type="AudioStream" uid="uid://iavnej1hm2io" path="res://Assets/Audio/195491__alienxxx__glitch_001.wav" id="9_ynf5e"]
 [ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scripts/ambient_particles.gd" id="12_6iyac"]
@@ -18,6 +19,84 @@
 [ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="15_wsu2k"]
 [ext_resource type="Script" uid="uid://ddvbqopxphvow" path="res://Scripts/saw_spawner.gd" id="16_k12tt"]
 [ext_resource type="PackedScene" uid="uid://cljshiwenhoau" path="res://Scenes/saw.tscn" id="17_h1bgf"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fevyy"]
+atlas = ExtResource("7_fevyy")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hibaj"]
+atlas = ExtResource("7_fevyy")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pdsj5"]
+atlas = ExtResource("7_fevyy")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ee4r6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fevyy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hibaj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pdsj5")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_pdsj5"]
+offsets = PackedFloat32Array(0.09543569, 0.13692947, 0.80497926)
+colors = PackedColorArray(0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ee4r6"]
+gradient = SubResource("Gradient_pdsj5")
+fill = 1
+fill_from = Vector2(0.50427353, 0.47863248)
+fill_to = Vector2(0.982906, 0.047008548)
+
+[sub_resource type="Animation" id="Animation_hibaj"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [3.59]
+}
+
+[sub_resource type="Animation" id="Animation_fevyy"]
+resource_name = "lights"
+length = 4.0
+loop_mode = 1
+step = 0.0333
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.0666667, 2.1333334, 3, 4.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 5.25, 0.0, 3.59, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pdsj5"]
+_data = {
+&"RESET": SubResource("Animation_hibaj"),
+&"lights": SubResource("Animation_fevyy")
+}
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bo1nx"]
 size = Vector2(7.72908, 201.723)
@@ -69,6 +148,9 @@ size = Vector2(206.815, 26.1516)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e08e2"]
 size = Vector2(210.381, 24.8502)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kqrg6"]
+size = Vector2(396.5109, 20)
 
 [sub_resource type="Gradient" id="Gradient_h1bgf"]
 offsets = PackedFloat32Array(0.318182, 0.639394)
@@ -256,6 +338,24 @@ texture = ExtResource("5_b3802")
 position = Vector2(-15, 9.99994)
 speed = 1000.0
 
+[node name="LaserWallAnimation" type="AnimatedSprite2D" parent="."]
+position = Vector2(-9.000012, 1153.2827)
+scale = Vector2(10.749999, 6.36322)
+sprite_frames = SubResource("SpriteFrames_ee4r6")
+frame_progress = 0.11896144
+
+[node name="PointLight2D" type="PointLight2D" parent="LaserWallAnimation"]
+position = Vector2(-1.4418588, -5.230486)
+scale = Vector2(0.78052336, 0.550036)
+energy = 3.59
+texture = SubResource("GradientTexture2D_ee4r6")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LaserWallAnimation/PointLight2D"]
+libraries = {
+&"": SubResource("AnimationLibrary_pdsj5")
+}
+autoplay = "lights"
+
 [node name="Walls" type="Node2D" parent="."]
 position = Vector2(3.98833, -460.012)
 scale = Vector2(1.29883, 1.29883)
@@ -389,6 +489,14 @@ position = Vector2(243.108, 1172.34)
 rotation = -0.786687
 shape = SubResource("RectangleShape2D_e08e2")
 debug_color = Color(1.46799e-06, 0.650471, 0.0903933, 0.42)
+
+[node name="WallStartBridge" type="StaticBody2D" parent="Walls"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallStartBridge"]
+position = Vector2(-22.318802, 1224.1879)
+scale = Vector2(0.9999994, 0.9999994)
+shape = SubResource("RectangleShape2D_kqrg6")
+debug_color = Color(0.043137256, 0.73333335, 0, 0.8980392)
 
 [node name="MainLight2D" type="PointLight2D" parent="."]
 texture_filter = 2
@@ -623,10 +731,10 @@ material = SubResource("ShaderMaterial_344ge")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1927.0
-offset_top = -1501.0
-offset_right = 1394.0
-offset_bottom = 4010.0
+offset_left = -1907.0
+offset_top = -1715.0
+offset_right = 1414.0
+offset_bottom = 3796.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -663,7 +771,7 @@ curve = SubResource("Curve2D_wsu2k")
 
 [node name="EnemySpawnLocator" type="PathFollow2D" parent="EnemySpawnPath"]
 position = Vector2(-736, -668)
-rotation = -0.835957
+rotation = -0.83595747
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]
