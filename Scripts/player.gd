@@ -41,7 +41,7 @@ var buffered_direction: Vector2 = Vector2.ZERO
 
 var main_camera: Camera2D
 
-var dash_camera_shake: float = 35.0
+var dash_camera_shake: float = 50.0
 
 func _ready() -> void:
 	var player_score = GameManager.score
