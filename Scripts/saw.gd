@@ -15,6 +15,9 @@ var player: Node2D
 var current_velocity: Vector2 = Vector2.ZERO
 var is_dying: bool = false
 
+func setup(config: Dictionary):
+	speed = config.get("speed", 700.0)
+
 func _ready() -> void:
 	player = get_tree().get_first_node_in_group("player")
 	rotation_speed = randf_range(1400.0, 1600.0)
@@ -60,7 +63,7 @@ func _on_area_entered(area: Area2D) -> void:
 		
 		hide()
 		metal_sound.play()
-		died.emit()
+		died.emit(self)
 		
 		await metal_sound.finished 
 		

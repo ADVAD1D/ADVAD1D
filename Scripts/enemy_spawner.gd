@@ -1,13 +1,15 @@
 extends Node2D
 @export var enemy_scene: PackedScene
 @export var player_node: CharacterBody2D
-@export var max_enemies: int = 7
 @export var spawn_locator_node: PathFollow2D
 @export var safe_spawn_radius: float = 100.0
 @export var spawn_timeout: float = 1.0
 
+var max_enemies: int = 4
 var current_enemy_count: int = 0
 var screen_size: Vector2
+
+var enemy_current_config = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -21,8 +23,15 @@ func spawn_initial_wave():
 	while current_enemy_count < max_enemies and current_attempts < max_initial_attempts:
 		spawn_enemy()
 		current_attempts += 1
+		
+func configure_for_phase(new_max_enemies: int, new_config: Dictionary):
+	max_enemies = new_max_enemies
+	enemy_current_config = new_config
+
 
 func spawn_enemy():
+	
+	#logica para encontrar la posición del spawn
 	if current_enemy_count >= max_enemies or not is_instance_valid(player_node):
 		return
 	spawn_locator_node.progress_ratio = randf()
@@ -33,12 +42,18 @@ func spawn_enemy():
 		return
 	
 	var enemy_instance = enemy_scene.instantiate()
-	get_parent().call_deferred("add_child", enemy_instance)
+	call_deferred("add_child", enemy_instance)
 	enemy_instance.global_position = spawn_position
+	
+	#logica del update de la dificultad
+	if not enemy_current_config.is_empty():
+		enemy_instance.setup(enemy_current_config)
+		
 	enemy_instance.died.connect(_on_enemy_died)
 	current_enemy_count += 1
 	
-func _on_enemy_died():
+func _on_enemy_died(enemy_reference):
 	current_enemy_count -= 1
+	enemy_reference.queue_free()
 	await get_tree().create_timer(spawn_timeout).timeout
 	spawn_enemy()

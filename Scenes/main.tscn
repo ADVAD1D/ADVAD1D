@@ -1,4 +1,4 @@
-[gd_scene load_steps=88 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=89 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="15_wsu2k"]
 [ext_resource type="Script" uid="uid://ddvbqopxphvow" path="res://Scripts/saw_spawner.gd" id="16_k12tt"]
 [ext_resource type="PackedScene" uid="uid://cljshiwenhoau" path="res://Scenes/saw.tscn" id="17_h1bgf"]
+[ext_resource type="Script" uid="uid://ch7ngtptk8mma" path="res://Scripts/phase_manager.gd" id="20_hibaj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fevyy"]
 atlas = ExtResource("7_fevyy")
@@ -754,13 +755,18 @@ lifetime = 10.0
 process_material = SubResource("ParticleProcessMaterial_d1ilt")
 script = ExtResource("12_6iyac")
 
-[node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node")]
+[node name="PhaseNode" type="Node2D" parent="." node_paths=PackedStringArray("ship_enemy_spawner", "saw_enemy_spawner")]
+script = ExtResource("20_hibaj")
+ship_enemy_spawner = NodePath("../EnemySpawner")
+saw_enemy_spawner = NodePath("../SawSpawner")
+
+[node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node") groups=["destructibles"]]
 script = ExtResource("14_wsu2k")
 enemy_scene = ExtResource("15_wsu2k")
 player_node = NodePath("../PlayerInstance")
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
-[node name="SawSpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node")]
+[node name="SawSpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node") groups=["destructibles"]]
 script = ExtResource("16_k12tt")
 saw_scene = ExtResource("17_h1bgf")
 player_node = NodePath("../PlayerInstance")
