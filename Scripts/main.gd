@@ -22,6 +22,12 @@ func _ready() -> void:
 	saw_spawner.first_saw_spawner.connect(saw_sound.play, CONNECT_ONE_SHOT)
 	laser_wall_animated.play()
 	
+	if GameManager.is_shader_animation:
+		GameManager.play_glitch_effect(crt_material)
+		
+	if GameManager.is_glitch_sound:
+		GameManager.play_glitch_sound(glitch_sound)
+	
 func play_glitch_effect():
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN_OUT)

@@ -5,9 +5,9 @@ signal timer_updated(time_left_string)
 
 @export var ship_enemy_spawner: Node2D
 @export var saw_enemy_spawner: Node2D
-@export var phase_duration = 150.0
+@export var phase_duration = 10.0
 
-@export var phase_cooldown_timer: float = 0.3
+@export var phase_cooldown_timer: float = 5.0
 
 var phase_requirements = {
 	1: 500,
@@ -68,7 +68,6 @@ func _on_phase_success():
 	print("fase", current_phase, "completada")
 	clear_the_board()
 	GameManager.phase_to_start = current_phase + 1
-	await get_tree().create_timer(phase_cooldown_timer).timeout
 	start_new_phase()
 		
 func _on_phase_failure():
@@ -77,9 +76,8 @@ func _on_phase_failure():
 	GameManager.stop_scoring()
 	
 	clear_the_board()
-	
-	await get_tree().create_timer(2.0).timeout
-	
+	GameManager.is_shader_animation = true
+	GameManager.is_glitch_sound = true
 	GameManager.phase_to_start = current_phase
 	
 	get_tree().call_deferred("reload_current_scene")
