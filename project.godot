@@ -36,6 +36,7 @@ enemy_laser=""
 enemigos=""
 saws=""
 enemies_death=""
+destructibles=""
 
 [input]
 

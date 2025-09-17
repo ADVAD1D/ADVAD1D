@@ -1,8 +1,10 @@
 extends Node
 
-var score: int = 0
 signal score_updated(new_score)
+
+var score: int = 0
 var can_add_score: bool = true
+var phase_to_start: int = 1
 
 func _ready() -> void:
 	pass 

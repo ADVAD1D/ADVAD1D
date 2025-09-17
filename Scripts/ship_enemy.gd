@@ -1,20 +1,24 @@
 extends CharacterBody2D
 
-@export var speed: float = 300.0
-@export var ideal_distance: float = 100.0
-@export var fire_range: float = 1500.0 
-@export var distance_margin: float = 50.0
-@export var strafe_speed: float = 150.0
-@export var strafe_influence: float = 0.6
-@export var acceleration: float = 4.0
-@export var friction: float = 2.0
-@export var separation_strength: float = 100.0
+var speed: float = 300.0
+var ideal_distance: float = 100.0
+var fire_range: float = 1500.0 
+var distance_margin: float = 50.0
+var strafe_speed: float = 150.0
+var strafe_influence: float = 0.6
+var acceleration: float = 4.0
+var friction: float = 2.0
+var separation_strength: float = 100.0
 
 signal died
 
 @onready var hitbox: Area2D = $Hitbox
+
 @onready var laser_sound: AudioStreamPlayer2D = $EnemyLsrSound
+
 @onready var separation_area = $SeparationArea
+
+@onready var shoot_timer: Timer = $ShootTimer
 
 var show_debug: bool = false
 
@@ -22,6 +26,11 @@ var bullet_scene = preload("res://Scenes/enemy_laser.tscn")
 
 var player: Node2D
 
+func setup(config: Dictionary):
+	speed = config.get("speed", 250.0)
+	print(config)
+	$ShootTimer.wait_time = config.get("shoot_timerate", 0.2)
+	
 func _ready() -> void:
 	player = get_tree().get_first_node_in_group("player")
 	hitbox.hit.connect(_on_hit)
@@ -73,12 +82,12 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	
 func shoot() -> void:
-	if $ShootTimer.is_stopped():
+	if shoot_timer.is_stopped():
 		var bullet_instance = bullet_scene.instantiate()
 		get_parent().add_child(bullet_instance)
 		bullet_instance.global_position = $Muzzle.global_position
 		bullet_instance.start(rotation)
-		$ShootTimer.start()
+		shoot_timer.start()
 		laser_sound.play()
 		
 func _draw() -> void:
@@ -96,5 +105,4 @@ func _on_hit(area_collided: Area2D) -> void:
 		GameManager.add_score(100)
 		area_collided.queue_free()
 
-	died.emit()
-	queue_free()
+	died.emit(self)
