@@ -24,10 +24,13 @@ func _ready() -> void:
 	phase_manager.phase_failed.connect(_on_phase_manager_failed)
 	laser_wall_animated.play()
 	
+<<<<<<< HEAD
 func _on_phase_manager_failed():
 	glitch_sound.play()
 	play_glitch_effect()
 	
+=======
+>>>>>>> parent of 0ecf31d (add restart in failure)
 func play_glitch_effect():
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN_OUT)
