@@ -64,7 +64,7 @@ func _on_enemy_died(enemy_reference):
 		current_enemy_count -= 1
 		return
 	
-	current_enemy_count -= 1
 	enemy_reference.queue_free()
+	current_enemy_count -= 1
 	await get_tree().create_timer(spawn_timeout).timeout
 	spawn_enemy()
