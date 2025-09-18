@@ -7,6 +7,9 @@ signal timer_updated(time_left_string)
 @export var saw_enemy_spawner: Node2D
 @export var phase_duration = 180.0
 
+@export var min_shoot_timerate: float = 0.2
+@export var max_shoot_timerate: float = 0.3
+
 @export var min_ship_enemies: float = 4.0
 @export var max_ship_enemies: float = 8.0
 
@@ -116,7 +119,7 @@ func apply_difficulty():
 	print("aplicando dificultad para la fase", current_phase, "progreso: ", progress)
 	var ship_max_enemies = int(lerp(min_ship_enemies, max_ship_enemies, progress))
 	var ship_config = {"speed": lerp(250.0, 500.0, progress),
-					   "shoot_timerate": lerp(0.3, 0.2, progress)} # Puedes añadir más stats
+					   "shoot_timerate": lerp(max_shoot_timerate, min_shoot_timerate, progress)} # Puedes añadir más stats
 	
 	if is_instance_valid(ship_enemy_spawner):
 		ship_enemy_spawner.configure_for_phase(ship_max_enemies, ship_config)
