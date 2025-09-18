@@ -109,8 +109,6 @@ func clear_the_board():
 		for enemies in node.get_children():
 			if enemies.has_signal("died"):
 				enemies.died.emit(enemies)
-			else:
-				enemies.queue_free()
 	
 func apply_difficulty():
 	var progress = float(current_phase - 1) / (phase_requirements.size() - 1.0)
