@@ -7,6 +7,13 @@ signal timer_updated(time_left_string)
 @export var saw_enemy_spawner: Node2D
 @export var phase_duration = 10.0
 
+@export var min_ship_enemies: float = 4.0
+@export var max_ship_enemies: float = 8.0
+
+@export var min_saw_enemies: float = 2.0
+@export var max_saw_enemies: float = 5.0
+
+
 @export var phase_cooldown_timer: float = 5.0
 
 var phase_requirements = {
@@ -17,8 +24,11 @@ var phase_requirements = {
 }
 
 var current_phase: int = 0
+
 var phase_timer: float
+
 var current_score_requirement: int
+
 var is_phase_active: bool = false
 
 # Called when the node enters the scene tree for the first time.
@@ -46,6 +56,13 @@ func start_new_phase():
 	current_phase = current_phase + 1
 	if not phase_requirements.has(current_phase):
 		print("has ganado las fases")
+		
+		if is_instance_valid(saw_enemy_spawner):
+			saw_enemy_spawner.stop()
+			
+		if is_instance_valid(ship_enemy_spawner):
+			ship_enemy_spawner.stop()
+			
 		return
 		
 	print("--- Empezando Fase ", current_phase, " ---")	
@@ -95,15 +112,15 @@ func apply_difficulty():
 	
 	#dificultad para las naves
 	print("aplicando dificultad para la fase", current_phase, "progreso: ", progress)
-	var ship_max_enemies = int(lerp(4.0, 10.0, progress))
+	var ship_max_enemies = int(lerp(min_ship_enemies, max_ship_enemies, progress))
 	var ship_config = {"speed": lerp(250.0, 500.0, progress),
-					   "shoot_timerate": lerp(0.8, 0.3, progress)} # Puedes añadir más stats
+					   "shoot_timerate": lerp(5.0, 2.0, progress)} # Puedes añadir más stats
 	
 	if is_instance_valid(ship_enemy_spawner):
 		ship_enemy_spawner.configure_for_phase(ship_max_enemies, ship_config)
 		
 	#dificultad para las sierras
-	var saw_max_enemies = int(lerp(2.0, 8.0, progress))
+	var saw_max_enemies = int(lerp(min_saw_enemies, max_saw_enemies, progress))
 	var saw_config = {"speed": lerp(700.0, 1200.0, progress)}
 	
 	if is_instance_valid(saw_enemy_spawner):

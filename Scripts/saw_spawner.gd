@@ -1,6 +1,6 @@
 class_name SawSpawner 
-
 extends Node2D
+
 @export var saw_scene: PackedScene
 @export var player_node: CharacterBody2D
 @export var spawn_locator_node: PathFollow2D
@@ -10,6 +10,8 @@ extends Node2D
 var max_enemies: int = 2
 var current_enemy_count: int = 0
 var screen_size: Vector2
+
+var is_active: bool = true
 
 var enemy_current_config = {}
 
@@ -65,7 +67,16 @@ func spawn_enemy():
 	enemy_instance.died.connect(_on_enemy_died)
 	current_enemy_count += 1
 	
+func stop():
+	is_active = false
+	print("Spawner de sierras detenido")
+	
 func _on_enemy_died(saw_reference):
+	
+	if not is_active:
+		current_enemy_count -= 1 # Aún registramos que murió.
+		return
+		
 	saw_reference.queue_free()
 	current_enemy_count -= 1
 	await get_tree().create_timer(spawn_timeout).timeout

@@ -10,6 +10,8 @@ var acceleration: float = 4.0
 var friction: float = 2.0
 var separation_strength: float = 100.0
 
+var is_dying: bool = false
+
 signal died
 
 @onready var hitbox: Area2D = $Hitbox
@@ -101,8 +103,10 @@ func _draw() -> void:
 		draw_circle(Vector2.ZERO, fire_range, circle_color)
 
 func _on_hit(area_collided: Area2D) -> void:
-	if area_collided.is_in_group("lasers"):
+	if area_collided.is_in_group("lasers") and not is_dying:
+		is_dying = true
 		GameManager.add_score(100)
 		area_collided.queue_free()
+		queue_free()
 
 	died.emit(self)
