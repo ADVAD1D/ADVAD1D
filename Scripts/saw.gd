@@ -63,9 +63,6 @@ func _on_area_entered(area: Area2D) -> void:
 		
 		hide()
 		metal_sound.play()
-		died.emit(self)
 		
 		await metal_sound.finished 
-		
-		queue_free()
-		
+		died.emit(self)
