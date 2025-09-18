@@ -1,4 +1,4 @@
-[gd_scene load_steps=89 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=90 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -15,6 +15,7 @@
 [ext_resource type="AudioStream" uid="uid://iavnej1hm2io" path="res://Assets/Audio/195491__alienxxx__glitch_001.wav" id="9_ynf5e"]
 [ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scripts/ambient_particles.gd" id="12_6iyac"]
 [ext_resource type="AudioStream" uid="uid://dlu22wl4fxr36" path="res://Assets/Audio/783832__chungus43a__milling-machine-motor.wav" id="12_b3802"]
+[ext_resource type="AudioStream" uid="uid://bwoq355ggrir4" path="res://Assets/Audio/351564__bertrof__game-sound-correct-with-delay.wav" id="13_pdsj5"]
 [ext_resource type="Script" uid="uid://cn624xhs3jj2a" path="res://Scripts/enemy_spawner.gd" id="14_wsu2k"]
 [ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="15_wsu2k"]
 [ext_resource type="Script" uid="uid://ddvbqopxphvow" path="res://Scripts/saw_spawner.gd" id="16_k12tt"]
@@ -737,6 +738,9 @@ offset_right = 1414.0
 offset_bottom = 3796.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="SucessSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("13_pdsj5")
 
 [node name="GlitchSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("9_ynf5e")
