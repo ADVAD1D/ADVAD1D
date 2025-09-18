@@ -13,8 +13,9 @@ signal timer_updated(time_left_string)
 @export var min_saw_enemies: float = 2.0
 @export var max_saw_enemies: float = 5.0
 
-
 @export var phase_cooldown_timer: float = 5.0
+
+@onready var success_sound: AudioStreamPlayer2D = $"../SucessSound"
 
 var phase_requirements = {
 	1: 500,
@@ -83,6 +84,7 @@ func _on_score_updated(new_score: int):
 func _on_phase_success():
 	is_phase_active = false
 	print("fase", current_phase, "completada")
+	success_sound.play()
 	clear_the_board()
 	GameManager.phase_to_start = current_phase + 1
 	start_new_phase()
