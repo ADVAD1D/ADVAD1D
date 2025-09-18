@@ -56,7 +56,11 @@ func _on_area_entered(area: Area2D) -> void:
 			area.queue_free()
 			$CollisionShape2D.set_deferred("disabled", true) 
 			GameManager.add_score(200)
+			
+		die()
 		
+		
+func die():
 		var saw_particles_instance = saw_particles.instantiate()
 		add_sibling(saw_particles_instance)
 		saw_particles_instance.position = position

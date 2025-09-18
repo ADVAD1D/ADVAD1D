@@ -107,8 +107,8 @@ func _on_phase_failure():
 func clear_the_board():
 	for node in get_tree().get_nodes_in_group("destructibles"):
 		for enemies in node.get_children():
-			if enemies.has_signal("died"):
-				enemies.died.emit(enemies)
+			if enemies.has_method("die"):
+				enemies.die()
 	
 func apply_difficulty():
 	var progress = float(current_phase - 1) / (phase_requirements.size() - 1.0)
