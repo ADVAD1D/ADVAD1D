@@ -2,6 +2,7 @@ extends Node
 
 signal phase_started(phase_number, score_requirement)
 signal timer_updated(time_left_string)
+signal phase_failed
 
 @export var ship_enemy_spawner: Node2D
 @export var saw_enemy_spawner: Node2D
@@ -69,17 +70,27 @@ func _on_phase_success():
 	clear_the_board()
 	GameManager.phase_to_start = current_phase + 1
 	start_new_phase()
+	
+func _on_player_hit():
+	if is_phase_active:
+		_on_phase_failure()
 		
 func _on_phase_failure():
+	if not is_phase_active:
+		return
+		
 	is_phase_active = false
-	print("TIEMPO AGOTADO. Reiniciando escena.")
+	print("¡FASE FALLIDA! Reiniciando...")
+	
 	GameManager.stop_scoring()
 	
 	clear_the_board()
-	GameManager.is_shader_animation = true
-	GameManager.is_glitch_sound = true
-	GameManager.phase_to_start = current_phase
 	
+	phase_failed.emit()
+	
+	await get_tree().create_timer(2.0).timeout
+	
+	GameManager.phase_to_start = current_phase
 	get_tree().call_deferred("reload_current_scene")
 	
 func clear_the_board():

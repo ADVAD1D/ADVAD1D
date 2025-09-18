@@ -68,3 +68,4 @@ func _on_area_entered(area: Area2D) -> void:
 		await metal_sound.finished 
 		
 		queue_free()
+		
