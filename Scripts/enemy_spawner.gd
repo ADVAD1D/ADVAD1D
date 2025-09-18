@@ -9,6 +9,8 @@ var max_enemies: int = 4
 var current_enemy_count: int = 0
 var screen_size: Vector2
 
+var is_active: bool = true
+
 var enemy_current_config = {}
 
 # Called when the node enters the scene tree for the first time.
@@ -52,7 +54,16 @@ func spawn_enemy():
 	enemy_instance.died.connect(_on_enemy_died)
 	current_enemy_count += 1
 	
+func stop():
+	is_active = false
+	print("Spawner de naves enemigas detenido")
+	
 func _on_enemy_died(enemy_reference):
+	
+	if not is_active:
+		current_enemy_count -= 1
+		return
+	
 	current_enemy_count -= 1
 	enemy_reference.queue_free()
 	await get_tree().create_timer(spawn_timeout).timeout
