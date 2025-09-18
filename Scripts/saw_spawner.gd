@@ -1,6 +1,6 @@
 class_name SawSpawner 
-extends Node2D
 
+extends Node2D
 @export var saw_scene: PackedScene
 @export var player_node: CharacterBody2D
 @export var spawn_locator_node: PathFollow2D
@@ -70,7 +70,3 @@ func _on_enemy_died(saw_reference):
 	current_enemy_count -= 1
 	await get_tree().create_timer(spawn_timeout).timeout
 	spawn_enemy()
-
-func spawn_max_enemies():
-	for enemy in range(max_enemies):
-		spawn_enemy()
