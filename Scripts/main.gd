@@ -7,7 +7,6 @@ extends Node2D
 @onready var saw_spawner: SawSpawner = $SawSpawner
 @onready var saw_sound: AudioStreamPlayer2D = $SawSound
 @onready var laser_wall_animated: AnimatedSprite2D = $LaserWallAnimation
-@onready var phase_manager = $PhaseNode
 
 var base_zoom: Vector2
 @export var laser_explosion_particles: PackedScene
@@ -18,19 +17,17 @@ var base_zoom: Vector2
 func _ready() -> void:
 	reset_shader_parameters()
 	base_zoom = cam.zoom
-	player.died.connect(phase_manager._on_player_hit) # Replace with function body.
+	player.died.connect(_on_player_died) # Replace with function body.
 	player.connect("dash", Callable(self, "_on_player_dashed"))
 	saw_spawner.first_saw_spawner.connect(saw_sound.play, CONNECT_ONE_SHOT)
-	phase_manager.phase_failed.connect(_on_phase_manager_failed)
 	laser_wall_animated.play()
 	
-<<<<<<< HEAD
-func _on_phase_manager_failed():
-	glitch_sound.play()
-	play_glitch_effect()
+	if GameManager.is_shader_animation:
+		GameManager.play_glitch_effect(crt_material)
+		
+	if GameManager.is_glitch_sound:
+		GameManager.play_glitch_sound(glitch_sound)
 	
-=======
->>>>>>> parent of 0ecf31d (add restart in failure)
 func play_glitch_effect():
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN_OUT)
@@ -81,3 +78,12 @@ func _on_laser_zone_area_entered(area: Area2D) -> void:
 			enemy_laser_exp_instance.global_position = area.global_position
 
 		area.queue_free()
+		
+func _on_player_died() -> void:
+	glitch_sound.play()
+	GameManager.stop_scoring()
+	var glitch_tween = play_glitch_effect()
+	await  glitch_tween.finished
+	await get_tree().create_timer(0.02).timeout
+	GameManager.reset_score()
+	get_tree().call_deferred("reload_current_scene")
