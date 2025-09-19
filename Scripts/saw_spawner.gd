@@ -25,7 +25,7 @@ func _ready() -> void:
 	
 func spawn_initial_wave():
 	current_enemy_count = 0
-	get_tree().call_group("saws", "die")
+	get_tree().call_group("saws", "die_silently")
 	
 	var max_initial_attempts = 100 
 	var current_attempts = 0
@@ -55,6 +55,7 @@ func spawn_enemy():
 	
 	#logica del spawn
 	var enemy_instance = saw_scene.instantiate()
+	enemy_instance.add_to_group("saws")
 	call_deferred("add_child", enemy_instance)
 	if not has_emitted_first_spawn_signal:
 		has_emitted_first_spawn_signal = true
@@ -79,7 +80,6 @@ func _on_enemy_died(saw_reference):
 		current_enemy_count -= 1 # Aún registramos que murió.
 		return
 		
-	saw_reference.queue_free()
 	current_enemy_count -= 1
 	await get_tree().create_timer(spawn_timeout).timeout
 	spawn_enemy()
