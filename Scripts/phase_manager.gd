@@ -13,8 +13,8 @@ signal timer_updated(time_left_string)
 @export var min_ship_enemies: float = 4.0
 @export var max_ship_enemies: float = 8.0
 
-@export var min_saw_enemies: float = 2.0
-@export var max_saw_enemies: float = 5.0
+@export var min_saw_enemies: float = 1.0
+@export var max_saw_enemies: float = 2.0
 
 @export var phase_cooldown_timer: float = 5.0
 
@@ -105,10 +105,8 @@ func _on_phase_failure():
 	get_tree().call_deferred("reload_current_scene")
 	
 func clear_the_board():
-	for node in get_tree().get_nodes_in_group("destructibles"):
-		for enemies in node.get_children():
-			if enemies.has_method("die"):
-				enemies.die()
+	print("Limpiando el tablero")
+	get_tree().call_group("saws", "die")
 	
 func apply_difficulty():
 	var progress = float(current_phase - 1) / (phase_requirements.size() - 1.0)
