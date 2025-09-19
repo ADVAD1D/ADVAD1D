@@ -25,6 +25,8 @@ func _ready() -> void:
 	
 func spawn_initial_wave():
 	current_enemy_count = 0
+	get_tree().call_group("saws", "die")
+	
 	var max_initial_attempts = 100 
 	var current_attempts = 0
 

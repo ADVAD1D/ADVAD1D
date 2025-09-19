@@ -70,3 +70,4 @@ func die():
 		
 		await metal_sound.finished 
 		died.emit(self)
+		queue_free()
