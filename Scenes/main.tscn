@@ -761,8 +761,9 @@ lifetime = 10.0
 process_material = SubResource("ParticleProcessMaterial_d1ilt")
 script = ExtResource("12_6iyac")
 
-[node name="PhaseNode" type="Node2D" parent="." node_paths=PackedStringArray("ship_enemy_spawner", "saw_enemy_spawner")]
+[node name="PhaseNode" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "ship_enemy_spawner", "saw_enemy_spawner")]
 script = ExtResource("20_hibaj")
+player_node = NodePath("../PlayerInstance")
 ship_enemy_spawner = NodePath("../EnemySpawner")
 saw_enemy_spawner = NodePath("../SawSpawner")
 
