@@ -163,19 +163,26 @@ func _draw() -> void:
 					draw_rect(Rect2(-collider.shape.size / 2, collider.shape.size), Color.RED, false, 2.0)
 					
 
-
-func _on_hitbox_area_entered(area: Area2D) -> void:
+func die():
 	if player_died:
 		return
-	if area.is_in_group("asteroides") or area.is_in_group("enemy_laser") or area.is_in_group("saws"):
-		if area.is_in_group("enemy_laser"):
-			area.queue_free()
-			
+		
+	player_died = true
+	
+	if ship_explosion_particles:
 		var ship_exp_instance = ship_explosion_particles.instantiate()
 		add_sibling(ship_exp_instance)
 		ship_exp_instance.position = position
 		
-		player_died = true
-		died.emit()
-		hide()
-		$CollisionShape2D.set_deferred("disabled", true) # Replace with function body.
+	died.emit()
+	hide()
+	$CollisionShape2D.set_deferred("disabled", true)
+	
+	
+
+func _on_hitbox_area_entered(area: Area2D) -> void:
+	if area.is_in_group("asteroides") or area.is_in_group("enemy_laser") or area.is_in_group("saws"):
+		if area.is_in_group("enemy_laser"):
+			area.queue_free()
+			
+		die() # Replace with function body.
