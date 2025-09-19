@@ -16,9 +16,10 @@ var enemy_current_config = {}
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	screen_size = get_viewport().get_visible_rect().size
-	spawn_initial_wave() # Replace with function body.
 	
 func spawn_initial_wave():
+	current_enemy_count = 0
+	get_tree().call_group("enemies", "die_silently")
 	var max_initial_attempts = 100 
 	var current_attempts = 0
 
@@ -29,6 +30,7 @@ func spawn_initial_wave():
 func configure_for_phase(new_max_enemies: int, new_config: Dictionary):
 	max_enemies = new_max_enemies
 	enemy_current_config = new_config
+	spawn_initial_wave()
 
 
 func spawn_enemy():
@@ -44,6 +46,7 @@ func spawn_enemy():
 		return
 	
 	var enemy_instance = enemy_scene.instantiate()
+	enemy_instance.add_to_group("enemies")
 	call_deferred("add_child", enemy_instance)
 	enemy_instance.global_position = spawn_position
 	
@@ -64,7 +67,6 @@ func _on_enemy_died(enemy_reference):
 		current_enemy_count -= 1
 		return
 	
-	enemy_reference.queue_free()
 	current_enemy_count -= 1
 	await get_tree().create_timer(spawn_timeout).timeout
 	spawn_enemy()

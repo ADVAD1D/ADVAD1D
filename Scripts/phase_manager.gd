@@ -11,9 +11,8 @@ signal timer_updated(time_left_string)
 @export var max_shoot_timerate: float = 0.3
 
 @export var min_ship_enemies: float = 4.0
-@export var max_ship_enemies: float = 8.0
+@export var max_ship_enemies: float = 5.0
 
-@export var min_saw_enemies: float = 1.0
 @export var max_saw_enemies: float = 2.0
 
 @export var phase_cooldown_timer: float = 5.0
@@ -106,7 +105,9 @@ func _on_phase_failure():
 	
 func clear_the_board():
 	print("Limpiando el tablero")
-	get_tree().call_group("saws", "die")
+			
+	get_tree().call_group("saws", "die_silently")
+	get_tree().call_group("enemies", "die_silently")
 	
 func apply_difficulty():
 	var progress = float(current_phase - 1) / (phase_requirements.size() - 1.0)
@@ -121,7 +122,7 @@ func apply_difficulty():
 		ship_enemy_spawner.configure_for_phase(ship_max_enemies, ship_config)
 		
 	#dificultad para las sierras
-	var saw_max_enemies = int(lerp(min_saw_enemies, max_saw_enemies, progress))
+	var saw_max_enemies = int(max_saw_enemies)
 	var saw_config = {"speed": lerp(700.0, 1200.0, progress)}
 	
 	if is_instance_valid(saw_enemy_spawner):

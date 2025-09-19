@@ -49,25 +49,42 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_area_entered(area: Area2D) -> void:
-	if (area.is_in_group("lasers") or area.is_in_group("enemies_death")) and not is_dying:
-		is_dying = true
-		
+	if (area.is_in_group("lasers") or area.is_in_group("enemies_death")):
 		if area.is_in_group("lasers"):
 			area.queue_free()
-			$CollisionShape2D.set_deferred("disabled", true) 
 			GameManager.add_score(200)
-			
-		die()
-		
-		
-func die():
-		var saw_particles_instance = saw_particles.instantiate()
-		add_sibling(saw_particles_instance)
-		saw_particles_instance.position = position
-		
-		hide()
-		metal_sound.play()
-		
-		await metal_sound.finished 
-		died.emit(self)
-		queue_free()
+		die_and_respawn()
+
+
+func die_and_respawn():
+	if is_dying:
+		return
+	is_dying = true
+	$CollisionShape2D.set_deferred("disabled", true)
+	
+	var saw_particles_instance = saw_particles.instantiate()
+	add_sibling(saw_particles_instance)
+	saw_particles_instance.position = position
+	
+	hide()
+	metal_sound.play()
+	
+	await metal_sound.finished
+	died.emit(self)
+	queue_free()
+
+func die_silently():
+	if is_dying:
+		return
+	is_dying = true
+	$CollisionShape2D.set_deferred("disabled", true)
+	
+	var saw_particles_instance = saw_particles.instantiate()
+	add_sibling(saw_particles_instance)
+	saw_particles_instance.position = position
+	
+	hide()
+	metal_sound.play()
+	
+	await metal_sound.finished
+	queue_free()
