@@ -742,8 +742,8 @@ grow_vertical = 2
 
 [node name="SucessSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("13_pdsj5")
-volume_db = 2.84
-pitch_scale = 0.65
+volume_db = 1.462
+pitch_scale = 0.54
 
 [node name="GlitchSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("9_ynf5e")
