@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+#player variables
 @export var speed: float
 @export var acceleration: float = 5.0
 @export var shoot_timerate: float = 0.1
@@ -9,6 +10,8 @@ extends CharacterBody2D
 @export var dash_duration: float = 0.1
 @export var dash_cooldown: float = 1.0
 
+
+#resources
 @onready var lsrsound: AudioStreamPlayer2D = $Lasersnd
 @onready var dash_sound: AudioStreamPlayer2D = $Dashsnd
 @onready var engine_trail: GPUParticles2D = $EngineTrail
