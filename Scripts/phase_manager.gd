@@ -7,7 +7,7 @@ signal timer_updated(time_left_string)
 
 @export var ship_enemy_spawner: Node2D
 @export var saw_enemy_spawner: Node2D
-@export var phase_duration = 180.0
+@export var phase_duration = 5.0
 
 @export var min_shoot_timerate: float = 0.2
 @export var max_shoot_timerate: float = 0.3
@@ -99,7 +99,7 @@ func _on_phase_failure():
 	GameManager.stop_scoring()
 	
 	if is_instance_valid(player_node):
-		player_node.die()
+		player_node.vanish()
 	
 	clear_the_board()
 	

@@ -24,9 +24,11 @@ func _ready() -> void:
 	
 	if GameManager.is_shader_animation:
 		GameManager.play_glitch_effect(crt_material)
+		GameManager.is_shader_animation = false
 		
 	if GameManager.is_glitch_sound:
 		GameManager.play_glitch_sound(glitch_sound)
+		GameManager.is_glitch_sound = false
 	
 func play_glitch_effect():
 	var tween = create_tween()
