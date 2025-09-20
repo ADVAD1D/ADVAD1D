@@ -166,7 +166,17 @@ func _draw() -> void:
 func die():
 	if player_died:
 		return
-		
+	
+	_perform_death_effects()
+	died.emit()
+
+func vanish():
+	if player_died:
+		return
+	
+	_perform_death_effects()
+
+func _perform_death_effects():
 	player_died = true
 	
 	if ship_explosion_particles:
@@ -174,7 +184,6 @@ func die():
 		add_sibling(ship_exp_instance)
 		ship_exp_instance.position = position
 		
-	died.emit()
 	hide()
 	$CollisionShape2D.set_deferred("disabled", true)
 	
