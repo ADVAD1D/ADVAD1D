@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://ct5mpwv8axj52" path="res://Scenes/Particles/enemy_ship_particles.tscn" id="2_c8ure"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mou6w"]
-size = Vector2(26.5655, 8.75005)
+size = Vector2(30.707943, 11.330511)
 
 [sub_resource type="Gradient" id="Gradient_3pc01"]
 offsets = PackedFloat32Array(0.369697, 0.715151)
@@ -27,7 +27,7 @@ texture = ExtResource("2_3pc01")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 z_index = 2
-position = Vector2(0.969518, -5.71723)
+position = Vector2(2.0000002, -5)
 rotation = -1.5708
 scale = Vector2(1.03299, 2.01279)
 shape = SubResource("RectangleShape2D_mou6w")
