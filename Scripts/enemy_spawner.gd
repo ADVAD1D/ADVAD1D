@@ -61,7 +61,7 @@ func stop():
 	is_active = false
 	print("Spawner de naves enemigas detenido")
 	
-func _on_enemy_died(enemy_reference):
+func _on_enemy_died(_enemy_reference):
 	
 	if not is_active:
 		current_enemy_count -= 1

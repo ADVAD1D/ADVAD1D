@@ -74,7 +74,7 @@ func stop():
 	is_active = false
 	print("Spawner de sierras detenido")
 	
-func _on_enemy_died(saw_reference):
+func _on_enemy_died(_saw_reference):
 	
 	if not is_active:
 		current_enemy_count -= 1 # Aún registramos que murió.
