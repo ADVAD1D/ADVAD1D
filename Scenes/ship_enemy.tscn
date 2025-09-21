@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://rfr1b2fb0o4q"]
+[gd_scene load_steps=13 format=3 uid="uid://rfr1b2fb0o4q"]
 
 [ext_resource type="Script" uid="uid://tvn1ktkbvk13" path="res://Scripts/ship_enemy.gd" id="1_exykt"]
 [ext_resource type="Texture2D" uid="uid://cx73ri0pr6pa5" path="res://Assets/Sprites/ship_enemy.png" id="1_nlnte"]
@@ -10,6 +10,36 @@ size = Vector2(11, 24)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bscg7"]
 size = Vector2(10.4142, 20)
+
+[sub_resource type="Gradient" id="Gradient_f0gle"]
+colors = PackedColorArray(1, 0.43481088, 0.36613947, 1, 1, 0, 0.3529412, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_j3121"]
+gradient = SubResource("Gradient_f0gle")
+
+[sub_resource type="Gradient" id="Gradient_um53k"]
+colors = PackedColorArray(1, 0.36778843, 0.3002166, 1, 0.82879096, 0, 0.012556447, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_2kinu"]
+gradient = SubResource("Gradient_um53k")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_6b5vx"]
+particle_flag_disable_z = true
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 1.0
+emission_ring_radius = 1.0
+emission_ring_inner_radius = 0.0
+emission_ring_cone_angle = 90.0
+angle_min = 108.000015
+angle_max = 578.0
+radial_velocity_min = -2.2351742e-05
+radial_velocity_max = 16.449978
+gravity = Vector3(0, 0, 0)
+scale_min = 20.0
+scale_max = 30.0
+color_ramp = SubResource("GradientTexture1D_2kinu")
+color_initial_ramp = SubResource("GradientTexture1D_j3121")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_f0gle"]
 radius = 72.4177
@@ -49,6 +79,13 @@ one_shot = true
 stream = ExtResource("4_f0gle")
 volume_db = -18.32
 pitch_scale = 0.48
+
+[node name="EngineTrail" type="GPUParticles2D" parent="."]
+position = Vector2(-0.4, 20)
+scale = Vector2(0.99999994, 0.99999994)
+amount = 10
+lifetime = 0.3
+process_material = SubResource("ParticleProcessMaterial_6b5vx")
 
 [node name="SeparationArea" type="Area2D" parent="."]
 collision_layer = 0

@@ -22,6 +22,8 @@ signal died
 
 @onready var shoot_timer: Timer = $ShootTimer
 
+@onready var engine_trail: GPUParticles2D = $EngineTrail
+
 var show_debug: bool = false
 
 var bullet_scene = preload("res://Scenes/enemy_laser.tscn")

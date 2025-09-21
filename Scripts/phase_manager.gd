@@ -4,6 +4,7 @@ signal phase_started(phase_number, score_requirement)
 signal timer_updated(time_left_string)
 
 @export var player_node: CharacterBody2D
+@export var asteroid_node: Marker2D
 
 @export var ship_enemy_spawner: Node2D
 @export var saw_enemy_spawner: Node2D
@@ -25,7 +26,8 @@ var phase_requirements = {
 	1: 500,
 	2: 1000,
 	3: 1500,
-	4: 2000
+	4: 2000,
+	5: 2500
 }
 
 var current_phase: int = 0
