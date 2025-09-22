@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://datoayxuels3x" path="res://Scripts/enemy_ship_exp_particles.gd" id="2_wm7ww"]
 
 [sub_resource type="Gradient" id="Gradient_lcurj"]
-colors = PackedColorArray(1, 0, 0, 1, 0.9999407, 0.9603352, 0.94417506, 1)
+colors = PackedColorArray(1, 0.599933, 0.540393, 1, 0.9999407, 0.9603352, 0.94417506, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_f4876"]
 gradient = SubResource("Gradient_lcurj")
