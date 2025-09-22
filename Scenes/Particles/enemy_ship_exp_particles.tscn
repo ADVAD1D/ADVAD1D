@@ -1,0 +1,51 @@
+[gd_scene load_steps=10 format=3 uid="uid://fcafgnv8sg0t"]
+
+[ext_resource type="Texture2D" uid="uid://dnutwgdk62yv3" path="res://Assets/Sprites/ship_enemy_particles.png" id="1_3pvn4"]
+[ext_resource type="Script" uid="uid://datoayxuels3x" path="res://Scripts/enemy_ship_exp_particles.gd" id="2_wm7ww"]
+
+[sub_resource type="Gradient" id="Gradient_lcurj"]
+colors = PackedColorArray(1, 0, 0, 1, 0.9999407, 0.9603352, 0.94417506, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_f4876"]
+gradient = SubResource("Gradient_lcurj")
+
+[sub_resource type="Gradient" id="Gradient_tuf4a"]
+colors = PackedColorArray(0.5686275, 0, 0, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_y1j6a"]
+gradient = SubResource("Gradient_tuf4a")
+
+[sub_resource type="Curve" id="Curve_f7b63"]
+_data = [Vector2(0, 0.29213488), 0.0, 0.0, 0, 0, Vector2(1, 0.033707857), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_wc416"]
+curve = SubResource("Curve_f7b63")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1vyba"]
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(2, 2, 1)
+angle_min = 360.00003
+angle_max = 508.40002
+spread = 180.0
+flatness = 1.0
+initial_velocity_min = 30.0
+initial_velocity_max = 80.0
+gravity = Vector3(0, 0, 0)
+scale_min = 17.0
+scale_max = 20.0
+scale_curve = SubResource("CurveTexture_wc416")
+color_ramp = SubResource("GradientTexture1D_y1j6a")
+color_initial_ramp = SubResource("GradientTexture1D_f4876")
+
+[node name="GPUParticles2D" type="GPUParticles2D"]
+scale = Vector2(3.6400013, 3.6400013)
+emitting = false
+texture = ExtResource("1_3pvn4")
+lifetime = 0.7
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_1vyba")
+script = ExtResource("2_wm7ww")
+
+[connection signal="finished" from="." to="." method="_on_finished"]
