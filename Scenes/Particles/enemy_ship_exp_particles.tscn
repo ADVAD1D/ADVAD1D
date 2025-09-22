@@ -10,7 +10,7 @@ colors = PackedColorArray(1, 0, 0, 1, 0.9999407, 0.9603352, 0.94417506, 1)
 gradient = SubResource("Gradient_lcurj")
 
 [sub_resource type="Gradient" id="Gradient_tuf4a"]
-colors = PackedColorArray(0.5686275, 0, 0, 1, 1, 1, 1, 1)
+colors = PackedColorArray(1, 0.72133213, 0.676376, 1, 1, 1, 1, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_y1j6a"]
 gradient = SubResource("Gradient_tuf4a")
