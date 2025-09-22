@@ -1,8 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://rfr1b2fb0o4q"]
+[gd_scene load_steps=16 format=3 uid="uid://rfr1b2fb0o4q"]
 
 [ext_resource type="Script" uid="uid://tvn1ktkbvk13" path="res://Scripts/ship_enemy.gd" id="1_exykt"]
 [ext_resource type="Texture2D" uid="uid://cx73ri0pr6pa5" path="res://Assets/Sprites/ship_enemy.png" id="1_nlnte"]
 [ext_resource type="Script" uid="uid://drwkj4b838jx8" path="res://Scripts/hitbox.gd" id="2_bscg7"]
+[ext_resource type="PackedScene" uid="uid://fcafgnv8sg0t" path="res://Scenes/Particles/enemy_ship_exp_particles.tscn" id="2_j3121"]
 [ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="4_f0gle"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exykt"]
@@ -57,6 +58,7 @@ z_index = 2
 scale = Vector2(2.5, 2.5)
 collision_layer = 9
 script = ExtResource("1_exykt")
+explosion_particles = ExtResource("2_j3121")
 metadata/_edit_group_ = true
 
 [node name="Hitbox" type="Area2D" parent="."]

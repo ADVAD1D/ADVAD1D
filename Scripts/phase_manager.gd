@@ -8,7 +8,7 @@ signal timer_updated(time_left_string)
 
 @export var ship_enemy_spawner: Node2D
 @export var saw_enemy_spawner: Node2D
-@export var phase_duration = 180.0
+@export var phase_duration = 100.0
 
 @export var min_shoot_timerate: float = 0.2
 @export var max_shoot_timerate: float = 0.5
@@ -27,7 +27,12 @@ var phase_requirements = {
 	2: 1000,
 	3: 1500,
 	4: 2000,
-	5: 2500
+	5: 2500,
+	6: 3000,
+	7: 3500,
+	8: 4000,
+	9: 4500,
+	10: 5000
 }
 
 var current_phase: int = 0

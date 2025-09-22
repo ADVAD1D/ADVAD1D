@@ -10,6 +10,8 @@ var acceleration: float = 4.0
 var friction: float = 2.0
 var separation_strength: float = 100.0
 
+@export var explosion_particles: PackedScene
+
 var is_dying: bool = false
 
 signal died
@@ -114,6 +116,11 @@ func die_and_respawn():
 	if is_dying:
 		return
 	is_dying = true
+	
+	var particles_instance = explosion_particles.instantiate()
+	add_sibling(particles_instance)
+	particles_instance.position = position
+	
 	died.emit(self)
 	queue_free()
 
@@ -121,4 +128,9 @@ func die_silently():
 	if is_dying:
 		return
 	is_dying = true
+	
+	var particles_instance = explosion_particles.instantiate()
+	add_sibling(particles_instance)
+	particles_instance.position = position
+	
 	queue_free()
