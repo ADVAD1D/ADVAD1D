@@ -1,4 +1,4 @@
-[gd_scene load_steps=90 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=91 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -324,6 +324,19 @@ _data = {
 "points": PackedVector2Array(0, 0, 0, 0, -736, -668, 0, 0, 0, 0, -342, -1104, 0, 0, 0, 0, 283, -1112, 0, 0, 0, 0, 672, -666, 0, 0, 0, 0, 877, -590, 0, 0, 0, 0, 1108, -95, 0, 0, 0, 0, 672, 898, 0, 0, 0, 0, 418, 878, 0, 0, 0, 0, 208, 1064, 0, 0, 0, 0, -267, 1041, 0, 0, 0, 0, -415, 904, 0, 0, 0, 0, -653, 880, 0, 0, 0, 0, -1125, -77, 0, 0, 0, 0, -739, -673)
 }
 point_count = 14
+
+[sub_resource type="GDScript" id="GDScript_pdsj5"]
+script/source = "extends CanvasLayer
+
+func _ready() -> void:
+	%unPauseButton.pressed.connect(GameManager.toggle_pause)
+	GameManager.pause.connect(toggle_show)
+	
+func toggle_show(is_paused : bool) -> void :
+	if is_paused : show()
+	else : hide()
+	
+"
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_kry3j")
@@ -785,6 +798,42 @@ curve = SubResource("Curve2D_wsu2k")
 [node name="EnemySpawnLocator" type="PathFollow2D" parent="EnemySpawnPath"]
 position = Vector2(-736, -668)
 rotation = -0.83595747
+
+[node name="menupausachaval" type="CanvasLayer" parent="."]
+process_mode = 3
+visible = false
+script = SubResource("GDScript_pdsj5")
+
+[node name="Control" type="Control" parent="menupausachaval"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="menupausachaval/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.58431375)
+
+[node name="unPauseButton" type="Button" parent="menupausachaval/Control/ColorRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -131.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Resume"
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]
