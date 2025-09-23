@@ -9,7 +9,7 @@ var is_glitch_sound: bool = false
 var game_paused := false
 
 func _ready() -> void:
-	pass
+	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _process(_delta: float) -> void:
 	pass
@@ -18,17 +18,9 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause") :
 		toggle_pause()
 
-func toggle_pause() -> void :
-	var main = get_tree().current_scene
-	if is_instance_valid(main) : 
-		game_paused = !game_paused
-		if game_paused :
-			main.process_mode = Node.PROCESS_MODE_DISABLED
-		else :
-			main.process_mode = Node.PROCESS_MODE_ALWAYS
-			
-		pause.emit(game_paused)
-
+func toggle_pause() -> void:
+	get_tree().paused = !get_tree().paused
+	pause.emit(get_tree().paused)
 func add_score(points):
 	score += points
 	score_updated.emit(score)
