@@ -26,6 +26,7 @@ func toggle_pause() -> void :
 			main.process_mode = Node.PROCESS_MODE_DISABLED
 		else :
 			main.process_mode = Node.PROCESS_MODE_ALWAYS
+			
 		pause.emit(game_paused)
 
 func add_score(points):
