@@ -21,6 +21,7 @@ func _input(event: InputEvent) -> void:
 func toggle_pause() -> void:
 	get_tree().paused = !get_tree().paused
 	pause.emit(get_tree().paused)
+	
 func add_score(points):
 	score += points
 	score_updated.emit(score)
