@@ -8,7 +8,6 @@ signal timer_updated(time_left_string)
 
 @export var ship_enemy_spawner: Node2D
 @export var saw_enemy_spawner: Node2D
-@export var phase_duration = 10.0
 
 @export var min_shoot_timerate: float = 0.2
 @export var max_shoot_timerate: float = 0.5
@@ -37,6 +36,19 @@ var phase_requirements = {
 	10: 5000
 }
 
+var phase_durations = {
+	1: 10.0,
+	2: 100.0,
+	3: 20.0,
+	4: 25.0,
+	5: 30.0,
+	6: 35.0,
+	7: 40.0,
+	8: 45.0,
+	9: 50.0,
+	10: 60.0
+}
+
 var current_phase: int = 0
 
 var phase_timer: float
@@ -49,6 +61,7 @@ var is_phase_active: bool = false
 func _ready() -> void:
 	print("phase manager listo a ejecutarse")
 	GameManager.score_updated.connect(_on_score_updated)
+	#current_phase = GameManager.phase_to_start - 1
 	start_new_phase() # Replace with function body.
 	
 	time_progress_bar.max_value = phase_timer
@@ -60,7 +73,8 @@ func _process(delta: float) -> void:
 		
 	phase_timer = phase_timer - delta
 	
-	time_progress_bar.value = phase_timer
+	if is_instance_valid(time_progress_bar):
+		time_progress_bar.value = phase_timer
 	
 	@warning_ignore("integer_division")
 	var minutes = int(phase_timer) / 60
@@ -86,9 +100,15 @@ func start_new_phase():
 	print("--- Empezando Fase ", current_phase, " ---")	
 	GameManager.reset_score()
 	
-	phase_timer = phase_duration
-	current_score_requirement = phase_requirements[current_phase]
+	var current_phase_duration = phase_durations.get(current_phase, 60.0)
 	
+	phase_timer = current_phase_duration
+	
+	if is_instance_valid(time_progress_bar):
+		time_progress_bar.max_value = current_phase_duration
+		time_progress_bar.value = current_phase_duration
+	
+	current_score_requirement = phase_requirements[current_phase]
 	phase_started.emit(current_phase, current_score_requirement)
 	apply_difficulty()
 	is_phase_active = true
