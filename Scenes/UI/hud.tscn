@@ -44,6 +44,7 @@ offset_right = 291.0
 offset_bottom = 46.0
 size_flags_horizontal = 4
 size_flags_vertical = 0
+text = "PHASE"
 label_settings = SubResource("LabelSettings_fqivn")
 
 [node name="FirstContainer" type="MarginContainer" parent="."]
