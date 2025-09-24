@@ -20,6 +20,7 @@ signal timer_updated(time_left_string)
 @export var phase_cooldown_timer: float = 5.0
 
 @onready var time_progress_bar: TextureProgressBar = $"../UILayer/HUD".get_node("TimeBarContainer/TimeProgressBar")
+@onready var phase_label: Label = $"../UILayer/HUD".get_node("PhaseLabel")
 
 @onready var success_sound: AudioStreamPlayer2D = $"../SucessSound"
 
@@ -38,15 +39,15 @@ var phase_requirements = {
 
 var phase_durations = {
 	1: 10.0,
-	2: 100.0,
+	2: 15.0,
 	3: 20.0,
-	4: 25.0,
-	5: 30.0,
-	6: 35.0,
-	7: 40.0,
-	8: 45.0,
-	9: 50.0,
-	10: 60.0
+	4: 30.0,
+	5: 40.0,
+	6: 50.0,
+	7: 60.0,
+	8: 70.0,
+	9: 80.0,
+	10: 100.0
 }
 
 var current_phase: int = 0
@@ -57,11 +58,16 @@ var current_score_requirement: int
 
 var is_phase_active: bool = false
 
+var restart_phase: bool = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	print("phase manager listo a ejecutarse")
 	GameManager.score_updated.connect(_on_score_updated)
-	#current_phase = GameManager.phase_to_start - 1
+	
+	#ready in current phase
+	if  restart_phase == true:
+		current_phase = GameManager.phase_to_start - 1
 	start_new_phase() # Replace with function body.
 	
 	time_progress_bar.max_value = phase_timer
@@ -99,6 +105,9 @@ func start_new_phase():
 		
 	print("--- Empezando Fase ", current_phase, " ---")	
 	GameManager.reset_score()
+	
+	if is_instance_valid(phase_label):
+		phase_label.text = "PHASE: " + str(current_phase)
 	
 	var current_phase_duration = phase_durations.get(current_phase, 60.0)
 	
