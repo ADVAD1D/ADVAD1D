@@ -26,6 +26,10 @@ window/size/viewport_height=270
 window/size/mode=2
 window/stretch/mode="canvas_items"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/kanban_tasks/plugin.cfg")
+
 [global_group]
 
 asteroides=""

@@ -8,7 +8,7 @@ signal timer_updated(time_left_string)
 
 @export var ship_enemy_spawner: Node2D
 @export var saw_enemy_spawner: Node2D
-@export var phase_duration = 100.0
+@export var phase_duration = 10.0
 
 @export var min_shoot_timerate: float = 0.2
 @export var max_shoot_timerate: float = 0.5
@@ -19,6 +19,8 @@ signal timer_updated(time_left_string)
 @export var max_saw_enemies: float = 2.0
 
 @export var phase_cooldown_timer: float = 5.0
+
+@onready var time_progress_bar: TextureProgressBar = $"../UILayer/HUD".get_node("TimeBarContainer/TimeProgressBar")
 
 @onready var success_sound: AudioStreamPlayer2D = $"../SucessSound"
 
@@ -48,7 +50,8 @@ func _ready() -> void:
 	print("phase manager listo a ejecutarse")
 	GameManager.score_updated.connect(_on_score_updated)
 	start_new_phase() # Replace with function body.
-
+	
+	time_progress_bar.max_value = phase_timer
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -56,6 +59,10 @@ func _process(delta: float) -> void:
 		return
 		
 	phase_timer = phase_timer - delta
+	print(phase_timer)
+	
+	time_progress_bar.value = phase_timer
+	
 	@warning_ignore("integer_division")
 	var minutes = int(phase_timer) / 60
 	var seconds = int(phase_timer) % 60
