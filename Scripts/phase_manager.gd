@@ -59,7 +59,6 @@ func _process(delta: float) -> void:
 		return
 		
 	phase_timer = phase_timer - delta
-	print(phase_timer)
 	
 	time_progress_bar.value = phase_timer
 	

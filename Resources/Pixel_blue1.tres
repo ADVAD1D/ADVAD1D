@@ -6,7 +6,7 @@
 font = ExtResource("1_ioibt")
 font_size = 20
 font_color = Color(6.617978e-08, 0.10316663, 0.10316668, 1)
-outline_size = 2
+outline_size = 5
 outline_color = Color(0, 1, 1, 1)
 shadow_size = 5
-shadow_color = Color(0, 0.72549, 0.694118, 1)
+shadow_color = Color(8.7838623e-07, 0.25323617, 0.24084643, 1)
