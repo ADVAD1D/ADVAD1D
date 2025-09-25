@@ -4,7 +4,8 @@ extends AudioStreamPlayer
 var playlist = [
 	preload("res://Assets/Audio/Music/Cosmic-Drift.wav"),
 	preload("res://Assets/Audio/Music/Space-Dance.wav"),
-	preload("res://Assets/Audio/Music/Space-War.wav")
+	preload("res://Assets/Audio/Music/Space-War.wav"),
+	preload("res://Assets/Audio/Music/Cosmic-Pulse.wav")
 ]
 
 var shuffled_playlist = []
