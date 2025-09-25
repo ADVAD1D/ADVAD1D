@@ -58,7 +58,7 @@ var current_score_requirement: int
 
 var is_phase_active: bool = false
 
-var restart_phase: bool = false
+var restart_from_phase: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -66,8 +66,9 @@ func _ready() -> void:
 	GameManager.score_updated.connect(_on_score_updated)
 	
 	#ready in current phase
-	if  restart_phase == true:
+	if  restart_from_phase == true:
 		current_phase = GameManager.phase_to_start - 1
+		
 	start_new_phase() # Replace with function body.
 	
 	time_progress_bar.max_value = phase_timer
