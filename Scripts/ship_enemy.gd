@@ -28,6 +28,8 @@ signal died
 
 @onready var engine_trail: GPUParticles2D = $EngineTrail
 
+var explosion_sound: AudioStreamPlayer2D = preload("res://Assets/Audio/AudioScenes/ship_enemy_explosion.tscn").instantiate()
+
 var show_debug: bool = false
 
 var bullet_scene = preload("res://Scenes/enemy_laser.tscn")
@@ -118,11 +120,17 @@ func die_and_respawn():
 	if is_dying:
 		return
 	is_dying = true
+	$CollisionShape2D.set_deferred("disabled", true)
 	
 	var particles_instance = explosion_particles.instantiate()
 	add_sibling(particles_instance)
 	particles_instance.position = position
 	
+	hide()
+	get_tree().current_scene.add_child(explosion_sound)
+	explosion_sound.play()
+	
+	await explosion_sound.finished
 	died.emit(self)
 	queue_free()
 
@@ -130,9 +138,15 @@ func die_silently():
 	if is_dying:
 		return
 	is_dying = true
+	$CollisionShape2D.set_deferred("disabled", true)
 	
 	var particles_instance = explosion_particles.instantiate()
 	add_sibling(particles_instance)
 	particles_instance.position = position
 	
+	hide()
+	get_tree().current_scene.add_child(explosion_sound)
+	explosion_sound.play()
+	
+	await explosion_sound.finished
 	queue_free()

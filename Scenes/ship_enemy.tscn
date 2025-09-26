@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://rfr1b2fb0o4q"]
+[gd_scene load_steps=17 format=3 uid="uid://rfr1b2fb0o4q"]
 
 [ext_resource type="Script" uid="uid://tvn1ktkbvk13" path="res://Scripts/ship_enemy.gd" id="1_exykt"]
 [ext_resource type="Texture2D" uid="uid://cx73ri0pr6pa5" path="res://Assets/Sprites/ship_enemy.png" id="1_nlnte"]
 [ext_resource type="Script" uid="uid://drwkj4b838jx8" path="res://Scripts/hitbox.gd" id="2_bscg7"]
 [ext_resource type="PackedScene" uid="uid://fcafgnv8sg0t" path="res://Scenes/Particles/enemy_ship_exp_particles.tscn" id="2_j3121"]
 [ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="4_f0gle"]
+[ext_resource type="AudioStream" uid="uid://gob57jdfqbw8" path="res://Assets/Audio/609587-unfa-grenade-explosion-sfx-medium-sized-meaty-realistic_wlTs6upp1.wav" id="5_um53k"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exykt"]
 size = Vector2(11, 24)
@@ -84,6 +85,10 @@ scale = Vector2(39.2115, 143.279)
 [node name="ShootTimer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
+
+[node name="ExplosionSound" type="AudioStreamPlayer2D" parent="."]
+scale = Vector2(0.99999994, 0.99999994)
+stream = ExtResource("5_um53k")
 
 [node name="EnemyLsrSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_f0gle")

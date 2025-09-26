@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://d1fhsna1rxh2p"]
+
+[ext_resource type="AudioStream" uid="uid://gob57jdfqbw8" path="res://Assets/Audio/609587-unfa-grenade-explosion-sfx-medium-sized-meaty-realistic_wlTs6upp1.wav" id="1_ubiod"]
+[ext_resource type="Script" uid="uid://ki7t2teh6dwt" path="res://Assets/Audio/AudioScenes/ship_enemy_explosion.gd" id="2_8glis"]
+
+[node name="ShipEnemyExplosion" type="AudioStreamPlayer2D"]
+stream = ExtResource("1_ubiod")
+script = ExtResource("2_8glis")
+
+[connection signal="finished" from="." to="." method="_on_finished"]
