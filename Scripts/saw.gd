@@ -9,7 +9,8 @@ extends Area2D
 signal died
 
 @onready var separation_area: Area2D = $SeparationArea
-@onready var metal_sound: AudioStreamPlayer2D = $MetalSound
+
+var metal_sound: AudioStreamPlayer2D = preload("res://Assets/Audio/AudioScenes/saw_explosion_sound.tscn").instantiate()
 
 var player: Node2D
 var current_velocity: Vector2 = Vector2.ZERO
@@ -67,6 +68,7 @@ func die_and_respawn():
 	saw_particles_instance.position = position
 	
 	hide()
+	get_tree().current_scene.add_child(metal_sound)
 	metal_sound.play()
 	
 	await metal_sound.finished
@@ -84,6 +86,7 @@ func die_silently():
 	saw_particles_instance.position = position
 	
 	hide()
+	get_tree().current_scene.add_child(metal_sound)
 	metal_sound.play()
 	
 	await metal_sound.finished

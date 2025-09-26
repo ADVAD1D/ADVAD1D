@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bvtm1pgoem10l"]
+
+[ext_resource type="AudioStream" uid="uid://c6g46xp8qj5n0" path="res://Assets/Audio/418194__deleted_user_3656686__hard-glass-impact.wav" id="1_kt70g"]
+[ext_resource type="Script" uid="uid://copx6ypkg2ffe" path="res://Assets/Audio/AudioScenes/saw_explosion_sound.gd" id="2_8wi04"]
+
+[node name="SawExplosionSound" type="AudioStreamPlayer2D"]
+stream = ExtResource("1_kt70g")
+script = ExtResource("2_8wi04")
+
+[connection signal="finished" from="." to="." method="_on_finished"]
