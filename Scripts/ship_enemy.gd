@@ -18,6 +18,8 @@ signal died
 
 @onready var hitbox: Area2D = $Hitbox
 
+@onready var shoot_marker: Marker2D = $Muzzle
+
 @onready var laser_sound: AudioStreamPlayer2D = $EnemyLsrSound
 
 @onready var separation_area = $SeparationArea
@@ -91,7 +93,7 @@ func shoot() -> void:
 	if shoot_timer.is_stopped():
 		var bullet_instance = bullet_scene.instantiate()
 		get_parent().add_child(bullet_instance)
-		bullet_instance.global_position = $Muzzle.global_position
+		bullet_instance.global_position = shoot_marker.global_position
 		bullet_instance.start(rotation)
 		shoot_timer.start()
 		laser_sound.play()
