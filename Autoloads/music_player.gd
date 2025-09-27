@@ -5,7 +5,8 @@ var playlist = [
 	preload("res://Assets/Audio/Music/Cosmic-Drift.wav"),
 	preload("res://Assets/Audio/Music/Space-Dance.wav"),
 	preload("res://Assets/Audio/Music/Space-War.wav"),
-	preload("res://Assets/Audio/Music/Cosmic-Pulse.wav")
+	preload("res://Assets/Audio/Music/Cosmic-Pulse.wav"),
+	preload("res://Assets/Audio/Music/synthwave-80s-retro-background-music-400483.wav")
 ]
 
 var shuffled_playlist = []

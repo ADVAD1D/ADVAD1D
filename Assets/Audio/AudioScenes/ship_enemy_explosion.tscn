@@ -5,6 +5,7 @@
 
 [node name="ShipEnemyExplosion" type="AudioStreamPlayer2D"]
 stream = ExtResource("1_ubiod")
+volume_db = 6.199
 script = ExtResource("2_8glis")
 
 [connection signal="finished" from="." to="." method="_on_finished"]

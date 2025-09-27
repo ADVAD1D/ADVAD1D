@@ -9,6 +9,7 @@ var is_glitch_sound: bool = false
 var game_paused := false
 
 func _ready() -> void:
+	randomize()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _process(_delta: float) -> void:
