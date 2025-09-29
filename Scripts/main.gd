@@ -7,6 +7,7 @@ extends Node2D
 @onready var saw_spawner: SawSpawner = $SawSpawner
 @onready var saw_sound: AudioStreamPlayer2D = $SawSound
 @onready var laser_wall_animated: AnimatedSprite2D = $LaserWallAnimation
+@onready var drone_sprite: AnimatedSprite2D = $DronePath/PathFollow2D/DroneSprite
 
 var base_zoom: Vector2
 @export var laser_explosion_particles: PackedScene
@@ -21,6 +22,7 @@ func _ready() -> void:
 	player.connect("dash", Callable(self, "_on_player_dashed"))
 	saw_spawner.first_saw_spawner.connect(saw_sound.play, CONNECT_ONE_SHOT)
 	laser_wall_animated.play()
+	drone_sprite.play()
 	
 	if GameManager.is_shader_animation:
 		GameManager.play_glitch_effect(crt_material)

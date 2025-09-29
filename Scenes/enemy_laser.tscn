@@ -21,13 +21,13 @@ script = ExtResource("1_wss2q")
 enemy_laser_particles = ExtResource("2_swast")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-rotation = -1.57181
 scale = Vector2(3.18738, 3.18738)
 texture = ExtResource("1_s2mcl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 z_index = 2
-position = Vector2(1.5, -3.5)
+position = Vector2(3, 2)
+rotation = 1.5707964
 shape = SubResource("RectangleShape2D_wss2q")
 debug_color = Color(0.943307, 7.70092e-06, 0.602222, 0.42)
 

@@ -96,7 +96,10 @@ func shoot() -> void:
 		var bullet_instance = bullet_scene.instantiate()
 		get_parent().add_child(bullet_instance)
 		bullet_instance.global_position = shoot_marker.global_position
-		bullet_instance.start(rotation)
+		
+		var fire_direction = Vector2.UP.rotated(rotation)
+		bullet_instance.start(fire_direction)
+		
 		shoot_timer.start()
 		laser_sound.play()
 		
