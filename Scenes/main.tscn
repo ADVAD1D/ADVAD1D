@@ -567,7 +567,7 @@ asteroid_scene = ExtResource("4_kry3j")
 player_node = NodePath("../PlayerInstance")
 
 [node name="Timer" type="Timer" parent="AsteroidSpawner"]
-wait_time = 0.2
+wait_time = 0.25
 autostart = true
 
 [node name="DeathZone" type="Area2D" parent="."]
@@ -793,7 +793,7 @@ text = "Resume"
 
 [node name="SucessSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("13_pdsj5")
-volume_db = 1.462
+volume_db = 4.906
 pitch_scale = 0.54
 
 [node name="GlitchSound" type="AudioStreamPlayer2D" parent="."]
