@@ -1,4 +1,4 @@
-[gd_scene load_steps=91 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=93 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -21,6 +21,7 @@
 [ext_resource type="Script" uid="uid://ddvbqopxphvow" path="res://Scripts/saw_spawner.gd" id="16_k12tt"]
 [ext_resource type="PackedScene" uid="uid://cljshiwenhoau" path="res://Scenes/saw.tscn" id="17_h1bgf"]
 [ext_resource type="Script" uid="uid://ch7ngtptk8mma" path="res://Scripts/phase_manager.gd" id="20_hibaj"]
+[ext_resource type="PackedScene" uid="uid://nvpk6cv3oksk" path="res://Scenes/drone.tscn" id="22_ee4r6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fevyy"]
 atlas = ExtResource("7_fevyy")
@@ -338,6 +339,12 @@ _data = {
 }
 point_count = 14
 
+[sub_resource type="Curve2D" id="Curve2D_pdsj5"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -887, -636, 0, 0, 0, 0, -1167, -79, 0, 0, 0, 0, -667, 912, 0, 0, 0, 0, -1087, -74, 0, 0, 0, 0, -887, -635)
+}
+point_count = 5
+
 [node name="Main" type="Node2D"]
 script = ExtResource("1_kry3j")
 laser_explosion_particles = ExtResource("2_hptm8")
@@ -567,8 +574,7 @@ asteroid_scene = ExtResource("4_kry3j")
 player_node = NodePath("../PlayerInstance")
 
 [node name="Timer" type="Timer" parent="AsteroidSpawner"]
-wait_time = 0.25
-autostart = true
+wait_time = 0.15
 
 [node name="DeathZone" type="Area2D" parent="."]
 position = Vector2(3.98833, -460.012)
@@ -836,6 +842,13 @@ curve = SubResource("Curve2D_wsu2k")
 [node name="EnemySpawnLocator" type="PathFollow2D" parent="EnemySpawnPath"]
 position = Vector2(-736, -668)
 rotation = -0.83595747
+
+[node name="DronePath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_pdsj5")
+
+[node name="PathFollow2D" parent="DronePath" instance=ExtResource("22_ee4r6")]
+position = Vector2(-887, -636)
+rotation = 2.036596
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]
