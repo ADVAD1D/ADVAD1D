@@ -1,6 +1,6 @@
 extends PathFollow2D
 
-@export var speed: float = 400.0
+@export var speed: float = 200.0
 @export var shoot_timerate: float = 0.8
 
 var laser_scene = preload("res://Scenes/enemy_laser.tscn")

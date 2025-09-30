@@ -341,7 +341,7 @@ point_count = 14
 
 [sub_resource type="Curve2D" id="Curve2D_pdsj5"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, -887, -636, 0, 0, 0, 0, -1167, -79, 0, 0, 0, 0, -667, 912, 0, 0, 0, 0, -1087, -74, 0, 0, 0, 0, -887, -635)
+"points": PackedVector2Array(0, 0, 0, 0, -887, -636, 0, 0, 0, 0, -1167, -79, 0, 0, 0, 0, -667, 912, 0, 0, 0, 0, -1117, -78, 0, 0, 0, 0, -887, -635)
 }
 point_count = 5
 

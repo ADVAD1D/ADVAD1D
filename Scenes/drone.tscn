@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://nvpk6cv3oksk"]
 
-[ext_resource type="Script" uid="uid://bm1j0661qagb1" path="res://Scenes/drone.gd" id="1_o36xs"]
+[ext_resource type="Script" uid="uid://bm1j0661qagb1" path="res://drone.gd" id="1_o36xs"]
 [ext_resource type="Texture2D" uid="uid://b4fpeaxpa10j5" path="res://Assets/Sprites/Dronfixed.png" id="2_o36xs"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_i3b1v"]
