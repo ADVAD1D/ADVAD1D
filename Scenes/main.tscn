@@ -819,11 +819,13 @@ lifetime = 10.0
 process_material = SubResource("ParticleProcessMaterial_d1ilt")
 script = ExtResource("12_6iyac")
 
-[node name="PhaseNode" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "ship_enemy_spawner", "saw_enemy_spawner")]
+[node name="PhaseNode" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "ship_enemy_spawner", "saw_enemy_spawner", "wall_to_remove", "sprite_to_remove")]
 script = ExtResource("20_hibaj")
 player_node = NodePath("../PlayerInstance")
 ship_enemy_spawner = NodePath("../EnemySpawner")
 saw_enemy_spawner = NodePath("../SawSpawner")
+wall_to_remove = NodePath("../Walls/WallStartBridge")
+sprite_to_remove = NodePath("../LaserWallAnimation")
 
 [node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node") groups=["destructibles"]]
 script = ExtResource("14_wsu2k")
