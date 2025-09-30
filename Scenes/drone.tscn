@@ -46,4 +46,4 @@ one_shot = true
 [node name="LsrSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_i3b1v")
 volume_db = -10.0
-pitch_scale = 0.29
+pitch_scale = 0.3

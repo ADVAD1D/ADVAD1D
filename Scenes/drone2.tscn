@@ -1,0 +1,47 @@
+[gd_scene load_steps=7 format=3 uid="uid://daifx8q4u0x65"]
+
+[ext_resource type="Script" uid="uid://cag42omnw12d6" path="res://Scripts/drone_2.gd" id="1_47h8v"]
+[ext_resource type="Texture2D" uid="uid://bohkw8suktfti" path="res://Assets/Sprites/Dronfixed2.png" id="1_excle"]
+[ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="3_2ogp0"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8x5i7"]
+atlas = ExtResource("1_excle")
+region = Rect2(0, 0, 500, 400)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_47h8v"]
+atlas = ExtResource("1_excle")
+region = Rect2(500, 0, 500, 400)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2ogp0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8x5i7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_47h8v")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="PathFollow2D" type="PathFollow2D"]
+rotates = false
+script = ExtResource("1_47h8v")
+
+[node name="DroneSprite" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.352, 0.352)
+sprite_frames = SubResource("SpriteFrames_2ogp0")
+
+[node name="Marker2D" type="Marker2D" parent="."]
+
+[node name="ShootTimer" type="Timer" parent="."]
+wait_time = 0.8
+one_shot = true
+
+[node name="LsrSound" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(-23, 0)
+stream = ExtResource("3_2ogp0")
+volume_db = -10.0
+pitch_scale = 0.3

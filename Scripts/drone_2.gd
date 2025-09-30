@@ -10,11 +10,12 @@ var laser_scene = preload("res://Scenes/enemy_laser.tscn")
 @onready var shoot_muzzle: Marker2D = $Marker2D
 @onready var laser_sound: AudioStreamPlayer2D = $LsrSound
 
-var move_direction: int = 1
+var move_direction: int = -1
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	progress_ratio = 1.0
 	# This code calculates and prints the progress_ratio for each control point of the parent Path2D.
 	# This is temporary and can be removed after noting down the values.
 	var path_node = get_parent()
@@ -32,7 +33,7 @@ func _ready() -> void:
 		print("Curve has no length. Cannot calculate progress ratios.")
 		return
 		
-	print("--- Progress Ratios for Path2D DRONE1 Control Points ---")
+	print("--- Progress Ratios for Path2D DRONE2 Control Points ---")
 	for i in range(curve.get_point_count()):
 		var point_pos = curve.get_point_position(i)
 		var offset = curve.get_closest_offset(point_pos)
@@ -44,14 +45,14 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	progress += speed * move_direction * delta
-	if progress_ratio >= 1.0:
-		sprite.rotation_degrees = -90.0
-	elif progress_ratio >= 0.82:
-		sprite.rotation_degrees = -90.0
-	elif progress_ratio >= 0.18:
-		sprite.rotation_degrees = -150.0
+	
+	if progress_ratio <= 0.33:
+		sprite.rotation_degrees = 90.0
+	elif progress_ratio <= 0.68:
+		sprite.rotation_degrees = 40.0
 	else:
-		sprite.rotation_degrees = -90.0
+		sprite.rotation_degrees = 90.0
+		
 	shoot()
 
 func shoot():
@@ -59,7 +60,7 @@ func shoot():
 		var laser_instance = laser_scene.instantiate()
 		get_parent().add_child(laser_instance)
 		laser_instance.global_position = shoot_muzzle.global_position
-		var fire_direction = Vector2.RIGHT.rotated(sprite.global_rotation)
+		var fire_direction = Vector2.LEFT.rotated(sprite.global_rotation)
 		laser_instance.start(fire_direction)
 		shoot_timer.start()
 		
