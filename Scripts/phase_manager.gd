@@ -12,10 +12,10 @@ signal timer_updated(time_left_string)
 @export var min_shoot_timerate: float = 0.2
 @export var max_shoot_timerate: float = 0.5
 
-@export var min_ship_enemies: float = 2.0
-@export var max_ship_enemies: float = 5.0
+@export var min_ship_enemies: float = 0.0 # = 2.0
+@export var max_ship_enemies: float = 0.0 # = 5.0
 
-@export var max_saw_enemies: float = 2.0
+@export var max_saw_enemies: float = 0.0 # = 2.0
 
 @export var phase_cooldown_timer: float = 5.0
 
@@ -189,5 +189,5 @@ func apply_difficulty():
 		
 func start_fade_out_sprite(target_sprite: AnimatedSprite2D):
 	var tween = create_tween()
-	tween.tween_property(target_sprite, "modulate:a", 0.0, 2.0)
+	tween.tween_property(target_sprite, "modulate:a", 0.0, 1.0)
 	tween.tween_callback(target_sprite.queue_free)
