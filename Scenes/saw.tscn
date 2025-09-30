@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cljshiwenhoau"]
+[gd_scene load_steps=16 format=3 uid="uid://cljshiwenhoau"]
 
 [ext_resource type="Script" uid="uid://d1yd1goxj7d46" path="res://Scripts/saw.gd" id="1_4qbox"]
 [ext_resource type="PackedScene" uid="uid://5r1c4072iu8o" path="res://Scenes/Particles/saw_particles.tscn" id="2_1kxu7"]
@@ -20,6 +20,40 @@ gradient = SubResource("Gradient_4qbox")
 use_hdr = true
 fill = 1
 fill_from = Vector2(0.491453, 0.478632)
+
+[sub_resource type="Gradient" id="Gradient_1kxu7"]
+colors = PackedColorArray(1, 0.07058824, 0.1764706, 1, 1, 0.4, 0.42352942, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ngmcx"]
+gradient = SubResource("Gradient_1kxu7")
+
+[sub_resource type="Gradient" id="Gradient_ijyew"]
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_1h6d2"]
+gradient = SubResource("Gradient_ijyew")
+
+[sub_resource type="Curve" id="Curve_n0gsv"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.86462885, 0.44943827), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_c323r"]
+curve = SubResource("Curve_n0gsv")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_rnbvy"]
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(1, 0, 0)
+emission_shape_scale = Vector3(1, 0, 1)
+emission_shape = 2
+emission_sphere_radius = 1.0
+angle_min = -187.29999
+angle_max = 360.00003
+gravity = Vector3(0, 98, 0)
+scale_min = 20.0
+scale_max = 30.0
+scale_curve = SubResource("CurveTexture_c323r")
+color_ramp = SubResource("GradientTexture1D_1h6d2")
+color_initial_ramp = SubResource("GradientTexture1D_ngmcx")
 
 [node name="Saw" type="Area2D" groups=["saws"]]
 collision_layer = 5
@@ -53,5 +87,9 @@ texture = SubResource("GradientTexture2D_mk2w8")
 stream = ExtResource("3_mk2w8")
 volume_db = -6.466
 pitch_scale = 0.5
+
+[node name="Trail" type="GPUParticles2D" parent="."]
+position = Vector2(-63, -14)
+process_material = SubResource("ParticleProcessMaterial_rnbvy")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

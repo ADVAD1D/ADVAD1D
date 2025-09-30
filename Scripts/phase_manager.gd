@@ -19,6 +19,9 @@ signal timer_updated(time_left_string)
 
 @export var phase_cooldown_timer: float = 5.0
 
+@export var wall_to_remove: StaticBody2D
+@export var sprite_to_remove: AnimatedSprite2D
+
 @onready var time_progress_bar: TextureProgressBar = $"../UILayer/HUD".get_node("TimeBarContainer/TimeProgressBar")
 @onready var phase_label: Label = $"../UILayer/HUD".get_node("PhaseLabel")
 
@@ -103,6 +106,12 @@ func start_new_phase():
 		if is_instance_valid(ship_enemy_spawner):
 			ship_enemy_spawner.stop()
 			
+		if is_instance_valid(wall_to_remove):
+			wall_to_remove.queue_free()
+			
+		if is_instance_valid(sprite_to_remove):
+			start_fade_out_sprite(sprite_to_remove)
+			
 		return
 		
 	print("--- Empezando Fase ", current_phase, " ---")	
@@ -177,3 +186,8 @@ func apply_difficulty():
 	
 	if is_instance_valid(saw_enemy_spawner):
 		saw_enemy_spawner.configure_for_phase(saw_max_enemies, saw_config)
+		
+func start_fade_out_sprite(target_sprite: AnimatedSprite2D):
+	var tween = create_tween()
+	tween.tween_property(target_sprite, "modulate:a", 0.0, 2.0)
+	tween.tween_callback(target_sprite.queue_free)
