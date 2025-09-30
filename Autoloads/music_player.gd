@@ -2,15 +2,15 @@ extends AudioStreamPlayer
 
 
 var playlist = [
-	preload("res://Assets/Audio/Music/Cosmic-Drift.wav"),
+	preload("res://Assets/Audio/Music/neon-rising-336846.wav"),
 	preload("res://Assets/Audio/Music/letx27s-meet-michelle-synthpop-background-music-for-video-vlog-394174.wav"),
 	preload("res://Assets/Audio/Music/techno-driver-188955.wav"),
 	preload("res://Assets/Audio/Music/neon-drive-retrowaver-synthwave-vaporwave-retro-80s-193108.wav"),
-	preload("res://Assets/Audio/Music/synthwave-80s-retro-background-music-400483.wav"),
 	preload("res://Assets/Audio/Music/synthwave-retrowave-sythpop-121540.wav")
 ]
 
 #licences
+#Music by <a href="https://pixabay.com/es/users/psychronic-13092015/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=336846">Douglas Gustafson</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=336846">Pixabay</a>
 #Music by <a href="https://pixabay.com/es/users/white_records-32584949/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=394174">Maksym Dudchyk</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=394174">Pixabay</a>
 #Music by <a href="https://pixabay.com/es/users/sergepavkinmusic-6130722/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=335098">Sergii Pavkin</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=335098">Pixabay</a>
 #Music by <a href="https://pixabay.com/es/users/lesiakower-25701529/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=109038">Lesiakower</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=109038">Pixabay</a>

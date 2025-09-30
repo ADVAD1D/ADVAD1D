@@ -12,10 +12,10 @@ signal timer_updated(time_left_string)
 @export var min_shoot_timerate: float = 0.2
 @export var max_shoot_timerate: float = 0.5
 
-@export var min_ship_enemies: float = 0.0
-@export var max_ship_enemies: float = 0.0
+@export var min_ship_enemies: float = 2.0
+@export var max_ship_enemies: float = 5.0
 
-@export var max_saw_enemies: float = 0.0
+@export var max_saw_enemies: float = 2.0
 
 @export var phase_cooldown_timer: float = 5.0
 
@@ -58,7 +58,7 @@ var current_score_requirement: int
 
 var is_phase_active: bool = false
 
-var restart_from_phase: bool = false
+var restart_from_phase: bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -95,6 +95,7 @@ func start_new_phase():
 	current_phase = current_phase + 1
 	if not phase_requirements.has(current_phase):
 		print("has ganado las fases")
+		phase_label.text = "ARENA WIN" 
 		
 		if is_instance_valid(saw_enemy_spawner):
 			saw_enemy_spawner.stop()
