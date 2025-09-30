@@ -97,6 +97,8 @@ func shoot() -> void:
 		get_parent().add_child(bullet_instance)
 		bullet_instance.global_position = shoot_marker.global_position
 		
+		#UP for direction of the laser in instance
+		#Indica la dirección del laser en su instancia
 		var fire_direction = Vector2.UP.rotated(rotation)
 		bullet_instance.start(fire_direction)
 		
