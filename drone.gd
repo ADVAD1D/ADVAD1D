@@ -8,6 +8,7 @@ var laser_scene = preload("res://Scenes/enemy_laser.tscn")
 @onready var shoot_timer: Timer = $ShootTimer
 @onready var sprite: AnimatedSprite2D = $DroneSprite
 @onready var shoot_muzzle: Marker2D = $Marker2D
+@onready var laser_sound: AudioStreamPlayer2D = $LsrSound
 
 var move_direction: int = 1
 
@@ -61,3 +62,5 @@ func shoot():
 		var fire_direction = Vector2.RIGHT.rotated(sprite.global_rotation)
 		laser_instance.start(fire_direction)
 		shoot_timer.start()
+		
+		laser_sound.play()

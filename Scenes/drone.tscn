@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://nvpk6cv3oksk"]
+[gd_scene load_steps=7 format=3 uid="uid://nvpk6cv3oksk"]
 
 [ext_resource type="Script" uid="uid://bm1j0661qagb1" path="res://drone.gd" id="1_o36xs"]
 [ext_resource type="Texture2D" uid="uid://b4fpeaxpa10j5" path="res://Assets/Sprites/Dronfixed.png" id="2_o36xs"]
+[ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="3_i3b1v"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_i3b1v"]
 atlas = ExtResource("2_o36xs")
@@ -41,3 +42,7 @@ position = Vector2(4.48718, 0)
 [node name="ShootTimer" type="Timer" parent="."]
 wait_time = 0.8
 one_shot = true
+
+[node name="LsrSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_i3b1v")
+pitch_scale = 0.29
