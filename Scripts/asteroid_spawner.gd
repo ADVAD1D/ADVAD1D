@@ -37,3 +37,8 @@ func create_asteroid():
 
 func _on_timer_timeout() -> void:
 	create_asteroid()
+	
+func stop():
+	if has_node("Timer"):
+		$Timer.stop()
+		print("Spawner de asteroides DETENIDO")
