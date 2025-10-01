@@ -26,6 +26,7 @@ signal timer_updated(time_left_string)
 @onready var phase_label: Label = $"../UILayer/HUD".get_node("PhaseLabel")
 
 @onready var success_sound: AudioStreamPlayer2D = $"../SucessSound"
+@onready var asteroids_spawner: Marker2D = $"../AsteroidSpawner"
 
 var phase_requirements = {
 	1: 500,
@@ -111,6 +112,9 @@ func start_new_phase():
 			
 		if is_instance_valid(sprite_to_remove):
 			start_fade_out_sprite(sprite_to_remove)
+			
+		if is_instance_valid(asteroids_spawner):
+			asteroids_spawner.stop()
 			
 		return
 		
