@@ -38,7 +38,6 @@ sprite_frames = SubResource("SpriteFrames_2ogp0")
 position = Vector2(-3, -25)
 
 [node name="ShootTimer" type="Timer" parent="."]
-wait_time = 0.8
 one_shot = true
 
 [node name="LsrSound" type="AudioStreamPlayer2D" parent="."]

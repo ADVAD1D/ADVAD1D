@@ -3,10 +3,12 @@ extends AudioStreamPlayer
 
 var playlist = [
 	preload("res://Assets/Audio/Music/neon-rising-336846.wav"),
-	preload("res://Assets/Audio/Music/letx27s-meet-michelle-synthpop-background-music-for-video-vlog-394174.wav"),
+	preload("res://Assets/Audio/Music/videoplayback.wav"),
 	preload("res://Assets/Audio/Music/techno-driver-188955.wav"),
 	preload("res://Assets/Audio/Music/neon-drive-retrowaver-synthwave-vaporwave-retro-80s-193108.wav"),
-	preload("res://Assets/Audio/Music/synthwave-retrowave-sythpop-121540.wav")
+	preload("res://Assets/Audio/Music/synthwave-retrowave-sythpop-121540.wav"),
+	preload("res://Assets/Audio/Music/Cybertronic Guardian.wav"),
+	preload("res://Assets/Audio/Music/trance-terminus-283001.wav")
 ]
 
 #licences
