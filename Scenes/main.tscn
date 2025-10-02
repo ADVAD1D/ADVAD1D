@@ -807,7 +807,7 @@ text = "Resume"
 
 [node name="SucessSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("13_pdsj5")
-volume_db = 7.0
+volume_db = 12.0
 pitch_scale = 0.54
 
 [node name="GlitchSound" type="AudioStreamPlayer2D" parent="."]
