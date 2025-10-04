@@ -25,7 +25,7 @@ font_size = 15
 font_color = Color(0, 0.14569733, 0.14569727, 1)
 outline_size = 2
 outline_color = Color(0, 1, 1, 1)
-shadow_size = 5
+shadow_size = 3
 shadow_color = Color(9.62615e-08, 0.31618276, 0.32560238, 1)
 
 [node name="HUD" type="Control"]
