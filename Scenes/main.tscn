@@ -289,7 +289,7 @@ shader_parameter/noise_speed = 2.0
 shader_parameter/static_noise_intensity = 0.0
 shader_parameter/pixelate = false
 shader_parameter/discolor = false
-shader_parameter/warp_amount = 0.0
+shader_parameter/warp_amount = 0.150000007125
 shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.3
 shader_parameter/vignette_opacity = 1.0
@@ -531,7 +531,7 @@ debug_color = Color(0.043137256, 0.73333335, 0, 0.8980392)
 texture_filter = 2
 position = Vector2(-6, -475)
 scale = Vector2(22.56, 33.52)
-energy = 0.5
+energy = 0.2
 texture = SubResource("GradientTexture2D_b3802")
 
 [node name="Rightlight" type="PointLight2D" parent="MainLight2D"]
@@ -539,7 +539,7 @@ position = Vector2(64.8136, 9.81579)
 rotation = -3.12224
 scale = Vector2(0.422627, 0.347391)
 skew = -0.00183356
-energy = 4.31
+energy = 0.5
 texture = SubResource("GradientTexture2D_fevyy")
 
 [node name="Leftlight" type="PointLight2D" parent="MainLight2D"]
@@ -547,7 +547,7 @@ position = Vector2(-64.0479, 10.1757)
 rotation = 1.58322
 scale = Vector2(0.303801, 0.425917)
 skew = -0.00679803
-energy = 2.5
+energy = 0.5
 texture = SubResource("GradientTexture2D_fevyy")
 
 [node name="UpLightRight" type="PointLight2D" parent="MainLight2D"]
@@ -555,7 +555,6 @@ position = Vector2(31.6489, -17.5418)
 rotation = -0.00507933
 scale = Vector2(0.36698, 0.184983)
 skew = 0.292145
-energy = 3.07
 texture = SubResource("GradientTexture2D_hibaj")
 
 [node name="UpLightLeft" type="PointLight2D" parent="MainLight2D"]
@@ -563,14 +562,12 @@ position = Vector2(-31.383, -18.7948)
 rotation = -3.09272
 scale = Vector2(0.392089, -0.154698)
 skew = -0.251327
-energy = 3.07
 texture = SubResource("GradientTexture2D_hibaj")
 
 [node name="BottomLight" type="PointLight2D" parent="MainLight2D"]
 texture_filter = 2
 position = Vector2(-0.132979, 26.7005)
 scale = Vector2(1.39539, 0.648821)
-energy = 1.07
 texture = SubResource("GradientTexture2D_pdsj5")
 
 [node name="AsteroidSpawner" type="Marker2D" parent="." node_paths=PackedStringArray("player_node")]
