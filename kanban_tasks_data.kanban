@@ -11,7 +11,8 @@
 			"uuid": "72d06918-5355-4e7c-b8e4-3c982492c347",
 			"title": "Todo",
 			"tasks": [
-				"795e901c-2084-4a57-8d82-a8a524c50ef3"
+				"795e901c-2084-4a57-8d82-a8a524c50ef3",
+				"c979c992-c8dc-40a1-bed0-284cf229de34"
 			]
 		},
 		{
@@ -54,6 +55,13 @@
 		{
 			"uuid": "c6dcc887-d0cc-4725-b8d0-396a9783fd94",
 			"title": "Progressive time in Phases",
+			"description": "",
+			"category": "546f1f49-1f30-4a13-b4aa-a983b4297f33",
+			"steps": []
+		},
+		{
+			"uuid": "c979c992-c8dc-40a1-bed0-284cf229de34",
+			"title": "Add pause button",
 			"description": "",
 			"category": "546f1f49-1f30-4a13-b4aa-a983b4297f33",
 			"steps": []
