@@ -297,14 +297,15 @@ shader_parameter/vignette_opacity = 1.0
 [sub_resource type="GDScript" id="GDScript_pdsj5"]
 script/source = "extends CanvasLayer
 
+@onready var unpause_button: Button = %unPauseButton
+
 func _ready() -> void:
-	%unPauseButton.pressed.connect(GameManager.toggle_pause)
+	unpause_button.pressed.connect(GameManager.toggle_pause)
 	GameManager.pause.connect(toggle_show)
 	
 func toggle_show(is_paused : bool) -> void :
 	if is_paused : show()
 	else : hide()
-	
 "
 
 [sub_resource type="Gradient" id="Gradient_d1ilt"]
