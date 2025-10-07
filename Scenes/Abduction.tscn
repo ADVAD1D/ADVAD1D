@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cwrkymd0iykky"]
+[gd_scene load_steps=5 format=3 uid="uid://cwrkymd0iykky"]
 
 [ext_resource type="Texture2D" uid="uid://cgxfbj1nol3bo" path="res://Assets/Sprites/capitainadabduction.png" id="1_nlkhs"]
+[ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scripts/camera_2d.gd" id="2_g50ly"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_lkfcr"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g50ly"]
@@ -22,7 +23,7 @@ shader_parameter/noise_speed = 2.0
 shader_parameter/static_noise_intensity = 0.0
 shader_parameter/pixelate = false
 shader_parameter/discolor = false
-shader_parameter/warp_amount = 0.30000001425
+shader_parameter/warp_amount = 0.2000000095
 shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.2
 shader_parameter/vignette_opacity = 1.0
@@ -30,20 +31,32 @@ shader_parameter/vignette_opacity = 1.0
 [node name="Abduction" type="Node2D"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(258, 169.99998)
-scale = Vector2(4.3421574, 4.3421574)
+position = Vector2(-3, 127)
+scale = Vector2(16.725534, 16.725534)
 texture = ExtResource("1_nlkhs")
 
-[node name="UILayer" type="CanvasLayer" parent="Sprite2D"]
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player_target")]
+zoom = Vector2(0.25, 0.25)
+limit_left = -1115
+limit_top = -550
+limit_right = 1115
+limit_bottom = 800
+limit_smoothed = true
+position_smoothing_enabled = true
+script = ExtResource("2_g50ly")
+player_target = NodePath("")
 
-[node name="ColorRect" type="ColorRect" parent="Sprite2D/UILayer"]
+[node name="UILayer" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="UILayer"]
 material = SubResource("ShaderMaterial_g50ly")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -27.0
-offset_top = -2.0
-offset_right = 19.0
-offset_bottom = 76.0
+offset_left = -1166.0
+offset_top = -704.00006
+offset_right = -1120.0
+offset_bottom = -580.02576
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(4.061179, 4.061179)
