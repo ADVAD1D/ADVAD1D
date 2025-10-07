@@ -10,7 +10,8 @@ var playlist = [
 	preload("res://Assets/Audio/Music/Cybertronic Guardian.wav"),
 	preload("res://Assets/Audio/Music/trance-terminus-283001.wav"),
 	preload("res://Assets/Audio/Music/cybertech-flight-404708-_1_.wav"),
-	preload("res://Assets/Audio/Music/nightdrive-nemesis-387796.wav")
+	preload("res://Assets/Audio/Music/nightdrive-nemesis-387796.wav"),
+	preload("res://Assets/Audio/end-of-the-line-317985.wav")
 ]
 
 #licences
