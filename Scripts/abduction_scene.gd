@@ -8,6 +8,7 @@ extends Node2D
 
 func _ready() -> void:
 	start_sequence()
+	GameManager.can_pause = false
 
 func start_sequence():
 	await get_tree().create_timer(display_duration).timeout
@@ -17,6 +18,8 @@ func start_sequence():
 	MusicPlayer.fade_out_and_stop(fade_out_duration)
 	
 	await illustration_tween.finished
+	
+	GameManager.can_pause = true
 	
 	if next_scene:
 		get_tree().change_scene_to_packed(next_scene)
