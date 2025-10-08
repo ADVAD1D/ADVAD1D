@@ -1,6 +1,10 @@
 extends AudioStreamPlayer
 
 
+var scene1_specific_playlist: Dictionary = {
+	"res://Scenes/abduction.tscn": preload("res://Assets/Audio/Music/circuit-pathway-387799.wav")
+}
+
 var playlist = [
 	preload("res://Assets/Audio/Music/neon-rising-336846.wav"),
 	preload("res://Assets/Audio/Music/videoplayback.wav"),
@@ -29,9 +33,31 @@ var shuffled_playlist = []
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	finished.connect(play_next_shuffled_song)
-	play_next_shuffled_song() # Replace with function body.
+	get_tree().scene_changed.connect(_on_scene_changed) # Replace with function body.
+	_on_scene_changed()
+	
+	
+func _on_scene_changed():
+	var current_scene_path = get_tree().current_scene.scene_file_path
+	print("Escena actual: ", get_tree().current_scene.scene_file_path)
+	
+	if scene1_specific_playlist.has(current_scene_path):
+		var specific_song = scene1_specific_playlist[current_scene_path]
+		
+		if stream != specific_song:
+			stream = specific_song
+			play()
+			print("reproduciendo tema específico: ", stream.resource_path.get_file())
+			
+	elif not playing:
+		play_next_shuffled_song()
 
 func play_next_shuffled_song():
+	var current_scene_path = get_tree().current_scene.scene_file_path
+	
+	if scene1_specific_playlist.has(current_scene_path):
+		return
+		
 	if shuffled_playlist.is_empty():
 		print("Playlist terminada. ¡Barajando de nuevo!")
 		shuffled_playlist = playlist.duplicate()
