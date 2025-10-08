@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://cwrkymd0iykky"]
+[gd_scene load_steps=6 format=3 uid="uid://cwrkymd0iykky"]
 
 [ext_resource type="Texture2D" uid="uid://cgxfbj1nol3bo" path="res://Assets/Sprites/capitainadabduction.png" id="1_nlkhs"]
 [ext_resource type="Script" uid="uid://lw3vdictts31" path="res://Scripts/scene1_camera_control.gd" id="2_eraxo"]
+[ext_resource type="Script" uid="uid://5h5vl12ervyf" path="res://Scripts/abduction_sprite_control.gd" id="2_k0sn5"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_lkfcr"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g50ly"]
@@ -30,10 +31,19 @@ shader_parameter/vignette_opacity = 1.0
 
 [node name="Abduction" type="Node2D"]
 
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -1238.0
+offset_top = -736.00006
+offset_right = -1202.6173
+offset_bottom = -711.1544
+scale = Vector2(68.14068, 68.14068)
+color = Color(0, 0, 0, 1)
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-3, 127)
 scale = Vector2(16.725534, 16.725534)
 texture = ExtResource("1_nlkhs")
+script = ExtResource("2_k0sn5")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.25, 0.25)
