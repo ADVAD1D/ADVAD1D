@@ -8,7 +8,7 @@
 shader = ExtResource("2_lkfcr")
 shader_parameter/overlay = true
 shader_parameter/resolution = Vector2(640, 480)
-shader_parameter/brightness = 3.0
+shader_parameter/brightness = 3.5
 shader_parameter/scanlines_opacity = 0.0
 shader_parameter/scanlines_width = 0.03
 shader_parameter/grille_opacity = 0.50000002375
@@ -35,7 +35,7 @@ position = Vector2(-3, 127)
 scale = Vector2(16.725534, 16.725534)
 texture = ExtResource("1_nlkhs")
 
-[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player_target")]
+[node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.25, 0.25)
 limit_left = -1115
 limit_top = -550
@@ -44,7 +44,6 @@ limit_bottom = 800
 limit_smoothed = true
 position_smoothing_enabled = true
 script = ExtResource("2_g50ly")
-player_target = NodePath("")
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 
