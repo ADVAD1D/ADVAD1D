@@ -1,5 +1,6 @@
 extends AudioStreamPlayer
 
+var is_fading: bool = false
 
 var scene1_specific_playlist: Dictionary = {
 	"res://Scenes/abduction.tscn": preload("res://Assets/Audio/Music/circuit-pathway-387799.wav")
@@ -66,3 +67,20 @@ func play_next_shuffled_song():
 	stream = shuffled_playlist.pop_front()
 	play()
 	print("Ahora suena: ", stream.resource_path.get_file())
+
+func fade_out_and_stop(duration: float):
+	if not playing or is_fading:
+		return
+		
+	is_fading = true
+	print("iniciando fade out de la música...")
+	
+	var tween = create_tween()
+	tween.tween_property(self, "volume_db", -80.0, duration)
+	
+	await tween.finished
+	
+	stop()
+	volume_db = 0.0 
+	is_fading = false
+	print("Música detenida.")
