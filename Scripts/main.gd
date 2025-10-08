@@ -18,6 +18,7 @@ var base_zoom: Vector2
 
 func _ready() -> void:
 	reset_shader_parameters()
+	GameManager.can_pause = true
 	base_zoom = cam.zoom
 	player.died.connect(_on_player_died) # Replace with function body.
 	player.connect("dash", Callable(self, "_on_player_dashed"))
@@ -86,10 +87,11 @@ func _on_laser_zone_area_entered(area: Area2D) -> void:
 		area.queue_free()
 		
 func _on_player_died() -> void:
+	GameManager.can_pause = false
 	glitch_sound.play()
 	GameManager.stop_scoring()
 	var glitch_tween = play_glitch_effect()
 	await  glitch_tween.finished
-	await get_tree().create_timer(0.02).timeout
+	await get_tree().create_timer(0.01).timeout
 	GameManager.reset_score()
 	get_tree().call_deferred("reload_current_scene")
