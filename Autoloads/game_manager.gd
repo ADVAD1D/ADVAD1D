@@ -7,6 +7,7 @@ var phase_to_start: int = 1
 var is_shader_animation: bool = false
 var is_glitch_sound: bool = false
 var game_paused := false
+var can_pause: bool = true
 
 func _ready() -> void:
 	randomize()
@@ -16,7 +17,7 @@ func _process(_delta: float) -> void:
 	pass
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause"):
+	if event.is_action_pressed("pause") and can_pause:
 		toggle_pause()
 
 func toggle_pause() -> void:
