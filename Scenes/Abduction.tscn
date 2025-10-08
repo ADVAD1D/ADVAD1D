@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cwrkymd0iykky"]
 
 [ext_resource type="Texture2D" uid="uid://cgxfbj1nol3bo" path="res://Assets/Sprites/capitainadabduction.png" id="1_nlkhs"]
-[ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scripts/camera_2d.gd" id="2_g50ly"]
+[ext_resource type="Script" uid="uid://lw3vdictts31" path="res://Scripts/scene1_camera_control.gd" id="2_eraxo"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_lkfcr"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g50ly"]
@@ -38,12 +38,12 @@ texture = ExtResource("1_nlkhs")
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.25, 0.25)
 limit_left = -1115
-limit_top = -550
+limit_top = -540
 limit_right = 1115
 limit_bottom = 800
 limit_smoothed = true
 position_smoothing_enabled = true
-script = ExtResource("2_g50ly")
+script = ExtResource("2_eraxo")
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 
