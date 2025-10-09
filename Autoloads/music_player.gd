@@ -17,8 +17,6 @@ var playlist = [
 	preload("res://Assets/Audio/Music/videoplayback.wav"),
 	preload("res://Assets/Audio/Music/techno-driver-188955.wav"),
 	preload("res://Assets/Audio/Music/neon-drive-retrowaver-synthwave-vaporwave-retro-80s-193108.wav"),
-	preload("res://Assets/Audio/Music/synthwave-retrowave-sythpop-121540.wav"),
-	preload("res://Assets/Audio/Music/Cybertronic Guardian.wav"),
 	preload("res://Assets/Audio/Music/cybertech-flight-404708-_1_.wav"),
 	preload("res://Assets/Audio/end-of-the-line-317985.wav"),
 	preload("res://Assets/Audio/Music/pulsehaven-nexus-382253.wav"),
