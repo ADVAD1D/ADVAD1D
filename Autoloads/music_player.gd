@@ -2,6 +2,10 @@ extends AudioStreamPlayer
 
 var is_fading: bool = false
 
+var no_music_scenes = [
+	"res://Scenes/tutorial.tscn"
+]
+
 var scene1_specific_playlist: Dictionary = {
 	"res://Scenes/abduction.tscn": preload("res://Assets/Audio/Music/circuit-pathway-387799.wav")
 }
@@ -51,6 +55,10 @@ func _on_scene_changed():
 			stream = specific_song
 			play()
 			print("reproduciendo tema específico: ", stream.resource_path.get_file())
+			
+	elif current_scene_path in no_music_scenes:
+		stop()
+		return
 			
 	elif not playing:
 		play_next_shuffled_song()
