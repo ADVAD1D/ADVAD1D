@@ -1,6 +1,6 @@
 extends Camera2D
 
-@export var player_target: Node2D
+@export var player_target: CharacterBody2D
 @export var smoothness: float = 0.5
 
 

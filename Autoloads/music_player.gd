@@ -6,6 +6,8 @@ var scene1_specific_playlist: Dictionary = {
 	"res://Scenes/abduction.tscn": preload("res://Assets/Audio/Music/circuit-pathway-387799.wav")
 }
 
+@onready var sfx_player: AudioStreamPlayer = $SFXPlayer
+
 var playlist = [
 	preload("res://Assets/Audio/Music/neon-rising-336846.wav"),
 	preload("res://Assets/Audio/Music/videoplayback.wav"),
@@ -67,6 +69,11 @@ func play_next_shuffled_song():
 	stream = shuffled_playlist.pop_front()
 	play()
 	print("Ahora suena: ", stream.resource_path.get_file())
+	
+func play_sfx(sound_resource: AudioStream):
+	if is_instance_valid(sfx_player) and sound_resource:
+		sfx_player.stream = sound_resource
+		sfx_player.play()
 
 func fade_out_and_stop(duration: float):
 	if not playing or is_fading:
