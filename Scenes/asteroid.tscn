@@ -9,7 +9,7 @@
 radius = 14.0
 
 [sub_resource type="Gradient" id="Gradient_bi0dy"]
-offsets = PackedFloat32Array(0.40890688, 0.72064775)
+offsets = PackedFloat32Array(0.46558705, 0.72064775)
 colors = PackedColorArray(0.9466736, 0.0006124879, 0.046406083, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_rfhhd"]
@@ -35,7 +35,7 @@ debug_color = Color(0.996414, 0, 0.187186, 0.42)
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
 position = Vector2(10, -5)
-scale = Vector2(1.6483375, 1.6483375)
+scale = Vector2(1.5444119, 1.5444119)
 texture = SubResource("GradientTexture2D_rfhhd")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
