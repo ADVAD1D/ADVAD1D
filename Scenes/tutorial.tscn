@@ -330,10 +330,26 @@ transition_sound = ExtResource("12_ap3ea")
 laser_explosion_particles = ExtResource("2_8mnmb")
 asteroids_explosion_particles = ExtResource("3_koko0")
 
+[node name="ColorRect2" type="ColorRect" parent="."]
+offset_left = -250274.86
+offset_top = -202922.53
+offset_right = -250234.86
+offset_bottom = -202882.53
+scale = Vector2(110.67999, 110.67999)
+color = Color(0, 0, 0, 1)
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-15, 1446)
 scale = Vector2(9.67856, 9.7983)
 texture = ExtResource("1_p1f1o")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -2241.0
+offset_top = -1816.9999
+offset_right = -2201.0
+offset_bottom = -1776.9999
+scale = Vector2(110.67999, 110.67999)
+color = Color(0, 0, 0, 1)
 
 [node name="PlayerInstance" parent="." instance=ExtResource("2_i6t4g")]
 position = Vector2(-15, 9.99994)
