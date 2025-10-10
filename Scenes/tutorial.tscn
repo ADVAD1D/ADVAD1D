@@ -343,7 +343,8 @@ position = Vector2(-15, 1446)
 scale = Vector2(9.67856, 9.7983)
 texture = ExtResource("1_p1f1o")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect1" type="ColorRect" parent="."]
+visible = false
 offset_left = -2241.0
 offset_top = -1816.9999
 offset_right = -2201.0
