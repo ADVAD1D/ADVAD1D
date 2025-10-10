@@ -125,7 +125,11 @@ func die_and_respawn():
 	if is_dying:
 		return
 	is_dying = true
+	
+	set_physics_process(false)
+	
 	$CollisionShape2D.set_deferred("disabled", true)
+	shoot_marker.set_deferred("disabled", true)
 	
 	var particles_instance = explosion_particles.instantiate()
 	add_sibling(particles_instance)
@@ -143,7 +147,11 @@ func die_silently():
 	if is_dying:
 		return
 	is_dying = true
+	
+	set_physics_process(false)
+	
 	$CollisionShape2D.set_deferred("disabled", true)
+	shoot_marker.set_deferred("disabled", true)
 	
 	var particles_instance = explosion_particles.instantiate()
 	add_sibling(particles_instance)
