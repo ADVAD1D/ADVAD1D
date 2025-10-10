@@ -9,6 +9,7 @@ extends Node2D
 @onready var glitch_sound: AudioStreamPlayer2D = $GlitchSound
 @onready var cam: Camera2D = $Camera2D
 @onready var laser_wall_animated: AnimatedSprite2D = $LaserWallAnimation
+@onready var fade_in_rect: ColorRect = $ColorRect
 
 
 var base_zoom: Vector2
@@ -17,6 +18,13 @@ var base_zoom: Vector2
 # Called when the node enters the scene tree for the first time.
 
 func _ready() -> void:
+	fade_in_rect.visible = true
+	fade_in_rect.modulate.a = 1.0 
+	
+	var tween = create_tween()
+	tween.tween_property(fade_in_rect, "modulate:a", 0.0, 1.5)
+	tween.tween_callback(fade_in_rect.hide)
+	
 	tutorial_timer.timeout.connect(_on_tutorial_timer_timeout)
 	tutorial_timer.start()
 	
