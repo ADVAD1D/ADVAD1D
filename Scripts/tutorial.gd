@@ -9,7 +9,7 @@ extends Node2D
 @onready var glitch_sound: AudioStreamPlayer2D = $GlitchSound
 @onready var cam: Camera2D = $Camera2D
 @onready var laser_wall_animated: AnimatedSprite2D = $LaserWallAnimation
-@onready var fade_in_rect: ColorRect = $ColorRect
+@onready var fade_in_rect: ColorRect = $ColorRect1
 
 
 var base_zoom: Vector2
