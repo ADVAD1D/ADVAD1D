@@ -1,12 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://bu55k5t5u8pui"]
+[gd_scene load_steps=4 format=3 uid="uid://bu55k5t5u8pui"]
 
 [ext_resource type="Script" uid="uid://cpb76ii5ikoxp" path="res://Scripts/trigger_scene.gd" id="1_r0hmj"]
+[ext_resource type="PackedScene" uid="uid://ojsnno8modll" path="res://Scenes/ending.tscn" id="2_tfhjy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ffhth"]
 size = Vector2(124, 20)
 
 [node name="Area2D" type="Area2D"]
 script = ExtResource("1_r0hmj")
+target_scene_path = ExtResource("2_tfhjy")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(3.7686925, 3.7686925)

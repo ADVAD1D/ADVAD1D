@@ -11,5 +11,7 @@ func _on_body_entered(body: Node2D):
 	if body.is_in_group("player"):
 		print("¡Jugador detectado! Cambiando de escena a: ", target_scene_path)
 		
-		if not target_scene_path.is_empty():
-			get_tree().change_scene_to_packed(target_scene_path)
+		if target_scene_path:
+			get_tree().call_deferred("change_scene_to_packed", target_scene_path)
+		else:
+			print("Error, no se asignó una escena de destino")
