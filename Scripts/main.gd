@@ -9,6 +9,7 @@ extends Node2D
 @onready var laser_wall_animated: AnimatedSprite2D = $LaserWallAnimation
 @onready var drone_sprite: AnimatedSprite2D = $DronePath/PathFollow2D/DroneSprite
 @onready var drone2_sprite: AnimatedSprite2D = $DronePath2/PathFollow2D/DroneSprite
+@onready var fade_rect: ColorRect = $UILayer/FadeRect
 
 var base_zoom: Vector2
 @export var laser_explosion_particles: PackedScene
@@ -95,3 +96,13 @@ func _on_player_died() -> void:
 	await get_tree().create_timer(0.01).timeout
 	GameManager.reset_score()
 	get_tree().call_deferred("reload_current_scene")
+	
+func fade_to_scene(target_scene_path: PackedScene, duration: float = 1.5):
+	fade_rect.modulate.a = 0.0
+	fade_rect.visible = true
+	var tween = create_tween()
+	tween.tween_property(fade_rect, "modulate:a", 1.0, duration)
+	await tween.finished
+	
+	if target_scene_path:
+		get_tree().call_deferred("change_scene_to_packed", target_scene_path)
