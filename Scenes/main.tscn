@@ -1,4 +1,4 @@
-[gd_scene load_steps=96 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=98 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -15,7 +15,9 @@
 [ext_resource type="AudioStream" uid="uid://iavnej1hm2io" path="res://Assets/Audio/195491__alienxxx__glitch_001.wav" id="9_ynf5e"]
 [ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scripts/ambient_particles.gd" id="12_6iyac"]
 [ext_resource type="AudioStream" uid="uid://dlu22wl4fxr36" path="res://Assets/Audio/783832__chungus43a__milling-machine-motor.wav" id="12_b3802"]
+[ext_resource type="Texture2D" uid="uid://c6hbs6yon2vsi" path="res://Assets/Sprites/Buttons/resume_button.png" id="13_cbgmd"]
 [ext_resource type="AudioStream" uid="uid://bwoq355ggrir4" path="res://Assets/Audio/351564__bertrof__game-sound-correct-with-delay.wav" id="13_pdsj5"]
+[ext_resource type="Texture2D" uid="uid://eohikkwux5cs" path="res://Assets/Sprites/Buttons/resume_button_hover.png" id="14_1w6v2"]
 [ext_resource type="Script" uid="uid://cn624xhs3jj2a" path="res://Scripts/enemy_spawner.gd" id="14_wsu2k"]
 [ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="15_wsu2k"]
 [ext_resource type="Script" uid="uid://ddvbqopxphvow" path="res://Scripts/saw_spawner.gd" id="16_k12tt"]
@@ -298,7 +300,7 @@ shader_parameter/vignette_opacity = 1.0
 [sub_resource type="GDScript" id="GDScript_pdsj5"]
 script/source = "extends CanvasLayer
 
-@onready var unpause_button: Button = %unPauseButton
+@onready var unpause_button: TextureButton = %unPauseButton
 
 func _ready() -> void:
 	unpause_button.pressed.connect(GameManager.toggle_pause)
@@ -527,7 +529,6 @@ debug_color = Color(1.46799e-06, 0.650471, 0.0903933, 0.42)
 position = Vector2(-22.318802, 1224.1879)
 scale = Vector2(0.9999994, 0.9999994)
 shape = SubResource("RectangleShape2D_kqrg6")
-disabled = true
 debug_color = Color(0.043137256, 0.73333335, 0, 0.8980392)
 
 [node name="MainLight2D" type="PointLight2D" parent="."]
@@ -767,6 +768,13 @@ offset_bottom = 3796.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="FadeRect" type="ColorRect" parent="UILayer"]
+visible = false
+offset_right = 77.532364
+offset_bottom = 40.0
+scale = Vector2(6.7068768, 6.7068768)
+color = Color(0, 0, 0, 1)
+
 [node name="PauseMenu" type="CanvasLayer" parent="."]
 process_mode = 3
 visible = false
@@ -789,7 +797,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0.07866589, 0.09273138, 0.58431375)
 
-[node name="unPauseButton" type="Button" parent="PauseMenu/Control/ColorRect"]
+[node name="unPauseButton" type="TextureButton" parent="PauseMenu/Control/ColorRect"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 3
@@ -797,13 +805,15 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -325.0
-offset_top = -162.0
-offset_right = -194.0
-offset_bottom = -131.0
+offset_left = -315.0
+offset_top = -163.0
+offset_right = -271.0
+offset_bottom = -148.0
 grow_horizontal = 0
 grow_vertical = 0
-text = "Resume"
+scale = Vector2(2.559999, 2.8400002)
+texture_normal = ExtResource("13_cbgmd")
+texture_hover = ExtResource("14_1w6v2")
 
 [node name="SucessSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("13_pdsj5")
@@ -868,7 +878,7 @@ position = Vector2(688, 902)
 rotation = -1.1316713
 
 [node name="TriggerScene" parent="." instance=ExtResource("24_3pmx8")]
-position = Vector2(-16, 4300)
+position = Vector2(-17, 4436)
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]

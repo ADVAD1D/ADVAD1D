@@ -1,7 +1,7 @@
 extends Node2D 
 
 @export var next_scene: PackedScene
-@export var display_duration: float = 5.0
+@export var display_duration: float = 10.0
 @export var fade_out_duration: float = 1.5
 
 @onready var illustration_sprite: Sprite2D = $Sprite2D
