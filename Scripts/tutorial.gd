@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var next_scene: PackedScene
+@export var next_scene: String
 @export var transition_sound: AudioStream
 
 @onready var tutorial_timer: Timer = $TutorialTimer
@@ -104,4 +104,4 @@ func _on_tutorial_timer_timeout():
 	MusicPlayer.play_sfx(transition_sound)
 	
 	if next_scene:
-		get_tree().change_scene_to_packed(next_scene)
+		get_tree().change_scene_to_file(next_scene)

@@ -89,6 +89,7 @@ texture = ExtResource("1_v0iea")
 position = Vector2(-1.08043, 3.2413)
 scale = Vector2(1.41877, 1.88991)
 shape = SubResource("CapsuleShape2D_v0iea")
+disabled = true
 debug_color = Color(0.0796014, 0.64918, 0, 0.42)
 
 [node name="Muzzle" type="Marker2D" parent="."]
