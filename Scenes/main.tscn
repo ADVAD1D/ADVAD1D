@@ -1,4 +1,4 @@
-[gd_scene load_steps=95 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=97 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -23,6 +23,8 @@
 [ext_resource type="Script" uid="uid://ch7ngtptk8mma" path="res://Scripts/phase_manager.gd" id="20_hibaj"]
 [ext_resource type="PackedScene" uid="uid://nvpk6cv3oksk" path="res://Scenes/drone.tscn" id="22_ee4r6"]
 [ext_resource type="PackedScene" uid="uid://daifx8q4u0x65" path="res://Scenes/drone2.tscn" id="23_gt3je"]
+[ext_resource type="PackedScene" uid="uid://bu55k5t5u8pui" path="res://Scenes/trigger_scene.tscn" id="24_3pmx8"]
+[ext_resource type="PackedScene" uid="uid://ojsnno8modll" path="res://Scenes/ending.tscn" id="25_u50mg"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fevyy"]
 atlas = ExtResource("7_fevyy")
@@ -864,6 +866,10 @@ curve = SubResource("Curve2D_3pmx8")
 [node name="PathFollow2D" parent="DronePath2" instance=ExtResource("23_gt3je")]
 position = Vector2(688, 902)
 rotation = -1.1316713
+
+[node name="TriggerScene" parent="." instance=ExtResource("24_3pmx8")]
+position = Vector2(-16, 4300)
+target_scene_path = ExtResource("25_u50mg")
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]
