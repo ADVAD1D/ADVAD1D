@@ -7,4 +7,4 @@ volume_db = -5.0
 script = ExtResource("1_ufhka")
 
 [node name="SFXPlayer" type="AudioStreamPlayer" parent="."]
-volume_db = 12.0
+volume_db = 5.0

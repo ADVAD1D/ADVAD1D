@@ -848,16 +848,18 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -23.0
-offset_top = 67.0
-offset_right = 17.0
-offset_bottom = 107.0
+offset_left = -26.0
+offset_top = 80.0
+offset_right = 77.0
+offset_bottom = 120.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.7752476, 0.7752476)
 size_flags_horizontal = 0
 
 [node name="Sprite2D" type="Sprite2D" parent="PauseMenu/HBoxContainer"]
-position = Vector2(-13.5, 20)
+position = Vector2(-13.5, 22)
+scale = Vector2(1.2063857, 1.2063857)
 texture = ExtResource("15_neg2b")
 
 [node name="DecreaseButton" type="TextureButton" parent="PauseMenu/HBoxContainer"]
@@ -883,7 +885,7 @@ texture_hover = ExtResource("19_r33sp")
 
 [node name="SucessSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("13_pdsj5")
-volume_db = 12.0
+volume_db = 5.0
 pitch_scale = 0.54
 
 [node name="GlitchSound" type="AudioStreamPlayer2D" parent="."]
