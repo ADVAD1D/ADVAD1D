@@ -15,9 +15,9 @@
 [ext_resource type="AudioStream" uid="uid://iavnej1hm2io" path="res://Assets/Audio/195491__alienxxx__glitch_001.wav" id="9_ynf5e"]
 [ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scripts/ambient_particles.gd" id="12_6iyac"]
 [ext_resource type="AudioStream" uid="uid://dlu22wl4fxr36" path="res://Assets/Audio/783832__chungus43a__milling-machine-motor.wav" id="12_b3802"]
-[ext_resource type="Texture2D" uid="uid://c6hbs6yon2vsi" path="res://Assets/Sprites/Buttons/resume_button.png" id="13_cbgmd"]
 [ext_resource type="AudioStream" uid="uid://bwoq355ggrir4" path="res://Assets/Audio/351564__bertrof__game-sound-correct-with-delay.wav" id="13_pdsj5"]
-[ext_resource type="Texture2D" uid="uid://eohikkwux5cs" path="res://Assets/Sprites/Buttons/resume_button_hover.png" id="14_1w6v2"]
+[ext_resource type="Texture2D" uid="uid://cowkl6f4b0p63" path="res://Assets/Sprites/resume_button.png" id="13_r33sp"]
+[ext_resource type="Texture2D" uid="uid://b8odg2tikg5cm" path="res://Assets/Sprites/resume_button_hover.png" id="14_hdf80"]
 [ext_resource type="Script" uid="uid://cn624xhs3jj2a" path="res://Scripts/enemy_spawner.gd" id="14_wsu2k"]
 [ext_resource type="Texture2D" uid="uid://wewd0rykgbgq" path="res://Assets/Sprites/dereasebutton.png" id="15_hpc6h"]
 [ext_resource type="Texture2D" uid="uid://cp0lyic4v7nia" path="res://Assets/Sprites/music_icon.png" id="15_neg2b"]
@@ -858,8 +858,8 @@ offset_bottom = -148.0
 grow_horizontal = 0
 grow_vertical = 0
 scale = Vector2(2.559999, 2.8400002)
-texture_normal = ExtResource("13_cbgmd")
-texture_hover = ExtResource("14_1w6v2")
+texture_normal = ExtResource("13_r33sp")
+texture_hover = ExtResource("14_hdf80")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PauseMenu"]
 anchors_preset = 8
