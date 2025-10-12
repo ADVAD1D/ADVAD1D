@@ -1,4 +1,4 @@
-[gd_scene load_steps=106 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=107 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://eohikkwux5cs" path="res://Assets/Sprites/Buttons/resume_button_hover.png" id="14_1w6v2"]
 [ext_resource type="Script" uid="uid://cn624xhs3jj2a" path="res://Scripts/enemy_spawner.gd" id="14_wsu2k"]
 [ext_resource type="Texture2D" uid="uid://wewd0rykgbgq" path="res://Assets/Sprites/dereasebutton.png" id="15_hpc6h"]
+[ext_resource type="Texture2D" uid="uid://cp0lyic4v7nia" path="res://Assets/Sprites/music_icon.png" id="15_neg2b"]
 [ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="15_wsu2k"]
 [ext_resource type="Texture2D" uid="uid://hqqqcwvlavvx" path="res://Assets/Sprites/dereasebutton_pressed.png" id="16_e08e2"]
 [ext_resource type="Script" uid="uid://ddvbqopxphvow" path="res://Scripts/saw_spawner.gd" id="16_k12tt"]
@@ -854,6 +855,10 @@ offset_bottom = 107.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="PauseMenu/HBoxContainer"]
+position = Vector2(-13.5, 20)
+texture = ExtResource("15_neg2b")
 
 [node name="DecreaseButton" type="TextureButton" parent="PauseMenu/HBoxContainer"]
 unique_name_in_owner = true
