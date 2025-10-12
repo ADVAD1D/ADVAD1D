@@ -1,4 +1,4 @@
-[gd_scene load_steps=107 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=108 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -33,6 +33,7 @@
 [ext_resource type="Texture2D" uid="uid://cmntejg0spyap" path="res://Assets/Sprites/increasebutton_pressed.png" id="20_neg2b"]
 [ext_resource type="PackedScene" uid="uid://nvpk6cv3oksk" path="res://Scenes/drone.tscn" id="22_ee4r6"]
 [ext_resource type="PackedScene" uid="uid://daifx8q4u0x65" path="res://Scenes/drone2.tscn" id="23_gt3je"]
+[ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="23_r33sp"]
 [ext_resource type="PackedScene" uid="uid://bu55k5t5u8pui" path="res://Scenes/trigger_scene.tscn" id="24_3pmx8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fevyy"]
@@ -312,23 +313,41 @@ script/source = "extends CanvasLayer
 @onready var decrease_button: TextureButton = %DecreaseButton
 @onready var volume_label: Label = %VolumenPercentage
 @onready var increase_button: TextureButton = %IncreaseButton
+@onready var button_sound: AudioStreamPlayer = %ButtonSound
+@onready var volume_hold_timer: Timer = $VolumeTimer
 
 func _ready() -> void:
 	unpause_button.pressed.connect(GameManager.toggle_pause)
-	decrease_button.pressed.connect(MusicPlayer.decrease_volume)
-	increase_button.pressed.connect(MusicPlayer.increase_volume)
 	
 	MusicPlayer.volume_changed.connect(_on_music_volume_changed)
 	
 	_on_music_volume_changed(MusicPlayer.get_volume_percent())
 	GameManager.pause.connect(toggle_show)
 	
+func _process(_delta: float) -> void:
+	if volume_hold_timer.is_stopped():
+		if decrease_button.is_pressed():
+			MusicPlayer.decrease_volume()
+			play_click_sound()
+			volume_hold_timer.start()
+			
+		elif increase_button.is_pressed():
+			MusicPlayer.increase_volume()
+			play_click_sound()
+			volume_hold_timer.start()
+	
+func play_click_sound():
+	button_sound.volume_db = MusicPlayer.volume_db
+	button_sound.play()
+	
 func _on_music_volume_changed(volume_percent: float):
 	volume_label.text = str(int(round(volume_percent))) + \"%\"
 	
 func toggle_show(is_paused : bool) -> void :
-	if is_paused : show()
-	else : hide()
+	if is_paused:
+		show()
+	else:
+		hide()
 "
 
 [sub_resource type="LabelSettings" id="LabelSettings_hdf80"]
@@ -882,6 +901,15 @@ layout_mode = 2
 texture_normal = ExtResource("18_neg2b")
 texture_pressed = ExtResource("20_neg2b")
 texture_hover = ExtResource("19_r33sp")
+
+[node name="ButtonSound" type="AudioStreamPlayer" parent="PauseMenu"]
+unique_name_in_owner = true
+stream = ExtResource("23_r33sp")
+
+[node name="VolumeTimer" type="Timer" parent="PauseMenu"]
+unique_name_in_owner = true
+wait_time = 0.1
+one_shot = true
 
 [node name="SucessSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("13_pdsj5")
