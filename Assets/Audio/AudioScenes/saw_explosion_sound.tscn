@@ -5,6 +5,7 @@
 
 [node name="SawExplosionSound" type="AudioStreamPlayer2D"]
 stream = ExtResource("1_kt70g")
+volume_db = -10.0
 pitch_scale = 0.52
 script = ExtResource("2_8wi04")
 
