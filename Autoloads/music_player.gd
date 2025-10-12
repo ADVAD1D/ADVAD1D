@@ -1,5 +1,10 @@
 extends AudioStreamPlayer
 
+signal volume_changed(volume_percent)
+
+const min_volume_db = -50.0
+const max_volume_db = -5.0
+
 var is_fading: bool = false
 
 var no_music_scenes = [
@@ -39,6 +44,10 @@ var shuffled_playlist = []
 func _ready() -> void:
 	finished.connect(play_next_shuffled_song)
 	get_tree().scene_changed.connect(_on_scene_changed) # Replace with function body.
+	
+	volume_db = max_volume_db
+	_emit_volume_changed()
+	
 	_on_scene_changed()
 	
 	
@@ -73,7 +82,9 @@ func play_next_shuffled_song():
 		shuffled_playlist.shuffle()
 	
 	stream = shuffled_playlist.pop_front()
+	volume_db = max_volume_db
 	play()
+	_emit_volume_changed()
 	print("Ahora suena: ", stream.resource_path.get_file())
 	
 func play_sfx(sound_resource: AudioStream):
@@ -97,3 +108,17 @@ func fade_out_and_stop(duration: float):
 	volume_db = 0.0 
 	is_fading = false
 	print("Música detenida.")
+	
+func increase_volume():
+	volume_db = clamp(volume_db + 2.0, min_volume_db, max_volume_db)
+	_emit_volume_changed()
+
+func decrease_volume():
+	volume_db = clamp(volume_db - 2.0, min_volume_db, max_volume_db)
+	_emit_volume_changed()
+
+func get_volume_percent() -> float:
+	return ((volume_db - min_volume_db) / (max_volume_db - min_volume_db)) * 100.0
+
+func _emit_volume_changed():
+	volume_changed.emit(get_volume_percent())

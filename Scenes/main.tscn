@@ -1,4 +1,4 @@
-[gd_scene load_steps=98 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=104 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -19,9 +19,14 @@
 [ext_resource type="AudioStream" uid="uid://bwoq355ggrir4" path="res://Assets/Audio/351564__bertrof__game-sound-correct-with-delay.wav" id="13_pdsj5"]
 [ext_resource type="Texture2D" uid="uid://eohikkwux5cs" path="res://Assets/Sprites/Buttons/resume_button_hover.png" id="14_1w6v2"]
 [ext_resource type="Script" uid="uid://cn624xhs3jj2a" path="res://Scripts/enemy_spawner.gd" id="14_wsu2k"]
+[ext_resource type="Texture2D" uid="uid://wewd0rykgbgq" path="res://Assets/Sprites/dereasebutton.png" id="15_hpc6h"]
 [ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="15_wsu2k"]
 [ext_resource type="Script" uid="uid://ddvbqopxphvow" path="res://Scripts/saw_spawner.gd" id="16_k12tt"]
+[ext_resource type="Texture2D" uid="uid://2f41284fn4kq" path="res://Assets/Sprites/dereasebutton_hover.png" id="16_kltya"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="17_e08e2"]
 [ext_resource type="PackedScene" uid="uid://cljshiwenhoau" path="res://Scenes/saw.tscn" id="17_h1bgf"]
+[ext_resource type="Texture2D" uid="uid://cii3dm47h4k7y" path="res://Assets/Sprites/increasebutton.png" id="18_neg2b"]
+[ext_resource type="Texture2D" uid="uid://bubqny5o8sh8w" path="res://Assets/Sprites/increasebutton_hover.png" id="19_r33sp"]
 [ext_resource type="Script" uid="uid://ch7ngtptk8mma" path="res://Scripts/phase_manager.gd" id="20_hibaj"]
 [ext_resource type="PackedScene" uid="uid://nvpk6cv3oksk" path="res://Scenes/drone.tscn" id="22_ee4r6"]
 [ext_resource type="PackedScene" uid="uid://daifx8q4u0x65" path="res://Scenes/drone2.tscn" id="23_gt3je"]
@@ -301,15 +306,34 @@ shader_parameter/vignette_opacity = 1.0
 script/source = "extends CanvasLayer
 
 @onready var unpause_button: TextureButton = %unPauseButton
+@onready var decrease_button: TextureButton = %DecreaseButton
+@onready var volume_label: Label = %VolumenPercentage
+@onready var increase_button: TextureButton = %IncreaseButton
 
 func _ready() -> void:
 	unpause_button.pressed.connect(GameManager.toggle_pause)
+	decrease_button.pressed.connect(MusicPlayer.decrease_volume)
+	increase_button.pressed.connect(MusicPlayer.increase_volume)
+	
+	MusicPlayer.volume_changed.connect(_on_music_volume_changed)
+	
+	_on_music_volume_changed(MusicPlayer.get_volume_percent())
 	GameManager.pause.connect(toggle_show)
+	
+func _on_music_volume_changed(volume_percent: float):
+	volume_label.text = str(int(round(volume_percent))) + \"%\"
 	
 func toggle_show(is_paused : bool) -> void :
 	if is_paused : show()
 	else : hide()
 "
+
+[sub_resource type="LabelSettings" id="LabelSettings_hdf80"]
+font = ExtResource("17_e08e2")
+font_size = 40
+font_color = Color(7.219613e-08, 0.21920863, 0.21920872, 1)
+outline_size = 3
+outline_color = Color(0, 1, 0.75686276, 1)
 
 [sub_resource type="Gradient" id="Gradient_d1ilt"]
 offsets = PackedFloat32Array(0, 0.482517, 1)
@@ -814,6 +838,39 @@ grow_vertical = 0
 scale = Vector2(2.559999, 2.8400002)
 texture_normal = ExtResource("13_cbgmd")
 texture_hover = ExtResource("14_1w6v2")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PauseMenu"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -23.0
+offset_top = 67.0
+offset_right = 17.0
+offset_bottom = 107.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+
+[node name="DecreaseButton" type="TextureButton" parent="PauseMenu/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = ExtResource("15_hpc6h")
+texture_hover = ExtResource("16_kltya")
+
+[node name="VolumenPercentage" type="Label" parent="PauseMenu/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "%"
+label_settings = SubResource("LabelSettings_hdf80")
+
+[node name="IncreaseButton" type="TextureButton" parent="PauseMenu/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = ExtResource("18_neg2b")
+texture_hover = ExtResource("19_r33sp")
 
 [node name="SucessSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("13_pdsj5")
