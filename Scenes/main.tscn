@@ -1,4 +1,4 @@
-[gd_scene load_steps=104 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=106 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -21,6 +21,7 @@
 [ext_resource type="Script" uid="uid://cn624xhs3jj2a" path="res://Scripts/enemy_spawner.gd" id="14_wsu2k"]
 [ext_resource type="Texture2D" uid="uid://wewd0rykgbgq" path="res://Assets/Sprites/dereasebutton.png" id="15_hpc6h"]
 [ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="15_wsu2k"]
+[ext_resource type="Texture2D" uid="uid://hqqqcwvlavvx" path="res://Assets/Sprites/dereasebutton_pressed.png" id="16_e08e2"]
 [ext_resource type="Script" uid="uid://ddvbqopxphvow" path="res://Scripts/saw_spawner.gd" id="16_k12tt"]
 [ext_resource type="Texture2D" uid="uid://2f41284fn4kq" path="res://Assets/Sprites/dereasebutton_hover.png" id="16_kltya"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="17_e08e2"]
@@ -28,6 +29,7 @@
 [ext_resource type="Texture2D" uid="uid://cii3dm47h4k7y" path="res://Assets/Sprites/increasebutton.png" id="18_neg2b"]
 [ext_resource type="Texture2D" uid="uid://bubqny5o8sh8w" path="res://Assets/Sprites/increasebutton_hover.png" id="19_r33sp"]
 [ext_resource type="Script" uid="uid://ch7ngtptk8mma" path="res://Scripts/phase_manager.gd" id="20_hibaj"]
+[ext_resource type="Texture2D" uid="uid://cmntejg0spyap" path="res://Assets/Sprites/increasebutton_pressed.png" id="20_neg2b"]
 [ext_resource type="PackedScene" uid="uid://nvpk6cv3oksk" path="res://Scenes/drone.tscn" id="22_ee4r6"]
 [ext_resource type="PackedScene" uid="uid://daifx8q4u0x65" path="res://Scenes/drone2.tscn" id="23_gt3je"]
 [ext_resource type="PackedScene" uid="uid://bu55k5t5u8pui" path="res://Scenes/trigger_scene.tscn" id="24_3pmx8"]
@@ -857,6 +859,7 @@ size_flags_horizontal = 0
 unique_name_in_owner = true
 layout_mode = 2
 texture_normal = ExtResource("15_hpc6h")
+texture_pressed = ExtResource("16_e08e2")
 texture_hover = ExtResource("16_kltya")
 
 [node name="VolumenPercentage" type="Label" parent="PauseMenu/HBoxContainer"]
@@ -870,6 +873,7 @@ label_settings = SubResource("LabelSettings_hdf80")
 unique_name_in_owner = true
 layout_mode = 2
 texture_normal = ExtResource("18_neg2b")
+texture_pressed = ExtResource("20_neg2b")
 texture_hover = ExtResource("19_r33sp")
 
 [node name="SucessSound" type="AudioStreamPlayer2D" parent="."]
