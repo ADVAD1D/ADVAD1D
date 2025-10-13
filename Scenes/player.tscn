@@ -111,6 +111,7 @@ bus = &"SFX"
 stream = ExtResource("5_fkybt")
 volume_db = 4.648
 pitch_scale = 0.76
+bus = &"SFX"
 
 [node name="EngineTrail" type="GPUParticles2D" parent="."]
 position = Vector2(-1.08043, 28.6315)
