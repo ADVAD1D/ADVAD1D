@@ -12,8 +12,8 @@ signal timer_updated(time_left_string)
 @export var min_shoot_timerate: float = 0.2
 @export var max_shoot_timerate: float = 0.5
 
-@export var min_ship_enemies: float = 0.0 # = 2.0
-@export var max_ship_enemies: float = 0.0 # = 5.0
+@export var min_ship_enemies: float = 2.0 # = 2.0
+@export var max_ship_enemies: float = 5.0 # = 5.0
 
 @export var max_saw_enemies: float = 2.0 # = 2.0
 

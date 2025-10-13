@@ -1,8 +1,9 @@
-[gd_scene load_steps=19 format=3 uid="uid://4pkkj4yusrj7"]
+[gd_scene load_steps=20 format=3 uid="uid://4pkkj4yusrj7"]
 
 [ext_resource type="Script" uid="uid://d3j8sct0cu046" path="res://Scripts/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://f2d5cwauvjt6" path="res://Assets/Sprites/Ship1.png" id="1_v0iea"]
 [ext_resource type="PackedScene" uid="uid://d1y6lma6f3pit" path="res://Scenes/Particles/ship_particles.tscn" id="2_vgqql"]
+[ext_resource type="PackedScene" uid="uid://qfrlx31ingdm" path="res://Scenes/Particles/dash_particles.tscn" id="2_x3wgy"]
 [ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="3_6t5aa"]
 [ext_resource type="AudioStream" uid="uid://cnhegchkuvlii" path="res://Assets/Audio/714258__qubodup__cloud-poof.wav" id="5_fkybt"]
 
@@ -78,6 +79,7 @@ z_index = 2
 scale = Vector2(1.85111, 1.85111)
 motion_mode = 1
 script = ExtResource("1_cvnsp")
+dash_particles = ExtResource("2_x3wgy")
 ship_explosion_particles = ExtResource("2_vgqql")
 metadata/_edit_group_ = true
 
