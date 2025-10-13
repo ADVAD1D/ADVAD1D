@@ -66,6 +66,7 @@ texture = ExtResource("2_4qbox")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 z_index = 5
+scale = Vector2(0.88, 0.88)
 shape = SubResource("CircleShape2D_1kxu7")
 debug_color = Color(0.96652, 0.113815, 0.368096, 0.42)
 
