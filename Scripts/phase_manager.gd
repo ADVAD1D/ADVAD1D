@@ -9,7 +9,7 @@ signal timer_updated(time_left_string)
 @export var ship_enemy_spawner: Node2D
 @export var saw_enemy_spawner: Node2D
 
-@export var min_shoot_timerate: float = 0.2
+@export var min_shoot_timerate: float = 0.3
 @export var max_shoot_timerate: float = 0.6
 
 @export var min_ship_enemies: float = 2.0 # = 2.0
