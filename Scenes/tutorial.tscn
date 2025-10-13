@@ -1,10 +1,9 @@
-[gd_scene load_steps=82 format=3 uid="uid://c8h020vchy722"]
+[gd_scene load_steps=81 format=3 uid="uid://c8h020vchy722"]
 
 [ext_resource type="Texture2D" uid="uid://dn2awjth0u77x" path="res://Assets/Sprites/tutorialgauntlet.png" id="1_p1f1o"]
 [ext_resource type="Script" uid="uid://b2txl04jujrjv" path="res://Scripts/tutorial.gd" id="1_ys4pu"]
 [ext_resource type="PackedScene" uid="uid://dohhwkxxtna34" path="res://Scenes/Particles/laser_particles.tscn" id="2_8mnmb"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_i6t4g"]
-
 [ext_resource type="PackedScene" uid="uid://df8hpgwrn52l8" path="res://Scenes/Particles/particles.tscn" id="3_koko0"]
 [ext_resource type="Texture2D" uid="uid://bxi55qpsnclqv" path="res://Assets/Sprites/laserwall.png" id="3_p8jf4"]
 [ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scripts/camera_2d.gd" id="4_i6t4g"]
@@ -784,6 +783,7 @@ text = "Resume"
 stream = ExtResource("11_t6ver")
 volume_db = 9.16
 pitch_scale = 0.38
+bus = &"SFX"
 
 [node name="AmbientParticles" type="GPUParticles2D" parent="."]
 z_index = 3

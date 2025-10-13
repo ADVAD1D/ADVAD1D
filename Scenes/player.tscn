@@ -105,6 +105,7 @@ debug_color = Color(0.996388, 0, 0.187683, 0.42)
 stream = ExtResource("3_6t5aa")
 volume_db = -12.933
 pitch_scale = 2.72
+bus = &"SFX"
 
 [node name="Dashsnd" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("5_fkybt")

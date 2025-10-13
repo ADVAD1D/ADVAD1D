@@ -87,6 +87,7 @@ texture = SubResource("GradientTexture2D_mk2w8")
 stream = ExtResource("3_mk2w8")
 volume_db = -6.466
 pitch_scale = 0.5
+bus = &"SFX"
 
 [node name="Trail" type="GPUParticles2D" parent="."]
 position = Vector2(-63, -14)

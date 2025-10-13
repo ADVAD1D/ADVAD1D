@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 
 GameManager="*res://Autoloads/game_manager.gd"
 MusicPlayer="*res://Autoloads/music_player.tscn"
+SfxManager="*res://Scripts/sfx_manager.gd"
 
 [display]
 
