@@ -71,6 +71,7 @@ script = ExtResource("2_ny26j")
 [node name="ScoreSound" type="AudioStreamPlayer2D" parent="FirstContainer/ScoreLabel"]
 stream = ExtResource("3_fdl0h")
 pitch_scale = 1.79
+bus = &"SFX"
 
 [node name="FPSContainer" type="MarginContainer" parent="."]
 layout_mode = 1

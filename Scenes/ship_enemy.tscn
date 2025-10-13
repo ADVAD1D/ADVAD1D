@@ -94,6 +94,7 @@ stream = ExtResource("5_um53k")
 stream = ExtResource("4_f0gle")
 volume_db = -18.32
 pitch_scale = 0.48
+bus = &"SFX"
 
 [node name="EngineTrail" type="GPUParticles2D" parent="."]
 position = Vector2(-0.4, 20)

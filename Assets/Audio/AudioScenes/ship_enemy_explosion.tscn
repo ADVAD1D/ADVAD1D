@@ -7,6 +7,7 @@
 stream = ExtResource("1_ubiod")
 volume_db = 5.0
 pitch_scale = 1.2
+bus = &"SFX"
 script = ExtResource("2_8glis")
 
 [connection signal="finished" from="." to="." method="_on_finished"]

@@ -292,7 +292,7 @@ shader_parameter/scanlines_width = 0.03
 shader_parameter/grille_opacity = 0.2
 shader_parameter/roll = true
 shader_parameter/roll_speed = 3.0
-shader_parameter/roll_size = 5.0
+shader_parameter/roll_size = 10.000000475
 shader_parameter/roll_variation = 0.5
 shader_parameter/distort_intensity = 0.02
 shader_parameter/aberration = 0.01000004797499998
@@ -316,29 +316,51 @@ script/source = "extends CanvasLayer
 @onready var button_sound: AudioStreamPlayer = %ButtonSound
 @onready var volume_hold_timer: Timer = $VolumeTimer
 
+@onready var decrease_sfx_button: TextureButton = %DecreaseButtonSFX
+@onready var increase_sfx_button: TextureButton = %IncreaseButtonSFX
+@onready var volume_sfx_label: Label = %VolumenPercentageSFX
+
 func _ready() -> void:
 	unpause_button.pressed.connect(GameManager.toggle_pause)
-	
 	MusicPlayer.volume_changed.connect(_on_music_volume_changed)
 	
 	_on_music_volume_changed(MusicPlayer.get_volume_percent())
 	GameManager.pause.connect(toggle_show)
 	
+	decrease_sfx_button.pressed.connect(SfxManager.decrease_sfx_volume)
+	increase_sfx_button.pressed.connect(SfxManager.increase_sfx_volume)
+	
+	SfxManager.sfx_volume_changed.connect(_on_sfx_volume_changed)
+	_on_sfx_volume_changed(SfxManager.get_sfx_volume_percent())
+	
 func _process(_delta: float) -> void:
 	if volume_hold_timer.is_stopped():
 		if decrease_button.is_pressed():
 			MusicPlayer.decrease_volume()
-			play_click_sound()
+			play_click_sound(MusicPlayer.volume_db)
 			volume_hold_timer.start()
 			
 		elif increase_button.is_pressed():
 			MusicPlayer.increase_volume()
-			play_click_sound()
+			play_click_sound(MusicPlayer.volume_db)
+			volume_hold_timer.start()
+			
+		elif decrease_sfx_button.is_pressed():
+			SfxManager.decrease_sfx_volume()
+			play_click_sound(AudioServer.get_bus_volume_db(SfxManager.sfx_bus_index))
+			volume_hold_timer.start()
+			
+		elif increase_sfx_button.is_pressed():
+			SfxManager.increase_sfx_volume()
+			play_click_sound(AudioServer.get_bus_volume_db(SfxManager.sfx_bus_index))
 			volume_hold_timer.start()
 	
-func play_click_sound():
-	button_sound.volume_db = MusicPlayer.volume_db
+func play_click_sound(target_volume_db: float):
+	button_sound.volume_db = target_volume_db
 	button_sound.play()
+	
+func _on_sfx_volume_changed(sfx_percent: float):
+	volume_sfx_label.text = str(int(round(sfx_percent))) + \"%\"
 	
 func _on_music_volume_changed(volume_percent: float):
 	volume_label.text = str(int(round(volume_percent))) + \"%\"
@@ -867,10 +889,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -26.0
-offset_top = 80.0
-offset_right = 77.0
-offset_bottom = 120.0
+offset_left = 136.0
+offset_top = 77.0
+offset_right = 239.0
+offset_bottom = 117.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.7752476, 0.7752476)
@@ -902,6 +924,47 @@ texture_normal = ExtResource("18_neg2b")
 texture_pressed = ExtResource("20_neg2b")
 texture_hover = ExtResource("19_r33sp")
 
+[node name="HBoxContainer2" type="HBoxContainer" parent="PauseMenu"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -187.0
+offset_top = 79.0
+offset_right = -84.0
+offset_bottom = 119.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7752476, 0.7752476)
+size_flags_horizontal = 0
+
+[node name="Sprite2DSFX" type="Sprite2D" parent="PauseMenu/HBoxContainer2"]
+position = Vector2(-13.5, 22)
+scale = Vector2(1.2063857, 1.2063857)
+texture = ExtResource("15_neg2b")
+
+[node name="DecreaseButtonSFX" type="TextureButton" parent="PauseMenu/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = ExtResource("15_hpc6h")
+texture_pressed = ExtResource("16_e08e2")
+texture_hover = ExtResource("16_kltya")
+
+[node name="VolumenPercentageSFX" type="Label" parent="PauseMenu/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "%"
+label_settings = SubResource("LabelSettings_hdf80")
+
+[node name="IncreaseButtonSFX" type="TextureButton" parent="PauseMenu/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = ExtResource("18_neg2b")
+texture_pressed = ExtResource("20_neg2b")
+texture_hover = ExtResource("19_r33sp")
+
 [node name="ButtonSound" type="AudioStreamPlayer" parent="PauseMenu"]
 unique_name_in_owner = true
 stream = ExtResource("23_r33sp")
@@ -915,14 +978,17 @@ one_shot = true
 stream = ExtResource("13_pdsj5")
 volume_db = 5.0
 pitch_scale = 0.54
+bus = &"SFX"
 
 [node name="GlitchSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("9_ynf5e")
 volume_db = 9.16
 pitch_scale = 0.38
+bus = &"SFX"
 
 [node name="SawSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("12_b3802")
+bus = &"SFX"
 
 [node name="AmbientParticles" type="GPUParticles2D" parent="."]
 z_index = 3
