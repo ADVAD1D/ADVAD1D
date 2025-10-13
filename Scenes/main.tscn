@@ -1,4 +1,4 @@
-[gd_scene load_steps=108 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=109 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -33,6 +33,7 @@
 [ext_resource type="Texture2D" uid="uid://cmntejg0spyap" path="res://Assets/Sprites/increasebutton_pressed.png" id="20_neg2b"]
 [ext_resource type="PackedScene" uid="uid://nvpk6cv3oksk" path="res://Scenes/drone.tscn" id="22_ee4r6"]
 [ext_resource type="PackedScene" uid="uid://daifx8q4u0x65" path="res://Scenes/drone2.tscn" id="23_gt3je"]
+[ext_resource type="Texture2D" uid="uid://b21nbsy1pvanx" path="res://Assets/Sprites/sound_icon.png" id="23_hdf80"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="23_r33sp"]
 [ext_resource type="PackedScene" uid="uid://bu55k5t5u8pui" path="res://Scenes/trigger_scene.tscn" id="24_3pmx8"]
 
@@ -940,9 +941,9 @@ scale = Vector2(0.7752476, 0.7752476)
 size_flags_horizontal = 0
 
 [node name="Sprite2DSFX" type="Sprite2D" parent="PauseMenu/HBoxContainer2"]
-position = Vector2(-13.5, 22)
-scale = Vector2(1.2063857, 1.2063857)
-texture = ExtResource("15_neg2b")
+position = Vector2(-15.478925, 19.348652)
+scale = Vector2(1.3095801, 1.3095801)
+texture = ExtResource("23_hdf80")
 
 [node name="DecreaseButtonSFX" type="TextureButton" parent="PauseMenu/HBoxContainer2"]
 unique_name_in_owner = true
