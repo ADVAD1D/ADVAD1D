@@ -9,7 +9,7 @@ extends CharacterBody2D
 @export var dash_speed_multiplier: float = 1.7
 @export var dash_duration: float = 0.1
 @export var dash_cooldown: float = 1.0
-
+@export var dash_particles: PackedScene
 
 #resources
 @onready var lsrsound: AudioStreamPlayer2D = $Lasersnd
@@ -129,6 +129,11 @@ func do_dash(direction: Vector2):
 	velocity = direction * speed * dash_speed_multiplier
 	dash.emit(direction)
 	dash_sound.play()
+	
+	if dash_particles:
+		var dash_particles_instance = dash_particles.instantiate()
+		get_parent().add_child(dash_particles_instance)
+		dash_particles_instance.global_position = global_position
 	
 	var tween = create_tween()
 	tween.tween_property(sprite, "modulate", Color(2, 2, 2, 1), 0.4).set_ease(Tween.EASE_OUT)

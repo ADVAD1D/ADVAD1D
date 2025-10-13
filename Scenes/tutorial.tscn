@@ -297,13 +297,13 @@ func toggle_show(is_paused : bool) -> void :
 
 [sub_resource type="Gradient" id="Gradient_dxsep"]
 offsets = PackedFloat32Array(0, 0.482517, 1)
-colors = PackedColorArray(0.7960531, 0.8705845, 0.9828442, 0.607843, 0.76035976, 0.8610363, 0.98997694, 1, 0.745098, 0.905882, 1, 0.705882)
+colors = PackedColorArray(0.79607844, 0.87058824, 0.9843137, 0.43529412, 0.7607843, 0.8627451, 0.9882353, 0.5372549, 0.74509805, 0.90588236, 1, 0.49803922)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_6iyac"]
 gradient = SubResource("Gradient_dxsep")
 
 [sub_resource type="Gradient" id="Gradient_lexqi"]
-colors = PackedColorArray(0.6834892, 0.8040205, 0.99025744, 0.678431, 1, 1, 1, 0.737255)
+colors = PackedColorArray(0.68235296, 0.8039216, 0.99215686, 0.42745098, 1, 1, 1, 0.5137255)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_jkdf5"]
 gradient = SubResource("Gradient_lexqi")
