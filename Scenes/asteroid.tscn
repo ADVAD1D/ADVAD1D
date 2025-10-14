@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bhplufrn7721i" path="res://Scenes/asteroid_explosion.tscn" id="3_bi0dy"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bi0dy"]
-radius = 13.87899
+radius = 14.0
 
 [sub_resource type="Gradient" id="Gradient_bi0dy"]
 offsets = PackedFloat32Array(0.46558705, 0.72064775)

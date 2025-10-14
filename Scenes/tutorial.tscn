@@ -1,4 +1,4 @@
-[gd_scene load_steps=81 format=3 uid="uid://c8h020vchy722"]
+[gd_scene load_steps=84 format=3 uid="uid://c8h020vchy722"]
 
 [ext_resource type="Texture2D" uid="uid://dn2awjth0u77x" path="res://Assets/Sprites/tutorialgauntlet.png" id="1_p1f1o"]
 [ext_resource type="Script" uid="uid://b2txl04jujrjv" path="res://Scripts/tutorial.gd" id="1_ys4pu"]
@@ -8,8 +8,11 @@
 [ext_resource type="Texture2D" uid="uid://bxi55qpsnclqv" path="res://Assets/Sprites/laserwall.png" id="3_p8jf4"]
 [ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scripts/camera_2d.gd" id="4_i6t4g"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="6_h2ono"]
+[ext_resource type="Texture2D" uid="uid://wufsr23lcfhs" path="res://Assets/Sprites/keyboards.png" id="6_lsb8r"]
+[ext_resource type="Texture2D" uid="uid://bli13eiwndque" path="res://Assets/Sprites/spacekey.png" id="7_ap3ea"]
 [ext_resource type="Script" uid="uid://bia82e1gl8v0j" path="res://Scripts/asteroid_spawner.gd" id="7_lsb8r"]
 [ext_resource type="PackedScene" uid="uid://bthfvcj4v47xh" path="res://Scenes/asteroid.tscn" id="8_ap3ea"]
+[ext_resource type="Texture2D" uid="uid://b2e04hwthcm8u" path="res://Assets/Sprites/Ekey.png" id="8_t6ver"]
 [ext_resource type="AudioStream" uid="uid://iavnej1hm2io" path="res://Assets/Audio/195491__alienxxx__glitch_001.wav" id="11_t6ver"]
 [ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scripts/ambient_particles.gd" id="12_2nb4t"]
 [ext_resource type="AudioStream" uid="uid://bwoq355ggrir4" path="res://Assets/Audio/351564__bertrof__game-sound-correct-with-delay.wav" id="12_ap3ea"]
@@ -341,6 +344,21 @@ color = Color(0, 0, 0, 1)
 position = Vector2(-15, 1446)
 scale = Vector2(9.67856, 9.7983)
 texture = ExtResource("1_p1f1o")
+
+[node name="Keyboards" type="Sprite2D" parent="."]
+position = Vector2(113, -168.00002)
+scale = Vector2(6.4399996, 6.4399996)
+texture = ExtResource("6_lsb8r")
+
+[node name="SpaceKey" type="Sprite2D" parent="."]
+position = Vector2(-200.99998, -124.99999)
+scale = Vector2(5.2183943, 5.2183943)
+texture = ExtResource("7_ap3ea")
+
+[node name="ELetterKey" type="Sprite2D" parent="."]
+position = Vector2(-130.00002, -227)
+scale = Vector2(6.4799986, 6.4799986)
+texture = ExtResource("8_t6ver")
 
 [node name="ColorRect1" type="ColorRect" parent="."]
 visible = false
