@@ -29,7 +29,8 @@ var playlist = [
 	preload("res://Assets/Audio/Music/blue-light-district-397940.wav"),
 	preload("res://Assets/Audio/Music/the-fight-left-in-us-391531.wav"),
 	preload("res://Assets/Audio/Music/chipwave-horizon-377407.wav"),
-	preload("res://Assets/Audio/Music/starstream-circuit-370586.wav")
+	preload("res://Assets/Audio/Music/starstream-circuit-370586.wav"),
+	preload("res://Assets/Audio/Music/darkwave-dawn-371013.wav")
 ]
 
 #licences
