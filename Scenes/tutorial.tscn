@@ -346,17 +346,17 @@ scale = Vector2(9.67856, 9.7983)
 texture = ExtResource("1_p1f1o")
 
 [node name="Keyboards" type="Sprite2D" parent="."]
-position = Vector2(113, -168.00002)
+position = Vector2(-14, -166.00003)
 scale = Vector2(6.4399996, 6.4399996)
 texture = ExtResource("6_lsb8r")
 
 [node name="SpaceKey" type="Sprite2D" parent="."]
-position = Vector2(-200.99998, -124.99999)
+position = Vector2(-20.000002, -5.000023)
 scale = Vector2(5.2183943, 5.2183943)
 texture = ExtResource("7_ap3ea")
 
 [node name="ELetterKey" type="Sprite2D" parent="."]
-position = Vector2(-130.00002, -227)
+position = Vector2(-132.00002, -225.00002)
 scale = Vector2(6.4799986, 6.4799986)
 texture = ExtResource("8_t6ver")
 
