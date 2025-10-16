@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3 uid="uid://cj563pbrl44fc"]
+
+[ext_resource type="Texture2D" uid="uid://dy6tdkwdkef2s" path="res://Assets/Sprites/creditslabel.png" id="1_gryuy"]
+[ext_resource type="Script" uid="uid://rbogeag5amhd" path="res://Scripts/credits_menu.gd" id="1_uah1q"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="2_ccovl"]
+[ext_resource type="Texture2D" uid="uid://bc241w2jom6bu" path="res://Assets/Sprites/exitbutton.png" id="3_7emq5"]
+[ext_resource type="Texture2D" uid="uid://cjf4fhtm0ta7m" path="res://Assets/Sprites/quitbuttonhover1.png" id="4_803yc"]
+[ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="6_1wbrc"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_1bamb"]
+font = ExtResource("2_ccovl")
+font_size = 45
+font_color = Color(0, 0.24358124, 0.24366018, 1)
+outline_size = 2
+outline_color = Color(0.13725491, 1, 1, 1)
+shadow_size = 3
+shadow_color = Color(0, 0.43529412, 0.53333336, 1)
+
+[node name="CreditsPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_uah1q")
+
+[node name="CreditsTexture" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 78.999985
+offset_top = -1.5258789e-05
+offset_right = 178.99998
+offset_bottom = 69.999985
+scale = Vector2(3.7600012, 3.7600012)
+texture = ExtResource("1_gryuy")
+
+[node name="CloseButton" type="TextureButton" parent="CreditsTexture"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 29.999996
+offset_bottom = 30.0
+scale = Vector2(0.464379, 0.464379)
+texture_normal = ExtResource("3_7emq5")
+texture_hover = ExtResource("4_803yc")
+
+[node name="CreditsLabel" type="Label" parent="CreditsTexture"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 34.308506
+offset_top = 9.57447
+offset_right = 146.30852
+offset_bottom = 44.57447
+scale = Vector2(0.25772285, 0.25772285)
+text = "CREDITS"
+label_settings = SubResource("LabelSettings_1bamb")
+
+[node name="ButtonSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_1wbrc")
+pitch_scale = 0.5
+
+[connection signal="mouse_entered" from="CreditsTexture/CloseButton" to="." method="_on_close_button_mouse_entered"]
