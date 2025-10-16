@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://s72gvn2mqhx2"]
+[gd_scene load_steps=25 format=3 uid="uid://s72gvn2mqhx2"]
 
 [ext_resource type="Texture2D" uid="uid://8n821btsns0g" path="res://Assets/Sprites/firstscene.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
@@ -10,7 +10,10 @@
 [ext_resource type="Texture2D" uid="uid://d27ed1pl0byje" path="res://Assets/Sprites/playbuttonhover.png" id="6_cp0ys"]
 [ext_resource type="Texture2D" uid="uid://duc8rjasfhdl3" path="res://Assets/Sprites/quitbutton.png" id="7_yhxw7"]
 [ext_resource type="Texture2D" uid="uid://3t8pj8h4rows" path="res://Assets/Sprites/quitbuttonhover.png" id="8_trj04"]
+[ext_resource type="Texture2D" uid="uid://c0b8fbs27w4o4" path="res://Assets/Sprites/creditsbutton.png" id="9_5egv6"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="10_16hvj"]
+[ext_resource type="Texture2D" uid="uid://c1let3csoxgfl" path="res://Assets/Sprites/creditsbuttonhover.png" id="10_vtepg"]
+[ext_resource type="PackedScene" uid="uid://cj563pbrl44fc" path="res://Scenes/credits.tscn" id="14_vtepg"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_48xlc"]
 atlas = ExtResource("1_28flt")
@@ -123,7 +126,7 @@ frame = 4
 frame_progress = 0.37111983
 
 [node name="Logo" type="Sprite2D" parent="."]
-position = Vector2(247, 117)
+position = Vector2(246.99998, 108)
 scale = Vector2(1.4800006, 1.4800006)
 texture = ExtResource("2_1ehe0")
 
@@ -153,16 +156,21 @@ mouse_filter = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 211.0
-offset_top = 176.00002
-offset_right = 261.0
-offset_bottom = 220.00002
+offset_left = 212.00002
+offset_top = 140.0
+offset_right = 262.0
+offset_bottom = 208.0
 scale = Vector2(1.829739, 1.829739)
 
 [node name="PlayButton" type="TextureButton" parent="VBoxContainer"]
 layout_mode = 2
 texture_normal = ExtResource("5_opfnp")
 texture_hover = ExtResource("6_cp0ys")
+
+[node name="CreditsButton" type="TextureButton" parent="VBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("9_5egv6")
+texture_hover = ExtResource("10_vtepg")
 
 [node name="QuitButton" type="TextureButton" parent="VBoxContainer"]
 layout_mode = 2
@@ -178,6 +186,11 @@ wait_time = 34.0
 one_shot = true
 autostart = true
 
+[node name="CreditsPanel" parent="." instance=ExtResource("14_vtepg")]
+visible = false
+layout_mode = 1
+
 [connection signal="mouse_entered" from="VBoxContainer/PlayButton" to="." method="_on_play_button_mouse_entered"]
+[connection signal="mouse_entered" from="VBoxContainer/CreditsButton" to="." method="_on_credits_button_mouse_entered"]
 [connection signal="mouse_entered" from="VBoxContainer/QuitButton" to="." method="_on_quit_button_mouse_entered"]
 [connection signal="timeout" from="ScrollTimer" to="." method="_on_scroll_timer_timeout"]
