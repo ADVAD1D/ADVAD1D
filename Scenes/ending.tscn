@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://ojsnno8modll"]
 
 [ext_resource type="Script" uid="uid://dgas4fqeurpqd" path="res://Scripts/ending.gd" id="1_bfdlc"]
-[ext_resource type="PackedScene" uid="uid://c8h020vchy722" path="res://Scenes/tutorial.tscn" id="2_8w7g3"]
+[ext_resource type="PackedScene" uid="uid://s72gvn2mqhx2" path="res://Scenes/main_menu.tscn" id="2_bfdlc"]
 [ext_resource type="Texture2D" uid="uid://cgykfhieg52g2" path="res://Assets/Sprites/ending.png" id="3_hv2aa"]
 [ext_resource type="Script" uid="uid://5h5vl12ervyf" path="res://Scripts/abduction_sprite_control.gd" id="4_1bcf8"]
 [ext_resource type="Script" uid="uid://lw3vdictts31" path="res://Scripts/scene1_camera_control.gd" id="5_ox17v"]
@@ -33,7 +33,7 @@ shader_parameter/vignette_opacity = 1.0
 
 [node name="Ending" type="Node2D"]
 script = ExtResource("1_bfdlc")
-next_scene = ExtResource("2_8w7g3")
+next_scene = ExtResource("2_bfdlc")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_left = -1238.0

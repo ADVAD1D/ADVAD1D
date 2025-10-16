@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Advad Protoype"
-run/main_scene="uid://cwrkymd0iykky"
+run/main_scene="uid://s72gvn2mqhx2"
 config/features=PackedStringArray("4.5", "Forward Plus")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 config/icon="res://icon.svg"
@@ -26,7 +26,7 @@ SfxManager="*res://Autoloads/sfx_manager.gd"
 
 window/size/viewport_width=520
 window/size/viewport_height=270
-window/size/mode=2
+window/size/mode=3
 window/stretch/mode="canvas_items"
 
 [editor_plugins]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=109 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=112 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -15,13 +15,16 @@
 [ext_resource type="AudioStream" uid="uid://iavnej1hm2io" path="res://Assets/Audio/195491__alienxxx__glitch_001.wav" id="9_ynf5e"]
 [ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scripts/ambient_particles.gd" id="12_6iyac"]
 [ext_resource type="AudioStream" uid="uid://dlu22wl4fxr36" path="res://Assets/Audio/783832__chungus43a__milling-machine-motor.wav" id="12_b3802"]
+[ext_resource type="PackedScene" uid="uid://s72gvn2mqhx2" path="res://Scenes/main_menu.tscn" id="13_536cc"]
+[ext_resource type="Texture2D" uid="uid://kq3gdmq8xgwi" path="res://Assets/Sprites/resumebutton1.png" id="13_hdf80"]
 [ext_resource type="AudioStream" uid="uid://bwoq355ggrir4" path="res://Assets/Audio/351564__bertrof__game-sound-correct-with-delay.wav" id="13_pdsj5"]
-[ext_resource type="Texture2D" uid="uid://cowkl6f4b0p63" path="res://Assets/Sprites/resume_button.png" id="13_r33sp"]
-[ext_resource type="Texture2D" uid="uid://b8odg2tikg5cm" path="res://Assets/Sprites/resume_button_hover.png" id="14_hdf80"]
+[ext_resource type="Texture2D" uid="uid://dcwcfbxoxb34h" path="res://Assets/Sprites/resumebutton1hover.png" id="14_jwpg7"]
 [ext_resource type="Script" uid="uid://cn624xhs3jj2a" path="res://Scripts/enemy_spawner.gd" id="14_wsu2k"]
 [ext_resource type="Texture2D" uid="uid://wewd0rykgbgq" path="res://Assets/Sprites/dereasebutton.png" id="15_hpc6h"]
+[ext_resource type="Texture2D" uid="uid://duc8rjasfhdl3" path="res://Assets/Sprites/quitbutton.png" id="15_k2e45"]
 [ext_resource type="Texture2D" uid="uid://cp0lyic4v7nia" path="res://Assets/Sprites/music_icon.png" id="15_neg2b"]
 [ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="15_wsu2k"]
+[ext_resource type="Texture2D" uid="uid://3t8pj8h4rows" path="res://Assets/Sprites/quitbuttonhover.png" id="16_536cc"]
 [ext_resource type="Texture2D" uid="uid://hqqqcwvlavvx" path="res://Assets/Sprites/dereasebutton_pressed.png" id="16_e08e2"]
 [ext_resource type="Script" uid="uid://ddvbqopxphvow" path="res://Scripts/saw_spawner.gd" id="16_k12tt"]
 [ext_resource type="Texture2D" uid="uid://2f41284fn4kq" path="res://Assets/Sprites/dereasebutton_hover.png" id="16_kltya"]
@@ -310,7 +313,10 @@ shader_parameter/vignette_opacity = 1.0
 [sub_resource type="GDScript" id="GDScript_pdsj5"]
 script/source = "extends CanvasLayer
 
+@export var menu_scene: PackedScene
+
 @onready var unpause_button: TextureButton = %unPauseButton
+@onready var quit_button: TextureButton = %QuitButton
 @onready var decrease_button: TextureButton = %DecreaseButton
 @onready var volume_label: Label = %VolumenPercentage
 @onready var increase_button: TextureButton = %IncreaseButton
@@ -330,6 +336,7 @@ func _ready() -> void:
 	
 	decrease_sfx_button.pressed.connect(SfxManager.decrease_sfx_volume)
 	increase_sfx_button.pressed.connect(SfxManager.increase_sfx_volume)
+	quit_button.pressed.connect(_on_quit_button_pressed)
 	
 	SfxManager.sfx_volume_changed.connect(_on_sfx_volume_changed)
 	_on_sfx_volume_changed(SfxManager.get_sfx_volume_percent())
@@ -365,6 +372,10 @@ func _on_sfx_volume_changed(sfx_percent: float):
 	
 func _on_music_volume_changed(volume_percent: float):
 	volume_label.text = str(int(round(volume_percent))) + \"%\"
+	
+func _on_quit_button_pressed():
+	get_tree().paused = false
+	get_tree().change_scene_to_packed(menu_scene)
 	
 func toggle_show(is_paused : bool) -> void :
 	if is_paused:
@@ -848,6 +859,7 @@ color = Color(0, 0, 0, 1)
 process_mode = 3
 visible = false
 script = SubResource("GDScript_pdsj5")
+menu_scene = ExtResource("13_536cc")
 
 [node name="Control" type="Control" parent="PauseMenu"]
 layout_mode = 3
@@ -874,15 +886,26 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -315.0
-offset_top = -163.0
+offset_left = -321.0
+offset_top = -193.00002
 offset_right = -271.0
-offset_bottom = -148.0
+offset_bottom = -173.00002
 grow_horizontal = 0
 grow_vertical = 0
 scale = Vector2(2.559999, 2.8400002)
-texture_normal = ExtResource("13_r33sp")
-texture_hover = ExtResource("14_hdf80")
+texture_normal = ExtResource("13_hdf80")
+texture_hover = ExtResource("14_jwpg7")
+
+[node name="QuitButton" type="TextureButton" parent="PauseMenu/Control/ColorRect"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 198.99998
+offset_top = 140.0
+offset_right = 248.99998
+offset_bottom = 180.0
+scale = Vector2(2.5600014, 2.5600014)
+texture_normal = ExtResource("15_k2e45")
+texture_hover = ExtResource("16_536cc")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PauseMenu"]
 anchors_preset = 8
