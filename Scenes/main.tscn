@@ -382,6 +382,12 @@ func toggle_show(is_paused : bool) -> void :
 		show()
 	else:
 		hide()
+
+func _on_un_pause_button_mouse_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_quit_button_mouse_entered() -> void:
+	button_sound.play() # Replace with function body.
 "
 
 [sub_resource type="LabelSettings" id="LabelSettings_hdf80"]
@@ -902,7 +908,7 @@ layout_mode = 0
 offset_left = 198.99998
 offset_top = 140.0
 offset_right = 248.99998
-offset_bottom = 180.0
+offset_bottom = 160.3125
 scale = Vector2(2.5600014, 2.5600014)
 texture_normal = ExtResource("15_k2e45")
 texture_hover = ExtResource("16_536cc")
@@ -1069,3 +1075,5 @@ position = Vector2(-17, 4436)
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]
 [connection signal="area_entered" from="LaserZone" to="." method="_on_laser_zone_area_entered"]
+[connection signal="mouse_entered" from="PauseMenu/Control/ColorRect/unPauseButton" to="PauseMenu" method="_on_un_pause_button_mouse_entered"]
+[connection signal="mouse_entered" from="PauseMenu/Control/ColorRect/QuitButton" to="PauseMenu" method="_on_quit_button_mouse_entered"]
