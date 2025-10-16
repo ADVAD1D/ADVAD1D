@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://s72gvn2mqhx2"]
+[gd_scene load_steps=22 format=3 uid="uid://s72gvn2mqhx2"]
 
 [ext_resource type="Texture2D" uid="uid://8n821btsns0g" path="res://Assets/Sprites/firstscene.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
@@ -6,6 +6,7 @@
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_48xlc"]
 [ext_resource type="PackedScene" uid="uid://cwrkymd0iykky" path="res://Scenes/abduction.tscn" id="2_trj04"]
 [ext_resource type="Texture2D" uid="uid://bp74cmhcbg21i" path="res://Assets/Sprites/playbutton.png" id="5_opfnp"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="5_vr1f0"]
 [ext_resource type="Texture2D" uid="uid://d27ed1pl0byje" path="res://Assets/Sprites/playbuttonhover.png" id="6_cp0ys"]
 [ext_resource type="Texture2D" uid="uid://duc8rjasfhdl3" path="res://Assets/Sprites/quitbutton.png" id="7_yhxw7"]
 [ext_resource type="Texture2D" uid="uid://3t8pj8h4rows" path="res://Assets/Sprites/quitbuttonhover.png" id="8_trj04"]
@@ -68,11 +69,20 @@ animations = [{
 "speed": 2.0
 }]
 
+[sub_resource type="LabelSettings" id="LabelSettings_t1dhk"]
+font = ExtResource("5_vr1f0")
+font_size = 20
+font_color = Color(0, 0.30910987, 0.3091098, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+shadow_size = 5
+shadow_color = Color(0, 0.21176471, 0.21176471, 1)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1ehe0"]
 shader = ExtResource("2_48xlc")
 shader_parameter/overlay = true
 shader_parameter/resolution = Vector2(640, 480)
-shader_parameter/brightness = 2.5
+shader_parameter/brightness = 3.0
 shader_parameter/scanlines_opacity = 0.0
 shader_parameter/scanlines_width = 0.03
 shader_parameter/grille_opacity = 0.2
@@ -117,6 +127,15 @@ position = Vector2(247, 117)
 scale = Vector2(1.4800006, 1.4800006)
 texture = ExtResource("2_1ehe0")
 
+[node name="CreditsLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 381.0
+offset_top = 225.0
+offset_right = 512.0
+offset_bottom = 248.0
+text = "ANGELUS11 - 2025"
+label_settings = SubResource("LabelSettings_t1dhk")
+
 [node name="UILayer" type="CanvasLayer" parent="."]
 
 [node name="ColorRect" type="ColorRect" parent="UILayer"]
@@ -155,7 +174,7 @@ stream = ExtResource("10_16hvj")
 pitch_scale = 0.5
 
 [node name="ScrollTimer" type="Timer" parent="."]
-wait_time = 30.0
+wait_time = 34.0
 one_shot = true
 autostart = true
 
