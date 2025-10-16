@@ -79,6 +79,7 @@ func play_next_shuffled_song():
 	var current_scene_path = get_tree().current_scene.scene_file_path
 	
 	if scene1_specific_playlist.has(current_scene_path):
+		play()
 		return
 		
 	if shuffled_playlist.is_empty():
