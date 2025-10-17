@@ -180,6 +180,7 @@ texture_hover = ExtResource("8_trj04")
 [node name="ButtonSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_16hvj")
 pitch_scale = 0.5
+bus = &"SFX"
 
 [node name="ScrollTimer" type="Timer" parent="."]
 wait_time = 34.0

@@ -8,3 +8,4 @@ script = ExtResource("1_ufhka")
 
 [node name="SFXPlayer" type="AudioStreamPlayer" parent="."]
 volume_db = 5.0
+bus = &"SFX"

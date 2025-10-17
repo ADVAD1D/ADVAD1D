@@ -998,6 +998,7 @@ texture_hover = ExtResource("19_r33sp")
 [node name="ButtonSound" type="AudioStreamPlayer" parent="PauseMenu"]
 unique_name_in_owner = true
 stream = ExtResource("23_r33sp")
+bus = &"SFX"
 
 [node name="VolumeTimer" type="Timer" parent="PauseMenu"]
 unique_name_in_owner = true
