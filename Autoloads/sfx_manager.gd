@@ -2,6 +2,7 @@ extends Node
 signal sfx_volume_changed(sfx_percent)
 
 var linear_sfx_volume: float = 1.0
+const min_linear_volume = 0.0001
 
 var sfx_bus_index: int
 
@@ -11,12 +12,12 @@ func _ready() -> void:
 	AudioServer.set_bus_volume_db(sfx_bus_index, linear_to_db(linear_sfx_volume))
 	
 func increase_sfx_volume():
-	linear_sfx_volume = clamp(linear_sfx_volume + 0.05, 0.0, 1.0)
+	linear_sfx_volume = clamp(linear_sfx_volume + 0.05, min_linear_volume, 1.0)
 	AudioServer.set_bus_volume_db(sfx_bus_index, linear_to_db(linear_sfx_volume))
 	_emit_sfx_volume_changed()
 
 func decrease_sfx_volume():
-	linear_sfx_volume = clamp(linear_sfx_volume - 0.05, 0.0, 1.0)
+	linear_sfx_volume = clamp(linear_sfx_volume - 0.05, min_linear_volume, 1.0)
 	AudioServer.set_bus_volume_db(sfx_bus_index, linear_to_db(linear_sfx_volume))
 	_emit_sfx_volume_changed()
 

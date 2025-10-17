@@ -2,6 +2,8 @@ extends AudioStreamPlayer
 
 signal volume_changed(volume_percent)
 
+const min_linear_volume = 0.0001
+
 var linear_volume: float = 1.0
 
 var is_fading: bool = false
@@ -116,12 +118,12 @@ func fade_out_and_stop(duration: float):
 	print("Música detenida.")
 	
 func increase_volume():
-	linear_volume = clamp(linear_volume + 0.05, 0.0, 1.0)
+	linear_volume = clamp(linear_volume + 0.05, min_linear_volume, 1.0)
 	volume_db = linear_to_db(linear_volume)
 	_emit_volume_changed()
 
 func decrease_volume():
-	linear_volume = clamp(linear_volume - 0.05, 0.0, 1.0)
+	linear_volume = clamp(linear_volume - 0.05, min_linear_volume, 1.0)
 	volume_db = linear_to_db(linear_volume)
 	_emit_volume_changed()
 
