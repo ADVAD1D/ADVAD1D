@@ -55,3 +55,8 @@ func play_glitch_effect(crt_material):
 	
 func play_glitch_sound(glitch_sound):
 	glitch_sound.play()
+	
+func reset_game_state():
+	print("Game Manager: Reseteando el estado del juego")
+	phase_to_start = 1
+	reset_score()
