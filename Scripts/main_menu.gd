@@ -23,6 +23,7 @@ func _process(delta: float) -> void:
 		animated_background.position.y -= scroll_speed * delta
 
 func _on_play_button_pressed():
+	GameManager.reset_game_state()
 	get_tree().change_scene_to_packed(next_scene)
 	
 func _on_quit_button_pressed():
