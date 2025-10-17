@@ -57,5 +57,6 @@ label_settings = SubResource("LabelSettings_1bamb")
 [node name="ButtonSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_1wbrc")
 pitch_scale = 0.5
+bus = &"SFX"
 
 [connection signal="mouse_entered" from="CreditsTexture/CloseButton" to="." method="_on_close_button_mouse_entered"]
