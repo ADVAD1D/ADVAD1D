@@ -67,6 +67,7 @@ func _on_scene_changed():
 		
 		if stream != specific_song:
 			stream = specific_song
+			volume_db = linear_to_db(linear_volume)
 			play()
 			print("reproduciendo tema específico: ", stream.resource_path.get_file())
 			
