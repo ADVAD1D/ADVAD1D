@@ -194,13 +194,13 @@ func apply_difficulty():
 	if is_instance_valid(saw_enemy_spawner):
 		saw_enemy_spawner.configure_for_phase(saw_max_enemies, saw_config)
 		
-		
 func start_fade_out_sprite(target_sprite: AnimatedSprite2D):
 	var tween = create_tween()
 	tween.tween_property(target_sprite, "modulate:a", 0.0, 1.0)
 	tween.tween_callback(target_sprite.queue_free)
 	
 func fade_out_objective_label():
+	objective_label.text = "> (ツ)"
 	print("iniciando fade out de los labels")
 	var tween = create_tween()
 	if is_instance_valid(objective_label):
