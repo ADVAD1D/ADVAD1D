@@ -101,7 +101,6 @@ position = Vector2(-0.540216, -13.5054)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2(-0.540216, 3.2413)
 shape = SubResource("RectangleShape2D_cvnsp")
-disabled = true
 debug_color = Color(0.996388, 0, 0.187683, 0.42)
 
 [node name="Lasersnd" type="AudioStreamPlayer2D" parent="."]

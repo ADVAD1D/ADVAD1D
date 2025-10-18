@@ -1,0 +1,108 @@
+[gd_scene load_steps=10 format=3 uid="uid://ctpfllc068qt6"]
+
+[ext_resource type="Script" uid="uid://cv86xec1kggty" path="res://Scripts/special_thanks.gd" id="1_8n762"]
+[ext_resource type="Texture2D" uid="uid://dy6tdkwdkef2s" path="res://Assets/Sprites/creditslabel.png" id="2_nm5lx"]
+[ext_resource type="Texture2D" uid="uid://csi5oi07jgx80" path="res://Assets/Sprites/hearticon.png" id="3_4ijaf"]
+[ext_resource type="Texture2D" uid="uid://bc241w2jom6bu" path="res://Assets/Sprites/exitbutton.png" id="4_fwj24"]
+[ext_resource type="Texture2D" uid="uid://cjf4fhtm0ta7m" path="res://Assets/Sprites/quitbuttonhover1.png" id="5_argos"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="6_wb8ex"]
+[ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="7_0gwen"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_josap"]
+font = ExtResource("6_wb8ex")
+font_size = 45
+font_color = Color(0, 0.24358124, 0.24366018, 1)
+outline_size = 2
+outline_color = Color(0.13725491, 1, 1, 1)
+shadow_size = 3
+shadow_color = Color(0, 0.43529412, 0.53333336, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_542ni"]
+font = ExtResource("6_wb8ex")
+font_size = 20
+font_color = Color(2.8878452e-07, 0.19484252, 0.19484252, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+shadow_size = 0
+shadow_color = Color(0, 0.21176471, 0.21176471, 0)
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8n762")
+
+[node name="CreditsTexture" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 78.999985
+offset_top = -1.5258789e-05
+offset_right = 178.99998
+offset_bottom = 69.999985
+scale = Vector2(3.7600012, 3.7600012)
+texture = ExtResource("2_nm5lx")
+
+[node name="HeartSprite" type="Sprite2D" parent="CreditsTexture"]
+unique_name_in_owner = true
+position = Vector2(74.73402, 11.436171)
+scale = Vector2(0.46516076, 0.46516076)
+texture = ExtResource("3_4ijaf")
+
+[node name="CloseButton" type="TextureButton" parent="CreditsTexture"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 29.999996
+offset_bottom = 30.0
+scale = Vector2(0.464379, 0.464379)
+texture_normal = ExtResource("4_fwj24")
+texture_hover = ExtResource("5_argos")
+
+[node name="ThanksLabel" type="Label" parent="CreditsTexture"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 21.27659
+offset_top = 6.6489377
+offset_right = 238.2766
+offset_bottom = 41.648937
+scale = Vector2(0.22245532, 0.22245532)
+text = "SPECIAL THANKS"
+label_settings = SubResource("LabelSettings_josap")
+
+[node name="PeopleLabel" type="Label" parent="CreditsTexture"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 7.7127686
+offset_top = 16.755318
+offset_right = 99.71277
+offset_bottom = 146.75531
+scale = Vector2(0.3317041, 0.3317041)
+text = "- ODRUU
+- CRO128
+- PAULA
+- TIPITO
+- OLIVERANDOM
+- NESTORGMS
+- GHOKO"
+label_settings = SubResource("LabelSettings_542ni")
+
+[node name="PeopleLabel2" type="Label" parent="CreditsTexture"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 41.223396
+offset_top = 17.021276
+offset_right = 133.22339
+offset_bottom = 147.02127
+scale = Vector2(0.3317041, 0.3317041)
+text = "- TSUNELA
+- TECTOR9
+- FAZZELI"
+label_settings = SubResource("LabelSettings_542ni")
+
+[node name="ButtonSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_0gwen")
+pitch_scale = 0.5
+bus = &"SFX"
+
+[connection signal="mouse_entered" from="CreditsTexture/CloseButton" to="." method="_on_close_button_mouse_entered"]
