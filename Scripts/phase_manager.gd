@@ -17,7 +17,7 @@ signal timer_updated(time_left_string)
 
 @export var max_saw_enemies: float = 2.0 # = 2.0
 
-@export var phase_cooldown_timer: float = 5.0 # = 5.0
+@export var phase_cooldown_timer: float = 1.0 # = 1.0
 
 @export var wall_to_remove: StaticBody2D
 @export var sprite_to_remove: AnimatedSprite2D
@@ -149,7 +149,7 @@ func _on_phase_success():
 	is_phase_active = false
 	print("fase", current_phase, "completada")
 	success_sound.play()
-	clear_the_board()
+	await clear_the_board()
 	GameManager.phase_to_start = current_phase + 1
 	start_new_phase()
 		
