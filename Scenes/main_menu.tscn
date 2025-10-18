@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://s72gvn2mqhx2"]
+[gd_scene load_steps=28 format=3 uid="uid://s72gvn2mqhx2"]
 
 [ext_resource type="Texture2D" uid="uid://8n821btsns0g" path="res://Assets/Sprites/firstscene.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
@@ -16,6 +16,7 @@
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="10_16hvj"]
 [ext_resource type="Texture2D" uid="uid://c1let3csoxgfl" path="res://Assets/Sprites/creditsbuttonhover.png" id="10_vtepg"]
 [ext_resource type="PackedScene" uid="uid://cj563pbrl44fc" path="res://Scenes/credits.tscn" id="14_vtepg"]
+[ext_resource type="PackedScene" uid="uid://ctpfllc068qt6" path="res://Scenes/special_thanks.tscn" id="17_wyh8j"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_48xlc"]
 atlas = ExtResource("1_28flt")
@@ -199,6 +200,10 @@ one_shot = true
 autostart = true
 
 [node name="CreditsPanel" parent="." instance=ExtResource("14_vtepg")]
+visible = false
+layout_mode = 1
+
+[node name="SpecialThanksPanel" parent="." instance=ExtResource("17_wyh8j")]
 visible = false
 layout_mode = 1
 

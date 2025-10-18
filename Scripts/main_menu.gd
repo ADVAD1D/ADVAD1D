@@ -10,6 +10,7 @@ extends Control
 @onready var quit_button: TextureButton = $VBoxContainer/QuitButton
 @onready var button_sound: AudioStreamPlayer = $ButtonSound
 @onready var credits_panel: Control = $CreditsPanel
+@onready var special_thanks_panel: Control = $SpecialThanksPanel
 
 var is_scrolling: bool = true
 
@@ -38,7 +39,7 @@ func _on_credits_button_pressed():
 	credits_panel.show()
 	
 func _on_special_thanks_button_pressed():
-	pass
+	special_thanks_panel.show()
 
 func _on_quit_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
