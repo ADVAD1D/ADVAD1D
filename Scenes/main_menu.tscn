@@ -1,13 +1,15 @@
-[gd_scene load_steps=25 format=3 uid="uid://s72gvn2mqhx2"]
+[gd_scene load_steps=27 format=3 uid="uid://s72gvn2mqhx2"]
 
 [ext_resource type="Texture2D" uid="uid://8n821btsns0g" path="res://Assets/Sprites/firstscene.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
 [ext_resource type="Texture2D" uid="uid://bgs2sn1qmqdrc" path="res://Assets/Sprites/ADVADLOGODEF.png" id="2_1ehe0"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_48xlc"]
 [ext_resource type="PackedScene" uid="uid://cwrkymd0iykky" path="res://Scenes/abduction.tscn" id="2_trj04"]
+[ext_resource type="Texture2D" uid="uid://3m1orbh60ase" path="res://Assets/Sprites/specialthanksbutton.png" id="5_m3bi6"]
 [ext_resource type="Texture2D" uid="uid://bp74cmhcbg21i" path="res://Assets/Sprites/playbutton.png" id="5_opfnp"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="5_vr1f0"]
 [ext_resource type="Texture2D" uid="uid://d27ed1pl0byje" path="res://Assets/Sprites/playbuttonhover.png" id="6_cp0ys"]
+[ext_resource type="Texture2D" uid="uid://ddpugxe2tluy5" path="res://Assets/Sprites/specialthanksbuttonhover.png" id="6_wyh8j"]
 [ext_resource type="Texture2D" uid="uid://duc8rjasfhdl3" path="res://Assets/Sprites/quitbutton.png" id="7_yhxw7"]
 [ext_resource type="Texture2D" uid="uid://3t8pj8h4rows" path="res://Assets/Sprites/quitbuttonhover.png" id="8_trj04"]
 [ext_resource type="Texture2D" uid="uid://c0b8fbs27w4o4" path="res://Assets/Sprites/creditsbutton.png" id="9_5egv6"]
@@ -130,6 +132,15 @@ position = Vector2(246.99998, 108)
 scale = Vector2(1.4800006, 1.4800006)
 texture = ExtResource("2_1ehe0")
 
+[node name="SpecialThanksButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 300.0
+offset_top = 189.0
+offset_right = 330.0
+offset_bottom = 219.0
+texture_normal = ExtResource("5_m3bi6")
+texture_hover = ExtResource("6_wyh8j")
+
 [node name="CreditsLabel" type="Label" parent="."]
 layout_mode = 0
 offset_left = 381.0
@@ -191,6 +202,7 @@ autostart = true
 visible = false
 layout_mode = 1
 
+[connection signal="mouse_entered" from="SpecialThanksButton" to="." method="_on_special_thanks_button_mouse_entered"]
 [connection signal="mouse_entered" from="VBoxContainer/PlayButton" to="." method="_on_play_button_mouse_entered"]
 [connection signal="mouse_entered" from="VBoxContainer/CreditsButton" to="." method="_on_credits_button_mouse_entered"]
 [connection signal="mouse_entered" from="VBoxContainer/QuitButton" to="." method="_on_quit_button_mouse_entered"]

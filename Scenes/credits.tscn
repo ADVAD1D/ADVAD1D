@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cj563pbrl44fc"]
+[gd_scene load_steps=12 format=3 uid="uid://cj563pbrl44fc"]
 
 [ext_resource type="Texture2D" uid="uid://dy6tdkwdkef2s" path="res://Assets/Sprites/creditslabel.png" id="1_gryuy"]
 [ext_resource type="Script" uid="uid://rbogeag5amhd" path="res://Scripts/credits_menu.gd" id="1_uah1q"]
@@ -26,6 +26,13 @@ shadow_size = 0
 shadow_color = Color(0, 0.21176471, 0.21176471, 0)
 
 [sub_resource type="LabelSettings" id="LabelSettings_7emq5"]
+font = ExtResource("2_ccovl")
+font_size = 20
+font_color = Color(0, 0.19607843, 0.19607843, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_1wbrc"]
 font = ExtResource("2_ccovl")
 font_size = 20
 font_color = Color(0, 0.19607843, 0.19607843, 1)
@@ -69,41 +76,51 @@ texture_hover = ExtResource("4_803yc")
 [node name="CreditsLabel" type="Label" parent="CreditsTexture"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 37.234035
-offset_top = 7.978725
-offset_right = 149.23405
-offset_bottom = 42.978725
+offset_left = 37.499992
+offset_top = 6.3829803
+offset_right = 149.5
+offset_bottom = 41.38298
 scale = Vector2(0.22245532, 0.22245532)
 text = "CREDITS"
 label_settings = SubResource("LabelSettings_1bamb")
 
 [node name="AuthorLabel" type="Label" parent="CreditsTexture"]
 layout_mode = 0
-offset_left = 7.978726
-offset_top = 16.755322
-offset_right = 124.23842
-offset_bottom = 32.75532
+offset_left = 7.7127686
+offset_top = 16.755318
+offset_right = 192.71277
+offset_bottom = 32.755318
 scale = Vector2(0.3317041, 0.3317041)
 text = "Game by ANGELUS11 and Cro128"
 label_settings = SubResource("LabelSettings_uah1q")
 
 [node name="MusicLabel" type="Label" parent="CreditsTexture"]
 layout_mode = 0
-offset_left = 7.9787254
-offset_top = 23.936167
-offset_right = 247.02945
-offset_bottom = 39.936165
+offset_left = 7.712768
+offset_top = 22.340424
+offset_right = 246.76349
+offset_bottom = 38.340424
 scale = Vector2(0.29816505, 0.29816505)
 text = "Music by Psychronic Games on Pixabay"
 label_settings = SubResource("LabelSettings_7emq5")
 
-[node name="Label" type="Label" parent="CreditsTexture"]
+[node name="ShaderLabel" type="Label" parent="CreditsTexture"]
+layout_mode = 0
+offset_left = 7.9787245
+offset_top = 27.127655
+offset_right = 209.97873
+offset_bottom = 43.127655
+scale = Vector2(0.3083776, 0.3083776)
+text = "CRT VISUAL SHADER by lord0Sanz"
+label_settings = SubResource("LabelSettings_1wbrc")
+
+[node name="InfoLabel" type="Label" parent="CreditsTexture"]
 layout_mode = 0
 offset_left = 7.7127676
-offset_top = 30.319145
+offset_top = 33.244675
 offset_right = 385.71277
-offset_bottom = 103.319145
-scale = Vector2(0.2117491, 0.2117491)
+offset_bottom = 182.24467
+scale = Vector2(0.1971551, 0.1971551)
 text = "Laser4.wav by jobro 
  https://freesound.org/s/35681/ -- License: Attribution 3.0
 Picked Coin Echo by NenadSimic 
