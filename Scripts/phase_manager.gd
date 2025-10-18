@@ -24,6 +24,7 @@ signal timer_updated(time_left_string)
 
 @onready var time_progress_bar: TextureProgressBar = $"../UILayer/HUD".get_node("TimeBarContainer/TimeProgressBar")
 @onready var phase_label: Label = $"../UILayer/HUD".get_node("PhaseLabel")
+@onready var objective_label: Label = $"../UILayer/HUD".get_node("ObjectiveLabel")
 
 @onready var success_sound: AudioStreamPlayer2D = $"../SucessSound"
 @onready var asteroids_spawner: Marker2D = $"../AsteroidSpawner"
@@ -100,6 +101,8 @@ func start_new_phase():
 	if not phase_requirements.has(current_phase):
 		print("has ganado las fases")
 		phase_label.text = "ARENA WIN" 
+		if is_instance_valid(objective_label):
+			fade_out_objective_label()
 		
 		if is_instance_valid(saw_enemy_spawner):
 			saw_enemy_spawner.stop()
@@ -192,8 +195,14 @@ func apply_difficulty():
 		saw_enemy_spawner.configure_for_phase(saw_max_enemies, saw_config)
 		
 		
-		
 func start_fade_out_sprite(target_sprite: AnimatedSprite2D):
 	var tween = create_tween()
 	tween.tween_property(target_sprite, "modulate:a", 0.0, 1.0)
 	tween.tween_callback(target_sprite.queue_free)
+	
+func fade_out_objective_label():
+	print("iniciando fade out de los labels")
+	var tween = create_tween()
+	if is_instance_valid(objective_label):
+		tween.tween_property(objective_label, "modulate:a", 0.0, 1.0)
+		tween.tween_callback(objective_label.queue_free)
