@@ -1,5 +1,6 @@
-[gd_scene load_steps=12 format=3 uid="uid://d1eonx56vybhy"]
+[gd_scene load_steps=14 format=3 uid="uid://d1eonx56vybhy"]
 
+[ext_resource type="Script" uid="uid://c3q1parb1fr23" path="res://Scripts/hud.gd" id="1_qdh5o"]
 [ext_resource type="LabelSettings" uid="uid://c6nid3mbrqux8" path="res://Resources/Pixel_blue1.tres" id="1_sprlj"]
 [ext_resource type="Script" uid="uid://cao0bar753xfq" path="res://Scripts/score_label.gd" id="2_ny26j"]
 [ext_resource type="AudioStream" uid="uid://4fccknlgqyae" path="res://Assets/Audio/171696__nenadsimic__picked-coin-echo.wav" id="3_fdl0h"]
@@ -19,6 +20,15 @@ outline_color = Color(0, 1, 1, 1)
 shadow_size = 5
 shadow_color = Color(0, 0.25490198, 0.23921569, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_qdh5o"]
+font = ExtResource("4_8glcj")
+font_size = 20
+font_color = Color(0, 0.101960786, 0.101960786, 1)
+outline_size = 2
+outline_color = Color(0, 1, 0.37254903, 1)
+shadow_size = 5
+shadow_color = Color(0, 0.25490198, 0.101960786, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_vsu76"]
 font = ExtResource("4_8glcj")
 font_size = 15
@@ -35,6 +45,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_qdh5o")
 
 [node name="PhaseLabel" type="Label" parent="."]
 layout_mode = 0
@@ -46,6 +57,16 @@ size_flags_horizontal = 4
 size_flags_vertical = 0
 text = "PHASE"
 label_settings = SubResource("LabelSettings_fqivn")
+
+[node name="ObjectiveLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 248.99998
+offset_top = 48.0
+offset_right = 285.9264
+offset_bottom = 64.0
+scale = Vector2(1.1644784, 1.1644784)
+text = ">"
+label_settings = SubResource("LabelSettings_qdh5o")
 
 [node name="FirstContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -79,9 +100,9 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -1.0
-offset_top = -1.0
+offset_top = -9.0
 offset_right = -1.0
-offset_bottom = -1.0
+offset_bottom = -9.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 70
