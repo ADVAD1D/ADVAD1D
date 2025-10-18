@@ -35,6 +35,16 @@ func _on_quit_button_pressed():
 func _on_play_button_mouse_entered() -> void:
 	button_sound.play()
 	
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause"):
+		
+		if credits_panel.visible:
+			credits_panel.hide()
+		elif special_thanks_panel.visible:
+			special_thanks_panel.hide()
+		else:	
+			get_tree().quit()
+	
 func _on_credits_button_pressed():
 	credits_panel.show()
 	

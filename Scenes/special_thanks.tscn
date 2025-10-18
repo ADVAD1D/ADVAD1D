@@ -97,7 +97,8 @@ offset_bottom = 147.02127
 scale = Vector2(0.3317041, 0.3317041)
 text = "- TSUNELA
 - TECTOR9
-- FAZZELI"
+- FAZZELI
+-SUNTIME"
 label_settings = SubResource("LabelSettings_542ni")
 
 [node name="ButtonSound" type="AudioStreamPlayer" parent="."]
