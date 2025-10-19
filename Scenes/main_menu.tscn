@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://s72gvn2mqhx2"]
+[gd_scene load_steps=31 format=3 uid="uid://s72gvn2mqhx2"]
 
 [ext_resource type="Texture2D" uid="uid://8n821btsns0g" path="res://Assets/Sprites/firstscene.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
@@ -10,7 +10,9 @@
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="5_vr1f0"]
 [ext_resource type="Texture2D" uid="uid://d27ed1pl0byje" path="res://Assets/Sprites/playbuttonhover.png" id="6_cp0ys"]
 [ext_resource type="Texture2D" uid="uid://ddpugxe2tluy5" path="res://Assets/Sprites/specialthanksbuttonhover.png" id="6_wyh8j"]
+[ext_resource type="Texture2D" uid="uid://cvt1ilue7b0ys" path="res://Assets/Sprites/discordpixelicon.png" id="7_mkpwh"]
 [ext_resource type="Texture2D" uid="uid://duc8rjasfhdl3" path="res://Assets/Sprites/quitbutton.png" id="7_yhxw7"]
+[ext_resource type="Texture2D" uid="uid://c80ak2c0el2pn" path="res://Assets/Sprites/discordpixeliconhover.png" id="8_4nkqq"]
 [ext_resource type="Texture2D" uid="uid://3t8pj8h4rows" path="res://Assets/Sprites/quitbuttonhover.png" id="8_trj04"]
 [ext_resource type="Texture2D" uid="uid://c0b8fbs27w4o4" path="res://Assets/Sprites/creditsbutton.png" id="9_5egv6"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="10_16hvj"]
@@ -74,6 +76,15 @@ animations = [{
 "name": &"default",
 "speed": 2.0
 }]
+
+[sub_resource type="LabelSettings" id="LabelSettings_mkpwh"]
+font = ExtResource("5_vr1f0")
+font_size = 20
+font_color = Color(0, 0.30980393, 0.30980393, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+shadow_size = 5
+shadow_color = Color(0, 0.21176471, 0.21176471, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_t1dhk"]
 font = ExtResource("5_vr1f0")
@@ -142,11 +153,31 @@ offset_bottom = 219.0
 texture_normal = ExtResource("5_m3bi6")
 texture_hover = ExtResource("6_wyh8j")
 
+[node name="DiscordButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 134.0
+offset_right = 1084.0
+offset_bottom = 1158.0
+scale = Vector2(0.05017208, 0.05017208)
+texture_normal = ExtResource("7_mkpwh")
+texture_hover = ExtResource("8_4nkqq")
+
+[node name="DiscordLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 56.999996
+offset_top = 175.0
+offset_right = 137.0
+offset_bottom = 191.0
+scale = Vector2(0.7715802, 0.7715802)
+text = "JOIN DISCORD!"
+label_settings = SubResource("LabelSettings_mkpwh")
+
 [node name="CreditsLabel" type="Label" parent="."]
 layout_mode = 0
 offset_left = 381.0
 offset_top = 225.0
-offset_right = 512.0
+offset_right = 486.0
 offset_bottom = 248.0
 text = "ANGELUS11 - 2025"
 label_settings = SubResource("LabelSettings_t1dhk")
@@ -208,6 +239,7 @@ visible = false
 layout_mode = 1
 
 [connection signal="mouse_entered" from="SpecialThanksButton" to="." method="_on_special_thanks_button_mouse_entered"]
+[connection signal="mouse_entered" from="DiscordButton" to="." method="_on_discord_button_mouse_entered"]
 [connection signal="mouse_entered" from="VBoxContainer/PlayButton" to="." method="_on_play_button_mouse_entered"]
 [connection signal="mouse_entered" from="VBoxContainer/CreditsButton" to="." method="_on_credits_button_mouse_entered"]
 [connection signal="mouse_entered" from="VBoxContainer/QuitButton" to="." method="_on_quit_button_mouse_entered"]
