@@ -11,6 +11,7 @@ extends Control
 @onready var button_sound: AudioStreamPlayer = $ButtonSound
 @onready var credits_panel: Control = $CreditsPanel
 @onready var special_thanks_panel: Control = $SpecialThanksPanel
+@onready var discord_button: TextureButton = $DiscordButton
 
 var is_scrolling: bool = true
 
@@ -20,6 +21,7 @@ func _ready() -> void:
 	quit_button.pressed.connect(_on_quit_button_pressed)
 	credits_button.pressed.connect(_on_credits_button_pressed)
 	special_thanks_button.pressed.connect(_on_special_thanks_button_pressed)
+	discord_button.pressed.connect(_on_discord_button_pressed)
 
 func _process(delta: float) -> void:
 	if is_scrolling:
@@ -50,6 +52,9 @@ func _on_credits_button_pressed():
 	
 func _on_special_thanks_button_pressed():
 	special_thanks_panel.show()
+	
+func _on_discord_button_pressed():
+	OS.shell_open("https://discord.com/invite/ne3U8RS8bA")
 
 func _on_quit_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
@@ -61,4 +66,7 @@ func _on_credits_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
 
 func _on_special_thanks_button_mouse_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_discord_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
