@@ -9,6 +9,7 @@ extends Control
 @onready var special_thanks_button: TextureButton = $SpecialThanksButton
 @onready var quit_button: TextureButton = $VBoxContainer/QuitButton
 @onready var button_sound: AudioStreamPlayer = $ButtonSound
+@onready var back_sound: AudioStreamPlayer = $BackSound
 @onready var credits_panel: Control = $CreditsPanel
 @onready var special_thanks_panel: Control = $SpecialThanksPanel
 @onready var discord_button: TextureButton = $DiscordButton
@@ -39,6 +40,7 @@ func _on_play_button_mouse_entered() -> void:
 	
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
+		back_sound.play()
 		
 		if credits_panel.visible:
 			credits_panel.hide()
