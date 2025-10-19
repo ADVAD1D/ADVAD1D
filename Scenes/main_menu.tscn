@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://s72gvn2mqhx2"]
+[gd_scene load_steps=32 format=3 uid="uid://s72gvn2mqhx2"]
 
 [ext_resource type="Texture2D" uid="uid://8n821btsns0g" path="res://Assets/Sprites/firstscene.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
@@ -19,6 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://c1let3csoxgfl" path="res://Assets/Sprites/creditsbuttonhover.png" id="10_vtepg"]
 [ext_resource type="PackedScene" uid="uid://cj563pbrl44fc" path="res://Scenes/credits.tscn" id="14_vtepg"]
 [ext_resource type="PackedScene" uid="uid://ctpfllc068qt6" path="res://Scenes/special_thanks.tscn" id="17_wyh8j"]
+[ext_resource type="AudioStream" uid="uid://e74mglwo351x" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="18_4nkqq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_48xlc"]
 atlas = ExtResource("1_28flt")
@@ -165,11 +166,11 @@ texture_hover = ExtResource("8_4nkqq")
 
 [node name="DiscordLabel" type="Label" parent="."]
 layout_mode = 0
-offset_left = 56.999996
+offset_left = 58.0
 offset_top = 175.0
-offset_right = 137.0
+offset_right = 138.0
 offset_bottom = 191.0
-scale = Vector2(0.7715802, 0.7715802)
+scale = Vector2(0.69024044, 0.69024044)
 text = "JOIN DISCORD!"
 label_settings = SubResource("LabelSettings_mkpwh")
 
@@ -223,6 +224,10 @@ texture_hover = ExtResource("8_trj04")
 [node name="ButtonSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_16hvj")
 pitch_scale = 0.5
+bus = &"SFX"
+
+[node name="BackSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("18_4nkqq")
 bus = &"SFX"
 
 [node name="ScrollTimer" type="Timer" parent="."]

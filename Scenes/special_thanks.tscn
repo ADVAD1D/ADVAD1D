@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://ctpfllc068qt6"]
+[gd_scene load_steps=11 format=3 uid="uid://ctpfllc068qt6"]
 
 [ext_resource type="Script" uid="uid://cv86xec1kggty" path="res://Scripts/special_thanks.gd" id="1_8n762"]
 [ext_resource type="Texture2D" uid="uid://dy6tdkwdkef2s" path="res://Assets/Sprites/creditslabel.png" id="2_nm5lx"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cjf4fhtm0ta7m" path="res://Assets/Sprites/quitbuttonhover1.png" id="5_argos"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="6_wb8ex"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="7_0gwen"]
+[ext_resource type="AudioStream" uid="uid://e74mglwo351x" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="8_nm5lx"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_josap"]
 font = ExtResource("6_wb8ex")
@@ -104,6 +105,10 @@ label_settings = SubResource("LabelSettings_542ni")
 [node name="ButtonSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_0gwen")
 pitch_scale = 0.5
+bus = &"SFX"
+
+[node name="BackSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_nm5lx")
 bus = &"SFX"
 
 [connection signal="mouse_entered" from="CreditsTexture/CloseButton" to="." method="_on_close_button_mouse_entered"]
