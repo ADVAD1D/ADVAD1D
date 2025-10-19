@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cj563pbrl44fc"]
+[gd_scene load_steps=14 format=3 uid="uid://cj563pbrl44fc"]
 
 [ext_resource type="Texture2D" uid="uid://dy6tdkwdkef2s" path="res://Assets/Sprites/creditslabel.png" id="1_gryuy"]
 [ext_resource type="Script" uid="uid://rbogeag5amhd" path="res://Scripts/credits_menu.gd" id="1_uah1q"]
@@ -41,6 +41,13 @@ outline_size = 2
 outline_color = Color(0, 1, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_803yc"]
+font = ExtResource("2_ccovl")
+font_size = 20
+font_color = Color(0, 0.19607843, 0.19607843, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_j6nef"]
 font = ExtResource("2_ccovl")
 font_size = 20
 font_color = Color(0, 0.19607843, 0.19607843, 1)
@@ -117,11 +124,11 @@ label_settings = SubResource("LabelSettings_1wbrc")
 
 [node name="InfoLabel" type="Label" parent="CreditsTexture"]
 layout_mode = 0
-offset_left = 7.7127676
-offset_top = 33.244675
-offset_right = 385.71277
-offset_bottom = 182.24467
-scale = Vector2(0.18883397, 0.18883397)
+offset_left = 7.4468102
+offset_top = 36.70212
+offset_right = 385.4468
+offset_bottom = 185.70212
+scale = Vector2(0.17351303, 0.17351303)
 text = "Laser4.wav by jobro 
  https://freesound.org/s/35681/ -- License: Attribution 3.0
 Picked Coin Echo by NenadSimic 
@@ -131,6 +138,16 @@ https://freesound.org/s/195491/ -- License: Attribution 4.0
 Game Sound Correct With Delay by Bertrof
 https://freesound.org/s/351564/ -- License: Attribution 3.0"
 label_settings = SubResource("LabelSettings_803yc")
+
+[node name="Label" type="Label" parent="CreditsTexture"]
+layout_mode = 0
+offset_left = 7.7127676
+offset_top = 31.64893
+offset_right = 199.71277
+offset_bottom = 54.64893
+scale = Vector2(0.28721133, 0.28721133)
+text = "GAME THUMBNAIL BY NESTORGMS"
+label_settings = SubResource("LabelSettings_j6nef")
 
 [node name="ButtonSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_1wbrc")
