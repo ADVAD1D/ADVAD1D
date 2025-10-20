@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://s72gvn2mqhx2"]
+[gd_scene load_steps=34 format=3 uid="uid://s72gvn2mqhx2"]
 
 [ext_resource type="Texture2D" uid="uid://8n821btsns0g" path="res://Assets/Sprites/firstscene.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
@@ -96,6 +96,24 @@ outline_color = Color(0, 1, 1, 1)
 shadow_size = 5
 shadow_color = Color(0, 0.21176471, 0.21176471, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_4nkqq"]
+font = ExtResource("5_vr1f0")
+font_size = 20
+font_color = Color(0, 0.30980393, 0.30980393, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+shadow_size = 5
+shadow_color = Color(0, 0.21176471, 0.21176471, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ehtkc"]
+font = ExtResource("5_vr1f0")
+font_size = 20
+font_color = Color(0, 0.30980393, 0.30980393, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+shadow_size = 5
+shadow_color = Color(0, 0.21176471, 0.21176471, 1)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1ehe0"]
 shader = ExtResource("2_48xlc")
 shader_parameter/overlay = true
@@ -182,6 +200,24 @@ offset_right = 486.0
 offset_bottom = 248.0
 text = "ANGELUS11 - 2025"
 label_settings = SubResource("LabelSettings_t1dhk")
+
+[node name="VersionLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 382.0
+offset_top = 244.0
+offset_right = 422.0
+offset_bottom = 267.0
+text = "0.0.0.1"
+label_settings = SubResource("LabelSettings_4nkqq")
+
+[node name="EngineLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 233.0
+offset_right = 165.0
+offset_bottom = 256.0
+text = "MADE WITH GODOT ENGINE"
+label_settings = SubResource("LabelSettings_ehtkc")
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 
