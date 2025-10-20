@@ -148,7 +148,9 @@ func do_dash(direction: Vector2):
 	
 	await get_tree().create_timer(dash_cooldown).timeout
 	can_dash = true
-	
+
+
+"""	
 func _draw() -> void:
 	
 	if not show_debug:
@@ -169,7 +171,7 @@ func _draw() -> void:
 					draw_circle(Vector2.ZERO, collider.shape.radius, Color.RED)
 				elif collider.shape is RectangleShape2D:
 					draw_rect(Rect2(-collider.shape.size / 2, collider.shape.size), Color.RED, false, 2.0)
-					
+"""
 
 func die():
 	if player_died:
