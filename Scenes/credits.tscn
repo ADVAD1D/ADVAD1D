@@ -124,10 +124,10 @@ label_settings = SubResource("LabelSettings_1wbrc")
 
 [node name="InfoLabel" type="Label" parent="CreditsTexture"]
 layout_mode = 0
-offset_left = 7.4468102
-offset_top = 36.70212
-offset_right = 385.4468
-offset_bottom = 185.70212
+offset_left = 8.244682
+offset_top = 36.968075
+offset_right = 386.2447
+offset_bottom = 185.96808
 scale = Vector2(0.17351303, 0.17351303)
 text = "Laser4.wav by jobro 
  https://freesound.org/s/35681/ -- License: Attribution 3.0

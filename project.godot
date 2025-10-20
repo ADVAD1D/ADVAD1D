@@ -31,7 +31,7 @@ window/stretch/mode="canvas_items"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/kanban_tasks/plugin.cfg")
+enabled=PackedStringArray("res://addons/discord_gd/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg")
 
 [global_group]
 
