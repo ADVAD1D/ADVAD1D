@@ -21,6 +21,7 @@ config/icon="res://icon.svg"
 GameManager="*res://Autoloads/game_manager.gd"
 MusicPlayer="*res://Autoloads/music_player.tscn"
 SfxManager="*res://Autoloads/sfx_manager.gd"
+DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
 
 [display]
 
@@ -31,7 +32,7 @@ window/stretch/mode="canvas_items"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/discord_gd/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg")
+enabled=PackedStringArray("res://addons/discord-rpc-gd/plugin.cfg", "res://addons/discord_gd/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg")
 
 [global_group]
 
