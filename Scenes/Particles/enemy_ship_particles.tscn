@@ -40,6 +40,7 @@ texture = ExtResource("1_1wrnq")
 lifetime = 1.02
 one_shot = true
 explosiveness = 1.0
+trail_enabled = true
 process_material = SubResource("ParticleProcessMaterial_1wrnq")
 script = ExtResource("2_1wrnq")
 

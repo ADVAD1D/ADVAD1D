@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://s72gvn2mqhx2"]
+[gd_scene load_steps=37 format=3 uid="uid://s72gvn2mqhx2"]
 
 [ext_resource type="Texture2D" uid="uid://8n821btsns0g" path="res://Assets/Sprites/firstscene.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
@@ -15,8 +15,11 @@
 [ext_resource type="Texture2D" uid="uid://c80ak2c0el2pn" path="res://Assets/Sprites/discordpixeliconhover.png" id="8_4nkqq"]
 [ext_resource type="Texture2D" uid="uid://3t8pj8h4rows" path="res://Assets/Sprites/quitbuttonhover.png" id="8_trj04"]
 [ext_resource type="Texture2D" uid="uid://c0b8fbs27w4o4" path="res://Assets/Sprites/creditsbutton.png" id="9_5egv6"]
+[ext_resource type="Texture2D" uid="uid://bkdv1633hq14x" path="res://Assets/Sprites/fullscreenbutton.png" id="9_jr6u5"]
+[ext_resource type="Texture2D" uid="uid://lnq6a0woe0n8" path="res://Assets/Sprites/fullscreenbuttonhover.png" id="10_6m47u"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="10_16hvj"]
 [ext_resource type="Texture2D" uid="uid://c1let3csoxgfl" path="res://Assets/Sprites/creditsbuttonhover.png" id="10_vtepg"]
+[ext_resource type="Texture2D" uid="uid://bkumdi5oetady" path="res://Assets/Sprites/fullscreenbuttonhover1.png" id="11_84iac"]
 [ext_resource type="PackedScene" uid="uid://cj563pbrl44fc" path="res://Scenes/credits.tscn" id="14_vtepg"]
 [ext_resource type="PackedScene" uid="uid://ctpfllc068qt6" path="res://Scenes/special_thanks.tscn" id="17_wyh8j"]
 [ext_resource type="AudioStream" uid="uid://e74mglwo351x" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="18_4nkqq"]
@@ -182,6 +185,18 @@ scale = Vector2(0.05017208, 0.05017208)
 texture_normal = ExtResource("7_mkpwh")
 texture_hover = ExtResource("8_4nkqq")
 
+[node name="FullScreenButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 296.00003
+offset_top = 143.00002
+offset_right = 341.00003
+offset_bottom = 188.00002
+scale = Vector2(0.8175782, 0.8175782)
+toggle_mode = true
+texture_normal = ExtResource("9_jr6u5")
+texture_pressed = ExtResource("10_6m47u")
+texture_hover = ExtResource("11_84iac")
+
 [node name="DiscordLabel" type="Label" parent="."]
 layout_mode = 0
 offset_left = 58.0
@@ -207,7 +222,7 @@ offset_left = 382.0
 offset_top = 244.0
 offset_right = 422.0
 offset_bottom = 267.0
-text = "0.0.0.1"
+text = "0.0.0.3"
 label_settings = SubResource("LabelSettings_4nkqq")
 
 [node name="EngineLabel" type="Label" parent="."]
@@ -281,6 +296,7 @@ layout_mode = 1
 
 [connection signal="mouse_entered" from="SpecialThanksButton" to="." method="_on_special_thanks_button_mouse_entered"]
 [connection signal="mouse_entered" from="DiscordButton" to="." method="_on_discord_button_mouse_entered"]
+[connection signal="mouse_entered" from="FullScreenButton" to="." method="_on_full_screen_button_mouse_entered"]
 [connection signal="mouse_entered" from="VBoxContainer/PlayButton" to="." method="_on_play_button_mouse_entered"]
 [connection signal="mouse_entered" from="VBoxContainer/CreditsButton" to="." method="_on_credits_button_mouse_entered"]
 [connection signal="mouse_entered" from="VBoxContainer/QuitButton" to="." method="_on_quit_button_mouse_entered"]
