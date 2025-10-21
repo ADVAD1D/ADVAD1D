@@ -8,7 +8,7 @@
 [ext_resource type="AudioStream" uid="uid://gob57jdfqbw8" path="res://Assets/Audio/609587-unfa-grenade-explosion-sfx-medium-sized-meaty-realistic_wlTs6upp1.wav" id="5_um53k"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exykt"]
-size = Vector2(11, 24)
+size = Vector2(14.4, 25.600006)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bscg7"]
 size = Vector2(10.4142, 20)
@@ -67,7 +67,8 @@ script = ExtResource("2_bscg7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 z_index = 1
-position = Vector2(-0.5, 2)
+position = Vector2(-0.39999932, 1.9999992)
+scale = Vector2(0.99999976, 0.99999976)
 shape = SubResource("RectangleShape2D_exykt")
 debug_color = Color(0.998661, 0, 0.136085, 0.42)
 

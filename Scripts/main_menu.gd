@@ -13,6 +13,7 @@ extends Control
 @onready var credits_panel: Control = $CreditsPanel
 @onready var special_thanks_panel: Control = $SpecialThanksPanel
 @onready var discord_button: TextureButton = $DiscordButton
+@onready var fullscreen_button: TextureButton = $FullScreenButton
 
 var is_scrolling: bool = true
 
@@ -20,9 +21,12 @@ func _ready() -> void:
 	GameManager.can_pause = false
 	play_button.pressed.connect(_on_play_button_pressed)
 	quit_button.pressed.connect(_on_quit_button_pressed)
+	fullscreen_button.toggled.connect(_on_fullscreen_toggled)
 	credits_button.pressed.connect(_on_credits_button_pressed)
 	special_thanks_button.pressed.connect(_on_special_thanks_button_pressed)
 	discord_button.pressed.connect(_on_discord_button_pressed)
+	
+	fullscreen_button.button_pressed = (DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN)
 
 func _process(delta: float) -> void:
 	if is_scrolling:
@@ -71,4 +75,13 @@ func _on_special_thanks_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
 
 func _on_discord_button_mouse_entered() -> void:
+	button_sound.play() # Replace with function body.
+	
+func _on_fullscreen_toggled(is_checked: bool):
+	if is_checked:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
+
+func _on_full_screen_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
