@@ -99,7 +99,9 @@ scale = Vector2(0.3317041, 0.3317041)
 text = "- TSUNELA
 - TECTOR9
 - FAZZELI
-- SUNTIME"
+- SUNTIME
+- MINDS
+- KOSHI"
 label_settings = SubResource("LabelSettings_542ni")
 
 [node name="ButtonSound" type="AudioStreamPlayer" parent="."]
