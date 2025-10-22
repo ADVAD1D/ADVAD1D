@@ -8,7 +8,9 @@ extends Node
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	DiscordRPC.app_id = 1429848946213126245 # Replace with function body.
+	var discord_app_id = EnvParser.parse("DISCORD_APP_ID")
+	
+	DiscordRPC.app_id = int(discord_app_id) # Replace with function body.
 	DiscordRPC.large_image = "portada" # Image key from "Art Assets"
 	DiscordRPC.start_timestamp = int(Time.get_unix_time_from_system()) # "02:46 elapsed"
 	# DiscordRPC.end_timestamp = int(Time.get_unix_time_from_system()) + 3600 # +1 hour in unix time / "01:00:00 remaining"

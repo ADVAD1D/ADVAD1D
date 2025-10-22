@@ -23,6 +23,7 @@ GameManager="*res://Autoloads/game_manager.gd"
 MusicPlayer="*res://Autoloads/music_player.tscn"
 SfxManager="*res://Autoloads/sfx_manager.gd"
 DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
+EnvParser="*res://addons/env_parser/EnvParser.gd"
 
 [display]
 
