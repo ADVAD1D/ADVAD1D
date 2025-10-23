@@ -8,13 +8,18 @@ extends Node
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	
+	#the parser takes the env value as a string 
 	var discord_app_id = EnvParser.parse("DISCORD_APP_ID")
 	
-	DiscordRPC.app_id = int(discord_app_id) # Replace with function body.
-	DiscordRPC.large_image = "portada" # Image key from "Art Assets"
-	DiscordRPC.start_timestamp = int(Time.get_unix_time_from_system()) # "02:46 elapsed"
-	# DiscordRPC.end_timestamp = int(Time.get_unix_time_from_system()) + 3600 # +1 hour in unix time / "01:00:00 remaining"
-	DiscordRPC.refresh() # Always refresh after changing the values!
+	if discord_app_id:
+		DiscordRPC.app_id = int(discord_app_id) # Replace with function body.
+		DiscordRPC.large_image = "portada" # Image key from "Art Assets"
+		DiscordRPC.start_timestamp = int(Time.get_unix_time_from_system()) # "02:46 elapsed"
+		# DiscordRPC.end_timestamp = int(Time.get_unix_time_from_system()) + 3600 # +1 hour in unix time / "01:00:00 remaining"
+		DiscordRPC.refresh() # Always refresh after changing the values!
+	else:
+		print("Error, no se encontró el valor DISCORD_APP_ID en el archivo .env")
 
 func  _process(_delta) -> void:
 	DiscordRPC.run_callbacks()
