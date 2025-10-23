@@ -105,3 +105,7 @@ func _on_tutorial_timer_timeout():
 	
 	if next_scene:
 		get_tree().change_scene_to_file(next_scene)
+		
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("Skip"):
+		get_tree().change_scene_to_file(next_scene)

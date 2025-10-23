@@ -9,6 +9,10 @@ extends Node2D
 func _ready() -> void:
 	start_sequence()
 	GameManager.can_pause = false
+	
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("Skip"):
+		get_tree().change_scene_to_packed(next_scene)
 
 func start_sequence():
 	await get_tree().create_timer(display_duration).timeout
