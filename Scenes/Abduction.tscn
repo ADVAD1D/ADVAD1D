@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cwrkymd0iykky"]
+[gd_scene load_steps=11 format=3 uid="uid://cwrkymd0iykky"]
 
 [ext_resource type="Texture2D" uid="uid://cgxfbj1nol3bo" path="res://Assets/Sprites/capitainadabduction.png" id="1_nlkhs"]
 [ext_resource type="Script" uid="uid://dg1y4ht8312sm" path="res://Scripts/abduction_scene.gd" id="1_s02xp"]
@@ -6,6 +6,17 @@
 [ext_resource type="Script" uid="uid://5h5vl12ervyf" path="res://Scripts/abduction_sprite_control.gd" id="2_k0sn5"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_lkfcr"]
 [ext_resource type="PackedScene" uid="uid://c8h020vchy722" path="res://Scenes/tutorial.tscn" id="2_s02xp"]
+[ext_resource type="Texture2D" uid="uid://8qwdi0lnhf43" path="res://Assets/Sprites/enterkey.png" id="5_6ude6"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="5_vkxro"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_tofm5"]
+font = ExtResource("5_vkxro")
+font_size = 20
+font_color = Color(6.617978e-08, 0.14569733, 0.14569727, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+shadow_size = 5
+shadow_color = Color(1.3536774e-07, 0.12474046, 0.12474043, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g50ly"]
 shader = ExtResource("2_lkfcr")
@@ -35,6 +46,38 @@ shader_parameter/vignette_opacity = 1.0
 script = ExtResource("1_s02xp")
 next_scene = ExtResource("2_s02xp")
 
+[node name="UILayer" type="CanvasLayer" parent="."]
+
+[node name="EnterKey" type="TextureRect" parent="UILayer"]
+offset_left = 451.99997
+offset_top = 181.0
+offset_right = 496.99997
+offset_bottom = 226.0
+scale = Vector2(1.0691628, 1.0691628)
+texture = ExtResource("5_6ude6")
+
+[node name="SkipLabel" type="Label" parent="UILayer"]
+offset_left = 456.99997
+offset_top = 224.99998
+offset_right = 483.99997
+offset_bottom = 240.99998
+scale = Vector2(1.3774437, 1.3774437)
+text = "SKIP"
+label_settings = SubResource("LabelSettings_tofm5")
+
+[node name="ColorRect" type="ColorRect" parent="UILayer"]
+material = SubResource("ShaderMaterial_g50ly")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1166.0
+offset_top = -704.00006
+offset_right = -1120.0
+offset_bottom = -580.02576
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(4.061179, 4.061179)
+
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_left = -1238.0
 offset_top = -736.00006
@@ -58,18 +101,3 @@ limit_bottom = 800
 limit_smoothed = true
 position_smoothing_enabled = true
 script = ExtResource("2_eraxo")
-
-[node name="UILayer" type="CanvasLayer" parent="."]
-
-[node name="ColorRect" type="ColorRect" parent="UILayer"]
-material = SubResource("ShaderMaterial_g50ly")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -1166.0
-offset_top = -704.00006
-offset_right = -1120.0
-offset_bottom = -580.02576
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(4.061179, 4.061179)
