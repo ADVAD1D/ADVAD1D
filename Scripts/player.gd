@@ -197,8 +197,6 @@ func _perform_death_effects():
 	hide()
 	$CollisionShape2D.set_deferred("disabled", true)
 	
-	
-
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("asteroides") or area.is_in_group("enemy_laser") or area.is_in_group("saws"):
 		if area.is_in_group("enemy_laser"):
