@@ -12,6 +12,14 @@ func _ready() -> void:
 	start_sequence()
 	GameManager.can_pause = false
 	
+	enter_key.modulate.a = 0.0
+	
+	var enter_fadein_tween = create_tween()
+	enter_fadein_tween.tween_property(enter_key, "modulate:a", 1.0, 1.5)
+	
+	var skip_fadein_tween = create_tween()
+	skip_fadein_tween.tween_property(skip_label, "modulate:a", 1.0, 1.5)
+	
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Skip"):
 		get_tree().change_scene_to_packed(next_scene)
