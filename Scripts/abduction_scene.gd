@@ -5,6 +5,8 @@ extends Node2D
 @export var fade_out_duration: float = 1.5
 
 @onready var illustration_sprite: Sprite2D = $Sprite2D
+@onready var enter_key: TextureRect = $UILayer/EnterKey
+@onready var skip_label: Label = $UILayer/SkipLabel
 
 func _ready() -> void:
 	start_sequence()
@@ -17,8 +19,16 @@ func _input(event: InputEvent) -> void:
 func start_sequence():
 	await get_tree().create_timer(display_duration).timeout
 	
+	#fades 
 	var illustration_tween = create_tween()
 	illustration_tween.tween_property(illustration_sprite, "modulate:a", 0.0, fade_out_duration)
+	
+	var enter_tween = create_tween()
+	enter_tween.tween_property(enter_key, "modulate:a", 0.0, fade_out_duration)
+	
+	var skip_tween = create_tween()
+	skip_tween.tween_property(skip_label, "modulate:a", 0.0, fade_out_duration)
+	
 	MusicPlayer.fade_out_and_stop(fade_out_duration)
 	
 	await illustration_tween.finished
