@@ -1,6 +1,7 @@
 extends Node
 signal score_updated(new_score)
 signal pause(is_paused)
+signal ship_selection_changed(new_ship_data)
 var score: int = 0
 var can_add_score: bool = true
 var phase_to_start: int = 1
@@ -9,12 +10,50 @@ var is_glitch_sound: bool = false
 var game_paused := false
 var can_pause: bool = true
 
+var ship_data = [
+	{
+		"name": "ship1",
+		"author": "ANGELUS11",
+		"texture": preload("res://Assets/Sprites/Ship1.png")
+	},
+	
+	{
+		"name": "ship2",
+		"author": "ANGELUS11",
+		"texture": preload("res://Assets/Sprites/shipskin1.png")
+	}
+]
+
+var selected_ship_index: int = 0
+
 func _ready() -> void:
 	randomize()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _process(_delta: float) -> void:
 	pass
+	
+func select_next_ship():
+	selected_ship_index += 1
+	
+	if selected_ship_index >= ship_data.size():
+		selected_ship_index = 0
+		
+	ship_selection_changed.emit(ship_data[selected_ship_index])
+	
+func select_previous_ship():
+	selected_ship_index -= 1
+	
+	if selected_ship_index < 0:
+		selected_ship_index = ship_data.size() - 1
+		
+	ship_selection_changed.emit(ship_data[selected_ship_index])
+	
+func get_selected_ship_data() -> Dictionary:
+	return ship_data[selected_ship_index]
+	
+func get_selected_ship_texture() -> Texture2D:
+	return ship_data[selected_ship_index]["texture"]
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause") and can_pause:

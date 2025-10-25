@@ -1,0 +1,163 @@
+[gd_scene load_steps=15 format=3 uid="uid://b3erfay7mn45e"]
+
+[ext_resource type="Texture2D" uid="uid://c1suoe5284u3a" path="res://Assets/Sprites/skinpanel2.png" id="1_0s6pj"]
+[ext_resource type="Script" uid="uid://dep7b8vk1sfv" path="res://Scripts/skin_selector.gd" id="1_43pbt"]
+[ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_g6083"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="3_sum1o"]
+[ext_resource type="Texture2D" uid="uid://dw1h7frdt4jf" path="res://Assets/Sprites/nextbutton1.png" id="4_mh730"]
+[ext_resource type="Texture2D" uid="uid://bc241w2jom6bu" path="res://Assets/Sprites/exitbutton.png" id="4_qwen4"]
+[ext_resource type="Texture2D" uid="uid://cjf4fhtm0ta7m" path="res://Assets/Sprites/quitbuttonhover1.png" id="5_0tot8"]
+[ext_resource type="Texture2D" uid="uid://cg4wnvam0pwwh" path="res://Assets/Sprites/nextbutton1hover.png" id="5_43pbt"]
+[ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="10_qwen4"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_1cnro"]
+font = ExtResource("3_sum1o")
+font_size = 20
+font_color = Color(0, 0.24313726, 0.24313726, 1)
+outline_size = 2
+outline_color = Color(0.13725491, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_43pbt"]
+font = ExtResource("3_sum1o")
+font_size = 20
+font_color = Color(0, 0.24313726, 0.24313726, 1)
+outline_size = 2
+outline_color = Color(0.13725491, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_v35mn"]
+font = ExtResource("3_sum1o")
+font_size = 20
+font_color = Color(0, 0.24313726, 0.24313726, 1)
+outline_size = 2
+outline_color = Color(0.13725491, 1, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sum1o"]
+shader = ExtResource("2_g6083")
+shader_parameter/overlay = true
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/brightness = 3.0
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.03
+shader_parameter/grille_opacity = 0.2
+shader_parameter/roll = true
+shader_parameter/roll_speed = 3.0
+shader_parameter/roll_size = 10.000000475
+shader_parameter/roll_variation = 0.5
+shader_parameter/distort_intensity = 0.02
+shader_parameter/aberration = 0.01000004797499998
+shader_parameter/noise_opacity = 0.311
+shader_parameter/noise_speed = 2.0
+shader_parameter/static_noise_intensity = 0.0
+shader_parameter/pixelate = false
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.150000007125
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 1.0
+shader_parameter/vignette_opacity = 0.586000027835
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_43pbt")
+
+[node name="SkinPanel" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_0s6pj")
+
+[node name="BackButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 55.0
+offset_top = 22.0
+offset_right = 85.0
+offset_bottom = 52.0
+scale = Vector2(1.42454, 1.42454)
+texture_normal = ExtResource("4_qwen4")
+texture_hover = ExtResource("5_0tot8")
+
+[node name="SkinsLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 185.0
+offset_top = 53.0
+offset_right = 274.0
+offset_bottom = 69.0
+scale = Vector2(1.6167805, 1.6167805)
+text = "SKIN SELECTOR"
+label_settings = SubResource("LabelSettings_1cnro")
+
+[node name="NextButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 380.0
+offset_top = 113.0
+offset_right = 425.0
+offset_bottom = 158.0
+texture_normal = ExtResource("4_mh730")
+texture_hover = ExtResource("5_43pbt")
+
+[node name="ShipPreview" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 220.99998
+offset_top = 96.0
+offset_right = 261.0
+offset_bottom = 136.0
+scale = Vector2(1.507489, 1.507489)
+
+[node name="PreviousButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 127.000015
+offset_top = 155.00002
+offset_right = 172.00002
+offset_bottom = 200.00002
+rotation = 3.1410596
+texture_normal = ExtResource("4_mh730")
+texture_hover = ExtResource("5_43pbt")
+
+[node name="ShipNameLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 177.99998
+offset_top = 166.0
+offset_right = 203.0
+offset_bottom = 182.0
+scale = Vector2(1.5303622, 1.5303622)
+text = "ship"
+label_settings = SubResource("LabelSettings_43pbt")
+
+[node name="ShipAuthorLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 255.0
+offset_top = 166.00002
+offset_right = 319.0
+offset_bottom = 182.00002
+scale = Vector2(1.4676892, 1.4676892)
+text = "By: Author"
+label_settings = SubResource("LabelSettings_v35mn")
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="UILayer"]
+material = SubResource("ShaderMaterial_sum1o")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1907.0
+offset_top = -1715.0
+offset_right = 1414.0
+offset_bottom = 3796.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ButtonSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_qwen4")
+pitch_scale = 0.5
+bus = &"SFX"
+
+[connection signal="mouse_entered" from="BackButton" to="." method="_on_back_button_mouse_entered"]

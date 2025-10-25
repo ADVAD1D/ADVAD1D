@@ -48,6 +48,7 @@ var dash_camera_shake: float = 45.0
 
 func _ready() -> void:
 	var player_score = GameManager.score
+	sprite.texture = GameManager.get_selected_ship_texture()
 	main_camera = get_viewport().get_camera_2d()
 	print(player_score)
 
