@@ -24,6 +24,14 @@ func _on_ship_selection_changed(ship_data: Dictionary):
 	ship_name_label.text = ship_data["name"]
 	ship_author_label.text = "By: " + ship_data["author"]
 	
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause"):
+		_on_back_button_pressed()
+	elif event.is_action_pressed("Move_Left"):
+		_on_left_button_pressed()
+	elif event.is_action_pressed("Move_Right"):
+		_on_right_button_pressed()
+	
 func _on_back_button_pressed():
 	get_tree().change_scene_to_file(back_scene)
 	

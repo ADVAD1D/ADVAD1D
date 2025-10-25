@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://b3erfay7mn45e"]
+[gd_scene load_steps=14 format=3 uid="uid://b3erfay7mn45e"]
 
 [ext_resource type="Texture2D" uid="uid://c1suoe5284u3a" path="res://Assets/Sprites/skinpanel2.png" id="1_0s6pj"]
 [ext_resource type="Script" uid="uid://dep7b8vk1sfv" path="res://Scripts/skin_selector.gd" id="1_43pbt"]
@@ -13,21 +13,21 @@
 [sub_resource type="LabelSettings" id="LabelSettings_1cnro"]
 font = ExtResource("3_sum1o")
 font_size = 20
-font_color = Color(0, 0.24313726, 0.24313726, 1)
+font_color = Color(9.325333e-08, 0.11189317, 0.11189317, 1)
 outline_size = 2
 outline_color = Color(0.13725491, 1, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_43pbt"]
 font = ExtResource("3_sum1o")
 font_size = 20
-font_color = Color(0, 0.24313726, 0.24313726, 1)
+font_color = Color(0, 0.11372549, 0.11372549, 1)
 outline_size = 2
 outline_color = Color(0.13725491, 1, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_v35mn"]
 font = ExtResource("3_sum1o")
 font_size = 20
-font_color = Color(0, 0.24313726, 0.24313726, 1)
+font_color = Color(0, 0.11372549, 0.11372549, 1)
 outline_size = 2
 outline_color = Color(0.13725491, 1, 1, 1)
 
@@ -90,7 +90,7 @@ offset_top = 53.0
 offset_right = 274.0
 offset_bottom = 69.0
 scale = Vector2(1.6167805, 1.6167805)
-text = "SKIN SELECTOR"
+text = "SHIP SELECTOR"
 label_settings = SubResource("LabelSettings_1cnro")
 
 [node name="NextButton" type="TextureButton" parent="."]
