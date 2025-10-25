@@ -2,6 +2,7 @@ extends Control
 
 @export var scroll_speed: float = 20.0
 @export var next_scene: PackedScene
+@export var skin_selector_scene: PackedScene
 
 @onready var animated_background: AnimatedSprite2D = $Background
 @onready var play_button: TextureButton = $VBoxContainer/PlayButton
@@ -14,6 +15,7 @@ extends Control
 @onready var special_thanks_panel: Control = $SpecialThanksPanel
 @onready var discord_button: TextureButton = $DiscordButton
 @onready var fullscreen_button: TextureButton = $FullScreenButton
+@onready var skin_selector_button: TextureButton = $SkinSelectorButton
 
 var is_scrolling: bool = true
 
@@ -24,6 +26,7 @@ func _ready() -> void:
 	fullscreen_button.toggled.connect(_on_fullscreen_toggled)
 	credits_button.pressed.connect(_on_credits_button_pressed)
 	special_thanks_button.pressed.connect(_on_special_thanks_button_pressed)
+	skin_selector_button.pressed.connect(_on_skin_selector_button_pressed)
 	discord_button.pressed.connect(_on_discord_button_pressed)
 	
 	fullscreen_button.button_pressed = (DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN)
@@ -61,6 +64,9 @@ func _on_special_thanks_button_pressed():
 	
 func _on_discord_button_pressed():
 	OS.shell_open("https://discord.com/invite/ne3U8RS8bA")
+	
+func _on_skin_selector_button_pressed():
+	get_tree().change_scene_to_packed(skin_selector_scene)
 
 func _on_quit_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
@@ -84,4 +90,7 @@ func _on_fullscreen_toggled(is_checked: bool):
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
 
 func _on_full_screen_button_mouse_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_skin_selector_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.

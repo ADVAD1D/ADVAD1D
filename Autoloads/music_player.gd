@@ -15,7 +15,9 @@ var no_music_scenes = [
 var scene1_specific_playlist: Dictionary = {
 	"res://Scenes/abduction.tscn": preload("res://Assets/Audio/Music/circuit-pathway-387799.wav"),
 	"res://Scenes/ending.tscn": preload("res://Assets/Audio/Music/star-runner-411375.wav"),
-	"res://Scenes/main_menu.tscn": preload("res://Assets/Audio/Music/in-time-all-hope-was-lost-411362.wav")
+	"res://Scenes/main_menu.tscn": preload("res://Assets/Audio/Music/in-time-all-hope-was-lost-411362.wav"),
+	"res://Scenes/skin_selector.tscn": preload("res://Assets/Audio/where-we-used-to-be-415885.wav")
+	
 }
 
 @onready var sfx_player: AudioStreamPlayer = $SFXPlayer
@@ -33,7 +35,8 @@ var playlist = [
 	preload("res://Assets/Audio/Music/the-fight-left-in-us-391531.wav"),
 	preload("res://Assets/Audio/Music/chipwave-horizon-377407.wav"),
 	preload("res://Assets/Audio/Music/starstream-circuit-370586.wav"),
-	preload("res://Assets/Audio/Music/darkwave-dawn-371013.wav")
+	preload("res://Assets/Audio/Music/darkwave-dawn-371013.wav"),
+	preload("res://Assets/Audio/Music/ascending-data-418712.wav")
 ]
 
 #licences
