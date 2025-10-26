@@ -66,8 +66,8 @@ color_ramp = SubResource("GradientTexture1D_f1ek2")
 color_initial_ramp = SubResource("GradientTexture1D_3smsa")
 
 [sub_resource type="Gradient" id="Gradient_vgqql"]
-offsets = PackedFloat32Array(0.044898, 0.692053)
-colors = PackedColorArray(0.5928615, 0.94524115, 0.9347711, 1, 0, 0, 0, 1)
+offsets = PackedFloat32Array(0.053333335, 0.7133333)
+colors = PackedColorArray(0.5921569, 0.94509804, 0.93333334, 0.2, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_fkybt"]
 gradient = SubResource("Gradient_vgqql")
