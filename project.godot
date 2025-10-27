@@ -29,7 +29,7 @@ EnvParser="*res://addons/env_parser/EnvParser.gd"
 
 window/size/viewport_width=520
 window/size/viewport_height=300
-window/size/mode=2
+window/size/mode=3
 window/stretch/mode="canvas_items"
 
 [editor_plugins]
