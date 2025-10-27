@@ -45,7 +45,7 @@ color = Color(0, 0, 0, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(17.000002, 74)
-scale = Vector2(16.52873, 16.52873)
+scale = Vector2(17.339272, 17.339272)
 texture = ExtResource("3_hv2aa")
 script = ExtResource("4_1bcf8")
 
