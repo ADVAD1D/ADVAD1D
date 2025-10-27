@@ -28,7 +28,7 @@ EnvParser="*res://addons/env_parser/EnvParser.gd"
 [display]
 
 window/size/viewport_width=520
-window/size/viewport_height=270
+window/size/viewport_height=300
 window/size/mode=2
 window/stretch/mode="canvas_items"
 
