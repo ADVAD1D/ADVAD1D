@@ -77,7 +77,7 @@ grow_vertical = 2
 texture = ExtResource("1_0s6pj")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(347, 67)
+position = Vector2(345.00003, 75.00001)
 scale = Vector2(1.3871844, 1.3871844)
 texture = ExtResource("3_qwen4")
 
@@ -93,10 +93,10 @@ texture_hover = ExtResource("5_0tot8")
 
 [node name="SkinsLabel" type="Label" parent="."]
 layout_mode = 0
-offset_left = 185.0
-offset_top = 53.0
+offset_left = 185.00002
+offset_top = 61.000004
 offset_right = 274.0
-offset_bottom = 69.0
+offset_bottom = 77.0
 scale = Vector2(1.6167805, 1.6167805)
 text = "SHIP SELECTOR"
 label_settings = SubResource("LabelSettings_1cnro")
@@ -104,28 +104,28 @@ label_settings = SubResource("LabelSettings_1cnro")
 [node name="NextButton" type="TextureButton" parent="."]
 layout_mode = 0
 offset_left = 380.0
-offset_top = 113.0
+offset_top = 127.0
 offset_right = 425.0
-offset_bottom = 158.0
+offset_bottom = 172.0
 texture_normal = ExtResource("4_mh730")
 texture_hover = ExtResource("5_43pbt")
 
 [node name="ShipPreview" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 220.99998
-offset_top = 96.0
+offset_top = 114.0
 offset_right = 261.0
-offset_bottom = 136.0
+offset_bottom = 154.0
 scale = Vector2(1.507489, 1.507489)
 expand_mode = 1
 stretch_mode = 5
 
 [node name="PreviousButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 127.000015
-offset_top = 155.00002
-offset_right = 172.00002
-offset_bottom = 200.00002
+offset_left = 127.00001
+offset_top = 168.00002
+offset_right = 172.0
+offset_bottom = 213.00002
 rotation = 3.1410596
 texture_normal = ExtResource("4_mh730")
 texture_hover = ExtResource("5_43pbt")
