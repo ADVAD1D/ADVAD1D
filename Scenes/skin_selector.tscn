@@ -132,10 +132,10 @@ texture_hover = ExtResource("5_43pbt")
 
 [node name="ShipNameLabel" type="Label" parent="."]
 layout_mode = 0
-offset_left = 177.99998
-offset_top = 166.0
-offset_right = 203.0
-offset_bottom = 182.0
+offset_left = 178.0
+offset_top = 191.0
+offset_right = 203.00002
+offset_bottom = 207.0
 scale = Vector2(1.5303622, 1.5303622)
 text = "ship"
 label_settings = SubResource("LabelSettings_43pbt")
@@ -143,9 +143,9 @@ label_settings = SubResource("LabelSettings_43pbt")
 [node name="ShipAuthorLabel" type="Label" parent="."]
 layout_mode = 0
 offset_left = 255.0
-offset_top = 166.00002
+offset_top = 191.0
 offset_right = 319.0
-offset_bottom = 182.00002
+offset_bottom = 207.0
 scale = Vector2(1.4676892, 1.4676892)
 text = "By: Author"
 label_settings = SubResource("LabelSettings_v35mn")

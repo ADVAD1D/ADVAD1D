@@ -50,17 +50,17 @@ next_scene = ExtResource("2_s02xp")
 
 [node name="EnterKey" type="TextureRect" parent="UILayer"]
 offset_left = 459.0
-offset_top = 192.0
+offset_top = 215.00002
 offset_right = 504.0
-offset_bottom = 237.0
+offset_bottom = 260.0
 scale = Vector2(0.72236204, 0.72236204)
 texture = ExtResource("5_6ude6")
 
 [node name="SkipLabel" type="Label" parent="UILayer"]
 offset_left = 462.00003
-offset_top = 223.00002
+offset_top = 246.0
 offset_right = 489.00003
-offset_bottom = 239.00002
+offset_bottom = 262.0
 scale = Vector2(0.99130595, 0.99130595)
 text = "SKIP"
 label_settings = SubResource("LabelSettings_tofm5")
