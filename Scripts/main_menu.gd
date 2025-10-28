@@ -94,3 +94,21 @@ func _on_full_screen_button_mouse_entered() -> void:
 
 func _on_skin_selector_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
+
+func _on_special_thanks_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_discord_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_skin_selector_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_play_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_credits_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_quit_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
