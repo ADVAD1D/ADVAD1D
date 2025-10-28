@@ -995,6 +995,19 @@ texture_normal = ExtResource("18_neg2b")
 texture_pressed = ExtResource("20_neg2b")
 texture_hover = ExtResource("19_r33sp")
 
+[node name="ColorRect" type="ColorRect" parent="PauseMenu"]
+material = SubResource("ShaderMaterial_344ge")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1907.0
+offset_top = -1715.0
+offset_right = 1414.0
+offset_bottom = 3796.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="ButtonSound" type="AudioStreamPlayer" parent="PauseMenu"]
 unique_name_in_owner = true
 stream = ExtResource("23_r33sp")
