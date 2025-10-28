@@ -20,55 +20,55 @@ var ship_data = [
 	{
 		"name": "ship2",
 		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/shipskin1.png")
+		"texture": preload("res://Assets/Sprites/Ships/ship2.png")
 	},
 	
 	{
 		"name": "ship3",
 		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/ship3.png")
+		"texture": preload("res://Assets/Sprites/Ships/ship3.png")
 	},
 	
 	{
 		"name": "ship4",
 		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/ship4.png")
+		"texture": preload("res://Assets/Sprites/Ships/ship4.png")
 	},
 	
 	{
 		"name": "ship5",
 		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/ship5.png")
+		"texture": preload("res://Assets/Sprites/Ships/ship5.png")
 	},
 	
 	{
 		"name": "ship6",
 		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/ship6.png")
+		"texture": preload("res://Assets/Sprites/Ships/ship6.png")
 	},
 	
 	{
 		"name": "ship7",
 		"author": "Tector9",
-		"texture": preload("res://Assets/Sprites/ship7.png")
+		"texture": preload("res://Assets/Sprites/Ships/ship7.png")
 	},
 	
 	{
 		"name": "ship8",
 		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/ship8.png")
+		"texture": preload("res://Assets/Sprites/Ships/ship8.png")
 	},
 	
 	{
 		"name": "ship9",
 		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/ship9.png")
+		"texture": preload("res://Assets/Sprites/Ships/ship9.png")
 	},
 	
 	{
 		"name": "ship10",
 		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/ship10.png")
+		"texture": preload("res://Assets/Sprites/Ships/ship10.png")
 	}
 ]
 
