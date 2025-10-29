@@ -4,7 +4,7 @@
 
 [sub_resource type="Curve" id="Curve_4fdt1"]
 _limits = [-360.0, 360.0, 0.0, 1.0]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.7878788, -222.47186), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, -36.40448), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="CurveTexture" id="CurveTexture_8aflv"]
@@ -34,21 +34,20 @@ particle_flag_disable_z = true
 angle_curve = SubResource("CurveTexture_8aflv")
 spread = 180.0
 initial_velocity_min = 20.0
-initial_velocity_max = 40.0
+initial_velocity_max = 20.0
+orbit_velocity_min = 9.49949e-08
+orbit_velocity_max = 0.2000001
 gravity = Vector3(0, 0, 0)
-scale_min = 20.0
-scale_max = 30.0
+scale_min = 40.0
+scale_max = 60.0
 scale_curve = SubResource("CurveTexture_d7rrw")
 color = Color(1, 0.20392157, 1, 1)
 color_ramp = SubResource("GradientTexture1D_hfjnm")
 color_initial_ramp = SubResource("GradientTexture1D_gqg0g")
 
 [node name="GPUParticles2D" type="GPUParticles2D"]
-scale = Vector2(-7.888037, -7.888037)
+scale = Vector2(-13.560907, -13.560907)
 amount = 20
-lifetime = 1.5
-explosiveness = 1.0
-randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_pewat")
 script = ExtResource("1_dmxve")
 
