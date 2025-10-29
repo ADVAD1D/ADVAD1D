@@ -1,0 +1,55 @@
+[gd_scene load_steps=11 format=3 uid="uid://bl4ac3fp63ooy"]
+
+[ext_resource type="Script" uid="uid://jrwbh43vqa44" path="res://Scenes/Particles/test_particles.gd" id="1_dmxve"]
+
+[sub_resource type="Curve" id="Curve_4fdt1"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.7878788, -222.47186), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_8aflv"]
+curve = SubResource("Curve_4fdt1")
+
+[sub_resource type="Gradient" id="Gradient_c6fcl"]
+colors = PackedColorArray(0.47166353, 0.0099204695, 0.4324385, 1, 1, 0.5647059, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gqg0g"]
+gradient = SubResource("Gradient_c6fcl")
+
+[sub_resource type="Gradient" id="Gradient_r2kxq"]
+colors = PackedColorArray(0.8235294, 0.827451, 0.8980392, 1, 1, 0, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_hfjnm"]
+gradient = SubResource("Gradient_r2kxq")
+
+[sub_resource type="Curve" id="Curve_kaq4s"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.86363643, 0.59550565), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_d7rrw"]
+curve = SubResource("Curve_kaq4s")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pewat"]
+particle_flag_disable_z = true
+angle_curve = SubResource("CurveTexture_8aflv")
+spread = 180.0
+initial_velocity_min = 20.0
+initial_velocity_max = 40.0
+gravity = Vector3(0, 0, 0)
+scale_min = 20.0
+scale_max = 30.0
+scale_curve = SubResource("CurveTexture_d7rrw")
+color = Color(1, 0.20392157, 1, 1)
+color_ramp = SubResource("GradientTexture1D_hfjnm")
+color_initial_ramp = SubResource("GradientTexture1D_gqg0g")
+
+[node name="GPUParticles2D" type="GPUParticles2D"]
+scale = Vector2(-7.888037, -7.888037)
+amount = 20
+lifetime = 1.5
+explosiveness = 1.0
+randomness = 1.0
+process_material = SubResource("ParticleProcessMaterial_pewat")
+script = ExtResource("1_dmxve")
+
+[connection signal="finished" from="." to="." method="_on_finished"]
