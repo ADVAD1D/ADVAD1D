@@ -239,7 +239,7 @@ offset_left = 383.0
 offset_top = 266.0
 offset_right = 423.0
 offset_bottom = 289.0
-text = "0.0.1.0"
+text = "0.1.0.0"
 label_settings = SubResource("LabelSettings_4nkqq")
 
 [node name="EngineLabel" type="Label" parent="."]
