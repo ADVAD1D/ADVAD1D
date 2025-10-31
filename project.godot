@@ -47,6 +47,7 @@ enemigos=""
 saws=""
 enemies_death=""
 destructibles=""
+allies=""
 
 [input]
 

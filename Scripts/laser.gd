@@ -5,9 +5,9 @@ extends Area2D
 var direction = Vector2.ZERO
 
 # Called when the node enters the scene tree for the first time.
-func start(start_rotation):
-	rotation = start_rotation
-	direction = Vector2.UP.rotated(rotation)
+func start(start_direction: Vector2):
+	direction = start_direction
+	rotation = direction.angle() + PI / 2
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
