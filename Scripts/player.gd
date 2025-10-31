@@ -115,7 +115,8 @@ func shoot():
 	lsrsound.play()
 	var laser_instance = laser_scene.instantiate()
 	laser_instance.global_position = $Muzzle.global_position
-	laser_instance.start(rotation)
+	var fire_direction = Vector2.UP.rotated(rotation)
+	laser_instance.start(fire_direction)
 	get_parent().add_child(laser_instance)
 	
 	await get_tree().create_timer(shoot_timerate).timeout
