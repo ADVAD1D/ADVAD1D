@@ -10,6 +10,7 @@ extends Area2D
 
 @onready var metal_sound: AudioStreamPlayer2D = $MetalSound
 @onready var shoot_timer: Timer = $ShootTimer
+@onready var laser_sound: AudioStreamPlayer2D = $LsrSound
 @onready var laser_scene = preload("res://Scenes/laser.tscn")
 
 #muzzles
@@ -53,6 +54,7 @@ func shoot():
 		var muzzles = [muzzle1, muzzle2, muzzle3, muzzle4, muzzle5, muzzle6]
 		
 		for muzzle in muzzles:
+			laser_sound.play()
 			var laser_instance = laser_scene.instantiate()
 			get_parent().add_child(laser_instance)
 			laser_instance.global_position = muzzle.global_position

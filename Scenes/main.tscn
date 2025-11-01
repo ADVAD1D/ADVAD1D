@@ -1072,7 +1072,7 @@ reward_scene = ExtResource("40_aqgau")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="Timer" type="Timer" parent="PowerUp1Spawner"]
-wait_time = 5.0
+wait_time = 10.0
 autostart = true
 
 [node name="EnemySpawnPath" type="Path2D" parent="."]
