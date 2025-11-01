@@ -7,7 +7,6 @@
 size = Vector2(21.895422, 20)
 
 [node name="PowerUp1Pickup" type="Area2D"]
-scale = Vector2(3, 3)
 script = ExtResource("1_novpv")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

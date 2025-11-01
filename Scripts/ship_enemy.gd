@@ -122,6 +122,8 @@ func _on_hit(area_collided: Area2D) -> void:
 		GameManager.add_score(100)
 		area_collided.queue_free()
 		die_and_respawn()
+	elif area_collided.is_in_group("allies"):
+		die_and_respawn()
 
 func die_and_respawn():
 	if is_dying:
