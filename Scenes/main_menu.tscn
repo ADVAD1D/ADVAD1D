@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://s72gvn2mqhx2"]
+[gd_scene load_steps=43 format=3 uid="uid://s72gvn2mqhx2"]
 
 [ext_resource type="Texture2D" uid="uid://8n821btsns0g" path="res://Assets/Sprites/firstscene.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
@@ -15,7 +15,9 @@
 [ext_resource type="Texture2D" uid="uid://duc8rjasfhdl3" path="res://Assets/Sprites/quitbutton.png" id="7_yhxw7"]
 [ext_resource type="Texture2D" uid="uid://c80ak2c0el2pn" path="res://Assets/Sprites/discordpixeliconhover.png" id="8_4nkqq"]
 [ext_resource type="Texture2D" uid="uid://3t8pj8h4rows" path="res://Assets/Sprites/quitbuttonhover.png" id="8_trj04"]
+[ext_resource type="Texture2D" uid="uid://bu36jnatqthqb" path="res://Assets/Sprites/github_button.png" id="8_tt8ml"]
 [ext_resource type="Texture2D" uid="uid://c0b8fbs27w4o4" path="res://Assets/Sprites/creditsbutton.png" id="9_5egv6"]
+[ext_resource type="Texture2D" uid="uid://caevxyadicjag" path="res://Assets/Sprites/github_button_hover.png" id="9_fmarx"]
 [ext_resource type="Texture2D" uid="uid://bkdv1633hq14x" path="res://Assets/Sprites/fullscreenbutton.png" id="9_jr6u5"]
 [ext_resource type="Texture2D" uid="uid://lnq6a0woe0n8" path="res://Assets/Sprites/fullscreenbuttonhover.png" id="10_6m47u"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="10_16hvj"]
@@ -83,6 +85,15 @@ animations = [{
 "name": &"default",
 "speed": 2.0
 }]
+
+[sub_resource type="LabelSettings" id="LabelSettings_hkdq0"]
+font = ExtResource("5_vr1f0")
+font_size = 20
+font_color = Color(0, 0.30980393, 0.30980393, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+shadow_size = 5
+shadow_color = Color(0, 0.21176471, 0.21176471, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_mkpwh"]
 font = ExtResource("5_vr1f0")
@@ -180,12 +191,23 @@ texture_normal = ExtResource("5_m3bi6")
 texture_hover = ExtResource("6_wyh8j")
 texture_focused = ExtResource("6_wyh8j")
 
+[node name="GithubButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 48.000004
+offset_top = 165.0
+offset_right = 98.0
+offset_bottom = 215.0
+scale = Vector2(1.3591198, 1.2314774)
+texture_normal = ExtResource("8_tt8ml")
+texture_hover = ExtResource("9_fmarx")
+texture_focused = ExtResource("9_fmarx")
+
 [node name="DiscordButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 88.0
-offset_top = 169.0
-offset_right = 1112.0
-offset_bottom = 1193.0
+offset_left = 115.0
+offset_top = 176.0
+offset_right = 1139.0
+offset_bottom = 1200.0
 scale = Vector2(0.05017208, 0.05017208)
 texture_normal = ExtResource("7_mkpwh")
 texture_hover = ExtResource("8_4nkqq")
@@ -214,12 +236,22 @@ texture_normal = ExtResource("12_84iac")
 texture_hover = ExtResource("13_5n0dv")
 texture_focused = ExtResource("13_5n0dv")
 
+[node name="GithubLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 57.000004
+offset_top = 219.0
+offset_right = 132.0
+offset_bottom = 235.0
+scale = Vector2(0.6912037, 0.6912037)
+text = "CONTRIBUTE!"
+label_settings = SubResource("LabelSettings_hkdq0")
+
 [node name="DiscordLabel" type="Label" parent="."]
 layout_mode = 0
-offset_left = 88.0
-offset_top = 212.0
-offset_right = 168.0
-offset_bottom = 228.0
+offset_left = 115.0
+offset_top = 219.0
+offset_right = 195.0
+offset_bottom = 235.0
 scale = Vector2(0.69024044, 0.69024044)
 text = "JOIN DISCORD!"
 label_settings = SubResource("LabelSettings_mkpwh")
@@ -244,10 +276,10 @@ label_settings = SubResource("LabelSettings_4nkqq")
 
 [node name="EngineLabel" type="Label" parent="."]
 layout_mode = 0
-offset_left = 9.0
+offset_left = 15.0
 offset_top = 256.0
-offset_right = 160.0
-offset_bottom = 279.0
+offset_right = 166.0
+offset_bottom = 272.0
 text = "MADE WITH GODOT ENGINE"
 label_settings = SubResource("LabelSettings_ehtkc")
 
@@ -316,6 +348,8 @@ layout_mode = 1
 
 [connection signal="focus_entered" from="SpecialThanksButton" to="." method="_on_special_thanks_button_focus_entered"]
 [connection signal="mouse_entered" from="SpecialThanksButton" to="." method="_on_special_thanks_button_mouse_entered"]
+[connection signal="focus_entered" from="GithubButton" to="." method="_on_github_button_focus_entered"]
+[connection signal="mouse_entered" from="GithubButton" to="." method="_on_github_button_mouse_entered"]
 [connection signal="focus_entered" from="DiscordButton" to="." method="_on_discord_button_focus_entered"]
 [connection signal="mouse_entered" from="DiscordButton" to="." method="_on_discord_button_mouse_entered"]
 [connection signal="mouse_entered" from="FullScreenButton" to="." method="_on_full_screen_button_mouse_entered"]

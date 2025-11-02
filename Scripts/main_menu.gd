@@ -13,6 +13,7 @@ extends Control
 @onready var back_sound: AudioStreamPlayer = $BackSound
 @onready var credits_panel: Control = $CreditsPanel
 @onready var special_thanks_panel: Control = $SpecialThanksPanel
+@onready var github_button: TextureButton = $GithubButton
 @onready var discord_button: TextureButton = $DiscordButton
 @onready var fullscreen_button: TextureButton = $FullScreenButton
 @onready var skin_selector_button: TextureButton = $SkinSelectorButton
@@ -27,6 +28,7 @@ func _ready() -> void:
 	credits_button.pressed.connect(_on_credits_button_pressed)
 	special_thanks_button.pressed.connect(_on_special_thanks_button_pressed)
 	skin_selector_button.pressed.connect(_on_skin_selector_button_pressed)
+	github_button.pressed.connect(_on_github_button_pressed)
 	discord_button.pressed.connect(_on_discord_button_pressed)
 	
 	fullscreen_button.button_pressed = (DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN)
@@ -62,6 +64,9 @@ func _on_credits_button_pressed():
 func _on_special_thanks_button_pressed():
 	special_thanks_panel.show()
 	
+func _on_github_button_pressed():
+	OS.shell_open("https://github.com/ADVAD1D/ADVAD1D")
+	
 func _on_discord_button_pressed():
 	OS.shell_open("https://discord.com/invite/ne3U8RS8bA")
 	
@@ -96,6 +101,12 @@ func _on_skin_selector_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
 
 func _on_special_thanks_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
+	
+func _on_github_button_mouse_entered() -> void:
+	button_sound.play() # Replace with function body.
+	
+func _on_github_button_focus_entered() -> void:
 	button_sound.play() # Replace with function body.
 
 func _on_discord_button_focus_entered() -> void:
