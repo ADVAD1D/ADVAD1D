@@ -111,6 +111,18 @@ var ship_data = [
 		"name": "ship17",
 		"author": "ANGELUS11",
 		"texture": preload("res://Assets/Sprites/Ships/ship17.png")
+	},
+	
+	{
+		"name": "ship18",
+		"author": "ANGELUS11",
+		"texture": preload("res://Assets/Sprites/Ships/ship18.png")
+	},
+	
+	{
+		"name": "ship19",
+		"author": "Cro128",
+		"texture": preload("res://Assets/Sprites/Ships/ship19.png")
 	}
 ]
 
