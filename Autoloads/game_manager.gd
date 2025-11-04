@@ -10,6 +10,7 @@ var is_glitch_sound: bool = false
 var game_paused := false
 var can_pause: bool = true
 
+#this dictionary defines ships data (name, author name, tetxure)
 var ship_data = [
 	{
 		"name": "ship1",
