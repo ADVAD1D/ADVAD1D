@@ -1,0 +1,68 @@
+[gd_scene load_steps=6 format=3 uid="uid://bwuxvtyw1050"]
+
+[ext_resource type="Script" uid="uid://dmunocf1vd2ml" path="res://Scripts/splash_screen_control.gd" id="1_oj8hf"]
+[ext_resource type="Texture2D" uid="uid://bjsfs0nfbdwix" path="res://Images/Logo.png" id="1_wr7to"]
+[ext_resource type="PackedScene" uid="uid://s72gvn2mqhx2" path="res://Scenes/main_menu.tscn" id="2_og3r6"]
+[ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_oj8hf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_og3r6"]
+shader = ExtResource("2_oj8hf")
+shader_parameter/overlay = true
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/brightness = 2.0
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.03
+shader_parameter/grille_opacity = 0.2
+shader_parameter/roll = true
+shader_parameter/roll_speed = 3.0
+shader_parameter/roll_size = 10.000000475
+shader_parameter/roll_variation = 0.5
+shader_parameter/distort_intensity = 0.02
+shader_parameter/aberration = 0.01000004797499998
+shader_parameter/noise_opacity = 0.311
+shader_parameter/noise_speed = 2.0
+shader_parameter/static_noise_intensity = 0.0
+shader_parameter/pixelate = false
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.150000007125
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.3
+shader_parameter/vignette_opacity = 1.0
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_oj8hf")
+next_scene = ExtResource("2_og3r6")
+
+[node name="LogoSprite" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 222.0
+offset_top = 109.0
+offset_right = 800.0
+offset_bottom = 910.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.07999998, 0.07999998)
+texture = ExtResource("1_wr7to")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_og3r6")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -30.000008
+offset_top = -40.0
+offset_right = 2260.099
+offset_bottom = 1499.426
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.20604253, 0.20604253)
