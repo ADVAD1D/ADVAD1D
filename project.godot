@@ -11,9 +11,12 @@ config_version=5
 [application]
 
 config/name="Advad Protoype"
-run/main_scene="uid://s72gvn2mqhx2"
+run/main_scene="uid://bwuxvtyw1050"
 config/features=PackedStringArray("4.5", "Forward Plus")
 boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/show_image=false
+boot_splash/fullsize=false
+boot_splash/use_filter=false
 config/icon="uid://xy0iuk8w6ung"
 config/windows_native_icon="res://Ship2scaled.ico"
 
