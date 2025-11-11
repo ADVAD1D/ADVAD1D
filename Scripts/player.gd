@@ -15,6 +15,7 @@ extends CharacterBody2D
 @onready var lsrsound: AudioStreamPlayer2D = $Lasersnd
 @onready var dash_sound: AudioStreamPlayer2D = $Dashsnd
 @onready var engine_trail: GPUParticles2D = $EngineTrail
+@onready var hitbox: Area2D = $Hitbox
 @onready var hitbox_collider: CollisionShape2D = $Hitbox/CollisionShape2D
 @onready var sprite: Sprite2D = $Sprite2D
 
@@ -205,3 +206,9 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 			area.queue_free()
 			
 		die() # Replace with function body.
+
+func _on_hitbox_body_entered(body: Node2D) -> void:
+	print("Cuerpo detectado", body.name)
+	if body.is_in_group("enemigos"):
+		print("Es un enemigo")
+		die()

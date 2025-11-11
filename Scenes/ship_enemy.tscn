@@ -57,7 +57,7 @@ radius = 72.4177
 [node name="ShipEnemy" type="CharacterBody2D" groups=["enemigos"]]
 z_index = 2
 scale = Vector2(2.5, 2.5)
-collision_layer = 9
+collision_layer = 265
 script = ExtResource("1_exykt")
 explosion_particles = ExtResource("2_j3121")
 metadata/_edit_group_ = true
