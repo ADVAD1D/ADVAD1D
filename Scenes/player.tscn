@@ -97,6 +97,7 @@ debug_color = Color(0.0796014, 0.64918, 0, 0.42)
 position = Vector2(-0.540216, -13.5054)
 
 [node name="Hitbox" type="Area2D" parent="."]
+collision_mask = 257
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2(-0.540216, 3.2413)
@@ -131,3 +132,4 @@ energy = 3.03
 texture = SubResource("GradientTexture2D_fkybt")
 
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

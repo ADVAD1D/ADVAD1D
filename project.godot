@@ -107,8 +107,14 @@ Skip={
 
 [layer_names]
 
+2d_render/layer_2="world"
 2d_render/layer_3="sierras"
 2d_render/layer_4="enemies"
+2d_render/layer_5="player_body"
+2d_render/layer_6="player_hitbox"
+2d_render/layer_7="enemies_bodies"
+2d_render/layer_8="enemie_areas"
+2d_render/layer_9="body_detections"
 
 [rendering]
 
