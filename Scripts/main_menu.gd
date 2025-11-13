@@ -4,6 +4,8 @@ extends Control
 @export var next_scene: PackedScene
 @export var skin_selector_scene: PackedScene
 
+@onready var browser_support: bool = true
+
 @onready var animated_background: AnimatedSprite2D = $Background
 @onready var play_button: TextureButton = $VBoxContainer/PlayButton
 @onready var credits_button: TextureButton = $VBoxContainer/CreditsButton
@@ -42,7 +44,10 @@ func _on_play_button_pressed():
 	get_tree().change_scene_to_packed(next_scene)
 	
 func _on_quit_button_pressed():
-	get_tree().quit()
+	if browser_support == true:
+		get_tree().reload_current_scene()
+	else:
+		get_tree().quit()
 
 func _on_play_button_mouse_entered() -> void:
 	button_sound.play()
@@ -56,7 +61,10 @@ func _input(event: InputEvent) -> void:
 		elif special_thanks_panel.visible:
 			special_thanks_panel.hide()
 		else:	
-			get_tree().quit()
+			if browser_support == true:
+				get_tree().reload_current_scene()
+			else:
+				get_tree().quit()
 	
 func _on_credits_button_pressed():
 	credits_panel.show()
