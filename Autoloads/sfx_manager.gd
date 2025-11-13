@@ -9,6 +9,7 @@ var sfx_bus_index: int
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	sfx_bus_index = AudioServer.get_bus_index("SFX")
+	await get_tree().process_frame
 	AudioServer.set_bus_volume_db(sfx_bus_index, linear_to_db(linear_sfx_volume))
 	
 func increase_sfx_volume():
