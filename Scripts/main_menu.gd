@@ -5,7 +5,7 @@ extends Control
 @export var skin_selector_scene: PackedScene
 
 #this bool manage scene in game versions (browser and native)
-@onready var browser_support: bool = false
+@onready var browser_support: bool = true
 
 @onready var animated_background: AnimatedSprite2D = $Background
 @onready var play_button: TextureButton = $VBoxContainer/PlayButton
