@@ -4,7 +4,8 @@ extends Control
 @export var next_scene: PackedScene
 @export var skin_selector_scene: PackedScene
 
-@onready var browser_support: bool = true
+#this bool manage scene in game versions (browser and native)
+@onready var browser_support: bool = false
 
 @onready var animated_background: AnimatedSprite2D = $Background
 @onready var play_button: TextureButton = $VBoxContainer/PlayButton
@@ -20,6 +21,7 @@ extends Control
 @onready var fullscreen_button: TextureButton = $FullScreenButton
 @onready var skin_selector_button: TextureButton = $SkinSelectorButton
 
+#this bool manage menu background scroll
 var is_scrolling: bool = true
 
 func _ready() -> void:
