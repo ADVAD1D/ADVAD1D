@@ -22,6 +22,8 @@ signal timer_updated(time_left_string)
 @export var wall_to_remove: StaticBody2D
 @export var sprite_to_remove: AnimatedSprite2D
 
+@onready var browser_support: bool = GameManager.browser_support
+
 @onready var time_progress_bar: TextureProgressBar = $"../UILayer/HUD".get_node("TimeBarContainer/TimeProgressBar")
 @onready var phase_label: Label = $"../UILayer/HUD".get_node("PhaseLabel")
 @onready var objective_label: Label = $"../UILayer/HUD".get_node("ObjectiveLabel")
@@ -200,7 +202,11 @@ func start_fade_out_sprite(target_sprite: AnimatedSprite2D):
 	tween.tween_callback(target_sprite.queue_free)
 	
 func fade_out_objective_label():
-	objective_label.text = "> (ツ)"
+	if browser_support == true:
+		objective_label.text = "CONGRATULATIONS!"
+	else:
+		objective_label.text = "> (ツ)"
+		
 	print("iniciando fade out de los labels")
 	var tween = create_tween()
 	if is_instance_valid(objective_label):
