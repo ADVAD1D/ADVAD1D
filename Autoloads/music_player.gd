@@ -37,7 +37,8 @@ var playlist = [
 	preload("res://Assets/Audio/Music/chipwave-horizon-377407.wav"),
 	preload("res://Assets/Audio/Music/starstream-circuit-370586.wav"),
 	preload("res://Assets/Audio/Music/darkwave-dawn-371013.wav"),
-	preload("res://Assets/Audio/Music/ascending-data-418712.wav")
+	preload("res://Assets/Audio/Music/ascending-data-418712.wav"),
+	preload("res://Assets/Audio/Music/starstream-interceptor-438040.wav")
 ]
 
 #licences
