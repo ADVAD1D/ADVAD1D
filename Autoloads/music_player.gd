@@ -13,6 +13,8 @@ var no_music_scenes = [
 	"res://Scenes/spash_screen.tscn"
 ]
 
+
+#LA RUTA A LA MÚSICA NO FUNCIONABA POR UNA MAYÚSCULA ME CAGO EN TODO CHAVAL MANOLO
 var scene1_specific_playlist: Dictionary = {
 	"res://Scenes/Abduction.tscn": preload("res://Assets/Audio/Music/circuit-pathway-387799.wav"),
 	"res://Scenes/ending.tscn": preload("res://Assets/Audio/Music/star-runner-411375.wav"),
