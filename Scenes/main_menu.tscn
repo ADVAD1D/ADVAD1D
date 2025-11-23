@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
 [ext_resource type="Texture2D" uid="uid://bgs2sn1qmqdrc" path="res://Assets/Sprites/ADVADLOGODEF.png" id="2_1ehe0"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_48xlc"]
-[ext_resource type="PackedScene" uid="uid://cwrkymd0iykky" path="res://Scenes/abduction.tscn" id="2_trj04"]
+[ext_resource type="PackedScene" uid="uid://cwrkymd0iykky" path="res://Scenes/Abduction.tscn" id="2_trj04"]
 [ext_resource type="PackedScene" uid="uid://b3erfay7mn45e" path="res://Scenes/skin_selector.tscn" id="3_5n0dv"]
 [ext_resource type="Texture2D" uid="uid://3m1orbh60ase" path="res://Assets/Sprites/specialthanksbutton.png" id="5_m3bi6"]
 [ext_resource type="Texture2D" uid="uid://bp74cmhcbg21i" path="res://Assets/Sprites/playbutton.png" id="5_opfnp"]
