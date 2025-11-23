@@ -9,6 +9,7 @@ signal timer_updated(time_left_string)
 @export var ship_enemy_spawner: Node2D
 @export var saw_enemy_spawner: Node2D
 
+#default times
 @export var min_shoot_timerate: float = 0.2 # = 0.2
 @export var max_shoot_timerate: float = 0.5 # = 0.5
 
@@ -100,6 +101,7 @@ func _process(delta: float) -> void:
 		
 func start_new_phase():
 	current_phase = current_phase + 1
+	#yes, i don't use elifs
 	if not phase_requirements.has(current_phase):
 		print("has ganado las fases")
 		phase_label.text = "ARENA WIN" 
@@ -180,6 +182,7 @@ func clear_the_board():
 func apply_difficulty():
 	var progress = float(current_phase - 1) / (phase_requirements.size() - 1.0)
 	
+	#sorry for the spanglish in the code
 	#dificultad para las naves
 	print("aplicando dificultad para la fase", current_phase, "progreso: ", progress)
 	var ship_max_enemies = int(lerp(min_ship_enemies, max_ship_enemies, progress))
@@ -202,6 +205,8 @@ func start_fade_out_sprite(target_sprite: AnimatedSprite2D):
 	tween.tween_callback(target_sprite.queue_free)
 	
 func fade_out_objective_label():
+	
+	#browsers can't show some characters, for this reason change win text in this version
 	if browser_support == true:
 		objective_label.text = "CONGRATULATIONS!"
 	else:
