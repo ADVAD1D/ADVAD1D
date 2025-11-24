@@ -40,7 +40,10 @@ var playlist = [
 	preload("res://Assets/Audio/Music/starstream-circuit-370586.wav"),
 	preload("res://Assets/Audio/Music/darkwave-dawn-371013.wav"),
 	preload("res://Assets/Audio/Music/ascending-data-418712.wav"),
-	preload("res://Assets/Audio/Music/starstream-interceptor-438040.wav")
+	preload("res://Assets/Audio/Music/starstream-interceptor-438040.wav"),
+	preload("res://Assets/Audio/Music/particle-beam-438034.wav"),
+	preload("res://Assets/Audio/Music/distorted-enlightenment-419069.wav"),
+	preload("res://Assets/Audio/Music/nightwave-night-423019.wav")
 ]
 
 #licences
