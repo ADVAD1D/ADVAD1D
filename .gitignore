@@ -1,5 +1,12 @@
 # Godot 4+ specific ignores
 .vscode/
 .godot/
+#android folder
+.nomedia
+#export presets
+export.cfg
+export_credentials.cfg
+.import/
 /android/
+# Environment files
 .env
