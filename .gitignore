@@ -6,6 +6,8 @@
 #export presets
 export.cfg
 export_credentials.cfg
+export_presets.cfg
+
 .import/
 /android/
 # Environment files
