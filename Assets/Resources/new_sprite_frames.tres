@@ -1,6 +1,39 @@
-[gd_resource type="SpriteFrames" load_steps=5 format=3 uid="uid://cji3knc7h5v1k"]
+[gd_resource type="SpriteFrames" load_steps=14 format=3 uid="uid://cji3knc7h5v1k"]
 
 [ext_resource type="Texture2D" uid="uid://bxi55qpsnclqv" path="res://Assets/Sprites/laserwall.png" id="1_kyaaq"]
+[ext_resource type="Texture2D" uid="uid://do1w47a12mmlq" path="res://Assets/Sprites/laserfullbreak.png" id="1_xxdkb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sax54"]
+atlas = ExtResource("1_xxdkb")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5omy7"]
+atlas = ExtResource("1_xxdkb")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4hb0x"]
+atlas = ExtResource("1_xxdkb")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0lpk2"]
+atlas = ExtResource("1_xxdkb")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_adjbs"]
+atlas = ExtResource("1_xxdkb")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g303g"]
+atlas = ExtResource("1_xxdkb")
+region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6pump"]
+atlas = ExtResource("1_xxdkb")
+region = Rect2(288, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xkoin"]
+atlas = ExtResource("1_xxdkb")
+region = Rect2(336, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xxdkb"]
 atlas = ExtResource("1_kyaaq")
@@ -18,6 +51,35 @@ region = Rect2(96, 0, 48, 48)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_sax54")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5omy7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4hb0x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0lpk2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_adjbs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g303g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6pump")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xkoin")
+}],
+"loop": false,
+"name": &"break",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_xxdkb")
 }, {
 "duration": 1.0,
@@ -26,7 +88,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_40vxd")
 }],
-"loop": true,
+"loop": false,
 "name": &"default",
 "speed": 5.0
 }]

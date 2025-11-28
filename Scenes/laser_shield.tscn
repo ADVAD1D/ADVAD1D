@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://cv6iiauo728sf"]
+[gd_scene load_steps=7 format=3 uid="uid://cv6iiauo728sf"]
 
 [ext_resource type="Script" uid="uid://d4kx3oaxv3iob" path="res://Scripts/laser_shield.gd" id="1_55mif"]
 [ext_resource type="SpriteFrames" uid="uid://cji3knc7h5v1k" path="res://Assets/Resources/new_sprite_frames.tres" id="1_s1qjh"]
+[ext_resource type="AudioStream" uid="uid://c6g46xp8qj5n0" path="res://Assets/Audio/418194__deleted_user_3656686__hard-glass-impact.wav" id="3_qcbcn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_55mif"]
 size = Vector2(51.103004, 3.5972443)
@@ -22,8 +23,6 @@ position = Vector2(-14.000001, -4.9999995)
 rotation = -1.0471976
 scale = Vector2(1.1665982, 0.62589866)
 sprite_frames = ExtResource("1_s1qjh")
-frame = 1
-frame_progress = 0.64668965
 
 [node name="CollisionLine1" type="CollisionShape2D" parent="."]
 position = Vector2(-13.890503, -4.9372916)
@@ -51,5 +50,9 @@ position = Vector2(0, 18)
 shape = SubResource("RectangleShape2D_jag7k")
 
 [node name="DurationTimer" type="Timer" parent="."]
-wait_time = 10.0
+wait_time = 5.0
 one_shot = true
+
+[node name="BreakSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_qcbcn")
+bus = &"SFX"
