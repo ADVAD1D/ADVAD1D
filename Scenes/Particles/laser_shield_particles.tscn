@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://c51bk7ng3bil1"]
+
+[ext_resource type="Texture2D" uid="uid://b83i0j45sb22j" path="res://Assets/Sprites/laser_shield_particles.png" id="1_lxs2y"]
+[ext_resource type="Script" uid="uid://camebndt73amb" path="res://Scripts/laser_shield_particles.gd" id="2_s20aa"]
+
+[sub_resource type="Curve" id="Curve_lxs2y"]
+_data = [Vector2(0.03787878, 0.1685394), 0.0, 0.0, 0, 0, Vector2(1, 0.011235952), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_s20aa"]
+curve = SubResource("Curve_lxs2y")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_s20aa"]
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(5, 30, 1)
+emission_shape = 2
+emission_sphere_radius = 1.0
+angle_min = 1.0728835e-05
+angle_max = 360.00003
+spread = 180.0
+flatness = 1.0
+initial_velocity_min = 10.0
+initial_velocity_max = 20.0
+gravity = Vector3(300, 0, 0)
+scale_min = 5.0
+scale_max = 20.0
+scale_curve = SubResource("CurveTexture_s20aa")
+
+[node name="GPUParticles2D" type="GPUParticles2D"]
+scale = Vector2(1.6945817, 1.690033)
+emitting = false
+amount = 10
+texture = ExtResource("1_lxs2y")
+lifetime = 0.7
+one_shot = true
+explosiveness = 1.0
+randomness = 1.0
+process_material = SubResource("ParticleProcessMaterial_s20aa")
+script = ExtResource("2_s20aa")
+
+[connection signal="finished" from="." to="." method="_on_finished"]
