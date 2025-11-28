@@ -2,6 +2,7 @@ extends Area2D
 
 @export var animated_sprites: Array[AnimatedSprite2D]
 @export var duration_timer: Timer
+@export var laser_shield_particles: PackedScene
 
 @onready var spawn_time: float = 0.1
 @onready var metal_sound: AudioStreamPlayer2D = $BreakSound
@@ -27,6 +28,9 @@ func play_all(animation_name: String):
 func _on_area_entered(area: Area2D):
 	if area.is_in_group("enemy_laser"):
 		play_all("break")
+		var laser_shield_instance = laser_shield_particles.instantiate()
+		get_parent().add_sibling(laser_shield_instance)
+		laser_shield_instance.global_position = area.global_position
 		metal_sound.play()
 		if area.has_method("set_direction"):
 			area.set_direction(-area.direction)
