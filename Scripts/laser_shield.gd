@@ -3,6 +3,7 @@ extends Area2D
 @export var animated_sprites: Array[AnimatedSprite2D]
 @export var duration_timer: Timer
 @export var laser_shield_particles: PackedScene
+@export var shield_break_particles: PackedScene
 
 @onready var spawn_time: float = 0.1
 @onready var metal_sound: AudioStreamPlayer2D = $BreakSound
@@ -17,7 +18,15 @@ func _ready() -> void: # Replace with function body.
 func _on_timeout():
 	set_deferred("monitoring", false)
 	set_deferred("monitorable", false)
+	hide()
+	
+	if shield_break_particles:
+		var explosion = shield_break_particles.instantiate()
+		get_parent().add_child(explosion)
+		explosion.global_positon = global_position
+		
 	metal_sound.play()
+	await metal_sound.finished
 	queue_free()
 
 func play_all(animation_name: String):
