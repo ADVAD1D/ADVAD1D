@@ -1,0 +1,32 @@
+[gd_resource type="SpriteFrames" load_steps=5 format=3 uid="uid://cji3knc7h5v1k"]
+
+[ext_resource type="Texture2D" uid="uid://bxi55qpsnclqv" path="res://Assets/Sprites/laserwall.png" id="1_kyaaq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xxdkb"]
+atlas = ExtResource("1_kyaaq")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tmt0g"]
+atlas = ExtResource("1_kyaaq")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_40vxd"]
+atlas = ExtResource("1_kyaaq")
+region = Rect2(96, 0, 48, 48)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xxdkb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tmt0g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_40vxd")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
