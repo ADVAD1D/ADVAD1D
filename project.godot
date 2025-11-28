@@ -52,6 +52,7 @@ saws=""
 enemies_death=""
 destructibles=""
 allies=""
+player_shield=""
 
 [input]
 

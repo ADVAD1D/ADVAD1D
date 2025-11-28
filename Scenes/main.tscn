@@ -1,4 +1,4 @@
-[gd_scene load_steps=115 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=118 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -42,6 +42,9 @@
 [ext_resource type="Script" uid="uid://cx0bsmcfls2de" path="res://Scripts/power_up_1_spawner.gd" id="37_o1aky"]
 [ext_resource type="PackedScene" uid="uid://knamw06tun51" path="res://Scenes/power_up_1_pickup.tscn" id="38_kwxat"]
 [ext_resource type="PackedScene" uid="uid://ddbj5g23l6doc" path="res://Scenes/powerup1.tscn" id="40_aqgau"]
+[ext_resource type="Script" uid="uid://cnmvll76uwvp0" path="res://Scripts/laser_shield_spawner.gd" id="40_kwxat"]
+[ext_resource type="PackedScene" uid="uid://bn8jtbmvulvxr" path="res://Scenes/laser_shield_pickup.tscn" id="41_kqrg6"]
+[ext_resource type="PackedScene" uid="uid://cv6iiauo728sf" path="res://Scenes/laser_shield.tscn" id="42_nwwfm"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fevyy"]
 atlas = ExtResource("7_fevyy")
@@ -1073,6 +1076,16 @@ spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="Timer" type="Timer" parent="PowerUp1Spawner"]
 wait_time = 10.0
+autostart = true
+
+[node name="LaserShieldSpawner" type="Node2D" parent="." node_paths=PackedStringArray("spawn_locator")]
+script = ExtResource("40_kwxat")
+pickup_scene = ExtResource("41_kqrg6")
+reward_scene = ExtResource("42_nwwfm")
+spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+
+[node name="Timer" type="Timer" parent="LaserShieldSpawner"]
+wait_time = 15.0
 autostart = true
 
 [node name="EnemySpawnPath" type="Path2D" parent="."]

@@ -60,6 +60,18 @@ func _on_area_entered(area: Area2D) -> void:
 			get_parent().add_child(sound_instance)
 			sound_instance.position = position
 		queue_free()
+		
+	if area.is_in_group("player_shield"):
+		if explosion_scene:
+			var asteroid_explosion = explosion_scene.instantiate()
+			add_sibling(asteroid_explosion)
+			asteroid_explosion.position = position
+		
+		if asteroid_explosion_sound:
+			var sound_instance = asteroid_explosion_sound.instantiate()
+			get_parent().add_child(sound_instance)
+			sound_instance.position = position
+		queue_free()
 			
 	if area.is_in_group("allies"):
 		if explosion_scene:
