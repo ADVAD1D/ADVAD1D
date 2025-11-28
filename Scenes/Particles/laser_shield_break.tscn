@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://cfn46vj0do2j3" path="res://Scripts/laser_shield_break.gd" id="2_g1t1d"]
 
 [sub_resource type="Curve" id="Curve_0egto"]
-_data = [Vector2(0.022727266, 0.92134833), 0.0, 0.0, 0, 0, Vector2(1, 0.23595512), 0.0, 0.0, 0, 0]
+_data = [Vector2(0.022727266, 0.92134833), 0.0, 0.0, 0, 0, Vector2(1, 0.123595595), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="CurveTexture" id="CurveTexture_us7ca"]
