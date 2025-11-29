@@ -14,7 +14,7 @@ var no_music_scenes = [
 ]
 
 
-#LA RUTA A LA MÚSICA NO FUNCIONABA POR UNA MAYÚSCULA ME CAGO EN TODO CHAVAL MANOLO
+#LA RUTA A LA MÚSICA NO FUNCIONABA POR UNA MAYÚSCULA ME CAGO EN TODOO CHAVAL MANOLO
 var scene1_specific_playlist: Dictionary = {
 	"res://Scenes/Abduction.tscn": preload("res://Assets/Audio/Music/circuit-pathway-387799.wav"),
 	"res://Scenes/ending.tscn": preload("res://Assets/Audio/Music/star-runner-411375.wav"),
@@ -27,22 +27,18 @@ var scene1_specific_playlist: Dictionary = {
 
 var playlist = [
 	preload("res://Assets/Audio/Music/neon-rising-336846.wav"),
-	preload("res://Assets/Audio/Music/videoplayback.wav"),
 	preload("res://Assets/Audio/Music/techno-driver-188955.wav"),
-	preload("res://Assets/Audio/Music/neon-drive-retrowaver-synthwave-vaporwave-retro-80s-193108.wav"),
 	preload("res://Assets/Audio/Music/cybertech-flight-404708-_1_.wav"),
 	preload("res://Assets/Audio/Music/end-of-the-line-317985.wav"),
 	preload("res://Assets/Audio/Music/pulsehaven-nexus-382253.wav"),
 	preload("res://Assets/Audio/Music/melody-machine-283000.wav"),
 	preload("res://Assets/Audio/Music/blue-light-district-397940.wav"),
 	preload("res://Assets/Audio/Music/the-fight-left-in-us-391531.wav"),
-	preload("res://Assets/Audio/Music/chipwave-horizon-377407.wav"),
 	preload("res://Assets/Audio/Music/starstream-circuit-370586.wav"),
 	preload("res://Assets/Audio/Music/darkwave-dawn-371013.wav"),
 	preload("res://Assets/Audio/Music/ascending-data-418712.wav"),
 	preload("res://Assets/Audio/Music/starstream-interceptor-438040.wav"),
 	preload("res://Assets/Audio/Music/particle-beam-438034.wav"),
-	preload("res://Assets/Audio/Music/distorted-enlightenment-419069.wav"),
 	preload("res://Assets/Audio/Music/nightwave-night-423019.wav"),
 	preload("res://Assets/Audio/Music/crimson-pathways-415883.mp3")
 ]
