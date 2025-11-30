@@ -25,6 +25,9 @@ var scene1_specific_playlist: Dictionary = {
 
 @onready var sfx_player: AudioStreamPlayer = $SFXPlayer
 
+#the max size for game resource(music) for itchio browser support is 200mb on index.pck
+#ogg format is better for this
+
 var playlist = [
 	preload("res://Assets/Audio/Music/neon-rising-336846.wav"),
 	preload("res://Assets/Audio/Music/techno-driver-188955.wav"),
