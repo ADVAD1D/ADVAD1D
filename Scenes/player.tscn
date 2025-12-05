@@ -36,7 +36,7 @@ gradient = SubResource("Gradient_8erm5")
 
 [sub_resource type="Curve" id="Curve_tx1dd"]
 _limits = [0.0, 440.75, 0.0, 1.0]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.894231, 0.823871), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.89393944, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="CurveTexture" id="CurveTexture_gymyn"]
