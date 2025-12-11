@@ -30,7 +30,7 @@ var scene1_specific_playlist: Dictionary = {
 
 var playlist = [
 	preload("res://Assets/Audio/Music/neon-rising-336846.wav"),
-	preload("res://Assets/Audio/Music/techno-driver-188955.wav"),
+	preload("res://Assets/Audio/Music/digital-dream-391529.wav"),
 	preload("res://Assets/Audio/Music/cybertech-flight-404708-_1_.wav"),
 	preload("res://Assets/Audio/Music/end-of-the-line-317985.wav"),
 	preload("res://Assets/Audio/Music/pulsehaven-nexus-382253.wav"),
