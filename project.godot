@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Advad Protoype"
+config/name="Advad"
 config/version="0.1.4.0"
 run/main_scene="uid://bwuxvtyw1050"
 config/features=PackedStringArray("4.5", "Forward Plus")

@@ -11,11 +11,15 @@ var can_add_score: bool = true
 var phase_to_start: int = 1
 var is_shader_animation: bool = false
 var is_glitch_sound: bool = false
-var game_paused := false
+var game_paused: bool = false
 var can_pause: bool = true
 
 var browser_support: bool = false
-var admin_control: bool = false
+var admin_control: bool = true
+
+const save_path: String = "user://save_game.json"
+#windows: %APPDATA%\Godot\app_userdata\ProjectName
+#linux: ~/.local/share/godot/app_userdata/ProjectName/
 
 #this dictionary defines ships data (name, author name, tetxure)
 var ship_data = [
@@ -175,9 +179,44 @@ var selected_ship_index: int = 0
 func _ready() -> void:
 	randomize()
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	if OS.has_feature("web"):
+		browser_support = true
+	load_data()
 
 func _process(_delta: float) -> void:
 	pass
+	
+func save_data():
+	if browser_support == true:
+		print("Web version: using default values")
+		return
+		
+	var data: Dictionary = {
+		"selected_ship": selected_ship_index
+	}
+	#create the file in path
+	var file = FileAccess.open(save_path, FileAccess.WRITE)
+	#convert the dict to json text
+	var json_string = JSON.stringify(data)
+	file.store_string(json_string)
+	print("saved game!, selected skin", selected_ship_index)
+	
+func load_data():
+	if browser_support == true:
+		print("Web version: using default values")
+		return
+		
+	if not FileAccess.file_exists(save_path):
+		print("The save file not exists, using default values")
+		return
+		
+	var file = FileAccess.open(save_path, FileAccess.READ)
+	var json_string = file.get_as_text()
+	var data = JSON.parse_string(json_string)
+	
+	if data and "selected_ship" in data:
+		selected_ship_index = int(data["selected_ship"])
+		print("Loaded data, selected ship", selected_ship_index)
 	
 func select_next_ship():
 	selected_ship_index += 1

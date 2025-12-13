@@ -38,10 +38,12 @@ func _on_back_button_pressed():
 func _on_left_button_pressed():
 	GameManager.select_previous_ship()
 	button_sound.play()
+	GameManager.save_data()
 	
 func _on_right_button_pressed():
 	GameManager.select_next_ship()
 	button_sound.play()
+	GameManager.save_data()
 
 func _on_back_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
