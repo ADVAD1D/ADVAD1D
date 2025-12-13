@@ -10,6 +10,7 @@ extends Node2D
 @onready var cam: Camera2D = $Camera2D
 @onready var laser_wall_animated: AnimatedSprite2D = $LaserWallAnimation
 @onready var fade_in_rect: ColorRect = $ColorRect1
+@onready var admin_control: bool = GameManager.admin_control
 
 
 var base_zoom: Vector2
@@ -93,7 +94,6 @@ func _on_player_died() -> void:
 	await get_tree().create_timer(0.01).timeout
 	get_tree().call_deferred("reload_current_scene")
 	
-	
 func _on_tutorial_timer_timeout():
 	if player.player_died:
 		print("el jugador está en proceso de morir, se cancela el cambio de escena")
@@ -107,5 +107,7 @@ func _on_tutorial_timer_timeout():
 		get_tree().change_scene_to_file(next_scene)
 		
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("Skip"):
+	if event.is_action_pressed("Skip") and admin_control == true:
 		get_tree().change_scene_to_file(next_scene)
+	else:
+		pass

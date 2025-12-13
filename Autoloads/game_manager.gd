@@ -15,6 +15,7 @@ var game_paused := false
 var can_pause: bool = true
 
 var browser_support: bool = false
+var admin_control: bool = false
 
 #this dictionary defines ships data (name, author name, tetxure)
 var ship_data = [
