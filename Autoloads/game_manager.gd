@@ -15,7 +15,7 @@ var game_paused: bool = false
 var can_pause: bool = true
 
 var browser_support: bool = false
-var admin_control: bool = true
+var admin_control: bool = false
 
 const save_path: String = "user://save_game.json"
 #windows: %APPDATA%\Godot\app_userdata\ProjectName
@@ -184,6 +184,12 @@ var ship_data = [
 		"name": "ship27",
 		"author": "ANGELUS11",
 		"texture": preload("res://Assets/Sprites/Ships/ship27.png")
+	},
+	
+	{
+		"name": "ship28",
+		"author": "Ringa Tech",
+		"texture": preload("res://Assets/Sprites/Ships/ship28.png")
 	}
 ]
 

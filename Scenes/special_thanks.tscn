@@ -101,7 +101,8 @@ text = "- TSUNELA
 - FAZZELLI
 - SUNTIME
 - MINDS
-- KOSHI"
+- KOSHI
+- GOLTYIP"
 label_settings = SubResource("LabelSettings_542ni")
 
 [node name="ButtonSound" type="AudioStreamPlayer" parent="."]
