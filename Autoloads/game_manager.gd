@@ -22,6 +22,7 @@ const save_path: String = "user://save_game.json"
 #linux: ~/.local/share/godot/app_userdata/ProjectName/
 
 #this dictionary defines ships data (name, author name, tetxure)
+#this list start with index 0
 var ship_data = [
 	{
 		"name": "ship1",
@@ -171,6 +172,18 @@ var ship_data = [
 		"name": "ship25",
 		"author": "ANGELUS11",
 		"texture": preload("res://Assets/Sprites/Ships/ship25.png")
+	},
+	
+	{
+		"name": "ship26",
+		"author": "ANGELUS11",
+		"texture": preload("res://Assets/Sprites/Ships/ship26.png")
+	},
+	
+	{
+		"name": "ship27",
+		"author": "ANGELUS11",
+		"texture": preload("res://Assets/Sprites/Ships/ship27.png")
 	}
 ]
 
