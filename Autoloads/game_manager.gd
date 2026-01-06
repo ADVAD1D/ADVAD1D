@@ -17,6 +17,8 @@ var can_pause: bool = true
 var browser_support: bool = false
 var admin_control: bool = false
 
+var fps: float = 0.0
+
 const save_path: String = "user://save_game.json"
 #windows: %APPDATA%\Godot\app_userdata\ProjectName
 #linux: ~/.local/share/godot/app_userdata/ProjectName/
@@ -215,7 +217,7 @@ func _ready() -> void:
 	load_data()
 
 func _process(_delta: float) -> void:
-	pass
+	fps = Engine.get_frames_per_second()
 	
 func save_data():
 	if browser_support == true:
