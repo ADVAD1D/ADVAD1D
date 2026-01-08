@@ -1,4 +1,4 @@
-[gd_scene load_steps=118 format=3 uid="uid://xxrst0ma8ldj"]
+[gd_scene load_steps=120 format=3 uid="uid://xxrst0ma8ldj"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -416,6 +416,13 @@ colors = PackedColorArray(0, 0.68235296, 0.8235294, 0.32941177, 1, 1, 1, 0.32941
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_jkdf5"]
 gradient = SubResource("Gradient_fdnlq")
 
+[sub_resource type="Curve" id="Curve_kqrg6"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.9621212, 0.1685394), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_nwwfm"]
+curve = SubResource("Curve_kqrg6")
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_d1ilt"]
 particle_flag_disable_z = true
 emission_shape_scale = Vector3(2280, 3060, 1)
@@ -427,6 +434,7 @@ initial_velocity_max = 40.0
 gravity = Vector3(0, 98, 0)
 scale_min = 20.0
 scale_max = 30.0
+scale_curve = SubResource("CurveTexture_nwwfm")
 color_ramp = SubResource("GradientTexture1D_jkdf5")
 color_initial_ramp = SubResource("GradientTexture1D_6iyac")
 
