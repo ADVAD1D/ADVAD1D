@@ -57,21 +57,7 @@ func _physics_process(delta: float) -> void:
 		
 	var is_moving = false
 			
-	if Input.is_action_just_pressed("dash") and can_dash:
-		var move_direction = Input.get_vector("Move_Left", "Move_Right", "Move_Up", "Move_Down")
-		
-		if move_direction == Vector2.ZERO:
-			move_direction = -transform.y
-		
-		if can_start_dash(move_direction):
-			do_dash(move_direction.normalized())
-		else:
-			dash_buffered = true
-			buffered_direction = move_direction.normalized()
-			
-	if dash_buffered and can_dash and can_start_dash(buffered_direction):
-		do_dash(buffered_direction)
-		dash_buffered = false
+
 	
 	if Input.is_action_pressed("Shoot") and can_shoot:
 			shoot()
@@ -90,6 +76,10 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity = velocity.lerp(Vector2.ZERO, friction * delta)
 			
+		if Input.is_action_just_pressed("dash") and can_dash:
+			var forward_vec = Vector2.UP.rotated(rotation)
+			do_dash(forward_vec)
+			
 	else:
 		var direction = Input.get_vector("Move_Left", "Move_Right", "Move_Up", "Move_Down")
 		
@@ -102,6 +92,22 @@ func _physics_process(delta: float) -> void:
 				rotation = lerp_angle(rotation, target_rotation, 0.22)
 		else:
 			velocity = velocity.lerp(Vector2.ZERO, friction * delta)
+			
+		if Input.is_action_just_pressed("dash") and can_dash:
+			var move_direction = Input.get_vector("Move_Left", "Move_Right", "Move_Up", "Move_Down")
+			
+			if move_direction == Vector2.ZERO:
+				move_direction = -transform.y
+			
+			if can_start_dash(move_direction):
+				do_dash(move_direction.normalized())
+			else:
+				dash_buffered = true
+				buffered_direction = move_direction.normalized()
+			
+		if dash_buffered and can_dash and can_start_dash(buffered_direction):
+			do_dash(buffered_direction)
+			dash_buffered = false
 			
 	engine_trail.emitting = is_moving
 		
