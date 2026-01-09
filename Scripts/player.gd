@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 #player variables
 @export var speed: float
+@export var rotation_speed: float = 3.5
 @export var acceleration: float = 5.0
 @export var shoot_timerate: float = 0.1
 @export var safe_radius: float = 200.0
@@ -21,30 +22,20 @@ extends CharacterBody2D
 
 @export var ship_explosion_particles: PackedScene
 
-
 #signals
 signal died
 signal dash(direction: Vector2)
 
 #init script variables
 var show_debug: bool = false
-
 var laser_scene = preload("res://Scenes/laser.tscn")
-
 var can_shoot: bool = true
-
 var player_died: bool = false
-
 var is_dashing: bool = false
-
 var can_dash: bool = true
-
 var dash_buffered: bool = false
-
 var buffered_direction: Vector2 = Vector2.ZERO
-
 var main_camera: Camera2D
-
 var dash_camera_shake: float = 45.0
 
 func _ready() -> void:
@@ -62,6 +53,10 @@ func _physics_process(delta: float) -> void:
 		move_and_collide(velocity * delta)
 		return
 		
+	var relative_control_active: bool = GameManager.relative_control_active
+		
+	var is_moving = false
+			
 	if Input.is_action_just_pressed("dash") and can_dash:
 		var move_direction = Input.get_vector("Move_Left", "Move_Right", "Move_Up", "Move_Down")
 		
@@ -80,18 +75,35 @@ func _physics_process(delta: float) -> void:
 	
 	if Input.is_action_pressed("Shoot") and can_shoot:
 			shoot()
-	
-	var direction = Input.get_vector("Move_Left", "Move_Right", "Move_Up", "Move_Down")
-	engine_trail.emitting = (direction != Vector2.ZERO)
-	
-	if direction != Vector2.ZERO:
-		velocity = velocity.lerp(direction * speed, acceleration * delta)
-		if not is_dashing:
-			var target_rotation = direction.angle() + PI/2
-			rotation = lerp_angle(rotation, target_rotation, 0.22)
-	else:
-		velocity = velocity.lerp(Vector2.ZERO, friction * delta)
+			
+	if relative_control_active == true:
+		var rotation_direction = Input.get_axis("Move_Left", "Move_Right")
+		rotation_speed = 5.0
+		rotation += rotation_direction * rotation_speed * delta
 		
+		var input_thrust = Input.get_axis("Move_Up", "Move_Down")
+		var direction_relative = Vector2.UP.rotated(rotation) * -input_thrust
+		
+		if input_thrust != 0:
+			velocity = velocity.lerp(direction_relative * speed, acceleration * delta)
+			is_moving = true
+		else:
+			velocity = velocity.lerp(Vector2.ZERO, friction * delta)
+			
+	else:
+		var direction = Input.get_vector("Move_Left", "Move_Right", "Move_Up", "Move_Down")
+		
+		if direction != Vector2.ZERO:
+			velocity = velocity.lerp(direction * speed, acceleration * delta)
+			is_moving = true
+			
+			if not is_dashing:
+				var target_rotation = direction.angle() + PI/2
+				rotation = lerp_angle(rotation, target_rotation, 0.22)
+		else:
+			velocity = velocity.lerp(Vector2.ZERO, friction * delta)
+			
+	engine_trail.emitting = is_moving
 		
 	if velocity != Vector2.ZERO:
 		var collision = move_and_collide(velocity * delta)
