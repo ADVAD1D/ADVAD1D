@@ -45,7 +45,6 @@ func _ready() -> void:
 	print(player_score)
 
 func _physics_process(delta: float) -> void:
-	
 	if player_died:
 		return
 		
@@ -56,8 +55,6 @@ func _physics_process(delta: float) -> void:
 	var relative_control_active: bool = GameManager.relative_control_active
 		
 	var is_moving = false
-			
-
 	
 	if Input.is_action_pressed("Shoot") and can_shoot:
 			shoot()
