@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://s72gvn2mqhx2"]
+[gd_scene load_steps=42 format=3 uid="uid://s72gvn2mqhx2"]
 
 [ext_resource type="Texture2D" uid="uid://8n821btsns0g" path="res://Assets/Sprites/firstscene.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
@@ -114,15 +114,6 @@ shadow_size = 5
 shadow_color = Color(0, 0.21176471, 0.21176471, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_4nkqq"]
-font = ExtResource("5_vr1f0")
-font_size = 20
-font_color = Color(0, 0.30980393, 0.30980393, 1)
-outline_size = 2
-outline_color = Color(0, 1, 1, 1)
-shadow_size = 5
-shadow_color = Color(0, 0.21176471, 0.21176471, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_ehtkc"]
 font = ExtResource("5_vr1f0")
 font_size = 20
 font_color = Color(0, 0.30980393, 0.30980393, 1)
@@ -271,17 +262,8 @@ offset_left = 383.0
 offset_top = 266.0
 offset_right = 423.0
 offset_bottom = 289.0
-text = "v0.1.5.0"
+text = "v0.1.6.0"
 label_settings = SubResource("LabelSettings_4nkqq")
-
-[node name="EngineLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 15.0
-offset_top = 256.0
-offset_right = 166.0
-offset_bottom = 272.0
-text = "MADE WITH GODOT ENGINE"
-label_settings = SubResource("LabelSettings_ehtkc")
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 

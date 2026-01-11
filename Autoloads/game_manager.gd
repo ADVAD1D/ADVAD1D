@@ -16,7 +16,7 @@ var can_pause: bool = true
 
 var browser_support: bool = false
 var admin_control: bool = false
-var relative_control_active: bool = false
+var relative_control_active: bool = true
 
 var fps: float = 0.0
 
