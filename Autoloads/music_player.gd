@@ -31,16 +31,15 @@ var scene1_specific_playlist: Dictionary = {
 var playlist = [
 	preload("res://Assets/Audio/Music/neon-rising-336846.wav"),
 	preload("res://Assets/Audio/Music/digital-dream-391529.wav"),
-	preload("res://Assets/Audio/Music/cybertech-flight-404708-_1_.wav"),
+	preload("res://Assets/Audio/Music/velvet-malware-454813.wav"),
 	preload("res://Assets/Audio/Music/end-of-the-line-317985.wav"),
 	preload("res://Assets/Audio/Music/pulsehaven-nexus-382253.wav"),
-	preload("res://Assets/Audio/Music/melody-machine-283000.wav"),
 	preload("res://Assets/Audio/Music/blue-light-district-397940.wav"),
 	preload("res://Assets/Audio/Music/the-fight-left-in-us-391531.wav"),
 	preload("res://Assets/Audio/Music/starstream-circuit-370586.wav"),
 	preload("res://Assets/Audio/Music/darkwave-dawn-371013.wav"),
 	preload("res://Assets/Audio/Music/ascending-data-418712.wav"),
-	preload("res://Assets/Audio/Music/starstream-interceptor-438040.wav"),
+	preload("res://Assets/Audio/Music/digital-disconnect-454806.wav"),
 	preload("res://Assets/Audio/Music/particle-beam-438034.wav"),
 	preload("res://Assets/Audio/Music/nightwave-night-423019.wav"),
 	preload("res://Assets/Audio/Music/crimson-pathways-415883.mp3")
