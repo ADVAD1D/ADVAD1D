@@ -12,6 +12,7 @@ extends Control
 @onready var credits_button: TextureButton = $VBoxContainer/CreditsButton
 @onready var special_thanks_button: TextureButton = $SpecialThanksButton
 @onready var quit_button: TextureButton = $VBoxContainer/QuitButton
+@onready var controls_button: TextureButton = $ControlsButton
 @onready var button_sound: AudioStreamPlayer = $ButtonSound
 @onready var back_sound: AudioStreamPlayer = $BackSound
 @onready var credits_panel: Control = $CreditsPanel
@@ -21,8 +22,12 @@ extends Control
 @onready var fullscreen_button: TextureButton = $FullScreenButton
 @onready var skin_selector_button: TextureButton = $SkinSelectorButton
 
+@onready var relative_label: Label = $RelativeLabel
+@onready var global_label: Label = $GlobalLabel
+
 #this bool manage menu background scroll
 var is_scrolling: bool = true
+var feedback_tween: Tween
 
 func _ready() -> void:
 	GameManager.can_pause = false
@@ -34,6 +39,13 @@ func _ready() -> void:
 	skin_selector_button.pressed.connect(_on_skin_selector_button_pressed)
 	github_button.pressed.connect(_on_github_button_pressed)
 	discord_button.pressed.connect(_on_discord_button_pressed)
+	
+	controls_button.pressed.connect(_on_controls_button_pressed)
+	controls_button.set_pressed_no_signal(GameManager.relative_control_active)
+	controls_button.toggled.connect(_on_controls_toggled)
+	
+	global_label.visible = false
+	relative_label.visible = false
 	
 	fullscreen_button.button_pressed = (DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN)
 
@@ -67,6 +79,29 @@ func _input(event: InputEvent) -> void:
 				get_tree().reload_current_scene()
 			else:
 				get_tree().quit()
+				
+func _on_controls_toggled(button_pressed_state: bool):
+	GameManager.relative_control_active = button_pressed_state
+	print("Control relativo ", button_pressed_state)
+	GameManager.save_data()
+	show_feedback_label(button_pressed_state)
+	
+func show_feedback_label(is_relative: bool):
+	if feedback_tween:
+		feedback_tween.kill()
+		
+	global_label.visible = false
+	relative_label.visible = false
+	
+	var target_label = relative_label if is_relative else global_label
+	
+	target_label.visible = true
+	
+	target_label.modulate.a = 1.0
+	
+	feedback_tween = create_tween()
+	feedback_tween.tween_interval(2.0)
+	feedback_tween.tween_property(target_label, "modulate:a", 0.0, 0.5)
 	
 func _on_credits_button_pressed():
 	credits_panel.show()
@@ -133,3 +168,12 @@ func _on_credits_button_focus_entered() -> void:
 
 func _on_quit_button_focus_entered() -> void:
 	button_sound.play() # Replace with function body.
+
+func _on_controls_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_controls_button_mouse_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_controls_button_pressed() -> void:
+	back_sound.play() # Replace with function body.

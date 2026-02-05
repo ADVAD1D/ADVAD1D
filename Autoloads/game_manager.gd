@@ -16,7 +16,7 @@ var can_pause: bool = true
 
 var browser_support: bool = false
 var admin_control: bool = false
-var relative_control_active: bool = true
+var relative_control_active: bool = false
 
 var fps: float = 0.0
 
@@ -226,7 +226,8 @@ func save_data():
 		return
 		
 	var data: Dictionary = {
-		"selected_ship": selected_ship_index
+		"selected_ship": selected_ship_index,
+		"controls_mode": relative_control_active
 	}
 	#create the file in path
 	var file = FileAccess.open(save_path, FileAccess.WRITE)
@@ -251,6 +252,10 @@ func load_data():
 	if data and "selected_ship" in data:
 		selected_ship_index = int(data["selected_ship"])
 		print("Loaded data, selected ship", selected_ship_index)
+		
+	if data and "controls_mode" in data:
+		relative_control_active = bool(data["controls_mode"])
+		print("loaded controls user config: ", relative_control_active)
 	
 func select_next_ship():
 	selected_ship_index += 1

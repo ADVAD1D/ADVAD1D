@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://s72gvn2mqhx2"]
+[gd_scene format=3 uid="uid://s72gvn2mqhx2"]
 
 [ext_resource type="Texture2D" uid="uid://8n821btsns0g" path="res://Assets/Sprites/firstscene.png" id="1_28flt"]
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
@@ -26,8 +26,10 @@
 [ext_resource type="Texture2D" uid="uid://b5cdor227lduo" path="res://Assets/Sprites/ship_button.png" id="12_84iac"]
 [ext_resource type="Texture2D" uid="uid://dkfi27m653fqi" path="res://Assets/Sprites/ship_button_hover.png" id="13_5n0dv"]
 [ext_resource type="PackedScene" uid="uid://cj563pbrl44fc" path="res://Scenes/credits.tscn" id="14_vtepg"]
+[ext_resource type="Texture2D" uid="uid://d3k3im72hadw5" path="res://Assets/Sprites/controlsbutton.png" id="17_hkdq0"]
 [ext_resource type="PackedScene" uid="uid://ctpfllc068qt6" path="res://Scenes/special_thanks.tscn" id="17_wyh8j"]
 [ext_resource type="AudioStream" uid="uid://e74mglwo351x" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="18_4nkqq"]
+[ext_resource type="Texture2D" uid="uid://dw0q6hjbb3chm" path="res://Assets/Sprites/controlsbuttonhover.png" id="18_xcoo4"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_48xlc"]
 atlas = ExtResource("1_28flt")
@@ -122,6 +124,21 @@ outline_color = Color(0, 1, 1, 1)
 shadow_size = 5
 shadow_color = Color(0, 0.21176471, 0.21176471, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_xcoo4"]
+font = ExtResource("5_vr1f0")
+font_size = 20
+font_color = Color(5.4147094e-08, 0.19890612, 0.1989061, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+shadow_size = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_jw7lb"]
+font = ExtResource("5_vr1f0")
+font_size = 20
+font_color = Color(0, 0.2, 0.2, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1ehe0"]
 shader = ExtResource("2_48xlc")
 shader_parameter/overlay = true
@@ -146,7 +163,7 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.5
 shader_parameter/vignette_opacity = 1.0
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=743528205]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -159,7 +176,7 @@ script = ExtResource("1_ce3w2")
 next_scene = ExtResource("2_trj04")
 skin_selector_scene = ExtResource("3_5n0dv")
 
-[node name="Background" type="AnimatedSprite2D" parent="."]
+[node name="Background" type="AnimatedSprite2D" parent="." unique_id=1566181270]
 position = Vector2(258.99997, 529)
 scale = Vector2(5.373841, 5.373841)
 sprite_frames = SubResource("SpriteFrames_trj04")
@@ -167,12 +184,12 @@ autoplay = "default"
 frame = 4
 frame_progress = 0.37111983
 
-[node name="Logo" type="Sprite2D" parent="."]
+[node name="Logo" type="Sprite2D" parent="." unique_id=887256024]
 position = Vector2(246.99998, 108)
 scale = Vector2(1.4800006, 1.4800006)
 texture = ExtResource("2_1ehe0")
 
-[node name="SpecialThanksButton" type="TextureButton" parent="."]
+[node name="SpecialThanksButton" type="TextureButton" parent="." unique_id=100673770]
 layout_mode = 0
 offset_left = 298.0
 offset_top = 209.0
@@ -182,7 +199,7 @@ texture_normal = ExtResource("5_m3bi6")
 texture_hover = ExtResource("6_wyh8j")
 texture_focused = ExtResource("6_wyh8j")
 
-[node name="GithubButton" type="TextureButton" parent="."]
+[node name="GithubButton" type="TextureButton" parent="." unique_id=306455585]
 layout_mode = 0
 offset_left = 48.000004
 offset_top = 165.0
@@ -193,7 +210,7 @@ texture_normal = ExtResource("8_tt8ml")
 texture_hover = ExtResource("9_fmarx")
 texture_focused = ExtResource("9_fmarx")
 
-[node name="DiscordButton" type="TextureButton" parent="."]
+[node name="DiscordButton" type="TextureButton" parent="." unique_id=351157286]
 layout_mode = 0
 offset_left = 115.0
 offset_top = 176.0
@@ -204,7 +221,7 @@ texture_normal = ExtResource("7_mkpwh")
 texture_hover = ExtResource("8_4nkqq")
 texture_focused = ExtResource("8_4nkqq")
 
-[node name="FullScreenButton" type="TextureButton" parent="."]
+[node name="FullScreenButton" type="TextureButton" parent="." unique_id=1991512864]
 layout_mode = 0
 offset_left = 293.0
 offset_top = 162.0
@@ -216,7 +233,7 @@ texture_normal = ExtResource("9_jr6u5")
 texture_pressed = ExtResource("10_6m47u")
 texture_hover = ExtResource("11_84iac")
 
-[node name="SkinSelectorButton" type="TextureButton" parent="."]
+[node name="SkinSelectorButton" type="TextureButton" parent="." unique_id=132487532]
 layout_mode = 0
 offset_left = 329.0
 offset_top = 167.0
@@ -227,7 +244,19 @@ texture_normal = ExtResource("12_84iac")
 texture_hover = ExtResource("13_5n0dv")
 texture_focused = ExtResource("13_5n0dv")
 
-[node name="GithubLabel" type="Label" parent="."]
+[node name="ControlsButton" type="TextureButton" parent="." unique_id=993854923]
+layout_mode = 0
+offset_left = 174.0
+offset_top = 158.0
+offset_right = 219.0
+offset_bottom = 203.0
+scale = Vector2(0.91145045, 0.91145045)
+toggle_mode = true
+action_mode = 0
+texture_normal = ExtResource("17_hkdq0")
+texture_hover = ExtResource("18_xcoo4")
+
+[node name="GithubLabel" type="Label" parent="." unique_id=1823666510]
 layout_mode = 0
 offset_left = 57.000004
 offset_top = 219.0
@@ -237,7 +266,7 @@ scale = Vector2(0.6912037, 0.6912037)
 text = "CONTRIBUTE!"
 label_settings = SubResource("LabelSettings_hkdq0")
 
-[node name="DiscordLabel" type="Label" parent="."]
+[node name="DiscordLabel" type="Label" parent="." unique_id=393501622]
 layout_mode = 0
 offset_left = 115.0
 offset_top = 219.0
@@ -247,7 +276,7 @@ scale = Vector2(0.69024044, 0.69024044)
 text = "JOIN DISCORD!"
 label_settings = SubResource("LabelSettings_mkpwh")
 
-[node name="CreditsLabel" type="Label" parent="."]
+[node name="CreditsLabel" type="Label" parent="." unique_id=1565755077]
 layout_mode = 0
 offset_left = 383.0
 offset_top = 246.0
@@ -256,7 +285,7 @@ offset_bottom = 269.0
 text = "ANGELUS11 - 2025"
 label_settings = SubResource("LabelSettings_t1dhk")
 
-[node name="VersionLabel" type="Label" parent="."]
+[node name="VersionLabel" type="Label" parent="." unique_id=1499426968]
 layout_mode = 0
 offset_left = 383.0
 offset_top = 266.0
@@ -265,9 +294,27 @@ offset_bottom = 289.0
 text = "v0.1.6.0"
 label_settings = SubResource("LabelSettings_4nkqq")
 
-[node name="UILayer" type="CanvasLayer" parent="."]
+[node name="RelativeLabel" type="Label" parent="." unique_id=195214820]
+layout_mode = 0
+offset_left = 33.0
+offset_top = 263.0
+offset_right = 169.0
+offset_bottom = 280.0
+text = "RELATIVE MODE ACTIVE"
+label_settings = SubResource("LabelSettings_xcoo4")
 
-[node name="ColorRect" type="ColorRect" parent="UILayer"]
+[node name="GlobalLabel" type="Label" parent="." unique_id=1798964555]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 263.0
+offset_right = 207.0
+offset_bottom = 286.0
+text = "GLOBAL MODE ACTIVE"
+label_settings = SubResource("LabelSettings_jw7lb")
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=1261559013]
+
+[node name="ColorRect" type="ColorRect" parent="UILayer" unique_id=1973218330]
 material = SubResource("ShaderMaterial_1ehe0")
 anchors_preset = 15
 anchor_right = 1.0
@@ -280,7 +327,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=144581150]
 layout_mode = 0
 offset_left = 211.00002
 offset_top = 161.0
@@ -288,43 +335,43 @@ offset_right = 261.0
 offset_bottom = 229.0
 scale = Vector2(1.829739, 1.829739)
 
-[node name="PlayButton" type="TextureButton" parent="VBoxContainer"]
+[node name="PlayButton" type="TextureButton" parent="VBoxContainer" unique_id=557783677]
 layout_mode = 2
 texture_normal = ExtResource("5_opfnp")
 texture_hover = ExtResource("6_cp0ys")
 texture_focused = ExtResource("6_cp0ys")
 
-[node name="CreditsButton" type="TextureButton" parent="VBoxContainer"]
+[node name="CreditsButton" type="TextureButton" parent="VBoxContainer" unique_id=2114862343]
 layout_mode = 2
 texture_normal = ExtResource("9_5egv6")
 texture_hover = ExtResource("10_vtepg")
 texture_focused = ExtResource("10_vtepg")
 
-[node name="QuitButton" type="TextureButton" parent="VBoxContainer"]
+[node name="QuitButton" type="TextureButton" parent="VBoxContainer" unique_id=111436286]
 layout_mode = 2
 texture_normal = ExtResource("7_yhxw7")
 texture_hover = ExtResource("8_trj04")
 texture_focused = ExtResource("8_trj04")
 
-[node name="ButtonSound" type="AudioStreamPlayer" parent="."]
+[node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=155312952]
 stream = ExtResource("10_16hvj")
 pitch_scale = 0.5
 bus = &"SFX"
 
-[node name="BackSound" type="AudioStreamPlayer" parent="."]
+[node name="BackSound" type="AudioStreamPlayer" parent="." unique_id=429658861]
 stream = ExtResource("18_4nkqq")
 bus = &"SFX"
 
-[node name="ScrollTimer" type="Timer" parent="."]
+[node name="ScrollTimer" type="Timer" parent="." unique_id=950928903]
 wait_time = 34.0
 one_shot = true
 autostart = true
 
-[node name="CreditsPanel" parent="." instance=ExtResource("14_vtepg")]
+[node name="CreditsPanel" parent="." unique_id=1404742361 instance=ExtResource("14_vtepg")]
 visible = false
 layout_mode = 1
 
-[node name="SpecialThanksPanel" parent="." instance=ExtResource("17_wyh8j")]
+[node name="SpecialThanksPanel" parent="." unique_id=339202290 instance=ExtResource("17_wyh8j")]
 visible = false
 layout_mode = 1
 
@@ -337,6 +384,8 @@ layout_mode = 1
 [connection signal="mouse_entered" from="FullScreenButton" to="." method="_on_full_screen_button_mouse_entered"]
 [connection signal="focus_entered" from="SkinSelectorButton" to="." method="_on_skin_selector_button_focus_entered"]
 [connection signal="mouse_entered" from="SkinSelectorButton" to="." method="_on_skin_selector_button_mouse_entered"]
+[connection signal="focus_entered" from="ControlsButton" to="." method="_on_controls_button_focus_entered"]
+[connection signal="mouse_entered" from="ControlsButton" to="." method="_on_controls_button_mouse_entered"]
 [connection signal="focus_entered" from="VBoxContainer/PlayButton" to="." method="_on_play_button_focus_entered"]
 [connection signal="mouse_entered" from="VBoxContainer/PlayButton" to="." method="_on_play_button_mouse_entered"]
 [connection signal="focus_entered" from="VBoxContainer/CreditsButton" to="." method="_on_credits_button_focus_entered"]

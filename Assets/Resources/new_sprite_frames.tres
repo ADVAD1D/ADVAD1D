@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=14 format=3 uid="uid://cji3knc7h5v1k"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://cji3knc7h5v1k"]
 
 [ext_resource type="Texture2D" uid="uid://bxi55qpsnclqv" path="res://Assets/Sprites/laserwall.png" id="1_kyaaq"]
 [ext_resource type="Texture2D" uid="uid://do1w47a12mmlq" path="res://Assets/Sprites/laserfullbreak.png" id="1_xxdkb"]
