@@ -28,6 +28,7 @@ extends Control
 #this bool manage menu background scroll
 var is_scrolling: bool = true
 var feedback_tween: Tween
+var feedback_label_lifetime: float = 2.0
 
 func _ready() -> void:
 	GameManager.can_pause = false
@@ -100,7 +101,7 @@ func show_feedback_label(is_relative: bool):
 	target_label.modulate.a = 1.0
 	
 	feedback_tween = create_tween()
-	feedback_tween.tween_interval(2.0)
+	feedback_tween.tween_interval(feedback_label_lifetime)
 	feedback_tween.tween_property(target_label, "modulate:a", 0.0, 0.5)
 	
 func _on_credits_button_pressed():
