@@ -255,6 +255,7 @@ toggle_mode = true
 action_mode = 0
 texture_normal = ExtResource("17_hkdq0")
 texture_hover = ExtResource("18_xcoo4")
+texture_focused = ExtResource("18_xcoo4")
 
 [node name="GithubLabel" type="Label" parent="." unique_id=1823666510]
 layout_mode = 0
