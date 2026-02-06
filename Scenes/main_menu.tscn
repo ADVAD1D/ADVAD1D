@@ -301,7 +301,7 @@ offset_left = 33.0
 offset_top = 263.0
 offset_right = 169.0
 offset_bottom = 280.0
-text = "RELATIVE MODE ACTIVE"
+text = "RELATIVE CONTROL ACTIVE"
 label_settings = SubResource("LabelSettings_xcoo4")
 
 [node name="GlobalLabel" type="Label" parent="." unique_id=1798964555]
@@ -310,7 +310,7 @@ offset_left = 34.0
 offset_top = 263.0
 offset_right = 207.0
 offset_bottom = 286.0
-text = "GLOBAL MODE ACTIVE"
+text = "GLOBAL CONTROL ACTIVE"
 label_settings = SubResource("LabelSettings_jw7lb")
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=1261559013]
