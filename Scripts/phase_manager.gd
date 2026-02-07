@@ -10,7 +10,7 @@ signal timer_updated(time_left_string)
 @export var saw_enemy_spawner: Node2D
 
 #default times
-@export var min_shoot_timerate: float = 0.4 # = 0.4
+@export var min_shoot_timerate: float = 0.3 # = 0.3
 @export var max_shoot_timerate: float = 0.8 # = 0.8
 
 @export var min_ship_enemies: float = 2.0 # = 2.0
@@ -24,6 +24,7 @@ signal timer_updated(time_left_string)
 @export var sprite_to_remove: AnimatedSprite2D
 
 @onready var browser_support: bool = GameManager.browser_support
+@onready var relative_control_active: bool = GameManager.relative_control_active
 
 @onready var time_progress_bar: TextureProgressBar = $"../UILayer/HUD".get_node("TimeBarContainer/TimeProgressBar")
 @onready var phase_label: Label = $"../UILayer/HUD".get_node("PhaseLabel")
@@ -72,6 +73,10 @@ var restart_from_phase: bool = true
 func _ready() -> void:
 	print("phase manager listo a ejecutarse")
 	GameManager.score_updated.connect(_on_score_updated)
+	
+	if relative_control_active == true:
+		max_shoot_timerate = 0.9
+		min_shoot_timerate = 0.5
 	
 	#ready in current phase
 	if  restart_from_phase == true:
