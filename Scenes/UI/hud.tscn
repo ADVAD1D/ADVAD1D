@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://d1eonx56vybhy"]
+[gd_scene format=3 uid="uid://d1eonx56vybhy"]
 
 [ext_resource type="Script" uid="uid://c3q1parb1fr23" path="res://Scripts/hud.gd" id="1_qdh5o"]
 [ext_resource type="LabelSettings" uid="uid://c6nid3mbrqux8" path="res://Resources/Pixel_blue1.tres" id="1_sprlj"]
@@ -29,6 +29,13 @@ outline_color = Color(0, 1, 0.37254903, 1)
 shadow_size = 5
 shadow_color = Color(0, 0.25490198, 0.101960786, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_cna6x"]
+font = ExtResource("4_8glcj")
+font_size = 20
+font_color = Color(0, 0.101960786, 0.101960786, 1)
+outline_size = 2
+outline_color = Color(0, 1, 0.37254903, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_vsu76"]
 font = ExtResource("4_8glcj")
 font_size = 15
@@ -38,7 +45,7 @@ outline_color = Color(0, 1, 1, 1)
 shadow_size = 3
 shadow_color = Color(9.62615e-08, 0.31618276, 0.32560238, 1)
 
-[node name="HUD" type="Control"]
+[node name="HUD" type="Control" unique_id=809782715]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -47,7 +54,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qdh5o")
 
-[node name="PhaseLabel" type="Label" parent="."]
+[node name="PhaseLabel" type="Label" parent="." unique_id=172922492]
 layout_mode = 0
 offset_left = 251.0
 offset_top = 20.0
@@ -58,7 +65,7 @@ size_flags_vertical = 0
 text = "PHASE"
 label_settings = SubResource("LabelSettings_fqivn")
 
-[node name="ObjectiveLabel" type="Label" parent="."]
+[node name="ObjectiveLabel" type="Label" parent="." unique_id=1668617355]
 layout_mode = 0
 offset_left = 249.0
 offset_top = 38.999996
@@ -68,7 +75,17 @@ scale = Vector2(1.1644784, 1.1644784)
 text = ">"
 label_settings = SubResource("LabelSettings_qdh5o")
 
-[node name="FirstContainer" type="MarginContainer" parent="."]
+[node name="CodeLabel" type="Label" parent="." unique_id=1317917855]
+layout_mode = 0
+offset_left = 422.99997
+offset_top = 250.99998
+offset_right = 534.0
+offset_bottom = 267.0
+scale = Vector2(0.7972367, 0.7972367)
+text = "> CYB3R4R3N4"
+label_settings = SubResource("LabelSettings_cna6x")
+
+[node name="FirstContainer" type="MarginContainer" parent="." unique_id=74602282]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -80,7 +97,7 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="ScoreLabel" type="Label" parent="FirstContainer"]
+[node name="ScoreLabel" type="Label" parent="FirstContainer" unique_id=1998077946]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 8
@@ -89,12 +106,12 @@ text = "SCORE: 0"
 label_settings = ExtResource("1_sprlj")
 script = ExtResource("2_ny26j")
 
-[node name="ScoreSound" type="AudioStreamPlayer2D" parent="FirstContainer/ScoreLabel"]
+[node name="ScoreSound" type="AudioStreamPlayer2D" parent="FirstContainer/ScoreLabel" unique_id=2069008376]
 stream = ExtResource("3_fdl0h")
 pitch_scale = 1.79
 bus = &"SFX"
 
-[node name="FPSContainer" type="MarginContainer" parent="."]
+[node name="FPSContainer" type="MarginContainer" parent="." unique_id=375008231]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -110,7 +127,7 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="FPSLabel" type="Label" parent="FPSContainer"]
+[node name="FPSLabel" type="Label" parent="FPSContainer" unique_id=399703078]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -118,7 +135,7 @@ text = "FPS:"
 label_settings = SubResource("LabelSettings_vsu76")
 script = ExtResource("5_vsu76")
 
-[node name="TimeBarContainer" type="HBoxContainer" parent="."]
+[node name="TimeBarContainer" type="HBoxContainer" parent="." unique_id=1151094502]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -134,12 +151,12 @@ grow_vertical = 2
 scale = Vector2(1.6400013, 1.6400013)
 theme_override_constants/separation = 0
 
-[node name="Skull" type="TextureRect" parent="TimeBarContainer"]
+[node name="Skull" type="TextureRect" parent="TimeBarContainer" unique_id=609829139]
 layout_mode = 2
 size_flags_horizontal = 8
 texture = ExtResource("6_fqivn")
 
-[node name="TimeProgressBar" type="TextureProgressBar" parent="TimeBarContainer"]
+[node name="TimeProgressBar" type="TextureProgressBar" parent="TimeBarContainer" unique_id=1681238604]
 layout_mode = 2
 size_flags_vertical = 4
 step = 0.1

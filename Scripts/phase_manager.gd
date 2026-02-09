@@ -29,6 +29,7 @@ signal timer_updated(time_left_string)
 @onready var time_progress_bar: TextureProgressBar = $"../UILayer/HUD".get_node("TimeBarContainer/TimeProgressBar")
 @onready var phase_label: Label = $"../UILayer/HUD".get_node("PhaseLabel")
 @onready var objective_label: Label = $"../UILayer/HUD".get_node("ObjectiveLabel")
+@onready var code_label: Label = $"../UILayer/HUD".get_node("CodeLabel")
 
 @onready var success_sound: AudioStreamPlayer2D = $"../SucessSound"
 @onready var asteroids_spawner: Marker2D = $"../AsteroidSpawner"
@@ -73,10 +74,15 @@ var restart_from_phase: bool = true
 func _ready() -> void:
 	print("phase manager listo a ejecutarse")
 	GameManager.score_updated.connect(_on_score_updated)
+	code_label.modulate.a = 0.0
 	
 	if relative_control_active == true:
+		#shoot timerate in relative control variables
 		max_shoot_timerate = 0.9
 		min_shoot_timerate = 0.5
+		
+		#max shoot enemies in relative control
+		max_ship_enemies = 4.0
 	
 	#ready in current phase
 	if  restart_from_phase == true:
@@ -109,7 +115,12 @@ func start_new_phase():
 	#yes, i don't use elifs
 	if not phase_requirements.has(current_phase):
 		print("has ganado las fases")
-		phase_label.text = "ARENA WIN" 
+		phase_label.text = "ARENA WIN"
+		var codelabel_tween = create_tween()
+		
+		# (object, property, final value, duration)
+		codelabel_tween.tween_property(code_label, "modulate:a", 1.0, 1.0)
+		
 		if is_instance_valid(objective_label):
 			fade_out_objective_label()
 		

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://4pkkj4yusrj7"]
+[gd_scene format=3 uid="uid://4pkkj4yusrj7"]
 
 [ext_resource type="Script" uid="uid://d3j8sct0cu046" path="res://Scripts/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://f2d5cwauvjt6" path="res://Assets/Sprites/Ship1.png" id="1_v0iea"]
@@ -74,7 +74,7 @@ gradient = SubResource("Gradient_vgqql")
 fill = 1
 fill_from = Vector2(0.491453, 0.5)
 
-[node name="CharacterBody2D" type="CharacterBody2D" groups=["player"]]
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1452199908 groups=["player"]]
 z_index = 2
 scale = Vector2(1.85111, 1.85111)
 motion_mode = 1
@@ -83,40 +83,40 @@ dash_particles = ExtResource("2_x3wgy")
 ship_explosion_particles = ExtResource("2_vgqql")
 metadata/_edit_group_ = true
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=78192914]
 scale = Vector2(1.74855, 1.74855)
 texture = ExtResource("1_v0iea")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=449850227]
 position = Vector2(-1.08043, 3.2413)
 scale = Vector2(1.41877, 1.88991)
 shape = SubResource("CapsuleShape2D_v0iea")
 debug_color = Color(0.0796014, 0.64918, 0, 0.42)
 
-[node name="Muzzle" type="Marker2D" parent="."]
+[node name="Muzzle" type="Marker2D" parent="." unique_id=1761263428]
 position = Vector2(-0.540216, -13.5054)
 
-[node name="Hitbox" type="Area2D" parent="."]
+[node name="Hitbox" type="Area2D" parent="." unique_id=1817135291]
 collision_mask = 257
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=570554289]
 position = Vector2(-0.540216, 3.2413)
 shape = SubResource("RectangleShape2D_cvnsp")
 debug_color = Color(0.996388, 0, 0.187683, 0.42)
 
-[node name="Lasersnd" type="AudioStreamPlayer2D" parent="."]
+[node name="Lasersnd" type="AudioStreamPlayer2D" parent="." unique_id=1668300777]
 stream = ExtResource("3_6t5aa")
 volume_db = -12.933
 pitch_scale = 2.72
 bus = &"SFX"
 
-[node name="Dashsnd" type="AudioStreamPlayer2D" parent="."]
+[node name="Dashsnd" type="AudioStreamPlayer2D" parent="." unique_id=1992490532]
 stream = ExtResource("5_fkybt")
 volume_db = 4.648
 pitch_scale = 0.76
 bus = &"SFX"
 
-[node name="EngineTrail" type="GPUParticles2D" parent="."]
+[node name="EngineTrail" type="GPUParticles2D" parent="." unique_id=264179076]
 position = Vector2(-1.08043, 28.6315)
 scale = Vector2(7.82663, 6.55636)
 amount = 10
@@ -126,7 +126,7 @@ explosiveness = 0.25
 trail_lifetime = 0.5
 process_material = SubResource("ParticleProcessMaterial_pu2lt")
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=505839961]
 scale = Vector2(1.87453, 1.87453)
 energy = 3.03
 texture = SubResource("GradientTexture2D_fkybt")
