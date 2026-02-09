@@ -11,6 +11,7 @@
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="5_vr1f0"]
 [ext_resource type="Texture2D" uid="uid://d27ed1pl0byje" path="res://Assets/Sprites/playbuttonhover.png" id="6_cp0ys"]
 [ext_resource type="Texture2D" uid="uid://ddpugxe2tluy5" path="res://Assets/Sprites/specialthanksbuttonhover.png" id="6_wyh8j"]
+[ext_resource type="Texture2D" uid="uid://2x8p7yh4hu8" path="res://Assets/Sprites/godotlogo.png" id="6_xcoo4"]
 [ext_resource type="Texture2D" uid="uid://cvt1ilue7b0ys" path="res://Assets/Sprites/discordpixelicon.png" id="7_mkpwh"]
 [ext_resource type="Texture2D" uid="uid://duc8rjasfhdl3" path="res://Assets/Sprites/quitbutton.png" id="7_yhxw7"]
 [ext_resource type="Texture2D" uid="uid://c80ak2c0el2pn" path="res://Assets/Sprites/discordpixeliconhover.png" id="8_4nkqq"]
@@ -188,6 +189,11 @@ frame_progress = 0.37111983
 position = Vector2(246.99998, 108)
 scale = Vector2(1.4800006, 1.4800006)
 texture = ExtResource("2_1ehe0")
+
+[node name="GodotIcon" type="Sprite2D" parent="." unique_id=1996180563]
+position = Vector2(467, 274.00003)
+scale = Vector2(0.86131614, 0.86131614)
+texture = ExtResource("6_xcoo4")
 
 [node name="SpecialThanksButton" type="TextureButton" parent="." unique_id=100673770]
 layout_mode = 0

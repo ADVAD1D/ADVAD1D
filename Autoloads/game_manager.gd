@@ -173,7 +173,7 @@ var ship_data = [
 	
 	{
 		"name": "ship25",
-		"author": "ANGELUS11",
+		"author": "Alva Majo",
 		"texture": preload("res://Assets/Sprites/Ships/ship25.png")
 	},
 	
