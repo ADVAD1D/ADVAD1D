@@ -11,7 +11,7 @@ const BASE_URL = ""
 #    "X-App-Token: SUPER_SECRETO_GODOT_123" 
 #]
 
-const HEADERS = ["Content-Type: application/json; charset=utf8"]
+var headers = []
 
 var _ping_http: HTTPRequest
 var _ai_http: HTTPRequest
@@ -19,7 +19,13 @@ var _ai_http: HTTPRequest
 var start_server: bool = GameManager.start_server
 
 # Called when the node enters the scene tree for the first time.
-func _ready() -> void:	
+func _ready() -> void:
+	var app_token = EnvParser.parse("APP_TOKEN")
+	headers = [
+		"Content-Type: application/json; charset=utf8",
+		"X-App-Token " + app_token
+		]
+		
 	if start_server == true:
 		_ping_http = HTTPRequest.new() # Replace with function body.
 		add_child(_ping_http)
@@ -45,7 +51,7 @@ func ask_godot_ai(prompt: String):
 	
 	print("API SERVICE: SEND PROMPT")
 	
-	var response = _ai_http.request(url, HEADERS, HTTPClient.METHOD_POST, body)
+	var response = _ai_http.request(url, headers, HTTPClient.METHOD_POST, body)
 	
 	if response != OK:
 		request_failed.emit("ERROR, CANNOT SEND THE REQUEST")
