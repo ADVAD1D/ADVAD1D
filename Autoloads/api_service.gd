@@ -23,7 +23,7 @@ func _ready() -> void:
 	var app_token = EnvParser.parse("APP_TOKEN")
 	headers = [
 		"Content-Type: application/json; charset=utf8",
-		"X-App-Token " + app_token
+		"X-App-Token: " + app_token
 		]
 		
 	if start_server == true:
