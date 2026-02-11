@@ -42,7 +42,6 @@ var playlist = [
 	preload("res://Assets/Audio/Music/digital-disconnect-454806.wav"),
 	preload("res://Assets/Audio/Music/particle-beam-438034.wav"),
 	preload("res://Assets/Audio/Music/nightwave-night-423019.wav"),
-	preload("res://Assets/Audio/Music/crimson-pathways-415883.mp3")
 ]
 
 #licences
