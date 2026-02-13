@@ -57,7 +57,11 @@ func ask_godot_ai(prompt: String):
 		request_failed.emit("ERROR, CANNOT SEND THE REQUEST")
 		
 #response managment (private)
-func _on_ping_completed(_result, response_code, _headers, _body):
+func _on_ping_completed(result, response_code, _headers, _body):
+	if result != HTTPRequest.RESULT_SUCCESS:
+		request_failed.emit("PING CAIDO: SIN CONEXIÓN O SERVIDOR CAÍDO")
+		server_status_checked.emit(false)
+		return
 	if response_code == 200:
 		print("SERVER WAKE AND READY!")
 		server_status_checked.emit(true)
@@ -65,7 +69,23 @@ func _on_ping_completed(_result, response_code, _headers, _body):
 		print("THE SERVER RESPONSE WITH AN ERROR", response_code)
 		server_status_checked.emit(false)
 		
-func _on_ai_completed(_result, response_code, _headers, body):
+func _on_ai_completed(result, response_code, _headers, body):
+	if result != HTTPRequest.RESULT_SUCCESS:
+		match result:
+			HTTPRequest.RESULT_CANT_CONNECT:
+				request_failed.emit("NO HAY CONEXIÓN A INTERNET O EL SERVIDOR NO EXISTE")
+			HTTPRequest.RESULT_CANT_RESOLVE:
+				request_failed.emit("ERROR DE DNS: NO SE ENCUENTRA EL DOMINIO")
+			HTTPRequest.RESULT_TLS_HANDSHAKE_ERROR:
+				request_failed.emit("ERROR DE SSL/HTTPS")
+			_:
+				request_failed.emit("ERROR DE CONEXIÓN DESCONOCIDO")
+		return
+		
+	if response_code == 0:
+		request_failed.emit("EL SERVIDOR NO RESPONDIÓ NADA: TIMEOUT O CAÍDA")
+		return
+		
 	var json = JSON.new()
 	var json_parse_result = json.parse(body.get_string_from_utf8())
 	if json_parse_result == OK:
