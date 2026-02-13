@@ -58,7 +58,8 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true
-text = "hola soy  un pequeño texto"
+text = "hola soy  un pequeño texto
+"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=2026956224]
 layout_mode = 2

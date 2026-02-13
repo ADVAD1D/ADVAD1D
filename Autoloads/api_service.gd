@@ -46,6 +46,10 @@ func wake_up_server():
 		print("LOCAL ERROR TO CONNECT SERVER")
 		
 func ask_godot_ai(prompt: String):
+	if _ai_http.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
+		print("API SERVICE: Peticion ignorada, ya hay una en curso")
+		return
+		
 	var body = JSON.stringify({"prompt": prompt})
 	var url = BASE_URL + "/askai"
 	
@@ -59,7 +63,7 @@ func ask_godot_ai(prompt: String):
 #response managment (private)
 func _on_ping_completed(result, response_code, _headers, _body):
 	if result != HTTPRequest.RESULT_SUCCESS:
-		request_failed.emit("PING CAIDO: SIN CONEXIÓN O SERVIDOR CAÍDO")
+		print("PING CAIDO: SIN CONEXIÓN O SERVIDOR CAÍDO")
 		server_status_checked.emit(false)
 		return
 	if response_code == 200:
