@@ -1,0 +1,11 @@
+[gd_resource type="Theme" format=3 uid="uid://kovmblbm60fu"]
+
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="1_kwbp0"]
+
+[resource]
+default_font = ExtResource("1_kwbp0")
+RichTextLabel/colors/default_color = Color(0.18581042, 0.99999994, 0.97991234, 1)
+RichTextLabel/colors/font_outline_color = Color(0, 0.23137255, 0.23921569, 1)
+RichTextLabel/constants/outline_size = 3
+RichTextLabel/font_sizes/bold_font_size = 20
+RichTextLabel/font_sizes/normal_font_size = 20

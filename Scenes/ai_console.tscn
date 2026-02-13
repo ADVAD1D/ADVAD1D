@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://bcnejjeik3wim"]
 
+[ext_resource type="Theme" uid="uid://kovmblbm60fu" path="res://Resources/font_pixel.tres" id="1_00ofu"]
+
 [node name="Control" type="Control" unique_id=116682182]
 layout_mode = 3
 anchors_preset = 15
@@ -7,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_00ofu")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=860161744]
 layout_mode = 1
@@ -30,6 +33,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true
+text = "hola soy  un pequeño texto"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=2026956224]
 layout_mode = 2
@@ -37,6 +41,7 @@ theme_override_constants/separation = 10
 
 [node name="LineEdit" type="LineEdit" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=934357620]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 8
 
 [node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1821511328]
