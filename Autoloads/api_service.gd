@@ -94,6 +94,10 @@ func _on_ai_completed(result, response_code, _headers, body):
 	var json_parse_result = json.parse(body.get_string_from_utf8())
 	if json_parse_result == OK:
 		var data = json.data
+		if typeof(data) != TYPE_DICTIONARY:
+			request_failed.emit("ERROR, FORMATO DE DATOS NO JSON INESPERADO")
+			return
+			
 		if response_code == 200:
 			if "response" in data:
 				ai_response_received.emit(data["response"])
