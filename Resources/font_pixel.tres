@@ -1,11 +1,19 @@
 [gd_resource type="Theme" format=3 uid="uid://kovmblbm60fu"]
 
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="1_kwbp0"]
+[ext_resource type="Texture2D" uid="uid://cbprjc0w041n6" path="res://Assets/Sprites/skinaipanel.png" id="1_s0vao"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x0f22"]
+texture = ExtResource("1_s0vao")
 
 [resource]
 default_font = ExtResource("1_kwbp0")
+LineEdit/colors/font_color = Color(0, 0.8745098, 0.8745098, 1)
+LineEdit/colors/font_outline_color = Color(0, 0, 0, 1)
+LineEdit/font_sizes/font_size = 20
+PanelContainer/styles/panel = SubResource("StyleBoxTexture_x0f22")
 RichTextLabel/colors/default_color = Color(0.18581042, 0.99999994, 0.97991234, 1)
 RichTextLabel/colors/font_outline_color = Color(0, 0.23137255, 0.23921569, 1)
 RichTextLabel/constants/outline_size = 3
-RichTextLabel/font_sizes/bold_font_size = 20
+RichTextLabel/font_sizes/bold_font_size = 16
 RichTextLabel/font_sizes/normal_font_size = 20

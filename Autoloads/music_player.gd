@@ -19,7 +19,8 @@ var scene1_specific_playlist: Dictionary = {
 	"res://Scenes/Abduction.tscn": preload("res://Assets/Audio/Music/circuit-pathway-387799.wav"),
 	"res://Scenes/ending.tscn": preload("res://Assets/Audio/Music/star-runner-411375.wav"),
 	"res://Scenes/main_menu.tscn": preload("res://Assets/Audio/Music/in-time-all-hope-was-lost-411362.wav"),
-	"res://Scenes/skin_selector.tscn": preload("res://Assets/Audio/where-we-used-to-be-415885.wav")
+	"res://Scenes/skin_selector.tscn": preload("res://Assets/Audio/where-we-used-to-be-415885.wav"),
+	"res://Scenes/ai_console.tscn": preload("res://Assets/Audio/Music/psychronic-hypnotic-crystals-415889.ogg")
 	
 }
 
