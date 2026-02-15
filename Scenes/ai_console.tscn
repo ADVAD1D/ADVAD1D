@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bcnejjeik3wim"]
 
 [ext_resource type="Theme" uid="uid://kovmblbm60fu" path="res://Resources/font_pixel.tres" id="1_00ofu"]
+[ext_resource type="Script" uid="uid://dw6cbe0t2sfem" path="res://Scripts/ai_console.gd" id="2_i8r7y"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_imyuk"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i8r7y"]
@@ -35,6 +36,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_00ofu")
+script = ExtResource("2_i8r7y")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=860161744]
 layout_mode = 1
@@ -69,6 +71,7 @@ theme_override_constants/separation = 10
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
+placeholder_text = "Type your message..."
 
 [node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1821511328]
 custom_minimum_size = Vector2(30, 30)

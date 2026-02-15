@@ -10,6 +10,7 @@ texture = ExtResource("1_s0vao")
 default_font = ExtResource("1_kwbp0")
 LineEdit/colors/font_color = Color(0, 0.8745098, 0.8745098, 1)
 LineEdit/colors/font_outline_color = Color(0, 0, 0, 1)
+LineEdit/colors/font_placeholder_color = Color(0.08417124, 0.30788425, 0.3083723, 1)
 LineEdit/font_sizes/font_size = 20
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_x0f22")
 RichTextLabel/colors/default_color = Color(0.18581042, 0.99999994, 0.97991234, 1)
