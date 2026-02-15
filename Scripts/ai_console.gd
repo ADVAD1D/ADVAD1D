@@ -4,7 +4,6 @@ extends Control
 @onready var input_field: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/LineEdit
 @onready var send_button: Button = $PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Button
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	send_button.pressed.connect(_on_send_button_pressed) # Replace with function body.
@@ -35,8 +34,8 @@ func send_message():
 	
 	Network.ask_godot_ai(text)
 	
-func _on_ai_response(_response_text):
-	add_message("AI: ", _response_text, "#ffffff")
+func _on_ai_response(response_text):
+	add_message("AI: ", response_text, "#ffffff")
 	
 	input_field.editable = true
 	send_button.disabled = false
