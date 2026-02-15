@@ -26,26 +26,41 @@ func _ready() -> void:
 		"X-App-Token: " + app_token
 		]
 		
+	_ping_http = HTTPRequest.new() # Replace with function body.
+	add_child(_ping_http)
+	_ping_http.request_completed.connect(_on_ping_completed)
+		
+	_ai_http = HTTPRequest.new()
+	add_child(_ai_http)
+	_ai_http.request_completed.connect(_on_ai_completed)
+		
+	#ALWAYS start the server for testing, otherwise the variables will become NULL
 	if start_server == true:
-		_ping_http = HTTPRequest.new() # Replace with function body.
-		add_child(_ping_http)
-		_ping_http.request_completed.connect(_on_ping_completed)
-		
-		_ai_http = HTTPRequest.new()
-		add_child(_ai_http)
-		_ai_http.request_completed.connect(_on_ai_completed)
-		
 		wake_up_server()
 		
-	pass
+	else:
+		request_failed.emit("API SERVICE, MANUAL INIT, THE SERVER STATUS IS FALSE.")
 
 func wake_up_server():
+	if BASE_URL == "":
+		print("API SERVICE: URL NOT FOUND IN THE CONSTANT")
+		return
+		
 	print("API SERVICE, TRY CALL SERVER!")
 	var response = _ping_http.request(BASE_URL)
 	if response != OK:
 		print("LOCAL ERROR TO CONNECT SERVER")
 		
 func ask_godot_ai(prompt: String):
+	if BASE_URL.strip_edges().is_empty():
+		print("API SERVICE: ERROR. URL IS EMPTY")
+		request_failed.emit("API SERVICE: ERROR. URL IS EMPTY")
+		return
+		
+	if not _ai_http:
+		request_failed.emit("CRITIC ERROR: HTTP SERVICE NOT INIT")
+		return
+		
 	if _ai_http.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
 		print("API SERVICE: Peticion ignorada, ya hay una en curso")
 		return

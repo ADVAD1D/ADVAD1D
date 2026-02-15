@@ -14,7 +14,7 @@ var is_glitch_sound: bool = false
 var game_paused: bool = false
 var can_pause: bool = true
 
-var start_server: bool = false
+var start_server: bool = true
 var browser_support: bool = false
 var admin_control: bool = false
 var relative_control_active: bool = false
