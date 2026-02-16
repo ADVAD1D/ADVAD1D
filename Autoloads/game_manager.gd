@@ -15,7 +15,7 @@ var game_paused: bool = false
 var can_pause: bool = true
 
 var start_server: bool = true
-var production_server_active = false
+var production_server_active = true
 var browser_support: bool = false
 var admin_control: bool = false
 var relative_control_active: bool = false
@@ -217,6 +217,8 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if OS.has_feature("web"):
 		browser_support = true
+	if start_server == true:
+		Network.wake_up_server()
 	load_data()
 
 func _process(_delta: float) -> void:

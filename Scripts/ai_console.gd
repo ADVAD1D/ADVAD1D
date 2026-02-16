@@ -12,7 +12,7 @@ func _ready() -> void:
 	if Network:
 		Network.ai_response_received.connect(_on_ai_response)
 		Network.request_failed.connect(_on_error)
-	add_message("Sistema", "Conexión establecida. Escribe algo...", "gray")
+	add_message("Start System", "Server Status = ON. Type your request...", "gray")
 	
 func _on_send_button_pressed():
 	send_message()
