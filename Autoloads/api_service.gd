@@ -5,7 +5,7 @@ signal ai_response_received(text: String)
 signal request_failed(error_msg: String)
 
 var production_server_active = GameManager.production_server_active
-var BASE_URL = ""
+var BASE_URL: String
 
 #var headers = [
 #    "Content-Type: application/json; charset=utf-8",
@@ -22,7 +22,7 @@ var start_server: bool = GameManager.start_server
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if production_server_active == true:
-		BASE_URL = "https://berto-ai.onrender.com/"
+		BASE_URL = "https://berto-ai.onrender.com"
 	else:
 		BASE_URL = "http://127.0.0.1:10000"
 		
