@@ -15,6 +15,7 @@ var game_paused: bool = false
 var can_pause: bool = true
 
 var start_server: bool = true
+var production_server_active = false
 var browser_support: bool = false
 var admin_control: bool = false
 var relative_control_active: bool = false
