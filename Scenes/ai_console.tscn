@@ -5,6 +5,9 @@
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_imyuk"]
 [ext_resource type="Texture2D" uid="uid://d2tb0imyr1ebe" path="res://Assets/Sprites/lineeditbar.png" id="3_42n04"]
 [ext_resource type="Texture2D" uid="uid://dmi1rtravlk8m" path="res://Assets/Sprites/lineeditfocus.png" id="4_fbo3q"]
+[ext_resource type="Texture2D" uid="uid://bc241w2jom6bu" path="res://Assets/Sprites/exitbutton.png" id="6_4r3im"]
+[ext_resource type="Texture2D" uid="uid://cjf4fhtm0ta7m" path="res://Assets/Sprites/quitbuttonhover1.png" id="7_n1sxu"]
+[ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="8_n1sxu"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fbo3q"]
 content_margin_left = 7.0
@@ -69,8 +72,6 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true
-text = "hola soy  un pequeño texto
-"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=2026956224]
 layout_mode = 2
@@ -103,3 +104,19 @@ offset_bottom = 3796.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="BackButton" type="TextureButton" parent="." unique_id=1185848638]
+layout_mode = 0
+offset_left = 472.99997
+offset_top = 3.0000076
+offset_right = 502.99997
+offset_bottom = 33.00002
+scale = Vector2(1.4059033, 1.4059033)
+texture_normal = ExtResource("6_4r3im")
+texture_hover = ExtResource("7_n1sxu")
+
+[node name="BackSound" type="AudioStreamPlayer" parent="." unique_id=546732123]
+stream = ExtResource("8_n1sxu")
+
+[connection signal="mouse_entered" from="BackButton" to="." method="_on_back_button_mouse_entered"]
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

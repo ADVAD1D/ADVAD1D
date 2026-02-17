@@ -6,6 +6,7 @@
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_48xlc"]
 [ext_resource type="PackedScene" uid="uid://cwrkymd0iykky" path="res://Scenes/Abduction.tscn" id="2_trj04"]
 [ext_resource type="PackedScene" uid="uid://b3erfay7mn45e" path="res://Scenes/skin_selector.tscn" id="3_5n0dv"]
+[ext_resource type="PackedScene" uid="uid://bcnejjeik3wim" path="res://Scenes/ai_console.tscn" id="4_1xund"]
 [ext_resource type="Texture2D" uid="uid://3m1orbh60ase" path="res://Assets/Sprites/specialthanksbutton.png" id="5_m3bi6"]
 [ext_resource type="Texture2D" uid="uid://bp74cmhcbg21i" path="res://Assets/Sprites/playbutton.png" id="5_opfnp"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="5_vr1f0"]
@@ -30,7 +31,9 @@
 [ext_resource type="Texture2D" uid="uid://d3k3im72hadw5" path="res://Assets/Sprites/controlsbutton.png" id="17_hkdq0"]
 [ext_resource type="PackedScene" uid="uid://ctpfllc068qt6" path="res://Scenes/special_thanks.tscn" id="17_wyh8j"]
 [ext_resource type="AudioStream" uid="uid://e74mglwo351x" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="18_4nkqq"]
+[ext_resource type="Texture2D" uid="uid://bjv5mqc5om1an" path="res://Assets/Sprites/chat_button.png" id="18_6vfk8"]
 [ext_resource type="Texture2D" uid="uid://dw0q6hjbb3chm" path="res://Assets/Sprites/controlsbuttonhover.png" id="18_xcoo4"]
+[ext_resource type="Texture2D" uid="uid://d230384jabs3q" path="res://Assets/Sprites/chat_button_hover.png" id="19_1xund"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_48xlc"]
 atlas = ExtResource("1_28flt")
@@ -176,6 +179,7 @@ size_flags_vertical = 4
 script = ExtResource("1_ce3w2")
 next_scene = ExtResource("2_trj04")
 skin_selector_scene = ExtResource("3_5n0dv")
+chat_console_scene = ExtResource("4_1xund")
 
 [node name="Background" type="AnimatedSprite2D" parent="." unique_id=1566181270]
 position = Vector2(258.99997, 529)
@@ -249,6 +253,16 @@ scale = Vector2(0.7554791, 0.7554791)
 texture_normal = ExtResource("12_84iac")
 texture_hover = ExtResource("13_5n0dv")
 texture_focused = ExtResource("13_5n0dv")
+
+[node name="ChatConsoleButton" type="TextureButton" parent="." unique_id=1393632435]
+layout_mode = 0
+offset_left = 355.0
+offset_top = 167.0
+offset_right = 385.0
+offset_bottom = 197.0
+scale = Vector2(0.7928984, 0.7928984)
+texture_normal = ExtResource("18_6vfk8")
+texture_hover = ExtResource("19_1xund")
 
 [node name="ControlsButton" type="TextureButton" parent="." unique_id=993854923]
 layout_mode = 0
@@ -391,6 +405,8 @@ layout_mode = 1
 [connection signal="mouse_entered" from="FullScreenButton" to="." method="_on_full_screen_button_mouse_entered"]
 [connection signal="focus_entered" from="SkinSelectorButton" to="." method="_on_skin_selector_button_focus_entered"]
 [connection signal="mouse_entered" from="SkinSelectorButton" to="." method="_on_skin_selector_button_mouse_entered"]
+[connection signal="focus_entered" from="ChatConsoleButton" to="." method="_on_chat_console_button_focus_entered"]
+[connection signal="mouse_entered" from="ChatConsoleButton" to="." method="_on_chat_console_button_mouse_entered"]
 [connection signal="focus_entered" from="ControlsButton" to="." method="_on_controls_button_focus_entered"]
 [connection signal="mouse_entered" from="ControlsButton" to="." method="_on_controls_button_mouse_entered"]
 [connection signal="focus_entered" from="VBoxContainer/PlayButton" to="." method="_on_play_button_focus_entered"]

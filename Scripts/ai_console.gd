@@ -1,5 +1,10 @@
 extends Control
+
+var back_scene: String = "res://Scenes/main_menu.tscn"
 #references to child nodes
+@onready var back_button: TextureButton = $BackButton
+@onready var back_sound: AudioStreamPlayer = $BackSound
+
 @onready var chat_display: RichTextLabel = $PanelContainer/MarginContainer/VBoxContainer/RichTextLabel
 @onready var input_field: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/LineEdit
 @onready var send_button: Button = $PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Button
@@ -50,3 +55,9 @@ func add_message(sender: String, message: String, color: String):
 	var formatted = "[b][color=%s]%s:[/color][/b] %s" % [color, sender, message]
 	# Ejemplo: [b][color=red]Nombre:[/color][/b] mensaje
 	chat_display.append_text(formatted + "\n")
+
+func _on_back_button_pressed() -> void:
+	get_tree().change_scene_to_file(back_scene) # Replace with function body.
+
+func _on_back_button_mouse_entered() -> void:
+	back_sound.play() # Replace with function body.

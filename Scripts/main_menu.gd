@@ -3,6 +3,7 @@ extends Control
 @export var scroll_speed: float = 20.0
 @export var next_scene: PackedScene
 @export var skin_selector_scene: PackedScene
+@export var chat_console_scene: PackedScene
 
 #this bool manage scene in game versions (browser and native)
 @onready var browser_support: bool = GameManager.browser_support
@@ -21,6 +22,7 @@ extends Control
 @onready var discord_button: TextureButton = $DiscordButton
 @onready var fullscreen_button: TextureButton = $FullScreenButton
 @onready var skin_selector_button: TextureButton = $SkinSelectorButton
+@onready var chat_console_button: TextureButton = $ChatConsoleButton
 
 @onready var relative_label: Label = $RelativeLabel
 @onready var global_label: Label = $GlobalLabel
@@ -38,6 +40,7 @@ func _ready() -> void:
 	credits_button.pressed.connect(_on_credits_button_pressed)
 	special_thanks_button.pressed.connect(_on_special_thanks_button_pressed)
 	skin_selector_button.pressed.connect(_on_skin_selector_button_pressed)
+	chat_console_button.pressed.connect(_on_chat_console_button_pressed)
 	github_button.pressed.connect(_on_github_button_pressed)
 	discord_button.pressed.connect(_on_discord_button_pressed)
 	
@@ -118,6 +121,9 @@ func _on_discord_button_pressed():
 	
 func _on_skin_selector_button_pressed():
 	get_tree().change_scene_to_packed(skin_selector_scene)
+	
+func _on_chat_console_button_pressed():
+	get_tree().change_scene_to_packed(chat_console_scene)
 
 func _on_quit_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
@@ -178,3 +184,9 @@ func _on_controls_button_mouse_entered() -> void:
 
 func _on_controls_button_pressed() -> void:
 	back_sound.play() # Replace with function body.
+
+func _on_chat_console_button_mouse_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_chat_console_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
