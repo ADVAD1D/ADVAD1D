@@ -13,6 +13,7 @@ var back_scene: String = "res://Scenes/main_menu.tscn"
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	GameManager.can_pause = false
 	back_button.pressed.connect(_on_back_button_pressed)
 	left_button.pressed.connect(_on_left_button_pressed)
 	right_button.pressed.connect(_on_right_button_pressed)

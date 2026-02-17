@@ -17,6 +17,7 @@ func _ready() -> void:
 	send_button.pressed.connect(_on_send_button_pressed) # Replace with function body.
 	input_field.text_submitted.connect(_on_text_submitted)
 	
+	GameManager.can_pause = false
 	chat_display.scroll_following = true
 	chat_display.visible_characters = -1
 	
@@ -24,6 +25,10 @@ func _ready() -> void:
 		Network.ai_response_received.connect(_on_ai_response)
 		Network.request_failed.connect(_on_error)
 	add_message("Start System", "Server Status = ON. Type your request...", "gray")
+	
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause"):
+		_on_back_button_pressed()
 	
 func _on_send_button_pressed():
 	send_message()
