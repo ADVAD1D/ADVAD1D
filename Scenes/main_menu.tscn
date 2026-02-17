@@ -263,6 +263,7 @@ offset_bottom = 197.0
 scale = Vector2(0.7928984, 0.7928984)
 texture_normal = ExtResource("18_6vfk8")
 texture_hover = ExtResource("19_1xund")
+texture_focused = ExtResource("19_1xund")
 
 [node name="ControlsButton" type="TextureButton" parent="." unique_id=993854923]
 layout_mode = 0

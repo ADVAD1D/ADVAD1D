@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://dcv22pktr17oi"
+path="res://.godot/imported/ai_response_dialogue.dialogue-2890c0c6c738abd2ba52231d016c9be7.tres"
+
+[deps]
+
+source_file="res://Dialogues/ai_response_dialogue.dialogue"
+dest_files=["res://.godot/imported/ai_response_dialogue.dialogue-2890c0c6c738abd2ba52231d016c9be7.tres"]
+
+[params]
+
+defaults=true

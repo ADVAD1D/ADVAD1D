@@ -33,6 +33,7 @@ SfxManager="*res://Autoloads/sfx_manager.gd"
 DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
 EnvParser="*res://addons/env_parser/EnvParser.gd"
 Network="*uid://bgwnrece4nmtf"
+DialogueManager="*uid://c3rodes2l3gxb"
 
 [display]
 
@@ -43,7 +44,7 @@ window/stretch/mode="canvas_items"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/discord-rpc-gd/plugin.cfg", "res://addons/discord_gd/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg")
+enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/discord_gd/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg")
 
 [global_group]
 
@@ -119,6 +120,10 @@ Skip={
 , Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":5,"pressure":0.0,"pressed":false,"script":null)
 ]
 }
+
+[internationalization]
+
+locale/translations_pot_files=PackedStringArray("res://Dialogues/ai_response_dialogue.dialogue")
 
 [layer_names]
 

@@ -14,6 +14,7 @@ var is_glitch_sound: bool = false
 var game_paused: bool = false
 var can_pause: bool = true
 
+var ai_last_response: String = ""
 var start_server: bool = true
 var production_server_active = true
 var browser_support: bool = false

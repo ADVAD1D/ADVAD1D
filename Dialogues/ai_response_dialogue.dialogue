@@ -1,0 +1,3 @@
+~ show_response
+Godot: {{GameManager.ai_last_response}}
+=> END

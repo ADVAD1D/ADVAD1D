@@ -114,9 +114,11 @@ offset_bottom = 33.00002
 scale = Vector2(1.4059033, 1.4059033)
 texture_normal = ExtResource("6_4r3im")
 texture_hover = ExtResource("7_n1sxu")
+texture_focused = ExtResource("7_n1sxu")
 
 [node name="BackSound" type="AudioStreamPlayer" parent="." unique_id=546732123]
 stream = ExtResource("8_n1sxu")
+bus = &"SFX"
 
 [connection signal="mouse_entered" from="BackButton" to="." method="_on_back_button_mouse_entered"]
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
