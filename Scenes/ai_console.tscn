@@ -3,6 +3,15 @@
 [ext_resource type="Theme" uid="uid://kovmblbm60fu" path="res://Resources/font_pixel.tres" id="1_00ofu"]
 [ext_resource type="Script" uid="uid://dw6cbe0t2sfem" path="res://Scripts/ai_console.gd" id="2_i8r7y"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_imyuk"]
+[ext_resource type="Texture2D" uid="uid://d2tb0imyr1ebe" path="res://Assets/Sprites/lineeditbar.png" id="3_42n04"]
+[ext_resource type="Texture2D" uid="uid://dmi1rtravlk8m" path="res://Assets/Sprites/lineeditfocus.png" id="4_fbo3q"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fbo3q"]
+content_margin_left = 7.0
+texture = ExtResource("3_42n04")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ux7q8"]
+texture = ExtResource("4_fbo3q")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i8r7y"]
 shader = ExtResource("2_imyuk")
@@ -71,6 +80,8 @@ theme_override_constants/separation = 10
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
+theme_override_styles/normal = SubResource("StyleBoxTexture_fbo3q")
+theme_override_styles/focus = SubResource("StyleBoxTexture_ux7q8")
 placeholder_text = "Type your message..."
 
 [node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1821511328]
