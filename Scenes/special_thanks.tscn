@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://ctpfllc068qt6"]
+[gd_scene format=3 uid="uid://ctpfllc068qt6"]
 
 [ext_resource type="Script" uid="uid://cv86xec1kggty" path="res://Scripts/special_thanks.gd" id="1_8n762"]
 [ext_resource type="Texture2D" uid="uid://dy6tdkwdkef2s" path="res://Assets/Sprites/creditslabel.png" id="2_nm5lx"]
@@ -27,7 +27,7 @@ outline_color = Color(0, 1, 1, 1)
 shadow_size = 0
 shadow_color = Color(0, 0.21176471, 0.21176471, 0)
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=1417264907]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,7 +36,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_8n762")
 
-[node name="CreditsTexture" type="TextureRect" parent="."]
+[node name="CreditsTexture" type="TextureRect" parent="." unique_id=307512438]
 layout_mode = 0
 offset_left = 78.999985
 offset_top = -1.5258789e-05
@@ -45,13 +45,13 @@ offset_bottom = 69.999985
 scale = Vector2(3.7600012, 3.7600012)
 texture = ExtResource("2_nm5lx")
 
-[node name="HeartSprite" type="Sprite2D" parent="CreditsTexture"]
+[node name="HeartSprite" type="Sprite2D" parent="CreditsTexture" unique_id=812132717]
 unique_name_in_owner = true
 position = Vector2(74.73402, 11.436171)
 scale = Vector2(0.46516076, 0.46516076)
 texture = ExtResource("3_4ijaf")
 
-[node name="CloseButton" type="TextureButton" parent="CreditsTexture"]
+[node name="CloseButton" type="TextureButton" parent="CreditsTexture" unique_id=1719513878]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 29.999996
@@ -60,7 +60,7 @@ scale = Vector2(0.464379, 0.464379)
 texture_normal = ExtResource("4_fwj24")
 texture_hover = ExtResource("5_argos")
 
-[node name="ThanksLabel" type="Label" parent="CreditsTexture"]
+[node name="ThanksLabel" type="Label" parent="CreditsTexture" unique_id=307114215]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 21.27659
@@ -71,7 +71,7 @@ scale = Vector2(0.22245532, 0.22245532)
 text = "SPECIAL THANKS"
 label_settings = SubResource("LabelSettings_josap")
 
-[node name="PeopleLabel" type="Label" parent="CreditsTexture"]
+[node name="PeopleLabel" type="Label" parent="CreditsTexture" unique_id=483507903]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 7.7127686
@@ -88,7 +88,7 @@ text = "- ODRUU
 - GHOKO"
 label_settings = SubResource("LabelSettings_542ni")
 
-[node name="PeopleLabel2" type="Label" parent="CreditsTexture"]
+[node name="PeopleLabel2" type="Label" parent="CreditsTexture" unique_id=1527732006]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 41.223396
@@ -105,12 +105,22 @@ text = "- TSUNELA
 - GOLTYIP"
 label_settings = SubResource("LabelSettings_542ni")
 
-[node name="ButtonSound" type="AudioStreamPlayer" parent="."]
+[node name="PeopleLabel3" type="Label" parent="CreditsTexture" unique_id=1829223709]
+layout_mode = 0
+offset_left = 65.69147
+offset_top = 16.755318
+offset_right = 157.69145
+offset_bottom = 146.75531
+scale = Vector2(0.3317041, 0.3317041)
+text = "- KODOMO"
+label_settings = SubResource("LabelSettings_542ni")
+
+[node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=1715317948]
 stream = ExtResource("7_0gwen")
 pitch_scale = 0.5
 bus = &"SFX"
 
-[node name="BackSound" type="AudioStreamPlayer" parent="."]
+[node name="BackSound" type="AudioStreamPlayer" parent="." unique_id=1350973467]
 stream = ExtResource("8_nm5lx")
 bus = &"SFX"
 

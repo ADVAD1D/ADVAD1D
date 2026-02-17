@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://ccfh771cly6wp" path="res://Assets/Sprites/send_button.png" id="5_mj1bx"]
 [ext_resource type="Texture2D" uid="uid://bc241w2jom6bu" path="res://Assets/Sprites/exitbutton.png" id="6_4r3im"]
 [ext_resource type="Texture2D" uid="uid://d25ei4d0ab75v" path="res://Assets/Sprites/send_button_hover.png" id="6_f6vue"]
+[ext_resource type="Texture2D" uid="uid://yviej45lff4b" path="res://Assets/Sprites/send_button_disabled.png" id="7_bptec"]
 [ext_resource type="Texture2D" uid="uid://cjf4fhtm0ta7m" path="res://Assets/Sprites/quitbuttonhover1.png" id="7_n1sxu"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="8_n1sxu"]
 
@@ -23,6 +24,9 @@ texture = ExtResource("5_mj1bx")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bptec"]
 texture = ExtResource("6_f6vue")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wfrhd"]
+texture = ExtResource("7_bptec")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i8r7y"]
 shader = ExtResource("2_imyuk")
@@ -99,6 +103,7 @@ layout_mode = 2
 size_flags_vertical = 8
 theme_override_styles/normal = SubResource("StyleBoxTexture_f6vue")
 theme_override_styles/hover = SubResource("StyleBoxTexture_bptec")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_wfrhd")
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=624943954]
 
