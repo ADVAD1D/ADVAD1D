@@ -12,6 +12,8 @@ var BASE_URL: String
 #    "X-App-Token: SUPER_SECRETO_GODOT_123" 
 #]
 
+#the server is active in uptimerobot session, Render off the server in 15 min
+
 var headers = []
 
 var _ping_http: HTTPRequest
@@ -98,17 +100,17 @@ func _on_ai_completed(result, response_code, _headers, body):
 	if result != HTTPRequest.RESULT_SUCCESS:
 		match result:
 			HTTPRequest.RESULT_CANT_CONNECT:
-				request_failed.emit("NO HAY CONEXIÓN A INTERNET O EL SERVIDOR NO EXISTE")
+				request_failed.emit("THERE IS NOT INTERNET CONNECTION OR THE SERVER DOES NOT EXIST")
 			HTTPRequest.RESULT_CANT_RESOLVE:
-				request_failed.emit("ERROR DE DNS: NO SE ENCUENTRA EL DOMINIO")
+				request_failed.emit("DNS ERROR: DOMAIN NOT FOUND")
 			HTTPRequest.RESULT_TLS_HANDSHAKE_ERROR:
-				request_failed.emit("ERROR DE SSL/HTTPS")
+				request_failed.emit("SSL/HTTPS ERROR")
 			_:
-				request_failed.emit("ERROR DE CONEXIÓN DESCONOCIDO")
+				request_failed.emit("UNKNOWN CONNECTION ERROR")
 		return
 		
 	if response_code == 0:
-		request_failed.emit("EL SERVIDOR NO RESPONDIÓ NADA: TIMEOUT O CAÍDA")
+		request_failed.emit("THE SERVER NOT RESPONSE, TIMEOUT OR CRASH")
 		return
 		
 	var json = JSON.new()
@@ -116,7 +118,7 @@ func _on_ai_completed(result, response_code, _headers, body):
 	if json_parse_result == OK:
 		var data = json.data
 		if typeof(data) != TYPE_DICTIONARY:
-			request_failed.emit("ERROR, FORMATO DE DATOS NO JSON INESPERADO")
+			request_failed.emit("ERROR, DATA FORMAT, NO JSON")
 			return
 			
 		if response_code == 200:
