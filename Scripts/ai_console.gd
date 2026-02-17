@@ -81,3 +81,6 @@ func _on_back_button_pressed() -> void:
 
 func _on_back_button_mouse_entered() -> void:
 	back_sound.play() # Replace with function body.
+
+func _on_button_mouse_entered() -> void:
+	back_sound.play() # Replace with function body.
