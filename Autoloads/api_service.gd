@@ -48,6 +48,12 @@ func _ready() -> void:
 		
 	else:
 		request_failed.emit("API SERVICE, MANUAL INIT, THE SERVER STATUS IS FALSE.")
+		
+func _log_dev(message: String, respose_code: int) -> void:
+	if OS.is_debug_build():
+		print_rich("[color=yellow][DEV LOG][/color] " + message, respose_code)
+	else:
+		pass
 
 func wake_up_server():
 	if BASE_URL == "":
@@ -93,7 +99,7 @@ func _on_ping_completed(result, response_code, _headers, _body):
 		print("SERVER WAKE AND READY!")
 		server_status_checked.emit(true)
 	else:
-		print("THE SERVER RESPONSE WITH AN ERROR", response_code)
+		_log_dev("THE SERVER RESPONSE WITH AN ERROR", response_code)
 		server_status_checked.emit(false)
 		
 func _on_ai_completed(result, response_code, _headers, body):
@@ -128,8 +134,11 @@ func _on_ai_completed(result, response_code, _headers, body):
 				request_failed.emit("The server responded 200 but the 'response' key is missing.")
 		else:
 			if "error" in data:
-				request_failed.emit("SERVER ERROR: " + str(response_code) + data["error"])
+				request_failed.emit("SERVER ERROR")
+				_log_dev("SERVER ERROR: ", response_code)
 			else:
-				request_failed.emit("UNKNOWN ERROR" + str(response_code))
+				request_failed.emit("UNKNOWN ERROR")
+				_log_dev("UNKNOWN ERROR", response_code)
 	else:
-		request_failed.emit("CRITIC ERROR, THE RESPONSE IS NOT A VALID JSON " + str(response_code))
+		request_failed.emit("CRITIC ERROR, THE RESPONSE IS NOT A VALID JSON ")
+		_log_dev("CRITIC ERROR, THE RESPONSE IS NOT A VALID JSON ", response_code)
