@@ -49,6 +49,8 @@ func _ready() -> void:
 	else:
 		request_failed.emit("API SERVICE, MANUAL INIT, THE SERVER STATUS IS FALSE.")
 		
+		
+#this function show log messages (response codes and messages) for devs, for security reasons
 func _log_dev(message: String, respose_code: int) -> void:
 	if OS.is_debug_build():
 		print_rich("[color=yellow][DEV LOG][/color] " + message, respose_code)
