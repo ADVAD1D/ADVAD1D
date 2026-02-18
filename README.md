@@ -73,6 +73,20 @@ The project is organized into the following main folders:
 -   **`main.gd`**: Controls the logic of the main game scene, player death, and visual effects.
 -   **`player.gd`**: Defines the player's behavior, including movement, shooting, and the dash mechanic.
 
+**API Service (Autoload [Autoloads/api_service.gd](Autoloads/api_service.gd))**
+
+- **Purpose:** Global HTTP client used to communicate with the AI server and centralize API requests/responses.
+- **Signals:** `server_status_checked(is_online: bool)`, `ai_response_received(text: String)`, `request_failed(error_msg: String)`.
+- **Configuration:** Uses `GameManager.production_server_active` to select `BASE_URL` (production: `https://advad-ai-server.onrender.com`, local: `http://127.0.0.1:10000`). The `X-App-Token` header is loaded with `EnvParser.parse("APP_TOKEN")`.
+- **Important variables:** `start_server` (from `GameManager.start_server`, used to auto-start the server) and `headers` (contains `Content-Type` and `X-App-Token`).
+- **Public methods:** `wake_up_server()` —pings the server— and `ask_godot_ai(prompt: String)` —sends prompts and emits `ai_response_received` or `request_failed` depending on the result.
+- **Notes for contributors:**
+  - Connect signals to receive responses and errors, for example:
+    - `get_node("/root/api_service").connect("ai_response_received", Callable(self, "_on_ai_response"))`
+    - `get_node("/root/api_service").connect("request_failed", Callable(self, "_on_api_error"))`
+  - In debug builds the service logs extra information via `_log_dev()`; those logs are suppressed in release builds.
+  - Make sure `APP_TOKEN` is available via `EnvParser` and configure `GameManager` flags (`production_server_active`, `start_server`) before testing.
+
 ## Credits
 
 -   **Development and Design:** ANGELUS11 and Cro128
