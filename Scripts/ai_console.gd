@@ -7,6 +7,7 @@ var current_text_lenght: int = 0
 
 @onready var back_button: TextureButton = $BackButton
 @onready var back_sound: AudioStreamPlayer = $BackSound
+@onready var typing_sound: AudioStreamPlayer = $TypingSound
 
 @onready var chat_display: RichTextLabel = $PanelContainer/MarginContainer/VBoxContainer/RichTextLabel
 @onready var input_field: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/LineEdit
@@ -76,6 +77,8 @@ func add_message(sender: String, message: String, color: String, animate: bool =
 		
 		var tween = create_tween()
 		tween.tween_property(chat_display, "visible_characters", new_total_chars, duration)
+		typing_sound.play()
+		tween.tween_callback(typing_sound.stop)
 	else:
 		chat_display.visible_characters = -1
 		

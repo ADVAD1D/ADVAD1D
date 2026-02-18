@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://yviej45lff4b" path="res://Assets/Sprites/send_button_disabled.png" id="7_bptec"]
 [ext_resource type="Texture2D" uid="uid://cjf4fhtm0ta7m" path="res://Assets/Sprites/quitbuttonhover1.png" id="7_n1sxu"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="8_n1sxu"]
+[ext_resource type="AudioStream" uid="uid://bao1cdmr6axml" path="res://Assets/Audio/163466__erh__machinery-ph-sny-1b14-4.wav" id="12_wfrhd"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fbo3q"]
 content_margin_left = 7.0
@@ -134,6 +135,10 @@ texture_focused = ExtResource("7_n1sxu")
 [node name="BackSound" type="AudioStreamPlayer" parent="." unique_id=546732123]
 stream = ExtResource("8_n1sxu")
 pitch_scale = 0.5
+bus = &"SFX"
+
+[node name="TypingSound" type="AudioStreamPlayer" parent="." unique_id=107174035]
+stream = ExtResource("12_wfrhd")
 bus = &"SFX"
 
 [connection signal="mouse_entered" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_button_mouse_entered"]
