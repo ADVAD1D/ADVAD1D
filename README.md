@@ -82,8 +82,8 @@ The project is organized into the following main folders:
 - **Public methods:** `wake_up_server()` —pings the server— and `ask_godot_ai(prompt: String)` —sends prompts and emits `ai_response_received` or `request_failed` depending on the result.
 - **Notes for contributors:**
   - Connect signals to receive responses and errors, for example:
-    - `get_node("/root/api_service").connect("ai_response_received", Callable(self, "_on_ai_response"))`
-    - `get_node("/root/api_service").connect("request_failed", Callable(self, "_on_api_error"))`
+	- `get_node("/root/api_service").connect("ai_response_received", Callable(self, "_on_ai_response"))`
+	- `get_node("/root/api_service").connect("request_failed", Callable(self, "_on_api_error"))`
   - In debug builds the service logs extra information via `_log_dev()`; those logs are suppressed in release builds.
   - Make sure `APP_TOKEN` is available via `EnvParser` and configure `GameManager` flags (`production_server_active`, `start_server`) before testing.
 

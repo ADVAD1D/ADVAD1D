@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://b3erfay7mn45e"]
+[gd_scene format=3 uid="uid://b3erfay7mn45e"]
 
 [ext_resource type="Texture2D" uid="uid://c1suoe5284u3a" path="res://Assets/Sprites/skinpanel2.png" id="1_0s6pj"]
 [ext_resource type="Script" uid="uid://dep7b8vk1sfv" path="res://Scripts/skin_selector.gd" id="1_43pbt"]
@@ -58,7 +58,7 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 1.0
 shader_parameter/vignette_opacity = 0.586000027835
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=1741315079]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -67,7 +67,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_43pbt")
 
-[node name="SkinPanel" type="TextureRect" parent="."]
+[node name="SkinPanel" type="TextureRect" parent="." unique_id=1965574484]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -76,12 +76,12 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_0s6pj")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=481073188]
 position = Vector2(345.00003, 75.00001)
 scale = Vector2(1.3871844, 1.3871844)
 texture = ExtResource("3_qwen4")
 
-[node name="BackButton" type="TextureButton" parent="."]
+[node name="BackButton" type="TextureButton" parent="." unique_id=1587076792]
 layout_mode = 0
 offset_left = 55.0
 offset_top = 22.0
@@ -91,7 +91,7 @@ scale = Vector2(1.42454, 1.42454)
 texture_normal = ExtResource("4_qwen4")
 texture_hover = ExtResource("5_0tot8")
 
-[node name="SkinsLabel" type="Label" parent="."]
+[node name="SkinsLabel" type="Label" parent="." unique_id=1834301475]
 layout_mode = 0
 offset_left = 185.00002
 offset_top = 61.000004
@@ -101,7 +101,7 @@ scale = Vector2(1.6167805, 1.6167805)
 text = "SHIP SELECTOR"
 label_settings = SubResource("LabelSettings_1cnro")
 
-[node name="NextButton" type="TextureButton" parent="."]
+[node name="NextButton" type="TextureButton" parent="." unique_id=1156429064]
 layout_mode = 0
 offset_left = 380.0
 offset_top = 127.0
@@ -110,7 +110,7 @@ offset_bottom = 172.0
 texture_normal = ExtResource("4_mh730")
 texture_hover = ExtResource("5_43pbt")
 
-[node name="ShipPreview" type="TextureRect" parent="."]
+[node name="ShipPreview" type="TextureRect" parent="." unique_id=224851419]
 layout_mode = 0
 offset_left = 220.99998
 offset_top = 114.0
@@ -120,7 +120,7 @@ scale = Vector2(1.507489, 1.507489)
 expand_mode = 1
 stretch_mode = 5
 
-[node name="PreviousButton" type="TextureButton" parent="."]
+[node name="PreviousButton" type="TextureButton" parent="." unique_id=705245503]
 layout_mode = 0
 offset_left = 127.00001
 offset_top = 168.00002
@@ -130,7 +130,7 @@ rotation = 3.1410596
 texture_normal = ExtResource("4_mh730")
 texture_hover = ExtResource("5_43pbt")
 
-[node name="ShipNameLabel" type="Label" parent="."]
+[node name="ShipNameLabel" type="Label" parent="." unique_id=2026679295]
 layout_mode = 0
 offset_left = 178.0
 offset_top = 191.0
@@ -140,7 +140,7 @@ scale = Vector2(1.5303622, 1.5303622)
 text = "ship"
 label_settings = SubResource("LabelSettings_43pbt")
 
-[node name="ShipAuthorLabel" type="Label" parent="."]
+[node name="ShipAuthorLabel" type="Label" parent="." unique_id=1027841915]
 layout_mode = 0
 offset_left = 255.0
 offset_top = 191.0
@@ -150,9 +150,9 @@ scale = Vector2(1.4676892, 1.4676892)
 text = "By: Author"
 label_settings = SubResource("LabelSettings_v35mn")
 
-[node name="UILayer" type="CanvasLayer" parent="."]
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=1722943563]
 
-[node name="ColorRect" type="ColorRect" parent="UILayer"]
+[node name="ColorRect" type="ColorRect" parent="UILayer" unique_id=411733729]
 material = SubResource("ShaderMaterial_sum1o")
 anchors_preset = 15
 anchor_right = 1.0
@@ -165,7 +165,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="ButtonSound" type="AudioStreamPlayer" parent="."]
+[node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=713504638]
 stream = ExtResource("10_qwen4")
 pitch_scale = 0.5
 bus = &"SFX"
