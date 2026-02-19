@@ -21,6 +21,7 @@ func _ready() -> void:
 	GameManager.can_pause = false
 	chat_display.scroll_following = true
 	chat_display.visible_characters = -1
+	chat_display.add_theme_constant_override("line_separation", 6)
 	
 	if Network:
 		Network.ai_response_received.connect(_on_ai_response)
@@ -52,7 +53,8 @@ func send_message():
 	Network.ask_godot_ai(text)
 	
 func _on_ai_response(response_text):
-	add_message("AI: ", response_text, "#ffffff", true)
+	var clean_text = format_ai_text(response_text)
+	add_message("AI: ", clean_text, "#ffffff", true)
 	
 	input_field.editable = true
 	send_button.disabled = false
@@ -62,6 +64,12 @@ func _on_error(error_msg):
 	add_message("Error: ", error_msg, "red")
 	input_field.editable = true
 	send_button.disabled = false
+	
+func format_ai_text(text: String) -> String:
+	var regex = RegEx.new()
+	regex.compile("\\*\\*(.*?)\\*\\*")
+	var result = regex.sub(text, "[b]$1[/b]", true)
+	return result
 	
 func add_message(sender: String, message: String, color: String, animate: bool = false):
 	var formatted = "[b][color=%s]%s:[/color][/b] %s" % [color, sender, message]
