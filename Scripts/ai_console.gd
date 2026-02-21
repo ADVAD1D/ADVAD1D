@@ -5,7 +5,10 @@ var back_scene: String = "res://Scenes/main_menu.tscn"
 
 var current_text_lenght: int = 0
 
+@onready var is_scroll_active: bool = GameManager.is_scroll_active
+
 @onready var back_button: TextureButton = $BackButton
+@onready var scroll_button: TextureButton = $ScrollBarButton
 @onready var back_sound: AudioStreamPlayer = $BackSound
 @onready var typing_sound: AudioStreamPlayer = $TypingSound
 
@@ -17,9 +20,13 @@ var current_text_lenght: int = 0
 func _ready() -> void:
 	send_button.pressed.connect(_on_send_button_pressed) # Replace with function body.
 	input_field.text_submitted.connect(_on_text_submitted)
+	scroll_button.toggled.connect(_on_scroll_button_toggled)
+	scroll_button.pressed.connect(_on_scroll_button_pressed)
 	
 	GameManager.can_pause = false
-	chat_display.scroll_following = true
+	chat_display.scroll_following = is_scroll_active
+	scroll_button.set_pressed_no_signal(is_scroll_active)
+		
 	chat_display.visible_characters = -1
 	chat_display.add_theme_constant_override("line_separation", 6)
 	
@@ -91,6 +98,19 @@ func add_message(sender: String, message: String, color: String, animate: bool =
 		chat_display.visible_characters = -1
 		
 	current_text_lenght = new_total_chars
+	
+func _on_scroll_button_toggled(button_pressed_state: bool):
+	GameManager.is_scroll_active = button_pressed_state
+	chat_display.scroll_following = button_pressed_state
+	print("Estado de la barra de scroll", button_pressed_state)
+	GameManager.save_data()
+	
+	if button_pressed_state == true:
+		var v_scrollbar = chat_display.get_v_scroll_bar()
+		v_scrollbar.value = v_scrollbar.max_value
+	
+func _on_scroll_button_pressed():
+	back_sound.play()
 
 func _on_back_button_pressed() -> void:
 	get_tree().change_scene_to_file(back_scene) # Replace with function body.
@@ -99,4 +119,7 @@ func _on_back_button_mouse_entered() -> void:
 	back_sound.play() # Replace with function body.
 
 func _on_button_mouse_entered() -> void:
+	back_sound.play() # Replace with function body.
+
+func _on_scroll_bar_button_mouse_entered() -> void:
 	back_sound.play() # Replace with function body.

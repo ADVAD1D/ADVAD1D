@@ -15,6 +15,7 @@ var game_paused: bool = false
 var can_pause: bool = true
 
 var ai_last_response: String = ""
+var is_scroll_active: bool = false
 var start_server: bool = true
 var production_server_active = true
 var browser_support: bool = false
@@ -232,10 +233,14 @@ func save_data():
 		
 	var data: Dictionary = {
 		"selected_ship": selected_ship_index,
-		"controls_mode": relative_control_active
+		"controls_mode": relative_control_active,
+		"scroll_bar_state": is_scroll_active
 	}
 	#create the file in path
 	var file = FileAccess.open(save_path, FileAccess.WRITE)
+	if file == null:
+		print("Error al guardar los datos", FileAccess.get_open_error())
+		return
 	#convert the dict to json text
 	var json_string = JSON.stringify(data)
 	file.store_string(json_string)
@@ -261,6 +266,10 @@ func load_data():
 	if data and "controls_mode" in data:
 		relative_control_active = bool(data["controls_mode"])
 		print("loaded controls user config: ", relative_control_active)
+		
+	if data and "scroll_bar_state" in data:
+		is_scroll_active = bool(data["scroll_bar_state"])
+		print("loaded scrollbar state user config: ", is_scroll_active)
 	
 func select_next_ship():
 	selected_ship_index += 1

@@ -12,6 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://cjf4fhtm0ta7m" path="res://Assets/Sprites/quitbuttonhover1.png" id="7_n1sxu"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="8_n1sxu"]
 [ext_resource type="AudioStream" uid="uid://bao1cdmr6axml" path="res://Assets/Audio/163466__erh__machinery-ph-sny-1b14-4.wav" id="12_wfrhd"]
+[ext_resource type="Texture2D" uid="uid://cbn76egjgsvuw" path="res://Assets/Sprites/scroll_bar_button.png" id="13_7w1m1"]
+[ext_resource type="Texture2D" uid="uid://ceppf7jomdmiu" path="res://Assets/Sprites/scroll_bar_button_hover.png" id="14_wmfkg"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fbo3q"]
 content_margin_left = 7.0
@@ -141,6 +143,18 @@ bus = &"SFX"
 stream = ExtResource("12_wfrhd")
 bus = &"SFX"
 
+[node name="ScrollBarButton" type="TextureButton" parent="." unique_id=1004020280]
+layout_mode = 0
+offset_left = 474.0
+offset_top = 46.999996
+offset_right = 504.0
+offset_bottom = 77.0
+scale = Vector2(1.3057115, 1.3057115)
+toggle_mode = true
+texture_normal = ExtResource("13_7w1m1")
+texture_hover = ExtResource("14_wmfkg")
+
 [connection signal="mouse_entered" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_button_mouse_entered"]
 [connection signal="mouse_entered" from="BackButton" to="." method="_on_back_button_mouse_entered"]
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="mouse_entered" from="ScrollBarButton" to="." method="_on_scroll_bar_button_mouse_entered"]
