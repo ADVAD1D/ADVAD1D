@@ -10,6 +10,7 @@ var current_text_lenght: int = 0
 @onready var back_button: TextureButton = $BackButton
 @onready var scroll_button: TextureButton = $ScrollBarButton
 @onready var back_sound: AudioStreamPlayer = $BackSound
+@onready var button_sound: AudioStreamPlayer = $ButtonSound
 @onready var typing_sound: AudioStreamPlayer = $TypingSound
 
 @onready var chat_display: RichTextLabel = $PanelContainer/MarginContainer/VBoxContainer/RichTextLabel
@@ -110,7 +111,7 @@ func _on_scroll_button_toggled(button_pressed_state: bool):
 		v_scrollbar.value = v_scrollbar.max_value
 	
 func _on_scroll_button_pressed():
-	back_sound.play()
+	button_sound.play()
 
 func _on_back_button_pressed() -> void:
 	get_tree().change_scene_to_file(back_scene) # Replace with function body.

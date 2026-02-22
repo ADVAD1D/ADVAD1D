@@ -13,6 +13,7 @@
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="8_n1sxu"]
 [ext_resource type="AudioStream" uid="uid://bao1cdmr6axml" path="res://Assets/Audio/163466__erh__machinery-ph-sny-1b14-4.wav" id="12_wfrhd"]
 [ext_resource type="Texture2D" uid="uid://cbn76egjgsvuw" path="res://Assets/Sprites/scroll_bar_button.png" id="13_7w1m1"]
+[ext_resource type="AudioStream" uid="uid://e74mglwo351x" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="13_wmfkg"]
 [ext_resource type="Texture2D" uid="uid://ceppf7jomdmiu" path="res://Assets/Sprites/scroll_bar_button_hover.png" id="14_wmfkg"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fbo3q"]
@@ -142,6 +143,9 @@ bus = &"SFX"
 [node name="TypingSound" type="AudioStreamPlayer" parent="." unique_id=107174035]
 stream = ExtResource("12_wfrhd")
 bus = &"SFX"
+
+[node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=1629121733]
+stream = ExtResource("13_wmfkg")
 
 [node name="ScrollBarButton" type="TextureButton" parent="." unique_id=1004020280]
 layout_mode = 0
