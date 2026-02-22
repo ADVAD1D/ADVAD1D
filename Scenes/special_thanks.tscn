@@ -112,7 +112,8 @@ offset_top = 16.755318
 offset_right = 157.69145
 offset_bottom = 146.75531
 scale = Vector2(0.3317041, 0.3317041)
-text = "- KODOMO"
+text = "- KODOMO
+- ITSRODRIGO"
 label_settings = SubResource("LabelSettings_542ni")
 
 [node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=1715317948]
