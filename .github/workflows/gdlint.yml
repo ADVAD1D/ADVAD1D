@@ -1,0 +1,16 @@
+name: GDScript Lint
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "**.gd"
+
+jobs:
+  lint:
+    name: gdlint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Scony/godot-gdscript-toolkit@master
+      - run: gdlint . --exclude addons/
