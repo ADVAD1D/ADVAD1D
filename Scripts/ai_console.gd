@@ -52,24 +52,24 @@ func send_message():
 	if text.is_empty():
 		return
 		
-	add_message("You: ", text, "#40a4f4")
+	add_message("You ", text, "#40a4f4")
 	input_field.clear()
 	input_field.editable = false
 	send_button.disabled = true
-	add_message("System:", "Waiting response...", "gray")
+	add_message("System ", "Waiting response...", "gray")
 	
 	Network.ask_godot_ai(text)
 	
 func _on_ai_response(response_text):
 	var clean_text = format_ai_text(response_text)
-	add_message("AI: ", clean_text, "#ffffff", true)
+	add_message("AI ", clean_text, "#ffffff", true)
 	
 	input_field.editable = true
 	send_button.disabled = false
 	input_field.grab_focus()
 	
 func _on_error(error_msg):
-	add_message("Error: ", error_msg, "red")
+	add_message("Error ", error_msg, "red")
 	input_field.editable = true
 	send_button.disabled = false
 	
