@@ -36,6 +36,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1952916941]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -46,6 +47,7 @@ stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1132677659]
 handle_input_locally = false
+canvas_item_default_texture_filter = 0
 gui_embed_subwindows = true
 size = Vector2i(520, 300)
 render_target_update_mode = 4
