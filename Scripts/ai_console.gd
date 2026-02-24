@@ -25,6 +25,8 @@ func _ready() -> void:
 	scroll_button.pressed.connect(_on_scroll_button_pressed)
 	
 	GameManager.can_pause = false
+	var v_scrollbar = chat_display.get_v_scroll_bar()
+	v_scrollbar.modulate = Color.TRANSPARENT
 	chat_display.scroll_following = is_scroll_active
 	scroll_button.set_pressed_no_signal(is_scroll_active)
 		
