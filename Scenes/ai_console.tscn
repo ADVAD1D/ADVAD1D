@@ -110,6 +110,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_bptec")
 theme_override_styles/disabled = SubResource("StyleBoxTexture_wfrhd")
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=624943954]
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="UILayer" unique_id=2047537198]
 material = SubResource("ShaderMaterial_i8r7y")

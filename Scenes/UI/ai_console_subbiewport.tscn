@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://de50n3nlygj51"]
+
+[ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="1_rw382"]
+[ext_resource type="PackedScene" uid="uid://bcnejjeik3wim" path="res://Scenes/ai_console.tscn" id="2_78sxk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rw382"]
+shader = ExtResource("1_rw382")
+shader_parameter/overlay = true
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/brightness = 2.5
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.030000001425
+shader_parameter/grille_opacity = 0.10000000475
+shader_parameter/roll = true
+shader_parameter/roll_speed = 3.0
+shader_parameter/roll_size = 10.000000475
+shader_parameter/roll_variation = 0.50000002049012
+shader_parameter/distort_intensity = 0.02000000095
+shader_parameter/aberration = 0.010000047974999982
+shader_parameter/noise_opacity = 0.30000001425
+shader_parameter/noise_speed = 2.0
+shader_parameter/static_noise_intensity = 0.0
+shader_parameter/pixelate = false
+shader_parameter/discolor = true
+shader_parameter/warp_amount = 0.150000007125
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.5
+shader_parameter/vignette_opacity = 1.0
+
+[node name="Control" type="Control" unique_id=906935093]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1952916941]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1132677659]
+handle_input_locally = false
+gui_embed_subwindows = true
+size = Vector2i(520, 300)
+render_target_update_mode = 4
+
+[node name="Control" parent="SubViewportContainer/SubViewport" unique_id=116682182 instance=ExtResource("2_78sxk")]
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1558366456]
+material = SubResource("ShaderMaterial_rw382")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
