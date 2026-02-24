@@ -6,6 +6,21 @@
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x0f22"]
 texture = ExtResource("1_s0vao")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x0f22"]
+bg_color = Color(0, 0.51854384, 0.37570426, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u7p27"]
+bg_color = Color(0, 0.95686275, 0.76862746, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sbt7x"]
+bg_color = Color(0, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s0vao"]
+bg_color = Color(1.7748215e-07, 0.15009743, 0.11833296, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_khmtv"]
+color = Color(0, 1, 0.76862746, 1)
+
 [resource]
 default_font = ExtResource("1_kwbp0")
 LineEdit/colors/font_color = Color(0, 0.8745098, 0.8745098, 1)
@@ -13,6 +28,14 @@ LineEdit/colors/font_outline_color = Color(0, 0, 0, 1)
 LineEdit/colors/font_placeholder_color = Color(0.08417124, 0.30788425, 0.3083723, 1)
 LineEdit/font_sizes/font_size = 20
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_x0f22")
+PopupMenu/colors/font_color = Color(0.19673601, 0.9255351, 0.9252035, 1)
+PopupMenu/colors/font_hover_color = Color(0.3492273, 0.92792875, 0.9999998, 1)
+PopupMenu/colors/font_separator_color = Color(0, 0.8745098, 0.8745098, 1)
+PopupMenu/styles/hover = SubResource("StyleBoxFlat_x0f22")
+PopupMenu/styles/labeled_separator_left = SubResource("StyleBoxFlat_u7p27")
+PopupMenu/styles/labeled_separator_right = SubResource("StyleBoxFlat_sbt7x")
+PopupMenu/styles/panel = SubResource("StyleBoxFlat_s0vao")
+PopupMenu/styles/separator = SubResource("StyleBoxLine_khmtv")
 RichTextLabel/colors/default_color = Color(0.18581042, 0.99999994, 0.97991234, 1)
 RichTextLabel/colors/font_outline_color = Color(0, 0.23137255, 0.23921569, 1)
 RichTextLabel/constants/outline_size = 3
