@@ -2,6 +2,8 @@
 
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="1_kwbp0"]
 [ext_resource type="Texture2D" uid="uid://cbprjc0w041n6" path="res://Assets/Sprites/skinaipanel.png" id="1_s0vao"]
+[ext_resource type="Texture2D" uid="uid://2p3js3sm8vw" path="res://Assets/Sprites/checkedicon.png" id="2_u7p27"]
+[ext_resource type="Texture2D" uid="uid://blljwddrv7qlc" path="res://Assets/Sprites/mininextbutton.png" id="2_x0f22"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x0f22"]
 texture = ExtResource("1_s0vao")
@@ -31,6 +33,8 @@ PanelContainer/styles/panel = SubResource("StyleBoxTexture_x0f22")
 PopupMenu/colors/font_color = Color(0.19673601, 0.9255351, 0.9252035, 1)
 PopupMenu/colors/font_hover_color = Color(0.3492273, 0.92792875, 0.9999998, 1)
 PopupMenu/colors/font_separator_color = Color(0, 0.8745098, 0.8745098, 1)
+PopupMenu/icons/radio_checked = ExtResource("2_u7p27")
+PopupMenu/icons/submenu = ExtResource("2_x0f22")
 PopupMenu/styles/hover = SubResource("StyleBoxFlat_x0f22")
 PopupMenu/styles/labeled_separator_left = SubResource("StyleBoxFlat_u7p27")
 PopupMenu/styles/labeled_separator_right = SubResource("StyleBoxFlat_sbt7x")
