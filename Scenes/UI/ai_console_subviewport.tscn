@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://de50n3nlygj51"]
 
-[ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="1_rw382"]
-[ext_resource type="PackedScene" uid="uid://bcnejjeik3wim" path="res://Scenes/ai_console.tscn" id="2_78sxk"]
+[ext_resource type="PackedScene" uid="uid://bcnejjeik3wim" path="res://Scenes/ai_console.tscn" id="1_u06g3"]
+[ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_7oi74"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rw382"]
-shader = ExtResource("1_rw382")
+shader = ExtResource("2_7oi74")
 shader_parameter/overlay = true
 shader_parameter/resolution = Vector2(640, 480)
 shader_parameter/brightness = 2.5
@@ -50,7 +50,7 @@ gui_embed_subwindows = true
 size = Vector2i(520, 300)
 render_target_update_mode = 4
 
-[node name="Control" parent="SubViewportContainer/SubViewport" unique_id=116682182 instance=ExtResource("2_78sxk")]
+[node name="Control" parent="SubViewportContainer/SubViewport" unique_id=116682182 instance=ExtResource("1_u06g3")]
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1558366456]
 material = SubResource("ShaderMaterial_rw382")
