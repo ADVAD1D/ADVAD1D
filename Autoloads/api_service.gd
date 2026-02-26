@@ -5,6 +5,7 @@ signal ai_response_received(text: String)
 signal request_failed(error_msg: String)
 
 var production_server_active = GameManager.production_server_active
+var debug_response_text_active = GameManager.debug_response_text_active
 var BASE_URL: String
 
 #var headers = [
@@ -130,6 +131,8 @@ func _on_ai_completed(result, response_code, _headers, body):
 			return
 			
 		if response_code == 200:
+			if "response" in data and debug_response_text_active == true:
+				print("TEXTO CRUDO: ", data["response"])
 			if "response" in data:
 				ai_response_received.emit(data["response"])
 			else:

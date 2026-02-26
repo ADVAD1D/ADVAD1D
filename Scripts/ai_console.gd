@@ -95,6 +95,7 @@ func add_message(sender: String, message: String, color: String, animate: bool =
 		
 		var tween = create_tween()
 		tween.tween_property(chat_display, "visible_characters", new_total_chars, duration)
+		tween.tween_callback(func(): chat_display.visible_characters = -1)
 		typing_sound.play()
 		tween.tween_callback(typing_sound.stop)
 	else:

@@ -33,7 +33,7 @@ var playlist = [
 	preload("res://Assets/Audio/Music/neon-rising-336846.wav"),
 	preload("res://Assets/Audio/Music/digital-dream-391529.wav"),
 	preload("res://Assets/Audio/Music/velvet-malware-454813.wav"),
-	preload("res://Assets/Audio/Music/end-of-the-line-317985.wav"),
+	preload("res://Assets/Audio/Music/psychronic-break-forward-468745.ogg"),
 	preload("res://Assets/Audio/Music/pulsehaven-nexus-382253.wav"),
 	preload("res://Assets/Audio/Music/blue-light-district-397940.wav"),
 	preload("res://Assets/Audio/Music/the-fight-left-in-us-391531.wav"),
