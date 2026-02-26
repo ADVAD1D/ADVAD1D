@@ -12,7 +12,7 @@ var BASE_URL: String
 #    "X-App-Token: SUPER_SECRETO_GODOT_123" 
 #]
 
-#the server is active in uptimerobot session, Render off the server in 15 min
+#the server is active in uptimerobot session (10min), Render off the server in 15 min
 
 var headers = []
 
