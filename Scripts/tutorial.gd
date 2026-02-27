@@ -44,23 +44,6 @@ func _ready() -> void:
 		GameManager.play_glitch_sound(glitch_sound)
 		GameManager.is_glitch_sound = false
 	
-func play_glitch_effect():
-	var tween = create_tween()
-	tween.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN_OUT)
-
-	tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.1, 0.1)
-	tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.1, 0.1)
-
-	tween.chain().tween_property(crt_material, "shader_parameter/aberration", 1.0, 0.1)
-	tween.chain().tween_property(crt_material, "shader_parameter/aberration", -1.0, 0.1)
-	tween.chain().tween_property(crt_material, "shader_parameter/aberration", 0.1, 0.01)
-	
-	tween.parallel().tween_property(crt_material, "shader_parameter/aberration", 0.01, 0.1)
-	tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.01, 0.1)
-	tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.01, 0.1)
-
-	return tween
-	
 func reset_shader_parameters():
 	if is_instance_valid(crt_material):
 		crt_material.set_shader_parameter("aberration", 0.02)
@@ -89,7 +72,7 @@ func _on_laser_zone_area_entered(area: Area2D) -> void:
 func _on_player_died() -> void:
 	tutorial_timer.stop()
 	glitch_sound.play()
-	var glitch_tween = play_glitch_effect()
+	var glitch_tween = GameManager.play_glitch_effect(crt_material)
 	await  glitch_tween.finished
 	await get_tree().create_timer(0.01).timeout
 	get_tree().call_deferred("reload_current_scene")

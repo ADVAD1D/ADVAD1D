@@ -19,6 +19,7 @@ var base_zoom: Vector2
 
 func _ready() -> void:
 	reset_shader_parameters()
+	
 	GameManager.can_pause = true
 	base_zoom = cam.zoom
 	player.died.connect(_on_player_died) # Replace with function body.
@@ -35,23 +36,6 @@ func _ready() -> void:
 	if GameManager.is_glitch_sound:
 		GameManager.play_glitch_sound(glitch_sound)
 		GameManager.is_glitch_sound = false
-	
-func play_glitch_effect():
-	var tween = create_tween()
-	tween.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN_OUT)
-
-	tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.1, 0.1)
-	tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.1, 0.1)
-
-	tween.chain().tween_property(crt_material, "shader_parameter/aberration", 1.0, 0.1)
-	tween.chain().tween_property(crt_material, "shader_parameter/aberration", -1.0, 0.1)
-	tween.chain().tween_property(crt_material, "shader_parameter/aberration", 0.1, 0.01)
-	
-	tween.parallel().tween_property(crt_material, "shader_parameter/aberration", 0.01, 0.1)
-	tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.01, 0.1)
-	tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.01, 0.1)
-
-	return tween
 	
 func reset_shader_parameters():
 	if is_instance_valid(crt_material):
@@ -91,7 +75,7 @@ func _on_player_died() -> void:
 	GameManager.can_pause = false
 	glitch_sound.play()
 	GameManager.stop_scoring()
-	var glitch_tween = play_glitch_effect()
+	var glitch_tween = GameManager.play_glitch_effect(crt_material)
 	await  glitch_tween.finished
 	await get_tree().create_timer(0.01).timeout
 	GameManager.reset_score()
