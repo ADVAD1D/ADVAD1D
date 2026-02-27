@@ -73,11 +73,13 @@ func _on_laser_zone_area_entered(area: Area2D) -> void:
 		
 func _on_player_died() -> void:
 	GameManager.can_pause = false
-	glitch_sound.play()
+	GameManager.play_glitch_sound(glitch_sound)
 	GameManager.stop_scoring()
+	
 	var glitch_tween = GameManager.play_glitch_effect(crt_material)
 	await  glitch_tween.finished
-	await get_tree().create_timer(0.01).timeout
+	await get_tree().create_timer(0.001).timeout
+	
 	GameManager.reset_score()
 	get_tree().call_deferred("reload_current_scene")
 	
