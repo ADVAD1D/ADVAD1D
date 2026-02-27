@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cwrkymd0iykky"]
+[gd_scene format=3 uid="uid://cwrkymd0iykky"]
 
 [ext_resource type="Texture2D" uid="uid://cgxfbj1nol3bo" path="res://Assets/Sprites/capitainadabduction.png" id="1_nlkhs"]
 [ext_resource type="Script" uid="uid://dg1y4ht8312sm" path="res://Scripts/abduction_scene.gd" id="1_s02xp"]
@@ -32,7 +32,7 @@ shader_parameter/roll_size = 5.0
 shader_parameter/roll_variation = 0.5
 shader_parameter/distort_intensity = 0.02
 shader_parameter/aberration = 0.01000004797499998
-shader_parameter/noise_opacity = 0.311
+shader_parameter/noise_opacity = 0.10000000475
 shader_parameter/noise_speed = 2.0
 shader_parameter/static_noise_intensity = 0.0
 shader_parameter/pixelate = false
@@ -42,13 +42,13 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.5
 shader_parameter/vignette_opacity = 1.0
 
-[node name="Abduction" type="Node2D"]
+[node name="Abduction" type="Node2D" unique_id=1983550431]
 script = ExtResource("1_s02xp")
 next_scene = ExtResource("2_s02xp")
 
-[node name="UILayer" type="CanvasLayer" parent="."]
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=974017322]
 
-[node name="EnterKey" type="TextureRect" parent="UILayer"]
+[node name="EnterKey" type="TextureRect" parent="UILayer" unique_id=775833959]
 offset_left = 459.0
 offset_top = 215.00002
 offset_right = 504.0
@@ -56,7 +56,7 @@ offset_bottom = 260.0
 scale = Vector2(0.72236204, 0.72236204)
 texture = ExtResource("5_6ude6")
 
-[node name="SkipLabel" type="Label" parent="UILayer"]
+[node name="SkipLabel" type="Label" parent="UILayer" unique_id=2041649409]
 offset_left = 462.00003
 offset_top = 246.0
 offset_right = 489.00003
@@ -65,7 +65,7 @@ scale = Vector2(0.99130595, 0.99130595)
 text = "SKIP"
 label_settings = SubResource("LabelSettings_tofm5")
 
-[node name="ColorRect" type="ColorRect" parent="UILayer"]
+[node name="ColorRect" type="ColorRect" parent="UILayer" unique_id=220638933]
 material = SubResource("ShaderMaterial_g50ly")
 anchors_preset = 15
 anchor_right = 1.0
@@ -78,7 +78,7 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(4.061179, 4.061179)
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1028286185]
 offset_left = -1238.0
 offset_top = -736.00006
 offset_right = -1202.6173
@@ -86,13 +86,13 @@ offset_bottom = -711.1544
 scale = Vector2(68.14068, 68.14068)
 color = Color(0, 0, 0, 1)
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=556465002]
 position = Vector2(-3, 127)
 scale = Vector2(16.725534, 16.725534)
 texture = ExtResource("1_nlkhs")
 script = ExtResource("2_k0sn5")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=272407749]
 zoom = Vector2(0.25, 0.25)
 limit_left = -1115
 limit_top = -540

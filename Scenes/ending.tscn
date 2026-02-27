@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://ojsnno8modll"]
+[gd_scene format=3 uid="uid://ojsnno8modll"]
 
 [ext_resource type="Script" uid="uid://dgas4fqeurpqd" path="res://Scripts/ending.gd" id="1_bfdlc"]
 [ext_resource type="PackedScene" uid="uid://s72gvn2mqhx2" path="res://Scenes/main_menu.tscn" id="2_bfdlc"]
@@ -21,7 +21,7 @@ shader_parameter/roll_size = 5.0
 shader_parameter/roll_variation = 0.5
 shader_parameter/distort_intensity = 0.02
 shader_parameter/aberration = 0.01000004797499998
-shader_parameter/noise_opacity = 0.311
+shader_parameter/noise_opacity = 0.10000000475
 shader_parameter/noise_speed = 2.0
 shader_parameter/static_noise_intensity = 0.0
 shader_parameter/pixelate = false
@@ -31,11 +31,11 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.5
 shader_parameter/vignette_opacity = 1.0
 
-[node name="Ending" type="Node2D"]
+[node name="Ending" type="Node2D" unique_id=269089926]
 script = ExtResource("1_bfdlc")
 next_scene = ExtResource("2_bfdlc")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2098415265]
 offset_left = -1238.0
 offset_top = -736.00006
 offset_right = -1202.6173
@@ -43,13 +43,13 @@ offset_bottom = -711.1544
 scale = Vector2(68.14068, 68.14068)
 color = Color(0, 0, 0, 1)
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1828497966]
 position = Vector2(5.000002, 72)
 scale = Vector2(17.339272, 17.339272)
 texture = ExtResource("3_hv2aa")
 script = ExtResource("4_1bcf8")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=553291474]
 position = Vector2(-33.000004, 7)
 scale = Vector2(1139.6892, 1139.6892)
 zoom = Vector2(0.25, 0.25)
@@ -61,9 +61,9 @@ limit_smoothed = true
 position_smoothing_enabled = true
 script = ExtResource("5_ox17v")
 
-[node name="UILayer" type="CanvasLayer" parent="."]
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=1763827207]
 
-[node name="ColorRect" type="ColorRect" parent="UILayer"]
+[node name="ColorRect" type="ColorRect" parent="UILayer" unique_id=438031360]
 material = SubResource("ShaderMaterial_ewxmf")
 anchors_preset = 15
 anchor_right = 1.0
