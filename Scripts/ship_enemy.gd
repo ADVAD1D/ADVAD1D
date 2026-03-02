@@ -17,28 +17,21 @@ var is_dying: bool = false
 signal died
 
 @onready var hitbox: Area2D = $Hitbox
-
 @onready var shoot_marker: Marker2D = $Muzzle
-
 @onready var laser_sound: AudioStreamPlayer2D = $EnemyLsrSound
-
 @onready var separation_area = $SeparationArea
-
 @onready var shoot_timer: Timer = $ShootTimer
-
 @onready var engine_trail: GPUParticles2D = $EngineTrail
 
 var explosion_sound: AudioStreamPlayer2D = preload("res://Assets/Audio/AudioScenes/ship_enemy_explosion.tscn").instantiate()
 
 var show_debug: bool = false
-
 var bullet_scene = preload("res://Scenes/enemy_laser.tscn")
-
 var player: Node2D
 
 func setup(config: Dictionary):
 	speed = config.get("speed", 250.0)
-	print(config)
+	_log_message(config)
 	$ShootTimer.wait_time = config.get("shoot_timerate", 0.2)
 	
 func _ready() -> void:
@@ -46,6 +39,12 @@ func _ready() -> void:
 	hitbox.hit.connect(_on_hit)
 	var tween = create_tween()
 	tween.tween_property(self, "scale", Vector2(2.5, 2.5), 0.2).from(Vector2.ZERO)
+	
+func _log_message(args: Dictionary):
+	if GameManager.is_debug_text == true:
+		print(args)
+	else:
+		return
 	
 func _physics_process(delta: float) -> void:
 	if not is_instance_valid(player):

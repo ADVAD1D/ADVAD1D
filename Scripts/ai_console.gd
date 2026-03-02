@@ -107,12 +107,26 @@ func add_message(sender: String, message: String, color: String, animate: bool =
 func _on_scroll_button_toggled(button_pressed_state: bool):
 	GameManager.is_scroll_active = button_pressed_state
 	chat_display.scroll_following = button_pressed_state
-	print("Estado de la barra de scroll", button_pressed_state)
+	_log_message(["Estado de la barra de scroll", button_pressed_state])
 	GameManager.save_data()
 	
 	if button_pressed_state == true:
 		var v_scrollbar = chat_display.get_v_scroll_bar()
 		v_scrollbar.value = v_scrollbar.max_value
+		
+func _log_message(message):
+	if GameManager.is_debug_text == true:
+		var final_string = ""
+		if typeof(message) == TYPE_ARRAY:
+			for arg in message:
+				final_string += str(arg) + " "
+			final_string = final_string.strip_edges()
+		else:
+			final_string = str(message)
+		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
+	else:
+		return
+
 	
 func _on_scroll_button_pressed():
 	button_sound.play()

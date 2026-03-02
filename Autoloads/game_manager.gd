@@ -13,6 +13,7 @@ var is_shader_animation: bool = false
 var is_glitch_sound: bool = false
 var game_paused: bool = false
 var can_pause: bool = true
+var is_debug_text : bool = false
 var debug_response_text_active: bool = false
 var ai_last_response: String = ""
 var is_scroll_active: bool = false
@@ -234,7 +235,7 @@ func _process(_delta: float) -> void:
 	
 func save_data():
 	if browser_support == true:
-		print("Web version: using default values")
+		_log_message("Web version: using default values")
 		return
 		
 	var data: Dictionary = {
@@ -245,20 +246,20 @@ func save_data():
 	#create the file in path
 	var file = FileAccess.open(save_path, FileAccess.WRITE)
 	if file == null:
-		print("Error al guardar los datos", FileAccess.get_open_error())
+		_log_message(["Error al guardar los datos", FileAccess.get_open_error()])
 		return
 	#convert the dict to json text
 	var json_string = JSON.stringify(data)
 	file.store_string(json_string)
-	print("saved game!, selected skin", selected_ship_index)
+	_log_message(["saved game!, selected skin", selected_ship_index])
 	
 func load_data():
 	if browser_support == true:
-		print("Web version: using default values")
+		_log_message("Web version: using default values")
 		return
 		
 	if not FileAccess.file_exists(save_path):
-		print("The save file not exists, using default values")
+		_log_message("The save file not exists, using default values")
 		return
 		
 	var file = FileAccess.open(save_path, FileAccess.READ)
@@ -267,15 +268,15 @@ func load_data():
 	
 	if data and "selected_ship" in data:
 		selected_ship_index = int(data["selected_ship"])
-		print("Loaded data, selected ship", selected_ship_index)
+		_log_message(["Loaded data, selected ship", selected_ship_index])
 		
 	if data and "controls_mode" in data:
 		relative_control_active = bool(data["controls_mode"])
-		print("loaded controls user config: ", relative_control_active)
+		_log_message(["loaded controls user config: ", relative_control_active])
 		
 	if data and "scroll_bar_state" in data:
 		is_scroll_active = bool(data["scroll_bar_state"])
-		print("loaded scrollbar state user config: ", is_scroll_active)
+		_log_message(["loaded scrollbar state user config: ", is_scroll_active])
 	
 func select_next_ship():
 	selected_ship_index += 1
@@ -319,6 +320,19 @@ func reset_score() -> void:
 	can_add_score = true
 	score_updated.emit(score)
 	
+func _log_message(message):
+	if is_debug_text == true:
+		var final_string = ""
+		if typeof(message) == TYPE_ARRAY:
+			for arg in message:
+				final_string += str(arg) + " "
+			final_string = final_string.strip_edges()
+		else:
+			final_string = str(message)
+		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
+	else:
+		return
+	
 func play_glitch_effect(crt_material):
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN_OUT)
@@ -340,6 +354,6 @@ func play_glitch_sound(glitch_sound):
 	glitch_sound.play()
 	
 func reset_game_state():
-	print("Game Manager: Reseteando el estado del juego")
+	_log_message("Game Manager: Reseteando el estado del juego")
 	phase_to_start = 1
 	reset_score()

@@ -60,17 +60,17 @@ func _log_dev(message: String, respose_code: int) -> void:
 
 func wake_up_server():
 	if BASE_URL == "":
-		print("API SERVICE: URL NOT FOUND IN THE CONSTANT")
+		_log_message("API SERVICE: URL NOT FOUND IN THE CONSTANT")
 		return
 		
-	print("API SERVICE, TRY CALL SERVER!")
+	_log_message("API SERVICE, TRY CALL SERVER!")
 	var response = _ping_http.request(BASE_URL)
 	if response != OK:
-		print("LOCAL ERROR TO CONNECT SERVER")
+		_log_message("LOCAL ERROR TO CONNECT SERVER")
 		
 func ask_godot_ai(prompt: String):
 	if BASE_URL.strip_edges().is_empty():
-		print("API SERVICE: ERROR. URL IS EMPTY")
+		_log_message("API SERVICE: ERROR. URL IS EMPTY")
 		request_failed.emit("API SERVICE: ERROR. URL IS EMPTY")
 		return
 		
@@ -79,13 +79,13 @@ func ask_godot_ai(prompt: String):
 		return
 		
 	if _ai_http.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
-		print("API SERVICE: Peticion ignorada, ya hay una en curso")
+		_log_message("API SERVICE: Peticion ignorada, ya hay una en curso")
 		return
 		
 	var body = JSON.stringify({"prompt": prompt})
 	var url = BASE_URL + "/askai"
 	
-	print("API SERVICE: SEND PROMPT")
+	_log_message("API SERVICE: SEND PROMPT")
 	
 	var response = _ai_http.request(url, headers, HTTPClient.METHOD_POST, body)
 	
@@ -95,11 +95,11 @@ func ask_godot_ai(prompt: String):
 #response managment (private)
 func _on_ping_completed(result, response_code, _headers, _body):
 	if result != HTTPRequest.RESULT_SUCCESS:
-		print("PING CAIDO: SIN CONEXIÓN O SERVIDOR CAÍDO")
+		_log_message("PING CAIDO: SIN CONEXIÓN O SERVIDOR CAÍDO")
 		server_status_checked.emit(false)
 		return
 	if response_code == 200:
-		print("SERVER WAKE AND READY!")
+		_log_message("SERVER WAKE AND READY!")
 		server_status_checked.emit(true)
 	else:
 		_log_dev("THE SERVER RESPONSE WITH AN ERROR", response_code)
@@ -132,7 +132,7 @@ func _on_ai_completed(result, response_code, _headers, body):
 			
 		if response_code == 200:
 			if "response" in data and debug_response_text_active == true:
-				print("TEXTO CRUDO: ", data["response"])
+				_log_message(["TEXTO CRUDO: ", data["response"]])
 			if "response" in data:
 				ai_response_received.emit(data["response"])
 			else:
@@ -147,3 +147,16 @@ func _on_ai_completed(result, response_code, _headers, body):
 	else:
 		request_failed.emit("CRITIC ERROR, THE RESPONSE IS NOT A VALID JSON ")
 		_log_dev("CRITIC ERROR, THE RESPONSE IS NOT A VALID JSON ", response_code)
+		
+func _log_message(message):
+	if GameManager.is_debug_text == true:
+		var final_string = ""
+		if typeof(message) == TYPE_ARRAY:
+			for arg in message:
+				final_string += str(arg) + " "
+			final_string = final_string.strip_edges()
+		else:
+			final_string = str(message)
+		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
+	else:
+		return

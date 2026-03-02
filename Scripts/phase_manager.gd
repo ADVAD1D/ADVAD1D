@@ -72,7 +72,7 @@ var restart_from_phase: bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	print("phase manager listo a ejecutarse")
+	_log_message("phase manager listo a ejecutarse")
 	GameManager.score_updated.connect(_on_score_updated)
 	code_label.modulate.a = 0.0
 	
@@ -114,7 +114,7 @@ func start_new_phase():
 	current_phase = current_phase + 1
 	#yes, i don't use elifs
 	if not phase_requirements.has(current_phase):
-		print("has ganado las fases")
+		_log_message("has ganado las fases")
 		phase_label.text = "ARENA WIN"
 		var codelabel_tween = create_tween()
 		
@@ -141,7 +141,7 @@ func start_new_phase():
 			
 		return
 		
-	print("--- Empezando Fase ", current_phase, " ---")	
+	_log_message(["--- Empezando Fase ---", current_phase])
 	GameManager.reset_score()
 	
 	if is_instance_valid(phase_label):
@@ -161,13 +161,13 @@ func start_new_phase():
 	is_phase_active = true
 	
 func _on_score_updated(new_score: int):
-	print("Puntuación actualizada: ", new_score)
+	_log_message(["Puntuación actualizada: ", new_score])
 	if is_phase_active and new_score >= current_score_requirement:
 		_on_phase_success()
 		
 func _on_phase_success():
 	is_phase_active = false
-	print("fase", current_phase, "completada")
+	_log_message(["fase", current_phase, "completada"])
 	success_sound.play()
 	await clear_the_board()
 	GameManager.phase_to_start = current_phase + 1
@@ -175,7 +175,7 @@ func _on_phase_success():
 		
 func _on_phase_failure():
 	is_phase_active = false
-	print("TIEMPO AGOTADO. Reiniciando escena.")
+	_log_message("TIEMPO AGOTADO. Reiniciando escena.")
 	GameManager.stop_scoring()
 	
 	if is_instance_valid(player_node):
@@ -190,7 +190,7 @@ func _on_phase_failure():
 	get_tree().call_deferred("reload_current_scene")
 	
 func clear_the_board():
-	print("Limpiando el tablero")
+	_log_message("Limpiando el tablero")
 			
 	get_tree().call_group("saws", "die_silently")
 	get_tree().call_group("enemies", "die_silently")
@@ -200,7 +200,7 @@ func apply_difficulty():
 	
 	#sorry for the spanglish in the code
 	#dificultad para las naves
-	print("aplicando dificultad para la fase", current_phase, "progreso: ", progress)
+	_log_message(["aplicando dificultad para la fase", current_phase, "progreso: ", progress])
 	var ship_max_enemies = int(lerp(min_ship_enemies, max_ship_enemies, progress))
 	var ship_config = {"speed": lerp(250.0, 500.0, progress),
 					   "shoot_timerate": lerp(max_shoot_timerate, min_shoot_timerate, progress)} # Puedes añadir más stats
@@ -228,8 +228,21 @@ func fade_out_objective_label():
 	else:
 		objective_label.text = "> (ツ)"
 		
-	print("iniciando fade out de los labels")
+	_log_message("iniciando fade out de los labels")
 	var tween = create_tween()
 	if is_instance_valid(objective_label):
 		tween.tween_property(objective_label, "modulate:a", 0.0, 1.0)
 		tween.tween_callback(objective_label.queue_free)
+		
+func _log_message(message):
+	if GameManager.is_debug_text == true:
+		var final_string = ""
+		if typeof(message) == TYPE_ARRAY:
+			for arg in message:
+				final_string += str(arg) + " "
+			final_string = final_string.strip_edges()
+		else:
+			final_string = str(message)
+		print("[color=yellow][DEV LOG][/color] " + final_string)
+	else:
+		return

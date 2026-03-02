@@ -15,32 +15,38 @@ var move_direction: int = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	print(">>> ESTADO REAL DEL DEBUG AL INICIAR DRON: ", GameManager.is_debug_text)
 	# This code calculates and prints the progress_ratio for each control point of the parent Path2D.
 	# This is temporary and can be removed after noting down the values.
 	var path_node = get_parent()
 	if not path_node is Path2D:
-		print("Parent is not a Path2D node.")
+		_log_message("Parent is not a Path2D node.")
 		return
-
+		
 	var curve = path_node.curve
 	if not curve:
-		print("Path2D does not have a Curve2D resource.")
+		_log_message("Path2D does not have a Curve2D resource.")
 		return
 
 	var total_length = curve.get_baked_length()
 	if total_length == 0:
-		print("Curve has no length. Cannot calculate progress ratios.")
+		_log_message("Curve has no length. Cannot calculate progress ratios.")
 		return
 		
-	print("--- Progress Ratios for Path2D DRONE1 Control Points ---")
+	_log_message("--- Progress Ratios for Path2D DRONE1 Control Points ---")
 	for i in range(curve.get_point_count()):
 		var point_pos = curve.get_point_position(i)
 		var offset = curve.get_closest_offset(point_pos)
 		var ratio = offset / total_length
-		print("Point %d: progress_ratio = %f" % [i, ratio])
-	print("-------------------------------------------------")
+		_log_message("Point %d: progress_ratio = %f" % [i, ratio])
+	_log_message("-------------------------------------------------")
 
-
+func _log_message(message):
+	if GameManager.is_debug_text == true:
+		print("[color=yellow][DEV LOG][/color] " + str(message))
+	else:
+		return
+		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	progress += speed * move_direction * delta

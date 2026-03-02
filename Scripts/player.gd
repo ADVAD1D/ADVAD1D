@@ -223,7 +223,6 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 		die() # Replace with function body.
 
 func _on_hitbox_body_entered(body: Node2D) -> void:
-	print("Cuerpo detectado", body.name)
 	if body.is_in_group("enemigos"):
 		print("Es un enemigo")
 		die()
