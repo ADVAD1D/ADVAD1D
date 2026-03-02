@@ -243,6 +243,6 @@ func _log_message(message):
 			final_string = final_string.strip_edges()
 		else:
 			final_string = str(message)
-		print("[color=yellow][DEV LOG][/color] " + final_string)
+		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
 	else:
 		return

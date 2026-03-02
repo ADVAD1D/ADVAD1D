@@ -43,7 +43,7 @@ func _ready() -> void:
 
 func _log_message(message):
 	if GameManager.is_debug_text == true:
-		print("[color=yellow][DEV LOG][/color] " + str(message))
+		print_rich("[color=yellow][DEV LOG][/color] " + str(message))
 	else:
 		return
 		
