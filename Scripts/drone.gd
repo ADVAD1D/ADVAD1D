@@ -15,8 +15,7 @@ var move_direction: int = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	print(">>> ESTADO REAL DEL DEBUG AL INICIAR DRON: ", GameManager.is_debug_text)
-	# This code calculates and prints the progress_ratio for each control point of the parent Path2D.
+	# This script calculates and prints the progress_ratio for each control point of the parent Path2D.
 	# This is temporary and can be removed after noting down the values.
 	var path_node = get_parent()
 	if not path_node is Path2D:

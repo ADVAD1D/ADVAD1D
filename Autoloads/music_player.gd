@@ -38,7 +38,7 @@ var playlist = [
 	preload("res://Assets/Audio/Music/blue-light-district-397940.wav"),
 	preload("res://Assets/Audio/Music/the-fight-left-in-us-391531.wav"),
 	preload("res://Assets/Audio/Music/starstream-circuit-370586.wav"),
-	preload("res://Assets/Audio/Music/darkwave-dawn-371013.wav"),
+	preload("res://Assets/Audio/Music/psychronic-breakpoint-triumph-468746.ogg"),
 	preload("res://Assets/Audio/Music/ascending-data-418712.wav"),
 	preload("res://Assets/Audio/Music/digital-disconnect-454806.wav"),
 	preload("res://Assets/Audio/Music/particle-beam-438034.wav"),
@@ -127,7 +127,7 @@ func fade_out_and_stop(duration: float):
 	stop()
 	volume_db = 0.0 
 	is_fading = false
-	print("Música detenida.")
+	_log_message("Music Stopped.")
 	
 func increase_volume():
 	linear_volume = clamp(linear_volume + 0.05, min_linear_volume, 1.0)
