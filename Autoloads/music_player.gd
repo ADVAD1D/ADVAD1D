@@ -69,7 +69,7 @@ func _ready() -> void:
 	
 func _on_scene_changed():
 	var current_scene_path = get_tree().current_scene.scene_file_path
-	_log_message(["Escena actual: ", current_scene_path])
+	_log_message(["Actual Scene: ", current_scene_path])
 	
 	if scene1_specific_playlist.has(current_scene_path):
 		var specific_song = scene1_specific_playlist[current_scene_path]
@@ -79,7 +79,7 @@ func _on_scene_changed():
 			volume_db = linear_to_db(linear_volume)
 			play()
 			var specific_song_path = stream.resource_path.get_file()
-			_log_message(["reproduciendo tema específico: ", specific_song_path])
+			_log_message(["Playing specific track: ", specific_song_path])
 			
 	elif current_scene_path in no_music_scenes:
 		stop()
@@ -96,7 +96,7 @@ func play_next_shuffled_song():
 		return
 		
 	if shuffled_playlist.is_empty():
-		print("Playlist terminada. ¡Barajando de nuevo!")
+		_log_message("Playlist finished, shuffling again!")
 		shuffled_playlist = playlist.duplicate()
 		shuffled_playlist.shuffle()
 	
@@ -104,7 +104,8 @@ func play_next_shuffled_song():
 	volume_db = linear_to_db(linear_volume)
 	play()
 	_emit_volume_changed()
-	print("Ahora suena: ", stream.resource_path.get_file())
+	var next_shuffled_song = stream.resource_path.get_file()
+	_log_message(["Now sounds: ", next_shuffled_song])
 	
 func play_sfx(sound_resource: AudioStream):
 	if is_instance_valid(sfx_player) and sound_resource:
@@ -116,7 +117,7 @@ func fade_out_and_stop(duration: float):
 		return
 		
 	is_fading = true
-	print("iniciando fade out de la música...")
+	_log_message("Starting fade out of the music...")
 	
 	var tween = create_tween()
 	tween.tween_property(self, "volume_db", -80.0, duration)
