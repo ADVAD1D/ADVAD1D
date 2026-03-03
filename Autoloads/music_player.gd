@@ -69,7 +69,7 @@ func _ready() -> void:
 	
 func _on_scene_changed():
 	var current_scene_path = get_tree().current_scene.scene_file_path
-	print("Escena actual: ", get_tree().current_scene.scene_file_path)
+	_log_message(["Escena actual: ", current_scene_path])
 	
 	if scene1_specific_playlist.has(current_scene_path):
 		var specific_song = scene1_specific_playlist[current_scene_path]
@@ -78,7 +78,8 @@ func _on_scene_changed():
 			stream = specific_song
 			volume_db = linear_to_db(linear_volume)
 			play()
-			print("reproduciendo tema específico: ", stream.resource_path.get_file())
+			var specific_song_path = stream.resource_path.get_file()
+			_log_message(["reproduciendo tema específico: ", specific_song_path])
 			
 	elif current_scene_path in no_music_scenes:
 		stop()
@@ -142,3 +143,16 @@ func get_volume_percent() -> float:
 
 func _emit_volume_changed():
 	volume_changed.emit(get_volume_percent())
+	
+func _log_message(message):
+	if GameManager.is_debug_text == true:
+		var final_string = ""
+		if typeof(message) == TYPE_ARRAY:
+			for arg in message:
+				final_string += str(arg) + " "
+			final_string = final_string.strip_edges()
+		else:
+			final_string = str(message)
+		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
+	else:
+		return
