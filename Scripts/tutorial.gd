@@ -79,10 +79,10 @@ func _on_player_died() -> void:
 	
 func _on_tutorial_timer_timeout():
 	if player.player_died:
-		_log_message("el jugador está en proceso de morir, se cancela el cambio de escena")
+		_log_message("The player is in the process of dying; the scene change is cancelled.")
 		return
 		
-	_log_message("Tutorial terminado. Pasando a la escena principal...")
+	_log_message("Finished tutorial. Change to main scene...")
 	
 	MusicPlayer.play_sfx(transition_sound)
 	
@@ -97,6 +97,6 @@ func _input(event: InputEvent) -> void:
 		
 func _log_message(message):
 	if GameManager.is_debug_text == true:
-		print_rich(message)
+		print_rich("[color=yellow][DEV LOG][/color] " + message)
 	else:
 		return

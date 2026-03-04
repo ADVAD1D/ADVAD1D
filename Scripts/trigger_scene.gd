@@ -15,7 +15,7 @@ func _on_body_entered(body: Node2D):
 	if body.is_in_group("player"):
 		set_deferred("monitoring", false)
 		call_deferred("set", "process_mode", PROCESS_MODE_DISABLED)
-		_log_message(["¡Jugador detectado! Cambiando de escena a: ", target_scene_path])
+		_log_message(["¡Player detected! Change to Scene: ", target_scene_path])
 		
 		MusicPlayer.fade_out_and_stop(fade_duration)
 		
