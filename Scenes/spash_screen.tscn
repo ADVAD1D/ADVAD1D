@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bwuxvtyw1050"]
+[gd_scene format=3 uid="uid://bwuxvtyw1050"]
 
 [ext_resource type="Script" uid="uid://dmunocf1vd2ml" path="res://Scripts/splash_screen_control.gd" id="1_oj8hf"]
 [ext_resource type="Texture2D" uid="uid://bjsfs0nfbdwix" path="res://Images/Logo.png" id="1_wr7to"]
@@ -19,7 +19,7 @@ shader_parameter/roll_size = 10.000000475
 shader_parameter/roll_variation = 0.5
 shader_parameter/distort_intensity = 0.02
 shader_parameter/aberration = 0.01000004797499998
-shader_parameter/noise_opacity = 0.311
+shader_parameter/noise_opacity = 0.10000000475
 shader_parameter/noise_speed = 2.0
 shader_parameter/static_noise_intensity = 0.0
 shader_parameter/pixelate = false
@@ -29,7 +29,7 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.3
 shader_parameter/vignette_opacity = 1.0
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=45411008]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,7 +39,7 @@ grow_vertical = 2
 script = ExtResource("1_oj8hf")
 next_scene = ExtResource("2_og3r6")
 
-[node name="LogoSprite" type="TextureRect" parent="."]
+[node name="LogoSprite" type="TextureRect" parent="." unique_id=650258784]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -53,7 +53,7 @@ grow_vertical = 2
 scale = Vector2(0.07999998, 0.07999998)
 texture = ExtResource("1_wr7to")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1682071494]
 material = SubResource("ShaderMaterial_og3r6")
 layout_mode = 1
 anchors_preset = 15
