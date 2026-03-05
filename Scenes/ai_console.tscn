@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://dw6cbe0t2sfem" path="res://Scripts/ai_console.gd" id="2_i8r7y"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_imyuk"]
 [ext_resource type="Texture2D" uid="uid://d2tb0imyr1ebe" path="res://Assets/Sprites/lineeditbar.png" id="3_42n04"]
+[ext_resource type="Texture2D" uid="uid://r5kd276mo4px" path="res://Assets/Sprites/generalad.png" id="3_vch6u"]
 [ext_resource type="Texture2D" uid="uid://dmi1rtravlk8m" path="res://Assets/Sprites/lineeditfocus.png" id="4_fbo3q"]
 [ext_resource type="Texture2D" uid="uid://ccfh771cly6wp" path="res://Assets/Sprites/send_button.png" id="5_mj1bx"]
 [ext_resource type="Texture2D" uid="uid://bc241w2jom6bu" path="res://Assets/Sprites/exitbutton.png" id="6_4r3im"]
@@ -73,6 +74,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="GeneralAISprite" type="Sprite2D" parent="PanelContainer" unique_id=61090595]
+modulate = Color(1, 1, 1, 0.40784314)
+self_modulate = Color(1, 1, 1, 0.24705882)
+position = Vector2(261, 148)
+scale = Vector2(4.954223, 4.954223)
+texture = ExtResource("3_vch6u")
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=510324711]
 layout_mode = 2
