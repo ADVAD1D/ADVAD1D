@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cv6iiauo728sf"]
+[gd_scene format=3 uid="uid://cv6iiauo728sf"]
 
 [ext_resource type="Script" uid="uid://d4kx3oaxv3iob" path="res://Scripts/laser_shield.gd" id="1_55mif"]
 [ext_resource type="SpriteFrames" uid="uid://cji3knc7h5v1k" path="res://Assets/Resources/new_sprite_frames.tres" id="1_s1qjh"]
@@ -7,57 +7,57 @@
 [ext_resource type="AudioStream" uid="uid://c6g46xp8qj5n0" path="res://Assets/Audio/418194__deleted_user_3656686__hard-glass-impact.wav" id="3_qcbcn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_55mif"]
-size = Vector2(51.103004, 3.5972443)
+size = Vector2(48.736565, 11.49349)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qcbcn"]
-size = Vector2(51.105118, 3.732051)
+size = Vector2(49.203194, 11.267949)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jag7k"]
-size = Vector2(54, 3)
+size = Vector2(54, 6.5)
 
-[node name="LaserShield" type="Area2D" node_paths=PackedStringArray("animated_sprites", "duration_timer") groups=["player_shield"]]
+[node name="LaserShield" type="Area2D" unique_id=1468804651 node_paths=PackedStringArray("animated_sprites", "duration_timer") groups=["player_shield"]]
 script = ExtResource("1_55mif")
 animated_sprites = [NodePath("SpriteLine1"), NodePath("SpriteLine2"), NodePath("SpriteLine3")]
 duration_timer = NodePath("DurationTimer")
 laser_shield_particles = ExtResource("2_jag7k")
 shield_break_particles = ExtResource("3_ncsag")
 
-[node name="SpriteLine1" type="AnimatedSprite2D" parent="."]
+[node name="SpriteLine1" type="AnimatedSprite2D" parent="." unique_id=2075378766]
 position = Vector2(-14.000001, -4.9999995)
 rotation = -1.0471976
 scale = Vector2(1.1665982, 0.62589866)
 sprite_frames = ExtResource("1_s1qjh")
 
-[node name="CollisionLine1" type="CollisionShape2D" parent="."]
-position = Vector2(-13.890503, -4.9372916)
+[node name="CollisionLine1" type="CollisionShape2D" parent="." unique_id=1490800228]
+position = Vector2(-9.876429, -4.0019355)
 rotation = -1.0506883
 shape = SubResource("RectangleShape2D_55mif")
 
-[node name="SpriteLine2" type="AnimatedSprite2D" parent="."]
+[node name="SpriteLine2" type="AnimatedSprite2D" parent="." unique_id=14589620]
 position = Vector2(15.12894, -5.2407713)
 rotation = 1.0471976
 scale = Vector2(1.1592293, 0.60671896)
 sprite_frames = ExtResource("1_s1qjh")
 
-[node name="CollisionLine2" type="CollisionShape2D" parent="."]
-position = Vector2(14.316988, -5.183014)
+[node name="CollisionLine2" type="CollisionShape2D" parent="." unique_id=2049859391]
+position = Vector2(10.578367, -4.1225967)
 rotation = 1.0471976
 shape = SubResource("RectangleShape2D_qcbcn")
 
-[node name="SpriteLine3" type="AnimatedSprite2D" parent="."]
+[node name="SpriteLine3" type="AnimatedSprite2D" parent="." unique_id=38766979]
 position = Vector2(-4.7683716e-07, 18)
 scale = Vector2(1.2083333, 0.5416666)
 sprite_frames = ExtResource("1_s1qjh")
 
-[node name="CollisionLine3" type="CollisionShape2D" parent="."]
-position = Vector2(0, 18)
+[node name="CollisionLine3" type="CollisionShape2D" parent="." unique_id=1636121182]
+position = Vector2(0, 16.25)
 shape = SubResource("RectangleShape2D_jag7k")
 
-[node name="DurationTimer" type="Timer" parent="."]
+[node name="DurationTimer" type="Timer" parent="." unique_id=1814349466]
 wait_time = 5.0
 one_shot = true
 
-[node name="BreakSound" type="AudioStreamPlayer2D" parent="."]
+[node name="BreakSound" type="AudioStreamPlayer2D" parent="." unique_id=716489702]
 stream = ExtResource("3_qcbcn")
 volume_db = -6.0
 pitch_scale = 0.8
