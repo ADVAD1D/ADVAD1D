@@ -386,6 +386,7 @@ func _on_quit_button_pressed():
 func toggle_show(is_paused : bool) -> void :
 	if is_paused:
 		show()
+		unpause_button.grab_focus()
 	else:
 		hide()
 
@@ -393,6 +394,12 @@ func _on_un_pause_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
 
 func _on_quit_button_mouse_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_quit_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_un_pause_button_focus_entered() -> void:
 	button_sound.play() # Replace with function body.
 "
 
@@ -913,6 +920,7 @@ grow_vertical = 0
 scale = Vector2(2.559999, 2.8400002)
 texture_normal = ExtResource("13_hdf80")
 texture_hover = ExtResource("14_jwpg7")
+texture_focused = ExtResource("14_jwpg7")
 
 [node name="QuitButton" type="TextureButton" parent="PauseMenu/Control/ColorRect" unique_id=2146562000]
 unique_name_in_owner = true
@@ -924,6 +932,7 @@ offset_bottom = 178.3125
 scale = Vector2(2.5600014, 2.5600014)
 texture_normal = ExtResource("15_k2e45")
 texture_hover = ExtResource("16_536cc")
+texture_focused = ExtResource("16_536cc")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PauseMenu" unique_id=1163637213]
 anchors_preset = 8
@@ -1121,5 +1130,7 @@ position = Vector2(-17, 4436)
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]
 [connection signal="area_entered" from="LaserZone" to="." method="_on_laser_zone_area_entered"]
+[connection signal="focus_entered" from="PauseMenu/Control/ColorRect/unPauseButton" to="PauseMenu" method="_on_un_pause_button_focus_entered"]
 [connection signal="mouse_entered" from="PauseMenu/Control/ColorRect/unPauseButton" to="PauseMenu" method="_on_un_pause_button_mouse_entered"]
+[connection signal="focus_entered" from="PauseMenu/Control/ColorRect/QuitButton" to="PauseMenu" method="_on_quit_button_focus_entered"]
 [connection signal="mouse_entered" from="PauseMenu/Control/ColorRect/QuitButton" to="PauseMenu" method="_on_quit_button_mouse_entered"]
