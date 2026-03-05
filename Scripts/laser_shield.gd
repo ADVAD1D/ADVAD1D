@@ -22,7 +22,7 @@ func _on_timeout():
 	
 	if shield_break_particles:
 		var explosion = shield_break_particles.instantiate()
-		get_parent().add_child(explosion)
+		get_parent().add_sibling(explosion)
 		explosion.global_position = global_position
 		
 	metal_sound.play()
