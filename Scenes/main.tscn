@@ -401,6 +401,18 @@ func _on_quit_button_focus_entered() -> void:
 
 func _on_un_pause_button_focus_entered() -> void:
 	button_sound.play() # Replace with function body.
+
+func _on_decrease_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_increase_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_decrease_button_sfx_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_increase_button_sfx_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
 "
 
 [sub_resource type="LabelSettings" id="LabelSettings_hdf80"]
@@ -960,6 +972,7 @@ layout_mode = 2
 texture_normal = ExtResource("15_hpc6h")
 texture_pressed = ExtResource("16_e08e2")
 texture_hover = ExtResource("16_kltya")
+texture_focused = ExtResource("16_e08e2")
 
 [node name="VolumenPercentage" type="Label" parent="PauseMenu/HBoxContainer" unique_id=1808231053]
 unique_name_in_owner = true
@@ -974,6 +987,7 @@ layout_mode = 2
 texture_normal = ExtResource("18_neg2b")
 texture_pressed = ExtResource("20_neg2b")
 texture_hover = ExtResource("19_r33sp")
+texture_focused = ExtResource("20_neg2b")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="PauseMenu" unique_id=814914990]
 anchors_preset = 8
@@ -1001,6 +1015,7 @@ layout_mode = 2
 texture_normal = ExtResource("15_hpc6h")
 texture_pressed = ExtResource("16_e08e2")
 texture_hover = ExtResource("16_kltya")
+texture_focused = ExtResource("16_e08e2")
 
 [node name="VolumenPercentageSFX" type="Label" parent="PauseMenu/HBoxContainer2" unique_id=351830055]
 unique_name_in_owner = true
@@ -1015,6 +1030,7 @@ layout_mode = 2
 texture_normal = ExtResource("18_neg2b")
 texture_pressed = ExtResource("20_neg2b")
 texture_hover = ExtResource("19_r33sp")
+texture_focused = ExtResource("20_neg2b")
 
 [node name="ColorRect" type="ColorRect" parent="PauseMenu" unique_id=259713460]
 material = SubResource("ShaderMaterial_344ge")
@@ -1134,3 +1150,7 @@ position = Vector2(-17, 4436)
 [connection signal="mouse_entered" from="PauseMenu/Control/ColorRect/unPauseButton" to="PauseMenu" method="_on_un_pause_button_mouse_entered"]
 [connection signal="focus_entered" from="PauseMenu/Control/ColorRect/QuitButton" to="PauseMenu" method="_on_quit_button_focus_entered"]
 [connection signal="mouse_entered" from="PauseMenu/Control/ColorRect/QuitButton" to="PauseMenu" method="_on_quit_button_mouse_entered"]
+[connection signal="focus_entered" from="PauseMenu/HBoxContainer/DecreaseButton" to="PauseMenu" method="_on_decrease_button_focus_entered"]
+[connection signal="focus_entered" from="PauseMenu/HBoxContainer/IncreaseButton" to="PauseMenu" method="_on_increase_button_focus_entered"]
+[connection signal="focus_entered" from="PauseMenu/HBoxContainer2/DecreaseButtonSFX" to="PauseMenu" method="_on_decrease_button_sfx_focus_entered"]
+[connection signal="focus_entered" from="PauseMenu/HBoxContainer2/IncreaseButtonSFX" to="PauseMenu" method="_on_increase_button_sfx_focus_entered"]

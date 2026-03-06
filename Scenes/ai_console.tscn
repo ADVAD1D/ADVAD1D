@@ -78,8 +78,8 @@ grow_vertical = 2
 [node name="GeneralAISprite" type="Sprite2D" parent="PanelContainer" unique_id=61090595]
 modulate = Color(1, 1, 1, 0.40784314)
 self_modulate = Color(1, 1, 1, 0.24705882)
-position = Vector2(260.00003, 136)
-scale = Vector2(5.3609757, 5.3609757)
+position = Vector2(263, 137)
+scale = Vector2(4.778921, 4.778921)
 texture = ExtResource("3_vch6u")
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=510324711]
