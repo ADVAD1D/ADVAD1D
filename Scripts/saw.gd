@@ -23,8 +23,11 @@ func _ready() -> void:
 	player = get_tree().get_first_node_in_group("player")
 	rotation_speed = randf_range(1400.0, 1600.0)
 	speed = randf_range(900.0, 1000.0)
+	
+	scale = Vector2.ZERO
 	var tween = create_tween()
-	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.2).from(Vector2.ZERO)
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)
+	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.2)
 
 func _physics_process(delta: float) -> void:
 	rotation_degrees += rotation_speed * delta

@@ -37,8 +37,11 @@ func setup(config: Dictionary):
 func _ready() -> void:
 	player = get_tree().get_first_node_in_group("player")
 	hitbox.hit.connect(_on_hit)
+	
+	scale = Vector2.ZERO
 	var tween = create_tween()
-	tween.tween_property(self, "scale", Vector2(2.5, 2.5), 0.2).from(Vector2.ZERO)
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)
+	tween.tween_property(self, "scale", Vector2(2.5, 2.5), 0.2)
 	
 func _log_message(args: Dictionary):
 	if GameManager.is_debug_text == true:

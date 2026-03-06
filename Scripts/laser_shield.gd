@@ -12,8 +12,11 @@ func _ready() -> void: # Replace with function body.
 	duration_timer.timeout.connect(_on_timeout)
 	duration_timer.start()
 	area_entered.connect(_on_area_entered)
+	
+	scale = Vector2.ZERO
 	var tween = create_tween()
-	tween.tween_property(self, "scale", Vector2(1.5, 1.5), spawn_time).from(Vector2.ZERO)
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)
+	tween.tween_property(self, "scale", Vector2(1.5, 1.5), spawn_time)
 	
 func _on_timeout():
 	set_deferred("monitoring", false)

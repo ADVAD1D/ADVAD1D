@@ -9,7 +9,8 @@ var direction: Vector2
 func _ready() -> void:
 	speed = randf_range(500.0, 1000.0)
 	scale = Vector2.ZERO
-	var tween = get_tree().create_tween()
+	var tween = create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)
 	tween.tween_property(self, "scale", Vector2(1.5, 1.5), 0.2)
 	
 func start(target_position):
