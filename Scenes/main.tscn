@@ -942,6 +942,7 @@ offset_top = 158.0
 offset_right = 249.00002
 offset_bottom = 178.3125
 scale = Vector2(2.5600014, 2.5600014)
+focus_next = NodePath("../../../HBoxContainer/DecreaseButton")
 texture_normal = ExtResource("15_k2e45")
 texture_hover = ExtResource("16_536cc")
 texture_focused = ExtResource("16_536cc")
@@ -969,6 +970,7 @@ texture = ExtResource("15_neg2b")
 [node name="DecreaseButton" type="TextureButton" parent="PauseMenu/HBoxContainer" unique_id=518945585]
 unique_name_in_owner = true
 layout_mode = 2
+focus_next = NodePath("../IncreaseButton")
 texture_normal = ExtResource("15_hpc6h")
 texture_pressed = ExtResource("16_e08e2")
 texture_hover = ExtResource("16_kltya")
@@ -984,6 +986,7 @@ label_settings = SubResource("LabelSettings_hdf80")
 [node name="IncreaseButton" type="TextureButton" parent="PauseMenu/HBoxContainer" unique_id=1659881865]
 unique_name_in_owner = true
 layout_mode = 2
+focus_next = NodePath("../../HBoxContainer2/DecreaseButtonSFX")
 texture_normal = ExtResource("18_neg2b")
 texture_pressed = ExtResource("20_neg2b")
 texture_hover = ExtResource("19_r33sp")
@@ -1012,6 +1015,7 @@ texture = ExtResource("23_hdf80")
 [node name="DecreaseButtonSFX" type="TextureButton" parent="PauseMenu/HBoxContainer2" unique_id=1430830860]
 unique_name_in_owner = true
 layout_mode = 2
+focus_next = NodePath("../IncreaseButtonSFX")
 texture_normal = ExtResource("15_hpc6h")
 texture_pressed = ExtResource("16_e08e2")
 texture_hover = ExtResource("16_kltya")
@@ -1027,6 +1031,7 @@ label_settings = SubResource("LabelSettings_hdf80")
 [node name="IncreaseButtonSFX" type="TextureButton" parent="PauseMenu/HBoxContainer2" unique_id=991014861]
 unique_name_in_owner = true
 layout_mode = 2
+focus_next = NodePath("../../Control/ColorRect/unPauseButton")
 texture_normal = ExtResource("18_neg2b")
 texture_pressed = ExtResource("20_neg2b")
 texture_hover = ExtResource("19_r33sp")
