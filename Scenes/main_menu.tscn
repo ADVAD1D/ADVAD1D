@@ -176,6 +176,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
+focus_next = NodePath("VBoxContainer/PlayButton")
 script = ExtResource("1_ce3w2")
 next_scene = ExtResource("2_trj04")
 skin_selector_scene = ExtResource("3_5n0dv")
