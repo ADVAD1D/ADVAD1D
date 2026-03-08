@@ -42,7 +42,7 @@ func _ready() -> void:
 	var player_score = GameManager.score
 	sprite.texture = GameManager.get_selected_ship_texture()
 	main_camera = get_viewport().get_camera_2d()
-	print(player_score)
+	_log_message(player_score)
 
 func _physics_process(delta: float) -> void:
 	if player_died:
@@ -226,3 +226,16 @@ func _on_hitbox_body_entered(body: Node2D) -> void:
 	if body.is_in_group("enemigos"):
 		print("Es un enemigo")
 		die()
+		
+func _log_message(message):
+	if GameManager.is_debug_text == true:
+		var final_string = ""
+		if typeof(message) == TYPE_ARRAY:
+			for arg in message:
+				final_string += str(arg) + " "
+			final_string = final_string.strip_edges()
+		else:
+			final_string = str(message)
+		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
+	else:
+		return
