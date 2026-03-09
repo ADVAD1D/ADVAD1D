@@ -13,6 +13,7 @@ extends CharacterBody2D
 @export var dash_particles: PackedScene
 
 #resources
+@onready var player_collider = $CollisionShape2D
 @onready var lsrsound: AudioStreamPlayer2D = $Lasersnd
 @onready var dash_sound: AudioStreamPlayer2D = $Dashsnd
 @onready var engine_trail: GPUParticles2D = $EngineTrail
@@ -27,7 +28,6 @@ signal died
 signal dash(direction: Vector2)
 
 #init script variables
-var show_debug: bool = false
 var laser_scene = preload("res://Scenes/laser.tscn")
 var can_shoot: bool = true
 var player_died: bool = false
@@ -109,13 +109,13 @@ func _physics_process(delta: float) -> void:
 	engine_trail.emitting = is_moving
 		
 	if velocity != Vector2.ZERO:
-		var collision = move_and_collide(velocity * delta)
+		var collision = move_and_slide()
 		
 		if collision:
 			velocity = Vector2.ZERO
 			
 	if Input.is_action_just_pressed("debug"):
-		show_debug = not show_debug
+		GameManager.show_debug = not GameManager.show_debug
 		queue_redraw()
 		
 func can_start_dash(direction: Vector2) -> bool:
@@ -157,24 +157,21 @@ func do_dash(direction: Vector2):
 	tween.tween_property(sprite, "modulate", Color(2, 2, 2, 1), 0.4).set_ease(Tween.EASE_OUT)
 	tween.tween_property(sprite, "modulate", Color.WHITE, 0.3).set_ease(Tween.EASE_IN)
 	
-	hitbox_collider.disabled = true
+	hitbox_collider.set_deferred("disabled", true)
 	await get_tree().create_timer(dash_duration).timeout
 	
 	is_dashing = false
 	
-	hitbox_collider.disabled = false
-	
+	hitbox_collider.set_deferred("disabled", false)
 	await get_tree().create_timer(dash_cooldown).timeout
 	can_dash = true
 
-
-"""	
 func _draw() -> void:
-	
-	if not show_debug:
+	if not GameManager.show_debug:
 		return
 	
-	if show_debug:
+	if GameManager.show_debug == true:
+		_log_message("DEBUG TRAIL AND SAFE RADIUS ACTIVATE")
 		var circle_color = Color.AQUAMARINE
 		circle_color.a = 0.3
 		draw_circle(Vector2.ZERO, safe_radius, circle_color)
@@ -189,7 +186,6 @@ func _draw() -> void:
 					draw_circle(Vector2.ZERO, collider.shape.radius, Color.RED)
 				elif collider.shape is RectangleShape2D:
 					draw_rect(Rect2(-collider.shape.size / 2, collider.shape.size), Color.RED, false, 2.0)
-"""
 
 func die():
 	if player_died:
@@ -213,7 +209,7 @@ func _perform_death_effects():
 		ship_exp_instance.position = position
 		
 	hide()
-	$CollisionShape2D.set_deferred("disabled", true)
+	player_collider.set_deferred("disabled", true)
 	
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("asteroides") or area.is_in_group("enemy_laser") or area.is_in_group("saws"):
@@ -224,7 +220,7 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 
 func _on_hitbox_body_entered(body: Node2D) -> void:
 	if body.is_in_group("enemigos"):
-		print("Es un enemigo")
+		_log_message("Es un enemigo")
 		die()
 		
 func _log_message(message):

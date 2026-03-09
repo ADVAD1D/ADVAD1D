@@ -13,6 +13,7 @@ var is_shader_animation: bool = false
 var is_glitch_sound: bool = false
 var game_paused: bool = false
 var can_pause: bool = true
+var show_debug: bool = false
 var is_debug_text : bool = false
 var debug_response_text_active: bool = false
 var ai_last_response: String = ""
