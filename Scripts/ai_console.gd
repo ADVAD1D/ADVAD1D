@@ -13,6 +13,7 @@ var current_text_lenght: int = 0
 @onready var button_sound: AudioStreamPlayer = $ButtonSound
 @onready var typing_sound: AudioStreamPlayer = $TypingSound
 
+#box containers nodes
 @onready var chat_display: RichTextLabel = $PanelContainer/MarginContainer/VBoxContainer/RichTextLabel
 @onready var input_field: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/LineEdit
 @onready var send_button: Button = $PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Button
@@ -141,4 +142,13 @@ func _on_button_mouse_entered() -> void:
 	back_sound.play() # Replace with function body.
 
 func _on_scroll_bar_button_mouse_entered() -> void:
+	back_sound.play() # Replace with function body.
+
+func _on_scroll_bar_button_focus_entered() -> void:
+	back_sound.play() # Replace with function body.
+
+func _on_back_button_focus_entered() -> void:
+	back_sound.play() # Replace with function body.
+
+func _on_button_focus_entered() -> void:
 	back_sound.play() # Replace with function body.

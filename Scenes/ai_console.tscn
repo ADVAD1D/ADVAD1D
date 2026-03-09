@@ -168,7 +168,10 @@ texture_normal = ExtResource("13_7w1m1")
 texture_hover = ExtResource("14_wmfkg")
 texture_focused = ExtResource("14_wmfkg")
 
+[connection signal="focus_entered" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_button_focus_entered"]
 [connection signal="mouse_entered" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_button_mouse_entered"]
+[connection signal="focus_entered" from="BackButton" to="." method="_on_back_button_focus_entered"]
 [connection signal="mouse_entered" from="BackButton" to="." method="_on_back_button_mouse_entered"]
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="focus_entered" from="ScrollBarButton" to="." method="_on_scroll_bar_button_focus_entered"]
 [connection signal="mouse_entered" from="ScrollBarButton" to="." method="_on_scroll_bar_button_mouse_entered"]
