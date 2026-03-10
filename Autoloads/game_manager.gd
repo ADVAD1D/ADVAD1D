@@ -23,6 +23,9 @@ var production_server_active = true
 var browser_support: bool = false
 var admin_control: bool = false
 var relative_control_active: bool = false
+var speedrun_mode_active: bool = false
+var is_speedrun_running: bool = false
+var speedrun_time: float = 0.0
 
 var fps: float = 0.0
 
@@ -223,6 +226,12 @@ var ship_data = [
 		"name": "ship32",
 		"author": "Kodomo",
 		"texture": preload("res://Assets/Sprites/Ships/ship32.png")
+	},
+	
+	{
+		"name": "ship33",
+		"author": "RobloxIris",
+		"texture": preload("res://Assets/Sprites/Ships/ship33.png")
 	}
 ]
 
@@ -237,9 +246,31 @@ func _ready() -> void:
 		Network.wake_up_server()
 	load_data()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	fps = Engine.get_frames_per_second()
+	if speedrun_mode_active and is_speedrun_running:
+		speedrun_time += delta
+		
+#speedrun functions
+func start_speedrun():
+	if speedrun_mode_active:
+		is_speedrun_running = true
+		
+func stop_speedrun():
+	is_speedrun_running = false
 	
+func reset_speedrun():
+	speedrun_time = 0.0
+	is_speedrun_running = false
+	
+func get_formatted_speedrun_time() -> String:
+	@warning_ignore("integer_division")
+	var minutes = int(speedrun_time) / 60
+	var seconds = int(speedrun_time) % 60
+	var milliseconds = int((speedrun_time - int(speedrun_time)) * 1000)
+	return "%02d:%02d.%03d" % [minutes, seconds, milliseconds]
+	
+#save and load data functions
 func save_data():
 	if browser_support == true:
 		_log_message("Web version: using default values")
@@ -248,6 +279,7 @@ func save_data():
 	var data: Dictionary = {
 		"selected_ship": selected_ship_index,
 		"controls_mode": relative_control_active,
+		"speedrun_mode_state": speedrun_mode_active,
 		"scroll_bar_state": is_scroll_active
 	}
 	#create the file in path
@@ -284,6 +316,10 @@ func load_data():
 	if data and "scroll_bar_state" in data:
 		is_scroll_active = bool(data["scroll_bar_state"])
 		_log_message(["loaded scrollbar state user config: ", is_scroll_active])
+		
+	if data and "speedrun_mode_state" in data:
+		speedrun_mode_active = bool(data["speedrun_mode_state"])
+		_log_message(["loaded speedrun mode state user config: ", speedrun_mode_active])
 	
 func select_next_ship():
 	selected_ship_index += 1
@@ -339,7 +375,8 @@ func _log_message(message):
 		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
 	else:
 		return
-	
+
+#global shader animation (apply to scenes)
 func play_glitch_effect(crt_material):
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN_OUT)

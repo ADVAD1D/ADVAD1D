@@ -23,6 +23,7 @@ extends Control
 @onready var fullscreen_button: TextureButton = $FullScreenButton
 @onready var skin_selector_button: TextureButton = $SkinSelectorButton
 @onready var chat_console_button: TextureButton = $ChatConsoleButton
+@onready var speedrun_button: TextureButton = $SpeedrunButton
 
 @onready var relative_label: Label = $RelativeLabel
 @onready var global_label: Label = $GlobalLabel
@@ -34,6 +35,7 @@ var feedback_label_lifetime: float = 2.0
 
 func _ready() -> void:
 	GameManager.can_pause = false
+	GameManager.reset_speedrun()
 	play_button.pressed.connect(_on_play_button_pressed)
 	quit_button.pressed.connect(_on_quit_button_pressed)
 	fullscreen_button.toggled.connect(_on_fullscreen_toggled)
@@ -46,6 +48,7 @@ func _ready() -> void:
 	
 	controls_button.pressed.connect(_on_controls_button_pressed)
 	controls_button.set_pressed_no_signal(GameManager.relative_control_active)
+	speedrun_button.set_pressed_no_signal(GameManager.speedrun_mode_active)
 	controls_button.toggled.connect(_on_controls_toggled)
 	
 	global_label.visible = false
@@ -189,4 +192,15 @@ func _on_chat_console_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
 
 func _on_chat_console_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_speedrun_button_toggled(button_pressed_state: bool) -> void:
+	GameManager.speedrun_mode_active = button_pressed_state # Replace with function body.
+	back_sound.play()
+	GameManager.save_data()
+
+func _on_speedrun_button_mouse_entered() -> void:
+	button_sound.play() # Replace with function body.
+
+func _on_speedrun_button_focus_entered() -> void:
 	button_sound.play() # Replace with function body.

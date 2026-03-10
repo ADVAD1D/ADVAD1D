@@ -163,3 +163,13 @@ step = 0.1
 texture_under = ExtResource("7_qdh5o")
 texture_over = ExtResource("8_cna6x")
 texture_progress = ExtResource("9_fqivn")
+
+[node name="SpeedrunLabel" type="Label" parent="." unique_id=289617577]
+layout_mode = 0
+offset_left = 267.00003
+offset_top = 243.00002
+offset_right = 317.00003
+offset_bottom = 266.0
+scale = Vector2(0.88638556, 0.88638556)
+text = "00:00:00"
+label_settings = ExtResource("1_sprlj")

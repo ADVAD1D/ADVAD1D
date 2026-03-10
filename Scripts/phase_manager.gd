@@ -72,8 +72,11 @@ var restart_from_phase: bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	_log_message("phase manager listo a ejecutarse")
 	GameManager.score_updated.connect(_on_score_updated)
+	if GameManager.speedrun_mode_active:
+		GameManager.start_speedrun()
+	_log_message("Phase manager ready to execute")
+	_log_message("Speedrun timer started!")
 	code_label.modulate.a = 0.0
 	
 	if relative_control_active == true:
@@ -116,6 +119,8 @@ func start_new_phase():
 	if not phase_requirements.has(current_phase):
 		_log_message("has ganado las fases")
 		phase_label.text = "ARENA WIN"
+		if GameManager.is_speedrun_running:
+			GameManager.stop_speedrun()
 		var codelabel_tween = create_tween()
 		
 		# (object, property, final value, duration)

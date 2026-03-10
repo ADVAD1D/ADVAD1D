@@ -59,7 +59,7 @@ func spawn_enemy():
 	
 func stop():
 	is_active = false
-	print("Spawner de naves enemigas detenido")
+	_log_message("Ship enemies spawner STOPEED")
 	
 func _on_enemy_died(_enemy_reference):
 	
@@ -70,3 +70,16 @@ func _on_enemy_died(_enemy_reference):
 	current_enemy_count -= 1
 	await get_tree().create_timer(spawn_timeout).timeout
 	spawn_enemy()
+
+func _log_message(message):
+	if GameManager.is_debug_text == true:
+		var final_string = ""
+		if typeof(message) == TYPE_ARRAY:
+			for arg in message:
+				final_string += str(arg) + " "
+			final_string = final_string.strip_edges()
+		else:
+			final_string = str(message)
+		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
+	else:
+		return

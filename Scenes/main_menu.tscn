@@ -34,6 +34,8 @@
 [ext_resource type="Texture2D" uid="uid://bjv5mqc5om1an" path="res://Assets/Sprites/chat_button.png" id="18_6vfk8"]
 [ext_resource type="Texture2D" uid="uid://dw0q6hjbb3chm" path="res://Assets/Sprites/controlsbuttonhover.png" id="18_xcoo4"]
 [ext_resource type="Texture2D" uid="uid://d230384jabs3q" path="res://Assets/Sprites/chat_button_hover.png" id="19_1xund"]
+[ext_resource type="Texture2D" uid="uid://7rtdjn2nxt5n" path="res://Assets/Sprites/cronometer_button.png" id="21_aylim"]
+[ext_resource type="Texture2D" uid="uid://bads1tb0f3f4w" path="res://Assets/Sprites/cronometer_button_hover.png" id="22_y82t1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_48xlc"]
 atlas = ExtResource("1_28flt")
@@ -257,14 +259,26 @@ texture_focused = ExtResource("13_5n0dv")
 
 [node name="ChatConsoleButton" type="TextureButton" parent="." unique_id=1393632435]
 layout_mode = 0
-offset_left = 355.0
+offset_left = 382.0
 offset_top = 167.0
-offset_right = 385.0
+offset_right = 412.0
 offset_bottom = 197.0
 scale = Vector2(0.7928984, 0.7928984)
 texture_normal = ExtResource("18_6vfk8")
 texture_hover = ExtResource("19_1xund")
 texture_focused = ExtResource("19_1xund")
+
+[node name="SpeedrunButton" type="TextureButton" parent="." unique_id=1647756487]
+layout_mode = 0
+offset_left = 355.0
+offset_top = 167.0
+offset_right = 385.0
+offset_bottom = 197.0
+scale = Vector2(0.7886959, 0.7886959)
+toggle_mode = true
+texture_normal = ExtResource("21_aylim")
+texture_hover = ExtResource("22_y82t1")
+texture_focused = ExtResource("22_y82t1")
 
 [node name="ControlsButton" type="TextureButton" parent="." unique_id=993854923]
 layout_mode = 0
@@ -409,6 +423,9 @@ layout_mode = 1
 [connection signal="mouse_entered" from="SkinSelectorButton" to="." method="_on_skin_selector_button_mouse_entered"]
 [connection signal="focus_entered" from="ChatConsoleButton" to="." method="_on_chat_console_button_focus_entered"]
 [connection signal="mouse_entered" from="ChatConsoleButton" to="." method="_on_chat_console_button_mouse_entered"]
+[connection signal="focus_entered" from="SpeedrunButton" to="." method="_on_speedrun_button_focus_entered"]
+[connection signal="mouse_entered" from="SpeedrunButton" to="." method="_on_speedrun_button_mouse_entered"]
+[connection signal="toggled" from="SpeedrunButton" to="." method="_on_speedrun_button_toggled"]
 [connection signal="focus_entered" from="ControlsButton" to="." method="_on_controls_button_focus_entered"]
 [connection signal="mouse_entered" from="ControlsButton" to="." method="_on_controls_button_mouse_entered"]
 [connection signal="focus_entered" from="VBoxContainer/PlayButton" to="." method="_on_play_button_focus_entered"]

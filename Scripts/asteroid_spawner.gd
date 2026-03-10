@@ -6,6 +6,8 @@ extends Marker2D
 @export var player_node: CharacterBody2D
 @export var safe_radius: float = 1250.0
 
+@onready var timer: Timer = $Timer
+
 func create_asteroid():
 	if not is_instance_valid(player_node):
 		return
@@ -40,5 +42,18 @@ func _on_timer_timeout() -> void:
 	
 func stop():
 	if has_node("Timer"):
-		$Timer.stop()
-		print("Spawner de asteroides DETENIDO")
+		timer.stop()
+		print("Asteoid spawner STOPPED")
+		
+func _log_message(message):
+	if GameManager.is_debug_text == true:
+		var final_string = ""
+		if typeof(message) == TYPE_ARRAY:
+			for arg in message:
+				final_string += str(arg) + " "
+			final_string = final_string.strip_edges()
+		else:
+			final_string = str(message)
+		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
+	else:
+		return
