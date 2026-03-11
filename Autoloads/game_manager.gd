@@ -398,6 +398,6 @@ func play_glitch_sound(glitch_sound):
 	glitch_sound.play()
 	
 func reset_game_state():
-	_log_message("Game Manager: Reseteando el estado del juego")
+	_log_message("Game Manager: Restart Game State...")
 	phase_to_start = 1
 	reset_score()

@@ -7,10 +7,10 @@
 [ext_resource type="AudioStream" uid="uid://c6g46xp8qj5n0" path="res://Assets/Audio/418194__deleted_user_3656686__hard-glass-impact.wav" id="3_qcbcn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_55mif"]
-size = Vector2(48.736565, 14.570496)
+size = Vector2(48.736565, 19.532478)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qcbcn"]
-size = Vector2(49.203194, 13.392307)
+size = Vector2(49.203194, 19.588459)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jag7k"]
 size = Vector2(54, 12.5)
@@ -29,7 +29,7 @@ scale = Vector2(1.1665982, 0.62589866)
 sprite_frames = ExtResource("1_s1qjh")
 
 [node name="CollisionLine1" type="CollisionShape2D" parent="." unique_id=1490800228]
-position = Vector2(-8.541369, -3.2373397)
+position = Vector2(-6.38845, -2.0043516)
 rotation = -1.0506883
 shape = SubResource("RectangleShape2D_55mif")
 
@@ -40,7 +40,7 @@ scale = Vector2(1.1592293, 0.60671896)
 sprite_frames = ExtResource("1_s1qjh")
 
 [node name="CollisionLine2" type="CollisionShape2D" parent="." unique_id=2049859391]
-position = Vector2(9.658493, -3.5915074)
+position = Vector2(6.9754806, -2.0424695)
 rotation = 1.0471976
 shape = SubResource("RectangleShape2D_qcbcn")
 
