@@ -37,6 +37,7 @@ var dash_buffered: bool = false
 var buffered_direction: Vector2 = Vector2.ZERO
 var main_camera: Camera2D
 var dash_camera_shake: float = 45.0
+var _debug_visual_enabled: bool = false
 
 func _ready() -> void:
 	var player_score = GameManager.score
@@ -114,8 +115,8 @@ func _physics_process(delta: float) -> void:
 		if collision:
 			velocity = Vector2.ZERO
 			
-	if Input.is_action_just_pressed("debug"):
-		GameManager.show_debug = not GameManager.show_debug
+	if Input.is_action_just_pressed("debug") and GameManager.show_debug:
+		_debug_visual_enabled = not _debug_visual_enabled
 		queue_redraw()
 		
 func can_start_dash(direction: Vector2) -> bool:
@@ -167,25 +168,24 @@ func do_dash(direction: Vector2):
 	can_dash = true
 
 func _draw() -> void:
-	if not GameManager.show_debug:
+	if GameManager.show_debug == false or _debug_visual_enabled == false:
 		return
 	
-	if GameManager.show_debug == true:
-		_log_message("DEBUG TRAIL AND SAFE RADIUS ACTIVATE")
-		var circle_color = Color.AQUAMARINE
-		circle_color.a = 0.3
-		draw_circle(Vector2.ZERO, safe_radius, circle_color)
+	_log_message("DEBUG TRAIL AND SAFE RADIUS ACTIVATE")
+	var circle_color = Color.AQUAMARINE
+	circle_color.a = 0.3
+	draw_circle(Vector2.ZERO, safe_radius, circle_color)
+	
+	var walls = get_tree().get_nodes_in_group("colisiones")
+	
+	for wall in walls:
+		var collider = wall.find_child("CollisionShape2D")
 		
-		var walls = get_tree().get_nodes_in_group("colisiones")
-		
-		for wall in walls:
-			var collider = wall.find_child("CollisionShape2D")
-			
-			if collider and collider.shape:
-				if collider.shape is CircleShape2D:
-					draw_circle(Vector2.ZERO, collider.shape.radius, Color.RED)
-				elif collider.shape is RectangleShape2D:
-					draw_rect(Rect2(-collider.shape.size / 2, collider.shape.size), Color.RED, false, 2.0)
+		if collider and collider.shape:
+			if collider.shape is CircleShape2D:
+				draw_circle(Vector2.ZERO, collider.shape.radius, Color.RED)
+			elif collider.shape is RectangleShape2D:
+				draw_rect(Rect2(-collider.shape.size / 2, collider.shape.size), Color.RED, false, 2.0)
 
 func die():
 	if player_died:
