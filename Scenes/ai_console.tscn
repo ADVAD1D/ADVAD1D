@@ -133,17 +133,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="BackButton" type="TextureButton" parent="." unique_id=1185848638]
-layout_mode = 0
-offset_left = 472.99997
-offset_top = 3.0000076
-offset_right = 502.99997
-offset_bottom = 33.00002
-scale = Vector2(1.4059033, 1.4059033)
-texture_normal = ExtResource("6_4r3im")
-texture_hover = ExtResource("7_n1sxu")
-texture_focused = ExtResource("7_n1sxu")
-
 [node name="BackSound" type="AudioStreamPlayer" parent="." unique_id=546732123]
 stream = ExtResource("8_n1sxu")
 pitch_scale = 0.5
@@ -156,13 +145,23 @@ bus = &"SFX"
 [node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=1629121733]
 stream = ExtResource("13_wmfkg")
 
+[node name="BackButton" type="TextureButton" parent="." unique_id=1185848638]
+layout_mode = 0
+offset_left = 460.00003
+offset_right = 490.00003
+offset_bottom = 30.000015
+scale = Vector2(1.9220815, 1.9220815)
+texture_normal = ExtResource("6_4r3im")
+texture_hover = ExtResource("7_n1sxu")
+texture_focused = ExtResource("7_n1sxu")
+
 [node name="ScrollBarButton" type="TextureButton" parent="." unique_id=1004020280]
 layout_mode = 0
-offset_left = 474.0
-offset_top = 46.999996
-offset_right = 504.0
-offset_bottom = 77.0
-scale = Vector2(1.3057115, 1.3057115)
+offset_left = 460.0
+offset_top = 54.0
+offset_right = 490.0
+offset_bottom = 84.0
+scale = Vector2(1.9202023, 1.9202023)
 toggle_mode = true
 texture_normal = ExtResource("13_7w1m1")
 texture_hover = ExtResource("14_wmfkg")
@@ -171,7 +170,11 @@ texture_focused = ExtResource("14_wmfkg")
 [connection signal="focus_entered" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_button_focus_entered"]
 [connection signal="mouse_entered" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_button_mouse_entered"]
 [connection signal="focus_entered" from="BackButton" to="." method="_on_back_button_focus_entered"]
+[connection signal="focus_exited" from="BackButton" to="." method="_on_back_button_focus_exited"]
 [connection signal="mouse_entered" from="BackButton" to="." method="_on_back_button_mouse_entered"]
+[connection signal="mouse_exited" from="BackButton" to="." method="_on_back_button_mouse_exited"]
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="focus_entered" from="ScrollBarButton" to="." method="_on_scroll_bar_button_focus_entered"]
+[connection signal="focus_exited" from="ScrollBarButton" to="." method="_on_scroll_bar_button_focus_exited"]
 [connection signal="mouse_entered" from="ScrollBarButton" to="." method="_on_scroll_bar_button_mouse_entered"]
+[connection signal="mouse_exited" from="ScrollBarButton" to="." method="_on_scroll_bar_button_mouse_exited"]

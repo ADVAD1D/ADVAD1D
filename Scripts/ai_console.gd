@@ -35,6 +35,9 @@ func _ready() -> void:
 	chat_display.visible_characters = -1
 	chat_display.add_theme_constant_override("line_separation", 6)
 	
+	back_button.modulate.a = 0.0
+	scroll_button.modulate.a = 0.0
+	
 	if Network:
 		Network.ai_response_received.connect(_on_ai_response)
 		Network.request_failed.connect(_on_error)
@@ -115,6 +118,12 @@ func _on_scroll_button_toggled(button_pressed_state: bool):
 		var v_scrollbar = chat_display.get_v_scroll_bar()
 		v_scrollbar.value = v_scrollbar.max_value
 		
+func fade_button_visibility(button: TextureButton, make_visible: bool):
+	var target_alpha = 1.0 if make_visible else 0.0
+	var tween = create_tween()
+	
+	tween.tween_property(button, "modulate:a", target_alpha, 0.2).set_trans(Tween.TRANS_SINE)
+		
 func _log_message(message):
 	if GameManager.is_debug_text == true:
 		var final_string = ""
@@ -137,18 +146,34 @@ func _on_back_button_pressed() -> void:
 
 func _on_back_button_mouse_entered() -> void:
 	back_sound.play() # Replace with function body.
+	fade_button_visibility(back_button, true)
 
 func _on_button_mouse_entered() -> void:
 	back_sound.play() # Replace with function body.
 
 func _on_scroll_bar_button_mouse_entered() -> void:
 	back_sound.play() # Replace with function body.
+	fade_button_visibility(scroll_button, true)
 
 func _on_scroll_bar_button_focus_entered() -> void:
 	back_sound.play() # Replace with function body.
+	fade_button_visibility(scroll_button, true)
 
 func _on_back_button_focus_entered() -> void:
 	back_sound.play() # Replace with function body.
+	fade_button_visibility(back_button, true)
 
 func _on_button_focus_entered() -> void:
 	back_sound.play() # Replace with function body.
+
+func _on_back_button_mouse_exited() -> void:
+	fade_button_visibility(back_button, false) # Replace with function body.
+
+func _on_back_button_focus_exited() -> void:
+	fade_button_visibility(back_button, false) # Replace with function body.
+
+func _on_scroll_bar_button_mouse_exited() -> void:
+	fade_button_visibility(scroll_button, false) # Replace with function body.
+
+func _on_scroll_bar_button_focus_exited() -> void:
+	fade_button_visibility(scroll_button, false) # Replace with function body.
