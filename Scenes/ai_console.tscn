@@ -146,6 +146,8 @@ bus = &"SFX"
 stream = ExtResource("13_wmfkg")
 
 [node name="BackButton" type="TextureButton" parent="." unique_id=1185848638]
+modulate = Color(1, 1, 1, 0.6627451)
+self_modulate = Color(1, 1, 1, 0.81960785)
 layout_mode = 0
 offset_left = 460.00003
 offset_right = 490.00003
@@ -156,6 +158,8 @@ texture_hover = ExtResource("7_n1sxu")
 texture_focused = ExtResource("7_n1sxu")
 
 [node name="ScrollBarButton" type="TextureButton" parent="." unique_id=1004020280]
+modulate = Color(1, 1, 1, 0.6901961)
+self_modulate = Color(1, 1, 1, 0.70980394)
 layout_mode = 0
 offset_left = 460.0
 offset_top = 54.0
