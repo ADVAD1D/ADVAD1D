@@ -144,6 +144,7 @@ bus = &"SFX"
 
 [node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=1629121733]
 stream = ExtResource("13_wmfkg")
+bus = &"SFX"
 
 [node name="BackButton" type="TextureButton" parent="." unique_id=1185848638]
 modulate = Color(1, 1, 1, 0.6627451)
