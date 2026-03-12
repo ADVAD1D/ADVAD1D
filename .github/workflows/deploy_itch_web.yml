@@ -1,0 +1,81 @@
+name: Deploy Godot Web Build to Itch.io
+
+on:
+  push:
+    branches:
+      - main # Cambia esto si usas otra rama principal como 'master'
+  workflow_dispatch: # Permite ejecutar el workflow manualmente desde la pestaña Actions
+
+# Si utilizas una versión diferente de Godot, cambia las URLs de descarga en los pasos de instalación.
+env:
+  GODOT_VERSION: 4.3-stable
+  GODOT_EXECUTABLE_URL: https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
+  GODOT_TEMPLATES_URL: https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
+  EXPORT_TEMPLATE_DIR: 4.3.stable # El nombre de la carpeta de templates de Godot
+
+jobs:
+  export-and-publish:
+    name: Export to Web and Publish to Itch.io
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          lfs: true # Habilita esto si usas Git LFS para tus recursos pesados
+
+      - name: Download and Install Godot
+        run: |
+          echo "Descargando Godot Engine..."
+          wget -q ${{ env.GODOT_EXECUTABLE_URL }} -O godot.zip
+          unzip godot.zip
+          sudo mv Godot_v*linux.x86_64 /usr/local/bin/godot
+          sudo chmod +x /usr/local/bin/godot
+
+      - name: Download and Install Export Templates
+        run: |
+          echo "Descargando Plantillas de Exportación..."
+          wget -q ${{ env.GODOT_TEMPLATES_URL }} -O templates.tpz
+          unzip templates.tpz
+          mkdir -p ~/.local/share/godot/export_templates/${{ env.EXPORT_TEMPLATE_DIR }}
+          mv templates/* ~/.local/share/godot/export_templates/${{ env.EXPORT_TEMPLATE_DIR }}/
+
+      - name: Import Godot Assets
+        run: |
+          echo "Importando recursos por primera vez (Godot 4 lo requiere antes de exportar)..."
+          godot --headless --editor --quit || true
+
+      - name: Export Web Build
+        run: |
+          echo "Exportando versión HTML5..."
+          mkdir -p build_web
+          # Exportamos utilizando el preset "Web". Generará build_web/index.html y los .pck/.js/.wasm asociados
+          godot --headless --export-release "Web" build_web/index.html
+
+      - name: Zip Exported Files
+        working-directory: build_web
+        run: |
+          echo "Comprimiendo archivos para Itch.io..."
+          zip -r ../advad_web_build.zip .
+
+      - name: Upload to Actions Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-web-build
+          path: advad_web_build.zip
+
+      - name: Download and Install Butler (Itch.io CLI)
+        run: |
+          echo "Instalando Butler..."
+          wget -qO butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+          unzip butler.zip
+          sudo chmod +x butler
+          sudo mv butler /usr/local/bin/butler
+
+      - name: Deploy to Itch.io
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          echo "Subiendo build a Itch.io con Butler..."
+          # Utilizamos los secrets configurados en GitHub (ITCH_USERNAME y ITCH_GAME_ID)
+          butler push advad_web_build.zip ${{ secrets.ITCH_USERNAME }}/${{ secrets.ITCH_GAME_ID }}:html
