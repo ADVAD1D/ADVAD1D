@@ -1,10 +1,8 @@
 name: Deploy Godot Web Build to Itch.io
 
 on:
-  push:
-    branches:
-      - main # Cambia esto si usas otra rama principal como 'master'
   workflow_dispatch: # Permite ejecutar el workflow manualmente desde la pestaña Actions
+
 
 # Si utilizas una versión diferente de Godot, cambia las URLs de descarga en los pasos de instalación.
 env:
@@ -43,6 +41,8 @@ jobs:
       - name: Import Godot Assets
         run: |
           echo "Importando recursos por primera vez (Godot 4 lo requiere antes de exportar)..."
+          godot --headless --editor --quit || true
+          echo "Segunda pasada de importación (necesaria para audios pesados en Godot 4)..."
           godot --headless --editor --quit || true
 
       - name: Export Web Build
