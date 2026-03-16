@@ -205,7 +205,7 @@ func apply_difficulty():
 	
 	#sorry for the spanglish in the code
 	#dificultad para las naves
-	_log_message(["aplicando dificultad para la fase", current_phase, "progreso: ", progress])
+	_log_message(["Apply difficult from Phase:", current_phase, "Progress: ", progress])
 	var ship_max_enemies = int(lerp(min_ship_enemies, max_ship_enemies, progress))
 	var ship_config = {"speed": lerp(250.0, 500.0, progress),
 					   "shoot_timerate": lerp(max_shoot_timerate, min_shoot_timerate, progress)} # Puedes añadir más stats

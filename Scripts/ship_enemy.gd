@@ -17,6 +17,7 @@ var is_dying: bool = false
 signal died
 
 @onready var hitbox: Area2D = $Hitbox
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var shoot_marker: Marker2D = $Muzzle
 @onready var laser_sound: AudioStreamPlayer2D = $EnemyLsrSound
 @onready var separation_area = $SeparationArea
@@ -134,7 +135,7 @@ func die_and_respawn():
 	
 	set_physics_process(false)
 	
-	$CollisionShape2D.set_deferred("disabled", true)
+	collision_shape.set_deferred("disabled", true)
 	shoot_marker.set_deferred("disabled", true)
 	
 	var particles_instance = explosion_particles.instantiate()
@@ -156,7 +157,7 @@ func die_silently():
 	
 	set_physics_process(false)
 	
-	$CollisionShape2D.set_deferred("disabled", true)
+	collision_shape.set_deferred("disabled", true)
 	shoot_marker.set_deferred("disabled", true)
 	
 	var particles_instance = explosion_particles.instantiate()

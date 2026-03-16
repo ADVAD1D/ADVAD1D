@@ -43,7 +43,7 @@ func _on_timer_timeout() -> void:
 func stop():
 	if has_node("Timer"):
 		timer.stop()
-		print("Asteoid spawner STOPPED")
+		_log_message("Asteoid spawner STOPPED")
 		
 func _log_message(message):
 	if GameManager.is_debug_text == true:
