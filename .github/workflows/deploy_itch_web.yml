@@ -37,9 +37,11 @@ jobs:
           mv templates/* ~/.local/share/godot/export_templates/${{ env.EXPORT_TEMPLATE_DIR }}/
 
       - name: Inject Export Presets
+        env:
+          PRESETS_FILE: ${{ secrets.EXPORT_PRESETS_CFG }}
         run: |
           echo "Create and inject export_presets.cfg from secrets..."
-          echo "${{ secrets.EXPORT_PRESETS_CFG }}" > export_presets.cfg
+          printf "%s\n" "$PRESETS_FILE" > export_presets.cfg
 
       - name: Import Godot Assets
         run: |
