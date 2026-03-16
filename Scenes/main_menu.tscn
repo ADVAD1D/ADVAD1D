@@ -198,7 +198,7 @@ scale = Vector2(1.4800006, 1.4800006)
 texture = ExtResource("2_1ehe0")
 
 [node name="GodotIcon" type="Sprite2D" parent="." unique_id=1996180563]
-position = Vector2(467, 274.00003)
+position = Vector2(449.00003, 275.00003)
 scale = Vector2(0.86131614, 0.86131614)
 texture = ExtResource("6_xcoo4")
 
