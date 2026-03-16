@@ -71,7 +71,7 @@ jobs:
       - name: Download and Install Butler (Itch.io CLI)
         run: |
           echo "Download and installing Butler..."
-          wget -qO butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+          wget -qO butler.zip https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default
           unzip butler.zip
           sudo chmod +x butler
           sudo mv butler /usr/local/bin/butler
