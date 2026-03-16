@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://rfr1b2fb0o4q"]
+[gd_scene format=3 uid="uid://rfr1b2fb0o4q"]
 
 [ext_resource type="Script" uid="uid://tvn1ktkbvk13" path="res://Scripts/ship_enemy.gd" id="1_exykt"]
 [ext_resource type="Texture2D" uid="uid://cx73ri0pr6pa5" path="res://Assets/Sprites/ship_enemy.png" id="1_nlnte"]
@@ -54,7 +54,7 @@ color_initial_ramp = SubResource("GradientTexture1D_j3121")
 [sub_resource type="CircleShape2D" id="CircleShape2D_f0gle"]
 radius = 72.4177
 
-[node name="ShipEnemy" type="CharacterBody2D" groups=["enemigos"]]
+[node name="ShipEnemy" type="CharacterBody2D" unique_id=1747319750 groups=["enemigos"]]
 z_index = 2
 scale = Vector2(2.5, 2.5)
 collision_layer = 265
@@ -62,42 +62,42 @@ script = ExtResource("1_exykt")
 explosion_particles = ExtResource("2_j3121")
 metadata/_edit_group_ = true
 
-[node name="Hitbox" type="Area2D" parent="."]
+[node name="Hitbox" type="Area2D" parent="." unique_id=1352395597]
 script = ExtResource("2_bscg7")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1389555027]
 z_index = 1
 position = Vector2(-0.39999932, 1.9999992)
 scale = Vector2(0.99999976, 0.99999976)
 shape = SubResource("RectangleShape2D_exykt")
 debug_color = Color(0.998661, 0, 0.136085, 0.42)
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=499694184]
 texture = ExtResource("1_nlnte")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1185704951]
 position = Vector2(-0.578565, 0)
 shape = SubResource("RectangleShape2D_bscg7")
 
-[node name="Muzzle" type="Marker2D" parent="."]
+[node name="Muzzle" type="Marker2D" parent="." unique_id=959215210]
 position = Vector2(-0.38571, -18.8998)
 scale = Vector2(39.2115, 143.279)
 
-[node name="ShootTimer" type="Timer" parent="."]
+[node name="ShootTimer" type="Timer" parent="." unique_id=973900299]
 wait_time = 0.2
 one_shot = true
 
-[node name="ExplosionSound" type="AudioStreamPlayer2D" parent="."]
+[node name="ExplosionSound" type="AudioStreamPlayer2D" parent="." unique_id=829189933]
 scale = Vector2(0.99999994, 0.99999994)
 stream = ExtResource("5_um53k")
 
-[node name="EnemyLsrSound" type="AudioStreamPlayer2D" parent="."]
+[node name="EnemyLsrSound" type="AudioStreamPlayer2D" parent="." unique_id=1188711169]
 stream = ExtResource("4_f0gle")
 volume_db = -18.32
 pitch_scale = 0.48
 bus = &"SFX"
 
-[node name="EngineTrail" type="GPUParticles2D" parent="."]
+[node name="EngineTrail" type="GPUParticles2D" parent="." unique_id=1883147541]
 position = Vector2(-0.4, 20)
 scale = Vector2(0.99999994, 0.99999994)
 amount = 10
@@ -105,11 +105,11 @@ lifetime = 0.3
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_6b5vx")
 
-[node name="SeparationArea" type="Area2D" parent="."]
+[node name="SeparationArea" type="Area2D" parent="." unique_id=947558785]
 collision_layer = 0
 collision_mask = 8
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SeparationArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SeparationArea" unique_id=809367709]
 position = Vector2(0, 0.8)
 shape = SubResource("CircleShape2D_f0gle")
 debug_color = Color(0.904106, 0.000141889, 0.750942, 0.42)

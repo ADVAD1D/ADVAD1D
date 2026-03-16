@@ -31,6 +31,22 @@ var bullet_scene = preload("res://Scenes/enemy_laser.tscn")
 var current_shoot_timer: float = 0.2
 var player: Node2D
 
+# INSTANTIATED NODES INITIALIZATION PROTOCOL
+
+# DANGER: NEVER modify node references (e.g., shoot_timer.wait_time) 
+# directly inside the setup() function.
+# 
+# Why?: The Spawner executes setup() right after instantiate(), but 
+# BEFORE calling add_child(). At that exact moment, the scene is not in the 
+# SceneTree, so @onready variables are still 'null'. Attempting to access 
+# them will cause an immediate crash (Base object 'Nil').
+#
+# THE RULE: setup() MUST ONLY be used to receive the configuration dictionary 
+# and store those values in the script's global variables. Injecting that 
+# data into the actual nodes must be done inside _ready(), when the 
+# nodes are safely loaded into memory.
+
+
 func setup(config: Dictionary):
 	speed = config.get("speed", 250.0)
 	_log_message(config)
