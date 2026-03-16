@@ -37,6 +37,7 @@ var dash_buffered: bool = false
 var buffered_direction: Vector2 = Vector2.ZERO
 var main_camera: Camera2D
 var dash_camera_shake: float = 45.0
+var hitbox_disabled: bool = false
 var _debug_visual_enabled: bool = false
 
 func _ready() -> void:
@@ -44,6 +45,12 @@ func _ready() -> void:
 	sprite.texture = GameManager.get_selected_ship_texture()
 	main_camera = get_viewport().get_camera_2d()
 	_log_message(player_score)
+	
+	if hitbox_disabled == true:
+		hitbox_collider.disabled = true
+		_log_message("PLAYER HITBOX DISABLED")
+	else:
+		return
 
 func _physics_process(delta: float) -> void:
 	if player_died:
