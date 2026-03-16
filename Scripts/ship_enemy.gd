@@ -33,7 +33,7 @@ var player: Node2D
 func setup(config: Dictionary):
 	speed = config.get("speed", 250.0)
 	_log_message(config)
-	$ShootTimer.wait_time = config.get("shoot_timerate", 0.2)
+	shoot_timer.wait_time = config.get("shoot_timerate", 0.2)
 	
 func _ready() -> void:
 	player = get_tree().get_first_node_in_group("player")
