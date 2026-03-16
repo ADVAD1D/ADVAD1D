@@ -28,16 +28,22 @@ var explosion_sound: AudioStreamPlayer2D = preload("res://Assets/Audio/AudioScen
 
 var show_debug: bool = false
 var bullet_scene = preload("res://Scenes/enemy_laser.tscn")
+var current_shoot_timer: float = 0.2
 var player: Node2D
 
 func setup(config: Dictionary):
 	speed = config.get("speed", 250.0)
 	_log_message(config)
-	shoot_timer.wait_time = config.get("shoot_timerate", 0.2)
+	current_shoot_timer = config.get("shoot_timerate", 0.2)
+	
+	if shoot_timer != null:
+		shoot_timer.wait_time = current_shoot_timer
 	
 func _ready() -> void:
 	player = get_tree().get_first_node_in_group("player")
 	hitbox.hit.connect(_on_hit)
+	if is_instance_valid(shoot_timer):
+		shoot_timer.wait_time = current_shoot_timer
 	
 	scale = Vector2.ZERO
 	var tween = create_tween()
