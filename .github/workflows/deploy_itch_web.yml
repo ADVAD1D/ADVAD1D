@@ -70,8 +70,11 @@ jobs:
           sudo mv butler /usr/local/bin/butler
 
       - name: Deploy to Itch.io
+        # yaml-language-server: $schema=https://json.schemastore.org/github-action.json
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+          ITCH_USERNAME: ${{ secrets.ITCH_USERNAME }}
+          ITCH_GAME_ID: ${{ secrets.ITCH_GAME_ID }}
         run: |
-          echo "Deploy build to Itch.io with Butler..."
-          butler push advad_web_build.zip ${{ secrets.ITCH_USERNAME }}/${{ secrets.ITCH_GAME_ID }}:html
+          echo "Deploying build to Itch.io with Butler..."
+          butler push advad_web_build.zip "${ITCH_USERNAME}/${ITCH_GAME_ID}:html"
