@@ -166,7 +166,7 @@ func start_new_phase():
 	is_phase_active = true
 	
 func _on_score_updated(new_score: int):
-	_log_message(["Puntuación actualizada: ", new_score])
+	_log_message(["Score Update: ", new_score])
 	if is_phase_active and new_score >= current_score_requirement:
 		_on_phase_success()
 		
@@ -180,7 +180,7 @@ func _on_phase_success():
 		
 func _on_phase_failure():
 	is_phase_active = false
-	_log_message("TIEMPO AGOTADO. Reiniciando escena.")
+	_log_message("NO TIME LEFT. Restart Scene.")
 	GameManager.stop_scoring()
 	
 	if is_instance_valid(player_node):
