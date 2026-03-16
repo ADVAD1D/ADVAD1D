@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://me0vklp2pqig" path="res://Assets/Sprites/uncheckedsprite.png" id="4_sbt7x"]
 [ext_resource type="Texture2D" uid="uid://1m3dkr1g5sld" path="res://Assets/Sprites/checkedicon_disabled.png" id="5_k614w"]
 [ext_resource type="Texture2D" uid="uid://dm7laycnay32i" path="res://Assets/Sprites/checkedsprite.png" id="5_khmtv"]
+[ext_resource type="Texture2D" uid="uid://bux677bnwxfqj" path="res://Assets/Sprites/minipreviousbutton.png" id="7_k614w"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x0f22"]
 texture = ExtResource("1_s0vao")
@@ -44,6 +45,7 @@ PopupMenu/icons/radio_checked_disabled = ExtResource("5_k614w")
 PopupMenu/icons/radio_unchecked = ExtResource("5_k614w")
 PopupMenu/icons/radio_unchecked_disabled = ExtResource("5_k614w")
 PopupMenu/icons/submenu = ExtResource("2_x0f22")
+PopupMenu/icons/submenu_mirrored = ExtResource("7_k614w")
 PopupMenu/icons/unchecked = ExtResource("4_sbt7x")
 PopupMenu/styles/hover = SubResource("StyleBoxFlat_x0f22")
 PopupMenu/styles/labeled_separator_left = SubResource("StyleBoxFlat_u7p27")

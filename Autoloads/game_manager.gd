@@ -14,6 +14,7 @@ var is_glitch_sound: bool = false
 var game_paused: bool = false
 var can_pause: bool = true
 var show_debug: bool = false
+#IMPORTANT: this bool change the value to _log_message function in some scripts!
 var is_debug_text : bool = true
 var debug_response_text_active: bool = false
 var ai_last_response: String = ""
@@ -23,6 +24,7 @@ var production_server_active = true
 var browser_support: bool = false
 var admin_control: bool = false
 var relative_control_active: bool = false
+#speedrun global variables
 var speedrun_mode_active: bool = false
 var is_speedrun_running: bool = false
 var speedrun_time: float = 0.0
