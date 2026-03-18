@@ -47,7 +47,7 @@ jobs:
         env:
           MY_APP_TOKEN: ${{ secrets.APP_TOKEN }}
         run: |
-          echo "Fabricando archivo .env para el EnvParser..."
+          echo "Fabric file from .env secrets..."
           echo "APP_TOKEN=$MY_APP_TOKEN" > .env
 
       - name: Import Godot Assets
