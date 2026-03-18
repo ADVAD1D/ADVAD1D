@@ -43,6 +43,13 @@ jobs:
           echo "Create and inject export_presets.cfg from secrets..."
           printf "%s\n" "$PRESETS_FILE" > export_presets.cfg
 
+      - name: Inject Environment Variables (.env)
+        env:
+          MY_APP_TOKEN: ${{ secrets.APP_TOKEN }}
+        run: |
+          echo "Fabricando archivo .env para el EnvParser..."
+          echo "APP_TOKEN=$MY_APP_TOKEN" > .env
+
       - name: Import Godot Assets
         run: |
           echo "Importing assets for the first time (Godot 4 requires this before exporting)..."
