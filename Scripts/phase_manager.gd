@@ -26,6 +26,7 @@ signal timer_updated(time_left_string)
 @onready var browser_support: bool = GameManager.browser_support
 @onready var relative_control_active: bool = GameManager.relative_control_active
 
+@onready var background_sprite: Sprite2D = $"../Sprite2D"
 @onready var time_progress_bar: TextureProgressBar = $"../UILayer/HUD".get_node("TimeBarContainer/TimeProgressBar")
 @onready var phase_label: Label = $"../UILayer/HUD".get_node("PhaseLabel")
 @onready var objective_label: Label = $"../UILayer/HUD".get_node("ObjectiveLabel")
@@ -117,8 +118,9 @@ func start_new_phase():
 	current_phase = current_phase + 1
 	#yes, i don't use elifs
 	if not phase_requirements.has(current_phase):
-		_log_message("has ganado las fases")
+		_log_message("You win all phases!")
 		phase_label.text = "ARENA WIN"
+		gray_scale_transition()
 		if GameManager.is_speedrun_running:
 			GameManager.stop_speedrun()
 		var codelabel_tween = create_tween()
@@ -238,6 +240,18 @@ func fade_out_objective_label():
 	if is_instance_valid(objective_label):
 		tween.tween_property(objective_label, "modulate:a", 0.0, 1.0)
 		tween.tween_callback(objective_label.queue_free)
+		
+func gray_scale_transition():
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	
+	tween.tween_property(
+		background_sprite.material,
+		"shader_parameter/grayscale_amount",
+		1.0,
+		2.0
+	)
 		
 func _log_message(message):
 	if GameManager.is_debug_text == true:
