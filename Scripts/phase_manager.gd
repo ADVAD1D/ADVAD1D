@@ -148,7 +148,7 @@ func start_new_phase():
 			
 		return
 		
-	_log_message(["--- Empezando Fase ---", current_phase])
+	_log_message(["--- Starting Phase ---", current_phase])
 	GameManager.reset_score()
 	
 	if is_instance_valid(phase_label):
