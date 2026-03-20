@@ -28,6 +28,7 @@ signal timer_updated(time_left_string)
 
 @onready var background_sprite: Sprite2D = $"../Sprite2D"
 @onready var time_progress_bar: TextureProgressBar = $"../UILayer/HUD".get_node("TimeBarContainer/TimeProgressBar")
+@onready var time_bar_container: HBoxContainer = $"../UILayer/HUD".get_node("TimeBarContainer")
 @onready var phase_label: Label = $"../UILayer/HUD".get_node("PhaseLabel")
 @onready var objective_label: Label = $"../UILayer/HUD".get_node("ObjectiveLabel")
 @onready var code_label: Label = $"../UILayer/HUD".get_node("CodeLabel")
@@ -121,6 +122,7 @@ func start_new_phase():
 		_log_message("You win all phases!")
 		phase_label.text = "ARENA WIN"
 		gray_scale_transition()
+		fade_out_time_bar()
 		if GameManager.is_speedrun_running:
 			GameManager.stop_speedrun()
 		var codelabel_tween = create_tween()
@@ -252,6 +254,13 @@ func gray_scale_transition():
 		1.0,
 		2.0
 	)
+	
+func fade_out_time_bar():
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	
+	tween.tween_property(time_bar_container, "modulate:a", 0.0, 1.0)
 		
 func _log_message(message):
 	if GameManager.is_debug_text == true:
