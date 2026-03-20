@@ -42,7 +42,7 @@ func spawn_enemy():
 	var spawn_position = spawn_locator_node.global_position
 	
 	if spawn_position.distance_to(player_node.global_position) <= safe_spawn_radius:
-		print("Spawn cancelado: el punto aleatorio en el camino estaba muy cerca.")
+		_log_message("Spawn Cancel: the random point in the safe radius is near")
 		return
 	
 	var enemy_instance = enemy_scene.instantiate()
