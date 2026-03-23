@@ -130,9 +130,7 @@ func shoot() -> void:
 		shoot_timer.start()
 		laser_sound.play()
 
-"""		
 func _draw() -> void:
-	
 	if not show_debug:
 		return
 	
@@ -140,7 +138,6 @@ func _draw() -> void:
 		var circle_color = Color.RED
 		circle_color.a = 0.3
 		draw_circle(Vector2.ZERO, fire_range, circle_color)
-"""
 
 func _on_hit(area_collided: Area2D) -> void:
 	if area_collided.is_in_group("lasers"):
