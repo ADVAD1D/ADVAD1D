@@ -46,4 +46,17 @@ func start_sequence():
 	if next_scene:
 		get_tree().change_scene_to_packed(next_scene)
 	else:
-		print("ERROR: No se asignó una escena para la transición.")
+		_log_message("ERROR: No se asignó una escena para la transición.")
+		
+func _log_message(message):
+	if GameManager.is_debug_text == true:
+		var final_string = ""
+		if typeof(message) == TYPE_ARRAY:
+			for arg in message:
+				final_string += str(arg) + " "
+			final_string = final_string.strip_edges()
+		else:
+			final_string = str(message)
+		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
+	else:
+		return
