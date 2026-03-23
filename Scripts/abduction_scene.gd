@@ -46,7 +46,7 @@ func start_sequence():
 	if next_scene:
 		get_tree().change_scene_to_packed(next_scene)
 	else:
-		_log_message("ERROR: No se asignó una escena para la transición.")
+		_log_message("ERROR: Not set a next_scene for the transition.")
 		
 func _log_message(message):
 	if GameManager.is_debug_text == true:
