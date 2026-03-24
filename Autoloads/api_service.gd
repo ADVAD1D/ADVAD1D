@@ -79,7 +79,7 @@ func ask_godot_ai(prompt: String):
 		return
 		
 	if _ai_http.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
-		_log_message("API SERVICE: Peticion ignorada, ya hay una en curso")
+		_log_message("API SERVICE: Missed request, there is already one in progress")
 		return
 		
 	var body = JSON.stringify({"prompt": prompt})
@@ -95,7 +95,7 @@ func ask_godot_ai(prompt: String):
 #response managment (private)
 func _on_ping_completed(result, response_code, _headers, _body):
 	if result != HTTPRequest.RESULT_SUCCESS:
-		_log_message("PING CAIDO: SIN CONEXIÓN O SERVIDOR CAÍDO")
+		_log_message("PING CAIDO: NOT CONECTION OR DOWN SERVER")
 		server_status_checked.emit(false)
 		return
 	if response_code == 200:
