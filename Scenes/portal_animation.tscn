@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://mvms73mx4k2i"]
+
+[ext_resource type="Texture2D" uid="uid://dqqgw3mtrh65m" path="res://Assets/Sprites/PortalAnimation.png" id="1_hciiq"]
+[ext_resource type="Script" uid="uid://1rjegcdhb5ep" path="res://Scripts/portal_animation.gd" id="2_qq8vi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qq8vi"]
+atlas = ExtResource("1_hciiq")
+region = Rect2(0, 0, 30, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_int82"]
+atlas = ExtResource("1_hciiq")
+region = Rect2(30, 0, 30, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mo0o8"]
+atlas = ExtResource("1_hciiq")
+region = Rect2(60, 0, 30, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l0qyf"]
+atlas = ExtResource("1_hciiq")
+region = Rect2(90, 0, 30, 30)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gr060"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qq8vi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_int82")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mo0o8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l0qyf")
+}],
+"loop": true,
+"name": &"default",
+"speed": 11.0
+}]
+
+[node name="PortalAnimation" type="AnimatedSprite2D" unique_id=1588891668]
+sprite_frames = SubResource("SpriteFrames_gr060")
+autoplay = "default"
+script = ExtResource("2_qq8vi")

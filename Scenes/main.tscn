@@ -40,6 +40,7 @@
 [ext_resource type="Texture2D" uid="uid://b21nbsy1pvanx" path="res://Assets/Sprites/sound_icon.png" id="23_hdf80"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="23_r33sp"]
 [ext_resource type="PackedScene" uid="uid://bu55k5t5u8pui" path="res://Scenes/trigger_scene.tscn" id="24_3pmx8"]
+[ext_resource type="PackedScene" uid="uid://mvms73mx4k2i" path="res://Scenes/portal_animation.tscn" id="36_s8vy0"]
 [ext_resource type="Script" uid="uid://cx0bsmcfls2de" path="res://Scripts/power_up_1_spawner.gd" id="37_o1aky"]
 [ext_resource type="PackedScene" uid="uid://knamw06tun51" path="res://Scenes/power_up_1_pickup.tscn" id="38_kwxat"]
 [ext_resource type="PackedScene" uid="uid://ddbj5g23l6doc" path="res://Scenes/powerup1.tscn" id="40_aqgau"]
@@ -1101,12 +1102,14 @@ sprite_to_remove = NodePath("../LaserWallAnimation")
 [node name="EnemySpawner" type="Node2D" parent="." unique_id=1050277523 node_paths=PackedStringArray("player_node", "spawn_locator_node") groups=["destructibles"]]
 script = ExtResource("14_wsu2k")
 enemy_scene = ExtResource("15_wsu2k")
+portal_scene = ExtResource("36_s8vy0")
 player_node = NodePath("../PlayerInstance")
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="SawSpawner" type="Node2D" parent="." unique_id=906314796 node_paths=PackedStringArray("player_node", "spawn_locator_node") groups=["destructibles"]]
 script = ExtResource("16_k12tt")
 saw_scene = ExtResource("17_h1bgf")
+portal_scene = ExtResource("36_s8vy0")
 player_node = NodePath("../PlayerInstance")
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 

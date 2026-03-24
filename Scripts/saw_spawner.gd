@@ -2,6 +2,7 @@ class_name SawSpawner
 extends Node2D
 
 @export var saw_scene: PackedScene
+@export var portal_scene: PackedScene
 @export var player_node: CharacterBody2D
 @export var spawn_locator_node: PathFollow2D
 @export var safe_spawn_radius: float = 100.0
@@ -52,6 +53,11 @@ func spawn_enemy():
 	if spawn_position.distance_to(player_node.global_position) <= safe_spawn_radius:
 		_log_message("Spawn Cancel: the random point in the safe radius is near")
 		return
+		
+	if portal_scene != null:
+		var portal_instance = portal_scene.instantiate()
+		call_deferred("add_child", portal_instance)
+		portal_instance.set_deferred("global_position", spawn_position)
 	
 	#logica del spawn
 	var enemy_instance = saw_scene.instantiate()
