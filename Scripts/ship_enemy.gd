@@ -26,7 +26,6 @@ signal died
 
 var explosion_sound: AudioStreamPlayer2D = preload("res://Assets/Audio/AudioScenes/ship_enemy_explosion.tscn").instantiate()
 
-var show_debug: bool = false
 var bullet_scene = preload("res://Scenes/enemy_laser.tscn")
 var current_shoot_timer: float = 0.2
 var player: Node2D
@@ -99,7 +98,7 @@ func _physics_process(delta: float) -> void:
 		shoot()
 		
 	if Input.is_action_just_pressed("debug"):
-		show_debug = not show_debug
+		GameManager.show_debug = not GameManager.show_debug
 		queue_redraw()
 	
 	var separation_vector: Vector2 = Vector2.ZERO
@@ -131,10 +130,9 @@ func shoot() -> void:
 		laser_sound.play()
 
 func _draw() -> void:
-	if not show_debug:
+	if GameManager.show_debug == false:
 		return
-	
-	if show_debug:
+	else:
 		var circle_color = Color.RED
 		circle_color.a = 0.3
 		draw_circle(Vector2.ZERO, fire_range, circle_color)
