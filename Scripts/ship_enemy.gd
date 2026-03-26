@@ -96,10 +96,6 @@ func _physics_process(delta: float) -> void:
 	
 	if distance_to_player < fire_range:
 		shoot()
-		
-	if Input.is_action_just_pressed("debug"):
-		GameManager.show_debug = not GameManager.show_debug
-		queue_redraw()
 	
 	var separation_vector: Vector2 = Vector2.ZERO
 	var neighbors = separation_area.get_overlapping_bodies()
