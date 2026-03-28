@@ -53,6 +53,8 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_area_entered(area: Area2D) -> void:
+	if is_dying:
+		return
 	if (area.is_in_group("lasers") or area.is_in_group("enemies_death") or area.is_in_group("allies")):
 		if area.is_in_group("lasers"):
 			area.queue_free()

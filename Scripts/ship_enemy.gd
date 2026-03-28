@@ -134,6 +134,8 @@ func _draw() -> void:
 		draw_circle(Vector2.ZERO, fire_range, circle_color)
 
 func _on_hit(area_collided: Area2D) -> void:
+	if is_dying:
+		return
 	if area_collided.is_in_group("lasers"):
 		GameManager.add_score(100)
 		area_collided.queue_free()
