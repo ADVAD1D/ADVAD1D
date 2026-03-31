@@ -7,6 +7,7 @@ extends Control
 
 #this bool manage scene in game versions (browser and native)
 @onready var browser_support: bool = GameManager.browser_support
+@onready var is_debug_text: bool = GameManager.is_debug_text
 
 @onready var animated_background: AnimatedSprite2D = $Background
 @onready var play_button: TextureButton = $VBoxContainer/PlayButton
@@ -14,6 +15,7 @@ extends Control
 @onready var special_thanks_button: TextureButton = $SpecialThanksButton
 @onready var quit_button: TextureButton = $VBoxContainer/QuitButton
 @onready var controls_button: TextureButton = $ControlsButton
+@onready var fps_button: TextureButton = $FPSButton
 @onready var button_sound: AudioStreamPlayer = $ButtonSound
 @onready var back_sound: AudioStreamPlayer = $BackSound
 @onready var credits_panel: Control = $CreditsPanel
@@ -46,10 +48,13 @@ func _ready() -> void:
 	github_button.pressed.connect(_on_github_button_pressed)
 	discord_button.pressed.connect(_on_discord_button_pressed)
 	
+	fps_button.pressed.connect(_on_fps_button_pressed)
 	controls_button.pressed.connect(_on_controls_button_pressed)
 	controls_button.set_pressed_no_signal(GameManager.relative_control_active)
 	speedrun_button.set_pressed_no_signal(GameManager.speedrun_mode_active)
+	fps_button.set_pressed_no_signal(GameManager.show_fps)
 	controls_button.toggled.connect(_on_controls_toggled)
+	fps_button.toggled.connect(_on_fps_button_toggled)
 	
 	global_label.visible = false
 	relative_label.visible = false
@@ -89,7 +94,7 @@ func _input(event: InputEvent) -> void:
 				
 func _on_controls_toggled(button_pressed_state: bool):
 	GameManager.relative_control_active = button_pressed_state
-	print("Control relativo ", button_pressed_state)
+	_log_message(["Relative Controls ", button_pressed_state])
 	GameManager.save_data()
 	show_feedback_label(button_pressed_state)
 	
@@ -109,6 +114,11 @@ func show_feedback_label(is_relative: bool):
 	feedback_tween = create_tween()
 	feedback_tween.tween_interval(feedback_label_lifetime)
 	feedback_tween.tween_property(target_label, "modulate:a", 0.0, 0.5)
+	
+func _on_fps_button_toggled(button_pressed_state: bool):
+	GameManager.show_fps = button_pressed_state
+	_log_message(["FPS Mode ", button_pressed_state])
+	GameManager.save_data()
 	
 func _on_credits_button_pressed():
 	credits_panel.show()
@@ -181,12 +191,21 @@ func _on_quit_button_focus_entered() -> void:
 
 func _on_controls_button_focus_entered() -> void:
 	button_sound.play() # Replace with function body.
+	
+func _on_fps_button_focus_entered() -> void:
+	button_sound.play() # Replace with function body.
 
 func _on_controls_button_mouse_entered() -> void:
+	button_sound.play() # Replace with function body.
+	
+func _on_fps_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
 
 func _on_controls_button_pressed() -> void:
 	back_sound.play() # Replace with function body.
+	
+func _on_fps_button_pressed():
+	back_sound.play()
 
 func _on_chat_console_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
@@ -204,3 +223,16 @@ func _on_speedrun_button_mouse_entered() -> void:
 
 func _on_speedrun_button_focus_entered() -> void:
 	button_sound.play() # Replace with function body.
+	
+func _log_message(message):
+	if is_debug_text == true:
+		var final_string = ""
+		if typeof(message) == TYPE_ARRAY:
+			for arg in message:
+				final_string += str(arg) + " "
+			final_string = final_string.strip_edges()
+		else:
+			final_string = str(message)
+		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
+	else:
+		return

@@ -14,6 +14,7 @@ var is_glitch_sound: bool = false
 var game_paused: bool = false
 var can_pause: bool = true
 var show_debug: bool = false
+var show_fps: bool = false
 #IMPORTANT: this bool change the value to _log_message function in some scripts!
 var is_debug_text : bool = false
 var debug_response_text_active: bool = false
@@ -281,6 +282,7 @@ func save_data():
 	var data: Dictionary = {
 		"selected_ship": selected_ship_index,
 		"controls_mode": relative_control_active,
+		"fps_mode": show_fps,
 		"speedrun_mode_state": speedrun_mode_active,
 		"scroll_bar_state": is_scroll_active
 	}
@@ -314,6 +316,10 @@ func load_data():
 	if data and "controls_mode" in data:
 		relative_control_active = bool(data["controls_mode"])
 		_log_message(["loaded controls user config: ", relative_control_active])
+		
+	if data and "fps_mode" in data:
+		show_fps = bool(data["fps_mode"])
+		_log_message(["loaded fps_mode user config: ", show_fps])
 		
 	if data and "scroll_bar_state" in data:
 		is_scroll_active = bool(data["scroll_bar_state"])
