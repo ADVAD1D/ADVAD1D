@@ -77,7 +77,7 @@ func _on_player_died() -> void:
 	GameManager.stop_scoring()
 	
 	var glitch_tween = GameManager.play_glitch_effect(crt_material)
-	await  glitch_tween.finished
+	await glitch_tween.finished
 	await get_tree().create_timer(0.01).timeout
 	
 	get_tree().call_group("saws", "die_silently")
