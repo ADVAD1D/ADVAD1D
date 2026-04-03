@@ -68,7 +68,6 @@ func stop():
 	_log_message("Ship enemies spawner STOPEED")
 	
 func _on_enemy_died(_enemy_reference):
-	
 	if not is_active:
 		current_enemy_count -= 1
 		return

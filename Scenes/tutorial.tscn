@@ -327,7 +327,6 @@ color_initial_ramp = SubResource("GradientTexture1D_6iyac")
 
 [node name="Tutorial" type="Node2D" unique_id=1756924719]
 script = ExtResource("1_ys4pu")
-next_scene = "res://Scenes/main.tscn"
 transition_sound = ExtResource("12_ap3ea")
 laser_explosion_particles = ExtResource("2_8mnmb")
 asteroids_explosion_particles = ExtResource("3_koko0")

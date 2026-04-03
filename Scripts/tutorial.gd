@@ -1,6 +1,5 @@
 extends Node2D
 
-@export var next_scene: String
 @export var transition_sound: AudioStream
 
 @onready var tutorial_timer: Timer = $TutorialTimer
@@ -12,13 +11,14 @@ extends Node2D
 @onready var fade_in_rect: ColorRect = $ColorRect1
 @onready var admin_control: bool = GameManager.admin_control
 
-
 var base_zoom: Vector2
 @export var laser_explosion_particles: PackedScene
 @export var asteroids_explosion_particles: PackedScene
 # Called when the node enters the scene tree for the first time.
 
 func _ready() -> void:
+	ResourceLoader.load_threaded_request("res://Scenes/main.tscn")
+	
 	fade_in_rect.visible = true
 	fade_in_rect.modulate.a = 1.0 
 	
@@ -85,15 +85,18 @@ func _on_tutorial_timer_timeout():
 	_log_message("Finished tutorial. Change to main scene...")
 	
 	MusicPlayer.play_sfx(transition_sound)
-	
-	if next_scene:
-		get_tree().change_scene_to_file(next_scene)
+	change_to_next()
 		
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Skip") and admin_control == true:
-		get_tree().change_scene_to_file(next_scene)
+		change_to_next()
 	else:
 		pass
+		
+func change_to_next():
+	var next_scene = ResourceLoader.load_threaded_get("res://Scenes/main.tscn")
+	if next_scene:
+		get_tree().change_scene_to_packed(next_scene)
 		
 func _log_message(message):
 	if GameManager.is_debug_text == true:
