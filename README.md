@@ -4,7 +4,7 @@
 ![Preview](Images/backgroundconcept.png)
 ![Preview](Images/skins.png)
 
-Advad is a fast-paced 2D space shooter game prototype developed with the Godot 4.5 engine. Pilot your ship through dangerous asteroid fields and confront enemies as you dodge, shoot, and survive to achieve the highest score.
+Advad is a fast-paced 2D space shooter game prototype developed with the Godot 4.5 / 4.6 engine. Pilot your ship through dangerous asteroid fields and confront enemies as you dodge, shoot, and survive to achieve the highest score.
 
 ## Key Features
 
