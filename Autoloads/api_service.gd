@@ -4,6 +4,10 @@ signal server_status_checked(is_online: bool)
 signal ai_response_received(text: String)
 signal request_failed(error_msg: String)
 
+#leaderboard signals
+signal phase_recorded_successfully()
+signal phase_record_failed (error_msg: String)
+
 var production_server_active = GameManager.production_server_active
 var debug_response_text_active = GameManager.debug_response_text_active
 var BASE_URL: String
@@ -19,6 +23,7 @@ var headers = []
 
 var _ping_http: HTTPRequest
 var _ai_http: HTTPRequest
+var _leaderboard_http: HTTPRequest
 
 var start_server: bool = GameManager.start_server
 
@@ -42,6 +47,10 @@ func _ready() -> void:
 	_ai_http = HTTPRequest.new()
 	add_child(_ai_http)
 	_ai_http.request_completed.connect(_on_ai_completed)
+	
+	_leaderboard_http = HTTPRequest.new()
+	add_child(_leaderboard_http)
+	_leaderboard_http.request_completed.connect(_on_leaderboard_completed)
 		
 	#ALWAYS start the server for testing, otherwise the variables will become NULL
 	if start_server == true:
@@ -49,7 +58,6 @@ func _ready() -> void:
 		
 	else:
 		request_failed.emit("API SERVICE, MANUAL INIT, THE SERVER STATUS IS FALSE.")
-		
 		
 #this function show log messages (response codes and messages) for devs, for security reasons
 func _log_dev(message: String, respose_code: int) -> void:
@@ -91,6 +99,32 @@ func ask_godot_ai(prompt: String):
 	
 	if response != OK:
 		request_failed.emit("ERROR, CANNOT SEND THE REQUEST")
+		
+func send_player_phase(player_name: String, last_phase: int):
+	if BASE_URL.strip_edges().is_empty():
+		_log_message("API ERROR: URL IS EMPTY")
+		return
+		
+	if not _leaderboard_http:
+		phase_record_failed.emit("CRITIC ERROR. HTTP SERVICE NOT INIT")
+		return
+		
+	if _leaderboard_http.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
+		_log_message("API SERVICE: Transmission in progress, ignoring duplicates.")
+		return
+		
+	var body = JSON.stringify({
+		"pilot_name": player_name,
+		"last_phase": last_phase
+	})
+	
+	var url = BASE_URL + "/api/record-phase"
+	var leaderboard_headers = ["Content-Type: application/json; charset=utf8"]
+	_log_message(["API SERVICE: SENDING BLACK BOX TO SERVER...", player_name, "Fase:", last_phase])
+	var response = _leaderboard_http.request(url, leaderboard_headers, HTTPClient.METHOD_POST, body)
+	
+	if response != OK:
+		phase_record_failed.emit("LOCAL ERROR: The HTTP request could not be dispatched.")
 		
 #response managment (private)
 func _on_ping_completed(result, response_code, _headers, _body):
@@ -147,6 +181,30 @@ func _on_ai_completed(result, response_code, _headers, body):
 	else:
 		request_failed.emit("CRITIC ERROR, THE RESPONSE IS NOT A VALID JSON ")
 		_log_dev("CRITIC ERROR, THE RESPONSE IS NOT A VALID JSON ", response_code)
+		
+func _on_leaderboard_completed(result, response_code, _headers, body):
+	if result != HTTPRequest.RESULT_SUCCESS:
+		match result:
+			HTTPRequest.RESULT_CANT_CONNECT:
+				_log_message("LEADERBOARD ERROR: No Internet connection or server unreachable.")
+			HTTPRequest.RESULT_CANT_RESOLVE:
+				_log_message("LEADERBOARD ERROR: Route or Domain not found")
+			HTTPRequest.RESULT_TLS_HANDSHAKE_ERROR:
+				_log_message("LEADERBOARD ERROR: SSL/HTTPS ERROR")
+			_:
+				_log_message("LEADERBOARD ERROR: UNKNOWN CONNECTION ERROR")
+		phase_record_failed.emit("UNKNOWN CONNECTION ERROR")
+		return
+		
+	if response_code != 200:
+		_log_message(["The server rejected the transmission. HTTP code: ", response_code])
+		if body:
+			_log_dev("DETAIL ERROR: " + body.get_string_from_utf8(), response_code)
+			
+		phase_record_failed.emit("HTTP ERROR: " + str(response_code))
+		return
+	_log_message("API SERVICE: Black box sent! Maximum phase recorded on the server.")
+	phase_recorded_successfully.emit()
 		
 func _log_message(message):
 	if GameManager.is_debug_text == true:
