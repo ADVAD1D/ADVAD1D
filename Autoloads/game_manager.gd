@@ -6,6 +6,7 @@ signal pause(is_paused)
 signal ship_selection_changed(new_ship_data)
 
 #global variables
+var player_name: String
 var score: int = 0
 var can_add_score: bool = true
 var phase_to_start: int = 1

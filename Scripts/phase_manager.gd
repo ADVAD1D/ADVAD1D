@@ -118,7 +118,11 @@ func _process(delta: float) -> void:
 func start_new_phase():
 	current_phase = current_phase + 1
 	if current_phase > 1:
-		Network.send_player_phase("Comandante_Beta", current_phase)
+		var current_pilot_name = GameManager.player_name
+		if current_pilot_name.strip_edges().is_empty():
+			current_pilot_name = "Player"
+		Network.send_player_phase(current_pilot_name, current_phase)
+		
 	#yes, i don't use elifs
 	if not phase_requirements.has(current_phase):
 		_log_message("You win all phases!")

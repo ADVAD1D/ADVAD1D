@@ -7,6 +7,9 @@ signal request_failed(error_msg: String)
 #leaderboard signals
 signal phase_recorded_successfully()
 signal phase_record_failed (error_msg: String)
+signal name_check_completed(is_available: bool, message: String)
+
+signal identity_recovered(pilot_name: String)
 
 var production_server_active = GameManager.production_server_active
 var debug_response_text_active = GameManager.debug_response_text_active
@@ -24,6 +27,8 @@ var headers = []
 var _ping_http: HTTPRequest
 var _ai_http: HTTPRequest
 var _leaderboard_http: HTTPRequest
+var _name_check_http: HTTPRequest
+var _whoami_http: HTTPRequest
 
 var start_server: bool = GameManager.start_server
 
@@ -51,6 +56,14 @@ func _ready() -> void:
 	_leaderboard_http = HTTPRequest.new()
 	add_child(_leaderboard_http)
 	_leaderboard_http.request_completed.connect(_on_leaderboard_completed)
+	
+	_name_check_http = HTTPRequest.new()
+	add_child(_name_check_http)
+	_name_check_http.request_completed.connect(_on_name_check_completed)
+	
+	_whoami_http = HTTPRequest.new()
+	add_child(_whoami_http)
+	_whoami_http.request_completed.connect(_on_whoami_completed)
 		
 	#ALWAYS start the server for testing, otherwise the variables will become NULL
 	if start_server == true:
@@ -76,6 +89,14 @@ func wake_up_server():
 	if response != OK:
 		_log_message("LOCAL ERROR TO CONNECT SERVER")
 		
+func check_my_identity():
+	var device_id = OS.get_unique_id()
+	var url = BASE_URL + "/api/whoami"
+	var auth_headers = ["X-Device-Id: " + device_id]
+	_log_message("API SERVICE: Scanning digital DNA for auto-login...")
+	
+	_whoami_http.request(url, auth_headers, HTTPClient.METHOD_GET)
+		
 func ask_godot_ai(prompt: String):
 	if BASE_URL.strip_edges().is_empty():
 		_log_message("API SERVICE: ERROR. URL IS EMPTY")
@@ -100,6 +121,31 @@ func ask_godot_ai(prompt: String):
 	if response != OK:
 		request_failed.emit("ERROR, CANNOT SEND THE REQUEST")
 		
+func check_pilot_name(pilot_name: String):
+	if BASE_URL.strip_edges().is_empty():
+		_log_message("API ERROR: URL IS EMPTY")
+		return
+	if not _name_check_http:
+		_log_message("ERROR: CHECK NAME HTTP SERVICE NOT INIT")
+		return
+	if _name_check_http.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
+		_log_message("CHECK IN PROGRESS")
+		return
+		
+	var url = BASE_URL + "/api/check-name/" + pilot_name.uri_encode()
+	var device_id = OS.get_unique_id()
+	var name_check_headers = [
+		"Content-Type: application/json; charset=utf8",
+		"X-Device-ID: " + device_id]
+	
+	_log_message(["API SERVICE: CHECKING NAME AVAILABILITY...", pilot_name])
+	
+	var response = _name_check_http.request(url, name_check_headers, HTTPClient.METHOD_GET)
+	
+	if response != OK:
+		_log_message("LOCAL ERROR: The name query could not be processed.")
+		name_check_completed.emit(false, "Local Network Error")
+		
 func send_player_phase(player_name: String, last_phase: int):
 	if BASE_URL.strip_edges().is_empty():
 		_log_message("API ERROR: URL IS EMPTY")
@@ -113,13 +159,18 @@ func send_player_phase(player_name: String, last_phase: int):
 		_log_message("API SERVICE: Transmission in progress, ignoring duplicates.")
 		return
 		
+	var decive_id = OS.get_unique_id()
+		
 	var body = JSON.stringify({
 		"pilot_name": player_name,
 		"last_phase": last_phase
 	})
 	
 	var url = BASE_URL + "/api/record-phase"
-	var leaderboard_headers = ["Content-Type: application/json; charset=utf8"]
+	var leaderboard_headers = [
+			"Content-Type: application/json; charset=utf8",
+			"X-Device-ID: " + decive_id]
+								
 	_log_message(["API SERVICE: SENDING BLACK BOX TO SERVER...", player_name, "Fase:", last_phase])
 	var response = _leaderboard_http.request(url, leaderboard_headers, HTTPClient.METHOD_POST, body)
 	
@@ -182,6 +233,28 @@ func _on_ai_completed(result, response_code, _headers, body):
 		request_failed.emit("CRITIC ERROR, THE RESPONSE IS NOT A VALID JSON ")
 		_log_dev("CRITIC ERROR, THE RESPONSE IS NOT A VALID JSON ", response_code)
 		
+func _on_name_check_completed(result, response_code, _headers, body):
+	if result != HTTPRequest.RESULT_SUCCESS:
+		_log_message("NAME CHECH ERROR, CONNECTION FAILED")
+		name_check_completed.emit(false, "Connection error to the server")
+		return
+	if response_code != 200:
+		_log_message(["NAME CHECK ERROR: HTTP CODE: ", response_code])
+		name_check_completed.emit(false, "Error del servidor (" + str(response_code) + ").")
+		return
+		
+	var json = JSON.new()
+	var parse_result = json.parse(body.get_string_from_utf8())
+	
+	if parse_result == OK:
+		var data = json.data
+		if typeof(data) == TYPE_DICTIONARY and data.has("available"):
+			name_check_completed.emit(data["available"], data.get("message", ""))
+		else:
+			name_check_completed.emit(false, "Invalid Server or DB Response")
+	else:
+		name_check_completed.emit(false, "Error decrypting database data.")
+		
 func _on_leaderboard_completed(result, response_code, _headers, body):
 	if result != HTTPRequest.RESULT_SUCCESS:
 		match result:
@@ -196,6 +269,11 @@ func _on_leaderboard_completed(result, response_code, _headers, body):
 		phase_record_failed.emit("UNKNOWN CONNECTION ERROR")
 		return
 		
+	if response_code == 409:
+		_log_message("Overwritting existing name attempt")
+		phase_record_failed.emit("Mission aborted: The name sign already belongs to another pilot.")
+		return
+		
 	if response_code != 200:
 		_log_message(["The server rejected the transmission. HTTP code: ", response_code])
 		if body:
@@ -205,7 +283,17 @@ func _on_leaderboard_completed(result, response_code, _headers, body):
 		return
 	_log_message("API SERVICE: Black box sent! Maximum phase recorded on the server.")
 	phase_recorded_successfully.emit()
-		
+	
+func _on_whoami_completed(result, response_code, _headers, body):
+	if result == HTTPRequest.RESULT_SUCCESS and response_code == 200:
+		var json = JSON.new()
+		if json.parse(body.get_string_from_utf8()) == OK:
+			var data = json.data
+			if data.get("pilot_name") != null:
+				identity_recovered.emit(data["pilot_name"])
+				return
+	identity_recovered.emit("ERROR, CANT FETCH PLAYER DATA ID")
+				
 func _log_message(message):
 	if GameManager.is_debug_text == true:
 		var final_string = ""

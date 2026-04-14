@@ -58,6 +58,10 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 1.0
 shader_parameter/vignette_opacity = 0.586000027835
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qwen4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0tot8"]
+
 [node name="Control" type="Control" unique_id=1741315079]
 layout_mode = 3
 anchors_preset = 15
@@ -77,7 +81,7 @@ grow_vertical = 2
 texture = ExtResource("1_0s6pj")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=481073188]
-position = Vector2(345.00003, 75.00001)
+position = Vector2(345.00003, 67)
 scale = Vector2(1.3871844, 1.3871844)
 texture = ExtResource("3_qwen4")
 
@@ -93,10 +97,10 @@ texture_hover = ExtResource("5_0tot8")
 
 [node name="SkinsLabel" type="Label" parent="." unique_id=1834301475]
 layout_mode = 0
-offset_left = 185.00002
-offset_top = 61.000004
+offset_left = 185.0
+offset_top = 54.0
 offset_right = 274.0
-offset_bottom = 77.0
+offset_bottom = 70.0
 scale = Vector2(1.6167805, 1.6167805)
 text = "SHIP SELECTOR"
 label_settings = SubResource("LabelSettings_1cnro")
@@ -170,4 +174,35 @@ stream = ExtResource("10_qwen4")
 pitch_scale = 0.5
 bus = &"SFX"
 
+[node name="NameLineEdit" type="LineEdit" parent="." unique_id=960539902]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 80.0
+offset_right = 435.0
+offset_bottom = 111.0
+theme_override_colors/font_color = Color(0.92156863, 0.85882354, 0.8392157, 0)
+theme_override_colors/font_uneditable_color = Color(0.8745098, 0.8745098, 0.8745098, 0)
+theme_override_colors/font_selected_color = Color(1, 1, 1, 0)
+theme_override_colors/font_outline_color = Color(2.5027991e-06, 0.8514727, 0.85147244, 0.99215686)
+theme_override_colors/font_placeholder_color = Color(0.26173756, 1, 0.95207256, 0.6)
+theme_override_colors/caret_color = Color(0.05882353, 0.9490196, 0.9490196, 1)
+theme_override_colors/selection_color = Color(0.5, 0.5, 0.5, 1)
+theme_override_constants/outline_size = 1
+theme_override_fonts/font = ExtResource("3_sum1o")
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBoxEmpty_qwen4")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_0tot8")
+placeholder_text = "USERNAME:"
+max_length = 12
+
+[node name="SubmitButton" type="Button" parent="." unique_id=1032064412]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 105.00001
+offset_right = 192.0
+offset_bottom = 113.00001
+scale = Vector2(1.7825232, 1.7825232)
+
 [connection signal="mouse_entered" from="BackButton" to="." method="_on_back_button_mouse_entered"]
+[connection signal="text_submitted" from="NameLineEdit" to="." method="_on_name_line_edit_text_submitted"]
+[connection signal="pressed" from="SubmitButton" to="." method="_on_submit_button_pressed"]
