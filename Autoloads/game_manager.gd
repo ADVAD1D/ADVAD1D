@@ -7,6 +7,7 @@ signal ship_selection_changed(new_ship_data)
 
 #global variables
 var player_name: String
+var player_name_field_editable: bool = false
 var score: int = 0
 var can_add_score: bool = true
 var phase_to_start: int = 1
@@ -285,7 +286,8 @@ func save_data():
 		"controls_mode": relative_control_active,
 		"fps_mode": show_fps,
 		"speedrun_mode_state": speedrun_mode_active,
-		"scroll_bar_state": is_scroll_active
+		"scroll_bar_state": is_scroll_active,
+		"pilot_name": player_name
 	}
 	#create the file in path
 	var file = FileAccess.open(save_path, FileAccess.WRITE)
@@ -295,6 +297,7 @@ func save_data():
 	#convert the dict to json text
 	var json_string = JSON.stringify(data)
 	file.store_string(json_string)
+	#saved data log messages
 	_log_message(["saved game!, selected skin", selected_ship_index])
 	
 func load_data():
@@ -329,6 +332,10 @@ func load_data():
 	if data and "speedrun_mode_state" in data:
 		speedrun_mode_active = bool(data["speedrun_mode_state"])
 		_log_message(["loaded speedrun mode state user config: ", speedrun_mode_active])
+		
+	if data and "pilot_name" in data:
+		player_name = String(data["pilot_name"])
+		_log_message(["Loaded player name: ", player_name])
 	
 func select_next_ship():
 	selected_ship_index += 1

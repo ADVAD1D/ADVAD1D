@@ -31,6 +31,7 @@ func _on_identity_recovered(recovered_name: String):
 	if recovered_name != "":
 		GameManager.player_name = recovered_name
 		_log_message("Identidad confirmada: " + recovered_name)
+		_lock_name_for_veteran(recovered_name)
 
 func _on_ship_selection_changed(ship_data: Dictionary):
 	ship_preview.texture = ship_data["texture"]
@@ -41,6 +42,8 @@ func _on_name_line_edit_text_submitted(new_text: String) -> void:
 	_register_pilot(new_text) # Replace with function body.
 
 func _on_submit_button_pressed() -> void:
+	if name_line_edit.editable == false:
+		return
 	_register_pilot(name_line_edit.text) # Replace with function body.
 	
 func _register_pilot(entered_text: String):
@@ -88,10 +91,21 @@ func _on_name_checked(is_available: bool, message: String):
 		name_line_edit.text = ""
 		name_line_edit.placeholder_text = "NAME AVAILABLE!"
 		_log_message("Authorization granted. Starting mission")
+		GameManager.save_data()
+		_lock_name_for_veteran(GameManager.player_name)
 	else:
 		_log_message(["The name is already taken", message])
 		name_line_edit.text = ""
 		name_line_edit.placeholder_text = "NAME TAKEN!"
+		
+func _lock_name_for_veteran(pilot_name: String):
+	if GameManager.player_name_field_editable == false:
+		name_line_edit.text = pilot_name
+		name_line_edit.editable = false
+		name_line_edit.focus_mode = Control.FOCUS_NONE
+		name_line_edit.tooltip_text = "You has already put your name, he cannot put another one."
+	else:
+		return
 	
 func _log_message(message):
 	if GameManager.is_debug_text == true:
