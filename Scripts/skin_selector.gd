@@ -11,7 +11,7 @@ var back_scene: String = "res://Scenes/main_menu.tscn"
 
 @onready var button_sound: AudioStreamPlayer = $ButtonSound
 
-@onready var name_line_edit: LineEdit = $NameLineEdit
+@onready var name_line_edit: LineEdit = $HBoxContainer/NameLineEdit
 @onready var submit_button: Button = $SubmitButton
 
 # Called when the node enters the scene tree for the first time.
