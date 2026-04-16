@@ -14,9 +14,14 @@ var back_scene: String = "res://Scenes/main_menu.tscn"
 @onready var name_line_edit: LineEdit = $HBoxContainer/NameLineEdit
 @onready var submit_button: Button = $SubmitButton
 
+@onready var system_warning_label: Label = $SystemMessage
+
+var message_tween: Tween
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	GameManager.can_pause = false
+	system_warning_label.visible = false
 	back_button.pressed.connect(_on_back_button_pressed)
 	left_button.pressed.connect(_on_left_button_pressed)
 	right_button.pressed.connect(_on_right_button_pressed)
@@ -92,6 +97,7 @@ func _on_name_checked(is_available: bool, message: String):
 		name_line_edit.placeholder_text = "NAME AVAILABLE!"
 		_log_message("Authorization granted. Starting mission")
 		GameManager.save_data()
+		await get_tree().create_timer(1.5).timeout
 		_lock_name_for_veteran(GameManager.player_name)
 	else:
 		_log_message(["The name is already taken", message])
@@ -103,9 +109,23 @@ func _lock_name_for_veteran(pilot_name: String):
 		name_line_edit.text = pilot_name
 		name_line_edit.editable = false
 		name_line_edit.focus_mode = Control.FOCUS_NONE
-		name_line_edit.tooltip_text = "You has already put your name, he cannot put another one."
+		_show_animated_warning_message("You cannot change your name!")
 	else:
 		return
+		
+func _show_animated_warning_message(text_msg: String) -> void:
+	system_warning_label.text = text_msg
+	system_warning_label.visible = true
+	system_warning_label.modulate.a = 0.0 
+	
+	if message_tween and message_tween.is_valid():
+		message_tween.kill()
+		
+	message_tween = create_tween()
+	message_tween.tween_property(system_warning_label, "modulate:a", 1.0, 0.5)
+	message_tween.tween_interval(2.5)
+	message_tween.tween_property(system_warning_label, "modulate:a", 0.0, 1.0)
+	message_tween.tween_callback(func(): system_warning_label.visible = false)
 	
 func _log_message(message):
 	if GameManager.is_debug_text == true:

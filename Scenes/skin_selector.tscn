@@ -67,7 +67,16 @@ outline_color = Color(0.49803922, 1, 0.9490196, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qwen4"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tapm0"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0tot8"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_0tot8"]
+font = ExtResource("3_sum1o")
+font_size = 24
+font_color = Color(1, 0.35734692, 0.29002047, 1)
+outline_size = 1
+outline_color = Color(1, 0.011764706, 0.03137255, 1)
 
 [node name="Control" type="Control" unique_id=1741315079]
 layout_mode = 3
@@ -223,8 +232,17 @@ theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("3_sum1o")
 theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("StyleBoxEmpty_qwen4")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_tapm0")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_0tot8")
 max_length = 12
+
+[node name="SystemMessage" type="Label" parent="." unique_id=906223348]
+layout_mode = 0
+offset_left = 187.0
+offset_top = 102.0
+offset_right = 411.0
+offset_bottom = 120.0
+label_settings = SubResource("LabelSettings_0tot8")
 
 [connection signal="mouse_entered" from="BackButton" to="." method="_on_back_button_mouse_entered"]
 [connection signal="pressed" from="SubmitButton" to="." method="_on_submit_button_pressed"]

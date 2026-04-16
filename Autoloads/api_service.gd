@@ -292,7 +292,7 @@ func _on_whoami_completed(result, response_code, _headers, body):
 			if data.get("pilot_name") != null:
 				identity_recovered.emit(data["pilot_name"])
 				return
-	identity_recovered.emit("ERROR, CANT FETCH PLAYER DATA ID")
+	identity_recovered.emit("")
 				
 func _log_message(message):
 	if GameManager.is_debug_text == true:
