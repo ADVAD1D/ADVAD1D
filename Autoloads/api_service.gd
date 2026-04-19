@@ -35,9 +35,9 @@ var start_server: bool = GameManager.start_server
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if production_server_active == true:
-		BASE_URL = "https://advad-ai-server.onrender.com"
+		BASE_URL = "https://advad-ai-server.onrender.com/api/advad-ai"
 	else:
-		BASE_URL = "http://127.0.0.1:10000"
+		BASE_URL = "http://127.0.0.1:10000/api/advad-ai"
 		
 	var app_token = EnvParser.parse("APP_TOKEN")
 	headers = [
