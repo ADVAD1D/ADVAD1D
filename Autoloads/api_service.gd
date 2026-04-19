@@ -85,13 +85,13 @@ func wake_up_server():
 		return
 		
 	_log_message("API SERVICE, TRY CALL SERVER!")
-	var response = _ping_http.request(BASE_URL)
+	var response = _ping_http.request(BASE_URL + "/")
 	if response != OK:
 		_log_message("LOCAL ERROR TO CONNECT SERVER")
 		
 func check_my_identity():
 	var device_id = OS.get_unique_id()
-	var url = BASE_URL + "/api/whoami"
+	var url = BASE_URL + "/whoami"
 	var auth_headers = ["X-Device-Id: " + device_id]
 	_log_message("API SERVICE: Scanning digital DNA for auto-login...")
 	
@@ -132,7 +132,7 @@ func check_pilot_name(pilot_name: String):
 		_log_message("CHECK IN PROGRESS")
 		return
 		
-	var url = BASE_URL + "/api/check-name/" + pilot_name.uri_encode()
+	var url = BASE_URL + "/check-name/" + pilot_name.uri_encode()
 	var device_id = OS.get_unique_id()
 	var name_check_headers = [
 		"Content-Type: application/json; charset=utf8",
@@ -166,7 +166,7 @@ func send_player_phase(player_name: String, last_phase: int):
 		"last_phase": last_phase
 	})
 	
-	var url = BASE_URL + "/api/record-phase"
+	var url = BASE_URL + "/record-phase"
 	var leaderboard_headers = [
 			"Content-Type: application/json; charset=utf8",
 			"X-Device-ID: " + decive_id]
