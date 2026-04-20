@@ -277,18 +277,30 @@ func get_formatted_speedrun_time() -> String:
 	
 #save and load data functions
 func save_data():
+	var data: Dictionary
 	if browser_support == true:
 		_log_message("Web version: using default values")
-		return
+		#only save player name in web version
+		_log_message("Save ONLY player_name in web version")
+		data = {
+			"pilot_name": player_name
+		}
+		_log_message(["Player name: ", player_name])
+	else:
+		data = {
+			"selected_ship": selected_ship_index,
+			"controls_mode": relative_control_active,
+			"fps_mode": show_fps,
+			"speedrun_mode_state": speedrun_mode_active,
+			"scroll_bar_state": is_scroll_active,
+			"pilot_name": player_name
+		}
+		_log_message(["saved game!, selected skin", selected_ship_index])
+		_log_message(["Relative controls: ", relative_control_active])
+		_log_message(["FPS mode: ", show_fps])
+		_log_message(["Speedrun mode state", speedrun_mode_active])
+		_log_message(["Scroll bar state", is_scroll_active])
 		
-	var data: Dictionary = {
-		"selected_ship": selected_ship_index,
-		"controls_mode": relative_control_active,
-		"fps_mode": show_fps,
-		"speedrun_mode_state": speedrun_mode_active,
-		"scroll_bar_state": is_scroll_active,
-		"pilot_name": player_name
-	}
 	#create the file in path
 	var file = FileAccess.open(save_path, FileAccess.WRITE)
 	if file == null:
@@ -297,14 +309,8 @@ func save_data():
 	#convert the dict to json text
 	var json_string = JSON.stringify(data)
 	file.store_string(json_string)
-	#saved data log messages
-	_log_message(["saved game!, selected skin", selected_ship_index])
 	
 func load_data():
-	if browser_support == true:
-		_log_message("Web version: using default values")
-		return
-		
 	if not FileAccess.file_exists(save_path):
 		_log_message("The save file not exists, using default values")
 		return
