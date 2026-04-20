@@ -291,7 +291,7 @@ func _get_persistent_device_uid():
 	var hw_id = OS.get_unique_id()
 	if hw_id != null and hw_id.strip_edges() != "":
 		return hw_id
-		
+	#ONLY save UID browser logic in web version, native works nice
 	var id_path = "user://web_device_id.dat"
 	if FileAccess.file_exists(id_path):
 		var file = FileAccess.open(id_path, FileAccess.READ)
