@@ -40,9 +40,11 @@ func _ready() -> void:
 		BASE_URL = "http://127.0.0.1:10000/api/advad-ai"
 		
 	var app_token = EnvParser.parse("APP_TOKEN")
+	var global_device_id = OS.get_unique_id()
 	headers = [
 		"Content-Type: application/json; charset=utf8",
-		"X-App-Token: " + app_token
+		"X-App-Token: " + app_token,
+		"X-Device-ID: " + global_device_id
 		]
 		
 	_ping_http = HTTPRequest.new() # Replace with function body.
@@ -90,12 +92,10 @@ func wake_up_server():
 		_log_message("LOCAL ERROR TO CONNECT SERVER")
 		
 func check_my_identity():
-	var device_id = OS.get_unique_id()
 	var url = BASE_URL + "/whoami"
-	var auth_headers = ["X-Device-Id: " + device_id]
 	_log_message("API SERVICE: Scanning digital DNA for auto-login...")
 	
-	_whoami_http.request(url, auth_headers, HTTPClient.METHOD_GET)
+	_whoami_http.request(url, headers, HTTPClient.METHOD_GET)
 		
 func ask_godot_ai(prompt: String):
 	if BASE_URL.strip_edges().is_empty():
@@ -133,14 +133,10 @@ func check_pilot_name(pilot_name: String):
 		return
 		
 	var url = BASE_URL + "/check-name/" + pilot_name.uri_encode()
-	var device_id = OS.get_unique_id()
-	var name_check_headers = [
-		"Content-Type: application/json; charset=utf8",
-		"X-Device-ID: " + device_id]
 	
 	_log_message(["API SERVICE: CHECKING NAME AVAILABILITY...", pilot_name])
 	
-	var response = _name_check_http.request(url, name_check_headers, HTTPClient.METHOD_GET)
+	var response = _name_check_http.request(url, headers, HTTPClient.METHOD_GET)
 	
 	if response != OK:
 		_log_message("LOCAL ERROR: The name query could not be processed.")
@@ -159,20 +155,14 @@ func send_player_phase(player_name: String, last_phase: int):
 		_log_message("API SERVICE: Transmission in progress, ignoring duplicates.")
 		return
 		
-	var decive_id = OS.get_unique_id()
-		
 	var body = JSON.stringify({
 		"pilot_name": player_name,
 		"last_phase": last_phase
 	})
 	
 	var url = BASE_URL + "/record-phase"
-	var leaderboard_headers = [
-			"Content-Type: application/json; charset=utf8",
-			"X-Device-ID: " + decive_id]
-								
 	_log_message(["API SERVICE: SENDING BLACK BOX TO SERVER...", player_name, "Fase:", last_phase])
-	var response = _leaderboard_http.request(url, leaderboard_headers, HTTPClient.METHOD_POST, body)
+	var response = _leaderboard_http.request(url, headers, HTTPClient.METHOD_POST, body)
 	
 	if response != OK:
 		phase_record_failed.emit("LOCAL ERROR: The HTTP request could not be dispatched.")
