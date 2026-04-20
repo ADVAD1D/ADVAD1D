@@ -42,10 +42,7 @@ func _ready() -> void:
 	var encrypted_app_token = EnvParser.parse("APP_TOKEN")
 	var app_token = Marshalls.base64_to_utf8(encrypted_app_token)
 		
-	var global_device_id = OS.get_unique_id()
-	if global_device_id == null or global_device_id.strip_edges() == "":
-		randomize()
-		global_device_id = "WEB-" + str(Time.get_ticks_msec()) + "-" + str(randi() % 10000)
+	var global_device_id = _get_persistent_device_uid()
 		
 	headers = [
 		"Content-Type: application/json; charset=utf8",
@@ -289,7 +286,26 @@ func _on_whoami_completed(result, response_code, _headers, body):
 				identity_recovered.emit(data["pilot_name"])
 				return
 	identity_recovered.emit("")
-				
+	
+func _get_persistent_device_uid():
+	var hw_id = OS.get_unique_id()
+	if hw_id != null and hw_id.strip_edges() != "":
+		return hw_id
+		
+	var id_path = "user://web_device_id.dat"
+	if FileAccess.file_exists(id_path):
+		var file = FileAccess.open(id_path, FileAccess.READ)
+		var saved_id = file.get_as_text().strip_edges()
+		if saved_id != "":
+			return saved_id
+			
+	randomize()
+	var new_web_id = "WEB-" + str(Time.get_ticks_msec()) + "-" + str(randi() % 10000)
+	var new_file = FileAccess.open(id_path, FileAccess.WRITE)
+	if new_file:
+		new_file.store_string(new_web_id)
+	return new_web_id
+	
 func _log_message(message):
 	if GameManager.is_debug_text == true:
 		var final_string = ""
