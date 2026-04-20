@@ -39,8 +39,16 @@ func _ready() -> void:
 	else:
 		BASE_URL = "http://127.0.0.1:10000/api/advad-ai"
 		
-	var app_token = EnvParser.parse("APP_TOKEN")
+	var encrypted_app_token = EnvParser.parse("APP_TOKEN")
+	if encrypted_app_token == null or encrypted_app_token == "":
+		encrypted_app_token = "NERWNERQNFNTVzBSRDExMDA="
+	var app_token = Marshalls.base64_to_utf8(encrypted_app_token)
+		
 	var global_device_id = OS.get_unique_id()
+	if global_device_id == null or global_device_id.strip_edges() == "":
+		randomize()
+		global_device_id = "WEB-" + str(Time.get_ticks_msec()) + "-" + str(randi() % 10000)
+		
 	headers = [
 		"Content-Type: application/json; charset=utf8",
 		"X-App-Token: " + app_token,
