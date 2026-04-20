@@ -39,8 +39,7 @@ func _ready() -> void:
 	else:
 		BASE_URL = "http://127.0.0.1:10000/api/advad-ai"
 		
-	var encrypted_app_token = EnvParser.parse("APP_TOKEN")
-	var app_token = Marshalls.base64_to_utf8(encrypted_app_token)
+	var app_token = EnvParser.parse("APP_TOKEN")
 		
 	var global_device_id = _get_persistent_device_uid()
 		
