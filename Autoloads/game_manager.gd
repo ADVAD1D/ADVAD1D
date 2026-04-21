@@ -6,6 +6,8 @@ signal pause(is_paused)
 signal ship_selection_changed(new_ship_data)
 
 #global variables
+const MAX_MESSAGES: int = 5
+var messages_sent: int = 0
 var player_name: String
 var player_name_field_editable: bool = false
 var score: int = 0
