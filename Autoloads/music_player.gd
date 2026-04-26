@@ -16,10 +16,10 @@ var no_music_scenes = [
 
 #LA RUTA A LA MÚSICA NO FUNCIONABA POR UNA MAYÚSCULA ME CAGO EN TODOO CHAVAL MANOLO
 var scene1_specific_playlist: Dictionary = {
-	"res://Scenes/Abduction.tscn": preload("res://Assets/Audio/Music/circuit-pathway-387799.wav"),
-	"res://Scenes/ending.tscn": preload("res://Assets/Audio/Music/star-runner-411375.wav"),
-	"res://Scenes/main_menu.tscn": preload("res://Assets/Audio/Music/in-time-all-hope-was-lost-411362.wav"),
-	"res://Scenes/skin_selector.tscn": preload("res://Assets/Audio/where-we-used-to-be-415885.wav"),
+	"res://Scenes/Abduction.tscn": preload("res://Assets/Audio/Music/circuit-pathway-387799.ogg"),
+	"res://Scenes/ending.tscn": preload("res://Assets/Audio/Music/star-runner-411375.ogg"),
+	"res://Scenes/main_menu.tscn": preload("res://Assets/Audio/Music/in-time-all-hope-was-lost-411362.ogg"),
+	"res://Scenes/skin_selector.tscn": preload("res://Assets/Audio/Music/where-we-used-to-be-415885.ogg"),
 	"res://Scenes/ai_console.tscn": preload("res://Assets/Audio/Music/psychronic-hypnotic-crystals-415889.ogg"),
 	"res://Scenes/UI/ai_console_subviewport.tscn": preload("res://Assets/Audio/Music/psychronic-hypnotic-crystals-415889.ogg")	
 }
@@ -30,19 +30,16 @@ var scene1_specific_playlist: Dictionary = {
 #ogg format is better for this
 
 var playlist = [
-	preload("res://Assets/Audio/Music/neon-rising-336846.wav"),
-	preload("res://Assets/Audio/Music/digital-dream-391529.wav"),
-	preload("res://Assets/Audio/Music/velvet-malware-454813.wav"),
+	preload("res://Assets/Audio/Music/neon-rising-336846.ogg"),
+	preload("res://Assets/Audio/Music/digital-dream-391529.ogg"),
+	preload("res://Assets/Audio/Music/velvet-malware-454813.ogg"),
 	preload("res://Assets/Audio/Music/psychronic-break-forward-468745.ogg"),
-	preload("res://Assets/Audio/Music/pulsehaven-nexus-382253.wav"),
-	preload("res://Assets/Audio/Music/blue-light-district-397940.wav"),
-	preload("res://Assets/Audio/Music/the-fight-left-in-us-391531.wav"),
-	preload("res://Assets/Audio/Music/starstream-circuit-370586.wav"),
+	preload("res://Assets/Audio/Music/pulsehaven-nexus-382253.ogg"),
+	preload("res://Assets/Audio/Music/blue-light-district-397940.ogg"),
+	preload("res://Assets/Audio/Music/the-fight-left-in-us-391531.ogg"),
 	preload("res://Assets/Audio/Music/psychronic-breakpoint-triumph-468746.ogg"),
-	preload("res://Assets/Audio/Music/ascending-data-418712.wav"),
-	preload("res://Assets/Audio/Music/digital-disconnect-454806.wav"),
-	preload("res://Assets/Audio/Music/particle-beam-438034.wav"),
-	preload("res://Assets/Audio/Music/nightwave-night-423019.wav"),
+	preload("res://Assets/Audio/Music/ascending-data-418712.ogg"),
+	preload("res://Assets/Audio/Music/digital-disconnect-454806.ogg"),
 ]
 
 #licences
