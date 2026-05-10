@@ -55,7 +55,7 @@ var shuffled_playlist = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	finished.connect(play_next_shuffled_song)
+	finished.connect(_on_music_finished)
 	get_tree().scene_changed.connect(_on_scene_changed) # Replace with function body.
 	
 	volume_db = linear_to_db(linear_volume)
@@ -63,6 +63,8 @@ func _ready() -> void:
 	_emit_volume_changed()
 	_on_scene_changed()
 	
+func _on_music_finished():
+	call_deferred("play_next_shuffled_song")
 	
 func _on_scene_changed():
 	var current_scene_path = get_tree().current_scene.scene_file_path
