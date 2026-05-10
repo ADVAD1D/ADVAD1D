@@ -13,7 +13,6 @@ var no_music_scenes = [
 	"res://Scenes/spash_screen.tscn"
 ]
 
-
 #LA RUTA A LA MÚSICA NO FUNCIONABA POR UNA MAYÚSCULA ME CAGO EN TODOO CHAVAL MANOLO
 var scene1_specific_playlist: Dictionary = {
 	"res://Scenes/Abduction.tscn": preload("res://Assets/Audio/Music/circuit-pathway-387799.ogg"),
@@ -55,6 +54,7 @@ var shuffled_playlist = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	#fix lag shutering in change music signal, use call deferred
 	finished.connect(_on_music_finished)
 	get_tree().scene_changed.connect(_on_scene_changed) # Replace with function body.
 	
