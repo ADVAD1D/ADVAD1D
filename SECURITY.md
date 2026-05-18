@@ -51,3 +51,12 @@ For questions regarding the implementation or further enhancements, refer to the
 ADVAD uses anonymous device identifiers (UIDs) temporarily to maintain the security of transmissions and the integrity of global scores. No personally identifiable information is collected.
 
 This data is stored on the backend infrastructure hosted on Render and is not sold to any third party.
+
+### Vulnerability reporting
+We take security breaches or flaws in the scoring system or AI API consumption very seriously.
+
+If you find a severe vulnerability (such as the ability to bypass token authentication, encryption vulnerabilities, or injections affecting server integrity), please do not open a public issue.
+
+Instead, report it directly by sending an email to: angelleonardohern3@gmail.com
+
+Please provide clear details on how to reproduce the vulnerability. We will evaluate and fix the issue as soon as possible.
