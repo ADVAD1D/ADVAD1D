@@ -24,7 +24,7 @@ Binary Integration: The key resides in the final executable, protected by compil
 ## Security Benefits
 
 Prevents easy extraction of assets using common tools (e.g., simple PCK viewers or unpackers).,
-Protects GDScript source code, scene structures, and resource files from casual inspection or "script kiddie" ripping.,
+Protects GDScript source code, scene structures, and resource files from casual inspection or "script kiddie" ripping.
 Maintains full game functionality with minimal performance overhead during loading.
 
 ## Implementation Details
