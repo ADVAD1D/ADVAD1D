@@ -43,6 +43,11 @@ window/size/viewport_height=300
 window/size/mode=3
 window/stretch/mode="canvas_items"
 
+[editor]
+
+version_control/plugin_name="GitPlugin"
+version_control/autoload_on_startup=true
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/discord_gd/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg")
