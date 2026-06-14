@@ -214,7 +214,7 @@ func apply_difficulty():
 	var progress = float(current_phase - 1) / (phase_requirements.size() - 1.0)
 	
 	#sorry for the spanglish in the code
-	#dificultad para las naves
+	#ships difficulty
 	_log_message(["Apply difficult from Phase:", current_phase, "Progress: ", progress])
 	var ship_max_enemies = int(lerp(min_ship_enemies, max_ship_enemies, progress))
 	var ship_config = {"speed": lerp(250.0, 500.0, progress),
@@ -223,7 +223,7 @@ func apply_difficulty():
 	if is_instance_valid(ship_enemy_spawner):
 		ship_enemy_spawner.configure_for_phase(ship_max_enemies, ship_config)
 		
-	#dificultad para las sierras
+	#saws difficulty
 	var saw_max_enemies = int(max_saw_enemies)
 	var saw_config = {"speed": lerp(700.0, 1200.0, progress)}
 	
