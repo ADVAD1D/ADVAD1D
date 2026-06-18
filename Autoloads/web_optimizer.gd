@@ -1,5 +1,5 @@
 extends Node
-## Web-only runtime optimizations.
+## 
 ##
 ## On desktop this autoload removes itself immediately (zero overhead)
 ## On web it switches every CRT ShaderMaterial in the current scene to its

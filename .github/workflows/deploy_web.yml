@@ -1,0 +1,93 @@
+name: Deploy Godot Web Build to Website
+
+on:
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: 4.6-stable
+  GODOT_EXECUTABLE_URL: https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_linux.x86_64.zip
+  GODOT_TEMPLATES_URL: https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_export_templates.tpz
+  EXPORT_TEMPLATE_DIR: 4.6.stable
+  WEBSITE_REPO: ANGELUSD11/ANGELUSD11.github.io
+  WEBSITE_BRANCH: main
+  WEBSITE_DEST_DIR: public/advad-game
+
+jobs:
+  export-and-deploy:
+    name: Export to Web and Deploy to Website
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Download and Install Godot
+        run: |
+          echo "Downloading Godot Engine..."
+          wget -q "${GODOT_EXECUTABLE_URL}" -O godot.zip
+          unzip godot.zip
+          sudo mv Godot_v*linux.x86_64 /usr/local/bin/godot
+          sudo chmod +x /usr/local/bin/godot
+
+      - name: Download and Install Export Templates
+        run: |
+          echo "Downloading Export Templates..."
+          wget -q "${GODOT_TEMPLATES_URL}" -O templates.tpz
+          unzip templates.tpz
+          mkdir -p ~/.local/share/godot/export_templates/${EXPORT_TEMPLATE_DIR}
+          mv templates/* ~/.local/share/godot/export_templates/${EXPORT_TEMPLATE_DIR}/
+
+      - name: Inject Export Presets
+        env:
+          PRESETS_FILE: ${{ secrets.EXPORT_PRESETS_CFG }}
+        run: |
+          echo "Create and inject export_presets.cfg from secrets..."
+          printf "%s\n" "$PRESETS_FILE" > export_presets.cfg
+
+      - name: Inject Environment Variables (.env)
+        env:
+          MY_APP_TOKEN: ${{ secrets.APP_TOKEN }}
+        run: |
+          echo "Fabric file from .env secrets..."
+          echo "APP_TOKEN=$MY_APP_TOKEN" > .env
+
+      - name: Import Godot Assets
+        run: |
+          echo "Importing assets for the first time (Godot 4 requires this before exporting)..."
+          godot --headless --editor --quit || true
+          echo "Second pass of importation (necessary for heavy audio in Godot 4)..."
+          godot --headless --editor --quit || true
+
+      - name: Export Web Build
+        run: |
+          echo "Exporting HTML5 version..."
+          mkdir -p build_web
+          godot --headless --export-release "Web" build_web/index.html
+
+      - name: Upload to Actions Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-web-build
+          path: build_web
+
+      - name: Deploy Web Build to Website Repo
+        env:
+          DEPLOY_PAT: ${{ secrets.WEBSITE_DEPLOY_PAT }}
+        run: |
+          echo "Cloning website repo (${WEBSITE_REPO}, branch ${WEBSITE_BRANCH})..."
+          git clone --branch "${WEBSITE_BRANCH}" --single-branch \
+            "https://x-access-token:${DEPLOY_PAT}@github.com/${WEBSITE_REPO}.git" website
+
+          echo "Replacing ${WEBSITE_DEST_DIR} with the fresh build..."
+          rm -rf "website/${WEBSITE_DEST_DIR}"
+          mkdir -p "website/${WEBSITE_DEST_DIR}"
+          cp -r build_web/. "website/${WEBSITE_DEST_DIR}/"
+
+          cd website
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${WEBSITE_DEST_DIR}"
+          git commit -m "chore: update ADVAD web build" || { echo "No changes to commit"; exit 0; }
+          git push origin "${WEBSITE_BRANCH}"
