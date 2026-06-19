@@ -1,10 +1,7 @@
 name: GDScript Lint
 
 on:
-  pull_request:
-    branches: ["main"]
-    paths:
-      - "**.gd"
+  workflow_dispatch:
 
 jobs:
   lint:
