@@ -34,6 +34,13 @@ uniform bool clip_warp = false;
 uniform float vignette_intensity = 0.4;
 uniform float vignette_opacity : hint_range(0.0, 1.0) = 0.5;
 
+// Lightweight path for web/low-end GPUs: skips ONLY the expensive animated
+// noise() film-grain (multiple sin/random per pixel). Everything else stays
+// intact (aberration, roll/distort, static noise, scanlines, grille, warp,
+// discolor) so the death glitch effect still looks the same on web.
+// Enabled automatically on web by Autoloads/web_optimizer.gd.
+uniform bool low_quality = false;
+
 // The rest of the shader code remains exactly the same from here...
 // (All the functions and fragment shader code remain unchanged)
 
@@ -143,7 +150,7 @@ void fragment() {
     }
 
     // Apply noise
-    if (noise_opacity > 0.0) {
+    if (!low_quality && noise_opacity > 0.0) {
         float n = smoothstep(0.4, 0.5, noise(uv * vec2(2.0, 200.0) + vec2(10.0, TIME * noise_speed)));
         float nl = n * roll_line * clamp(random((ceil(uv * resolution) / resolution) + vec2(TIME * 0.8, 0.0)).x + 0.8, 0.0, 1.0);
         text.rgb = clamp(mix(text.rgb, text.rgb + nl, noise_opacity), vec3(0.0), vec3(1.0));

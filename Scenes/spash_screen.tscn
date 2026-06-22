@@ -28,6 +28,7 @@ shader_parameter/warp_amount = 0.150000007125
 shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.3
 shader_parameter/vignette_opacity = 1.0
+shader_parameter/low_quality = false
 
 [node name="Control" type="Control" unique_id=45411008]
 layout_mode = 3

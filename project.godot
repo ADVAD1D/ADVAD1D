@@ -35,6 +35,7 @@ EnvParser="*res://addons/env_parser/EnvParser.gd"
 Network="*uid://bgwnrece4nmtf"
 DialogueManager="*uid://c3rodes2l3gxb"
 MainManager="*uid://hhs0k5eaobg1"
+WebOptimizer="*res://Autoloads/web_optimizer.gd"
 
 [display]
 
