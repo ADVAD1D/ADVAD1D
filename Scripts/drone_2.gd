@@ -62,7 +62,6 @@ func _process(delta: float) -> void:
 func shoot():
 	if shoot_timer.is_stopped():
 		var fire_direction = Vector2.LEFT.rotated(sprite.global_rotation)
-		# Pooled bullet instead of instantiate()/queue_free().
 		EnemyLaserPool.acquire(get_parent(), shoot_muzzle.global_position, fire_direction)
 		shoot_timer.start()
 		
