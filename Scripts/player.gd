@@ -221,8 +221,8 @@ func _perform_death_effects():
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("asteroides") or area.is_in_group("enemy_laser") or area.is_in_group("saws"):
 		if area.is_in_group("enemy_laser"):
-			area.queue_free()
-			
+			EnemyLaserPool.release(area)
+
 		die() # Replace with function body.
 
 func _on_hitbox_body_entered(body: Node2D) -> void:
