@@ -71,7 +71,10 @@ func _on_area_entered(area: Area2D) -> void:
 		return
 	
 	if area.is_in_group("enemy_laser") or area.is_in_group("saws"):
-		area.queue_free()
+		if area.is_in_group("enemy_laser"):
+			EnemyLaserPool.release(area)  # return to pool, don't destroy
+		else:
+			area.queue_free()  # saws aren't pooled
 		die()
 
 func die():
