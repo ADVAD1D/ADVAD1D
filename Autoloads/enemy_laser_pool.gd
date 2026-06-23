@@ -9,13 +9,11 @@ const PREWARM_COUNT: int = 40
 
 var _available: Array = []
 
-
 func _ready() -> void:
 	for i in PREWARM_COUNT:
 		var bullet = ENEMY_LASER_SCENE.instantiate()
 		bullet.deactivate()
 		_available.append(bullet)
-
 
 ## Takes a bullet, adds it under 'parent' and fires it. If 'origin' (a point
 ## inside the arena, e.g. the ship center) is given and a wall lies between it
@@ -28,7 +26,6 @@ func acquire(parent: Node, spawn_position: Vector2, fire_direction: Vector2, ori
 	bullet.activate(spawn_position, fire_direction)
 	return bullet
 
-
 func _muzzle_behind_wall(ref_node, from: Vector2, to: Vector2) -> bool:
 	var space = ref_node.get_world_2d().direct_space_state
 	var query := PhysicsRayQueryParameters2D.create(from, to)
@@ -36,7 +33,6 @@ func _muzzle_behind_wall(ref_node, from: Vector2, to: Vector2) -> bool:
 	query.collision_mask = 1
 	var hit: Dictionary = space.intersect_ray(query)
 	return hit and hit.collider is StaticBody2D
-
 
 ## Returns a bullet to the pool. Idempotent (is_active guards double-release).
 func release(bullet) -> void:
@@ -54,7 +50,6 @@ func _take_available() -> Node:
 		if is_instance_valid(bullet):
 			return bullet
 	return ENEMY_LASER_SCENE.instantiate()
-
 
 func _recycle(bullet) -> void:
 	if not is_instance_valid(bullet):
