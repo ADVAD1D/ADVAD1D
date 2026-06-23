@@ -116,8 +116,8 @@ func shoot() -> void:
 		#UP for direction of the laser in instance
 		#Indica la dirección del laser en su instancia
 		var fire_direction = Vector2.UP.rotated(rotation)
-		# Pooled bullet instead of instantiate()/queue_free().
-		EnemyLaserPool.acquire(get_parent(), shoot_marker.global_position, fire_direction)
+		# ship center as origin: blocks the shot when flush against a wall
+		EnemyLaserPool.acquire(get_parent(), shoot_marker.global_position, fire_direction, global_position)
 
 		shoot_timer.start()
 		laser_sound.play()

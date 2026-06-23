@@ -23,5 +23,5 @@ func _on_area_entered(area: Area2D) -> void:
 			get_parent().add_child(enemy_particles_instance)
 			enemy_particles_instance.global_position = (global_position + area.global_position) / 2
 
-		EnemyLaserPool.release(area)  # enemy bullet back to pool
-		queue_free()  # player shot isn't pooled
+		EnemyLaserPool.release(area)
+		queue_free()
