@@ -1,9 +1,5 @@
 extends Node
 ## Object pool for enemy (ship/drone) projectiles, to avoid per-shot
-## instantiate()/queue_free() GC churn that stutters the web build.
-## Free bullets live as orphan nodes in _available; as an autoload the pool
-## survives scene reloads, so parked bullets persist.
-
 const ENEMY_LASER_SCENE: PackedScene = preload("res://Scenes/enemy_laser.tscn")
 const PREWARM_COUNT: int = 40
 
@@ -41,7 +37,6 @@ func release(bullet) -> void:
 	bullet.deactivate()
 	# Defer the reparent: don't touch the tree during an area_entered signal.
 	call_deferred("_recycle", bullet)
-
 
 func _take_available() -> Node:
 	# Skip dead refs (freed by a scene reload); instantiate if none left.
