@@ -5,7 +5,6 @@ extends Area2D
 var direction = Vector2.ZERO
 var is_active: bool = false
 
-
 func activate(spawn_position: Vector2, start_direction: Vector2) -> void:
 	global_position = spawn_position
 	set_direction(start_direction)
@@ -15,7 +14,6 @@ func activate(spawn_position: Vector2, start_direction: Vector2) -> void:
 	set_deferred("monitoring", true)
 	set_deferred("monitorable", true)
 
-
 func deactivate() -> void:
 	is_active = false
 	direction = Vector2.ZERO
@@ -23,7 +21,6 @@ func deactivate() -> void:
 	set_deferred("monitoring", false)
 	set_deferred("monitorable", false)
 	hide()
-
 
 # Kept for compatibility: used by laser_shield on reflect.
 func start(start_direction: Vector2):

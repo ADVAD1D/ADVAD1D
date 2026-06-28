@@ -1,14 +1,9 @@
 extends Node
-## Object pool for enemy (ship/drone) projectiles, to avoid per-shot
-## instantiate()/queue_free() GC churn that stutters the web build.
-## Free bullets live as orphan nodes in _available; as an autoload the pool
-## survives scene reloads, so parked bullets persist.
 
 const ENEMY_LASER_SCENE: PackedScene = preload("res://Scenes/enemy_laser.tscn")
 const PREWARM_COUNT: int = 40
 
 var _available: Array = []
-
 
 func _ready() -> void:
 	for i in PREWARM_COUNT:
@@ -16,10 +11,6 @@ func _ready() -> void:
 		bullet.deactivate()
 		_available.append(bullet)
 
-
-## Takes a bullet, adds it under 'parent' and fires it. If 'origin' (a point
-## inside the arena, e.g. the ship center) is given and a wall lies between it
-## and the muzzle, the shot is blocked (returns null) so no bullet spawns outside.
 func acquire(parent: Node, spawn_position: Vector2, fire_direction: Vector2, origin: Vector2 = Vector2.INF) -> Node:
 	if origin != Vector2.INF and _muzzle_behind_wall(parent, origin, spawn_position):
 		return null
@@ -27,7 +18,6 @@ func acquire(parent: Node, spawn_position: Vector2, fire_direction: Vector2, ori
 	parent.add_child(bullet)
 	bullet.activate(spawn_position, fire_direction)
 	return bullet
-
 
 func _muzzle_behind_wall(ref_node, from: Vector2, to: Vector2) -> bool:
 	var space = ref_node.get_world_2d().direct_space_state
@@ -37,7 +27,6 @@ func _muzzle_behind_wall(ref_node, from: Vector2, to: Vector2) -> bool:
 	var hit: Dictionary = space.intersect_ray(query)
 	return hit and hit.collider is StaticBody2D
 
-
 ## Returns a bullet to the pool. Idempotent (is_active guards double-release).
 func release(bullet) -> void:
 	if not is_instance_valid(bullet) or not bullet.is_active:
@@ -46,7 +35,6 @@ func release(bullet) -> void:
 	# Defer the reparent: don't touch the tree during an area_entered signal.
 	call_deferred("_recycle", bullet)
 
-
 func _take_available() -> Node:
 	# Skip dead refs (freed by a scene reload); instantiate if none left.
 	while not _available.is_empty():
@@ -54,7 +42,6 @@ func _take_available() -> Node:
 		if is_instance_valid(bullet):
 			return bullet
 	return ENEMY_LASER_SCENE.instantiate()
-
 
 func _recycle(bullet) -> void:
 	if not is_instance_valid(bullet):

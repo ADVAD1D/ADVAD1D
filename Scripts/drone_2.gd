@@ -64,5 +64,4 @@ func shoot():
 		var fire_direction = Vector2.LEFT.rotated(sprite.global_rotation)
 		EnemyLaserPool.acquire(get_parent(), shoot_muzzle.global_position, fire_direction)
 		shoot_timer.start()
-		
 		laser_sound.play()
