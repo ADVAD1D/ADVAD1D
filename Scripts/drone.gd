@@ -61,11 +61,8 @@ func _process(delta: float) -> void:
 
 func shoot():
 	if shoot_timer.is_stopped():
-		var laser_instance = laser_scene.instantiate()
-		get_parent().add_child(laser_instance)
-		laser_instance.global_position = shoot_muzzle.global_position
 		var fire_direction = Vector2.RIGHT.rotated(sprite.global_rotation)
-		laser_instance.start(fire_direction)
+		EnemyLaserPool.acquire(get_parent(), shoot_muzzle.global_position, fire_direction)
 		shoot_timer.start()
 		
 		laser_sound.play()

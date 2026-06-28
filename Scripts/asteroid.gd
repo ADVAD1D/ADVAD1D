@@ -47,7 +47,7 @@ func _on_area_entered(area: Area2D) -> void:
 			var sound_instance = asteroid_explosion_sound.instantiate()
 			get_parent().add_child(sound_instance)
 			sound_instance.position = position
-		area.queue_free()
+		EnemyLaserPool.release(area)
 		queue_free()
 		
 	if area.is_in_group("saws"):

@@ -66,7 +66,7 @@ func _on_laser_zone_area_entered(area: Area2D) -> void:
 			add_child(enemy_laser_exp_instance)
 			enemy_laser_exp_instance.global_position = area.global_position
 
-		area.queue_free()
+		EnemyLaserPool.release(area)
 		
 func _on_player_died() -> void:
 	GameManager.can_pause = false
