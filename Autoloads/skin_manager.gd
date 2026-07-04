@@ -1,9 +1,7 @@
 extends Node
-
+signal ship_selection_changed(new_ship_data)
 # Handles ship skin selection and its data catalog.
 # NOTE: persistence (save/load of selected_ship_index) lives in GameManager.
-
-signal ship_selection_changed(new_ship_data)
 
 #this dictionary defines ships data (name, author name, texture)
 #this list start with index 0
