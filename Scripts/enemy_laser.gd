@@ -30,11 +30,11 @@ func start(start_direction: Vector2):
 # thin arena walls (StaticBody2D, which Area2D never physically stops against).
 func _physics_process(delta: float) -> void:
 	var motion: Vector2 = direction * speed * delta
-	var space := get_world_2d().direct_space_state
-	var query := PhysicsRayQueryParameters2D.create(global_position, global_position + motion)
+	var space: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	var query: PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(global_position, global_position + motion)
 	query.collide_with_areas = false
 	query.collision_mask = 1
-	var hit := space.intersect_ray(query)
+	var hit: Dictionary = space.intersect_ray(query)
 	if hit and hit.collider is StaticBody2D:
 		_spawn_impact_particles(hit.position)
 		EnemyLaserPool.release(self)

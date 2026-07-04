@@ -21,7 +21,7 @@ func acquire(parent: Node, spawn_position: Vector2, fire_direction: Vector2, ori
 
 func _muzzle_behind_wall(ref_node, from: Vector2, to: Vector2) -> bool:
 	var space = ref_node.get_world_2d().direct_space_state
-	var query := PhysicsRayQueryParameters2D.create(from, to)
+	var query: PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(from, to)
 	query.collide_with_areas = false
 	query.collision_mask = 1
 	var hit: Dictionary = space.intersect_ray(query)
