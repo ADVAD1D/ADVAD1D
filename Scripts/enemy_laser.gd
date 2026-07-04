@@ -36,9 +36,19 @@ func _physics_process(delta: float) -> void:
 	query.collision_mask = 1
 	var hit := space.intersect_ray(query)
 	if hit and hit.collider is StaticBody2D:
+		_spawn_impact_particles(hit.position)
 		EnemyLaserPool.release(self)
 		return
 	global_position += motion
+
+# Spawn the impact burst at the wall hit point, parented to the arena so it
+# outlives this bullet when it gets recycled back into the pool.
+func _spawn_impact_particles(at: Vector2) -> void:
+	if not enemy_laser_particles:
+		return
+	var particles = enemy_laser_particles.instantiate()
+	get_parent().add_child(particles)
+	particles.global_position = at
 
 func set_direction(new_direction: Vector2):
 	direction = new_direction
