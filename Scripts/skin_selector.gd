@@ -25,8 +25,8 @@ func _ready() -> void:
 	back_button.pressed.connect(_on_back_button_pressed)
 	left_button.pressed.connect(_on_left_button_pressed)
 	right_button.pressed.connect(_on_right_button_pressed)
-	GameManager.ship_selection_changed.connect(_on_ship_selection_changed)
-	_on_ship_selection_changed(GameManager.get_selected_ship_data()) # Replace with function body.
+	SkinManager.ship_selection_changed.connect(_on_ship_selection_changed)
+	_on_ship_selection_changed(SkinManager.get_selected_ship_data()) # Replace with function body.
 	
 	Network.name_check_completed.connect(_on_name_checked)
 	Network.identity_recovered.connect(_on_identity_recovered)
@@ -77,12 +77,12 @@ func _on_back_button_pressed():
 	get_tree().change_scene_to_file(back_scene)
 	
 func _on_left_button_pressed():
-	GameManager.select_previous_ship()
+	SkinManager.select_previous_ship()
 	button_sound.play()
 	GameManager.save_data()
 	
 func _on_right_button_pressed():
-	GameManager.select_next_ship()
+	SkinManager.select_next_ship()
 	button_sound.play()
 	GameManager.save_data()
 

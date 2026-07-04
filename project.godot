@@ -27,6 +27,7 @@ config/windows_native_icon="res://Ship2scaled.ico"
 
 [autoload]
 
+SkinManager="*res://Autoloads/skin_manager.gd"
 GameManager="*res://Autoloads/game_manager.gd"
 MusicPlayer="*res://Autoloads/music_player.tscn"
 SfxManager="*res://Autoloads/sfx_manager.gd"

@@ -1,9 +1,8 @@
 extends Node
 
-#signals 
+#signals
 signal score_updated(new_score)
 signal pause(is_paused)
-signal ship_selection_changed(new_ship_data)
 
 #global variables
 const MAX_MESSAGES: int = 5
@@ -39,210 +38,6 @@ var fps: float = 0.0
 const save_path: String = "user://save_game.json"
 #windows: %APPDATA%\Godot\app_userdata\ProjectName
 #linux: ~/.local/share/godot/app_userdata/ProjectName/
-
-#this dictionary defines ships data (name, author name, tetxure)
-#this list start with index 0
-var ship_data = [
-	{
-		"name": "ship1",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ship1.png")
-	},
-	
-	{
-		"name": "ship2",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship2.png")
-	},
-	
-	{
-		"name": "ship3",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship3.png")
-	},
-	
-	{
-		"name": "ship4",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship4.png")
-	},
-	
-	{
-		"name": "ship5",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship5.png")
-	},
-	
-	{
-		"name": "ship6",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship6.png")
-	},
-	
-	{
-		"name": "ship7",
-		"author": "Tector9",
-		"texture": preload("res://Assets/Sprites/Ships/ship7.png")
-	},
-	
-	{
-		"name": "ship8",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship8.png")
-	},
-	
-	{
-		"name": "ship9",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship9.png")
-	},
-	
-	{
-		"name": "ship10",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship10.png")
-	},
-	
-	{
-		"name": "ship11",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship11.png")
-	},
-	
-	{
-		"name": "ship12",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship12.png")
-	},
-	
-	{
-		"name": "ship13",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship13.png")
-	},
-	
-	{
-		"name": "ship14",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship14.png")
-	},
-	
-	{
-		"name": "ship15",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship15.png")
-	},
-	
-	{
-		"name": "ship16",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship16.png")
-	},
-	
-	{
-		"name": "ship17",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship17.png")
-	},
-	
-	{
-		"name": "ship18",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship18.png")
-	},
-	
-	{
-		"name": "ship19",
-		"author": "Cro128",
-		"texture": preload("res://Assets/Sprites/Ships/ship19.png")
-	},
-	
-	{
-		"name": "ship20",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship20.png")
-	},
-	
-	{
-		"name": "ship21",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship21.png")
-	},
-	
-	{
-		"name": "ship22",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship22.png")
-	},
-	
-	{
-		"name": "ship23",
-		"author": "Odruu",
-		"texture": preload("res://Assets/Sprites/Ships/ship23.png")
-	},
-	
-	{
-		"name": "ship24",
-		"author": "Johnny224",
-		"texture": preload("res://Assets/Sprites/Ships/ship24.png")
-	},
-	
-	{
-		"name": "ship25",
-		"author": "Alva Majo",
-		"texture": preload("res://Assets/Sprites/Ships/ship25.png")
-	},
-	
-	{
-		"name": "ship26",
-		"author": "ANGELUS11",
-		"texture": preload("res://Assets/Sprites/Ships/ship26.png")
-	},
-	
-	{
-		"name": "ship27",
-		"author": "Tipito",
-		"texture": preload("res://Assets/Sprites/Ships/ship27.png")
-	},
-	
-	{
-		"name": "ship28",
-		"author": "Ringa Tech",
-		"texture": preload("res://Assets/Sprites/Ships/ship28.png")
-	},
-	
-	{
-		"name": "ship29",
-		"author": "Oliverandom",
-		"texture": preload("res://Assets/Sprites/Ships/ship29.png")
-	},
-	
-	{
-		"name": "ship30",
-		"author": "Sealex",
-		"texture": preload("res://Assets/Sprites/Ships/ship30.png")
-	},
-	
-	{
-		"name": "ship31",
-		"author": "ItsRodrigo",
-		"texture": preload("res://Assets/Sprites/Ships/ship31.png")
-	},
-	
-	{
-		"name": "ship32",
-		"author": "Kodomo",
-		"texture": preload("res://Assets/Sprites/Ships/ship32.png")
-	},
-	
-	{
-		"name": "ship33",
-		"author": "RobloxIris",
-		"texture": preload("res://Assets/Sprites/Ships/ship33.png")
-	}
-]
-
-var selected_ship_index: int = 0
 
 func _ready() -> void:
 	randomize()
@@ -290,14 +85,14 @@ func save_data():
 		_log_message(["Player name: ", player_name])
 	else:
 		data = {
-			"selected_ship": selected_ship_index,
+			"selected_ship": SkinManager.selected_ship_index,
 			"controls_mode": relative_control_active,
 			"fps_mode": show_fps,
 			"speedrun_mode_state": speedrun_mode_active,
 			"scroll_bar_state": is_scroll_active,
 			"pilot_name": player_name
 		}
-		_log_message(["saved game!, selected skin", selected_ship_index])
+		_log_message(["saved game!, selected skin", SkinManager.selected_ship_index])
 		_log_message(["Relative controls: ", relative_control_active])
 		_log_message(["FPS mode: ", show_fps])
 		_log_message(["Speedrun mode state", speedrun_mode_active])
@@ -322,8 +117,8 @@ func load_data():
 	var data = JSON.parse_string(json_string)
 	
 	if data and "selected_ship" in data:
-		selected_ship_index = int(data["selected_ship"])
-		_log_message(["Loaded data, selected ship", selected_ship_index])
+		SkinManager.selected_ship_index = int(data["selected_ship"])
+		_log_message(["Loaded data, selected ship", SkinManager.selected_ship_index])
 		
 	if data and "controls_mode" in data:
 		relative_control_active = bool(data["controls_mode"])
@@ -344,28 +139,6 @@ func load_data():
 	if data and "pilot_name" in data:
 		player_name = String(data["pilot_name"])
 		_log_message(["Loaded player name: ", player_name])
-	
-func select_next_ship():
-	selected_ship_index += 1
-	
-	if selected_ship_index >= ship_data.size():
-		selected_ship_index = 0
-		
-	ship_selection_changed.emit(ship_data[selected_ship_index])
-	
-func select_previous_ship():
-	selected_ship_index -= 1
-	
-	if selected_ship_index < 0:
-		selected_ship_index = ship_data.size() - 1
-		
-	ship_selection_changed.emit(ship_data[selected_ship_index])
-	
-func get_selected_ship_data() -> Dictionary:
-	return ship_data[selected_ship_index]
-	
-func get_selected_ship_texture() -> Texture2D:
-	return ship_data[selected_ship_index]["texture"]
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause") and can_pause:

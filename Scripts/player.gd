@@ -42,7 +42,7 @@ var _debug_visual_enabled: bool = false
 
 func _ready() -> void:
 	var player_score = GameManager.score
-	sprite.texture = GameManager.get_selected_ship_texture()
+	sprite.texture = SkinManager.get_selected_ship_texture()
 	main_camera = get_viewport().get_camera_2d()
 	_log_message(player_score)
 	
