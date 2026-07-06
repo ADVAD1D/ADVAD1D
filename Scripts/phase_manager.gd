@@ -75,6 +75,13 @@ var restart_from_phase: bool = true
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	GameManager.score_updated.connect(_on_score_updated)
+
+	# Phases shown in the debug menu (Tab).
+	DebugMenu.watch(self, "current_phase", "Phase")
+	DebugMenu.watch(self, "phase_timer", "Phase timer")
+	DebugMenu.watch(self, "current_score_requirement", "Score req")
+	DebugMenu.watch(self, "is_phase_active", "Phase active")
+
 	if GameManager.speedrun_mode_active:
 		GameManager.start_speedrun()
 	_log_message("Phase manager ready to execute")

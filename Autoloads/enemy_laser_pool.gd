@@ -25,6 +25,10 @@ func _muzzle_behind_wall(ref_node, from: Vector2, to: Vector2) -> bool:
 	query.collide_with_areas = false
 	query.collision_mask = 1
 	var hit: Dictionary = space.intersect_ray(query)
+	# Draw the ray and its hit point in the debug menu (Tab).
+	DebugMenu.register_ray(from, to, hit.position if hit else Vector2.INF)
+	if hit:
+		DebugMenu.register_point(hit.position, Color.ORANGE_RED)
 	return hit and hit.collider is StaticBody2D
 
 ## Returns a bullet to the pool. Idempotent (is_active guards double-release).
