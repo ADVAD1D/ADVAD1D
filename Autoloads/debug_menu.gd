@@ -22,10 +22,7 @@ const SHAPE_GROUPS: Dictionary = {
 }
 
 # Default lifetime (s) for transient rays/points.
-const DEFAULT_TTL: float = 0.4
-
-# Same pixel font as the FPS label.
-const PIXEL_FONT_PATH: String = "res://Assets/Fonts/Kenney Pixel.ttf"
+const DEFAULT_TTL: float = 0.5
 
 # --- State ---
 
@@ -127,20 +124,12 @@ func _build_overlay() -> void:
 
 	var panel: PanelContainer = PanelContainer.new()
 	panel.position = Vector2(8, 8)
-	panel.modulate = Color(1, 1, 1, 0.9)
+	panel.modulate = Color(1.0, 1.0, 1.0, 0.7)
 	_overlay.add_child(panel)
 
 	_label = Label.new()
-	# Same look as the FPS label: pixel font, teal fill, cyan outline, shadow.
-	var settings: LabelSettings = LabelSettings.new()
-	settings.font = load(PIXEL_FONT_PATH)
-	settings.font_size = 15
-	settings.font_color = Color(0, 0.14569733, 0.14569727, 1)
-	settings.outline_size = 2
-	settings.outline_color = Color(0, 1, 1, 1)
-	settings.shadow_size = 3
-	settings.shadow_color = Color(0, 0.31618276, 0.32560238, 1)
-	_label.label_settings = settings
+	# Reuse the shared pixel style (see FontManager).
+	_label.label_settings = FontManager.pixel_label_settings(11)
 	panel.add_child(_label)
 
 func _apply_enabled(value: bool) -> void:

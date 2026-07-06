@@ -38,6 +38,7 @@ DialogueManager="*uid://c3rodes2l3gxb"
 MainManager="*uid://hhs0k5eaobg1"
 WebOptimizer="*res://Autoloads/web_optimizer.gd"
 EnemyLaserPool="*res://Autoloads/enemy_laser_pool.gd"
+FontManager="*res://Autoloads/font_manager.gd"
 DebugMenu="*res://Autoloads/debug_menu.gd"
 
 [display]
