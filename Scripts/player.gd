@@ -38,13 +38,16 @@ var buffered_direction: Vector2 = Vector2.ZERO
 var main_camera: Camera2D
 var dash_camera_shake: float = 45.0
 var hitbox_disabled: bool = false
-var _debug_visual_enabled: bool = false
 
 func _ready() -> void:
 	var player_score = GameManager.score
 	sprite.texture = SkinManager.get_selected_ship_texture()
 	main_camera = get_viewport().get_camera_2d()
 	_log_message(player_score)
+
+	# Vars shown live in the debug menu (Tab). Velocity is already in the panel.
+	DebugMenu.watch(self, "is_dashing", "Dashing")
+	DebugMenu.watch(self, "can_dash", "Can dash")
 	
 	if hitbox_disabled == true:
 		hitbox_collider.disabled = true
@@ -122,8 +125,8 @@ func _physics_process(delta: float) -> void:
 		if collision:
 			velocity = Vector2.ZERO
 			
-	if Input.is_action_just_pressed("debug") and GameManager.show_debug:
-		_debug_visual_enabled = not _debug_visual_enabled
+	# Debug menu (Tab) drives this via GameManager.show_debug: repaint _draw().
+	if GameManager.show_debug:
 		queue_redraw()
 		
 func can_start_dash(direction: Vector2) -> bool:
@@ -175,9 +178,9 @@ func do_dash(direction: Vector2):
 	can_dash = true
 
 func _draw() -> void:
-	if GameManager.show_debug == false or _debug_visual_enabled == false:
+	if GameManager.show_debug == false:
 		return
-	
+
 	_log_message("DEBUG TRAIL AND SAFE RADIUS ACTIVATE")
 	var circle_color = Color.AQUAMARINE
 	circle_color.a = 0.3
