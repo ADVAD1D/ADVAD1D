@@ -26,7 +26,11 @@ const DEFAULT_TTL: float = 0.5
 
 # --- State ---
 
-var enabled: bool = false
+# Master switch: set to false to fully disable the menu (Tab does nothing).
+var enabled: bool = true
+
+# Runtime toggle state: whether the overlay is currently shown.
+var _shown: bool = false
 
 # Live-watched properties: {node, property, label}. Read every frame.
 var _watches: Array = []
@@ -58,9 +62,12 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_world_layer()
 	_build_overlay()
-	_apply_enabled(false)
+	_apply_shown(false)
 
 func _unhandled_input(event: InputEvent) -> void:
+	# Master switch off -> ignore Tab entirely.
+	if not enabled:
+		return
 	# _unhandled_input so normal UI can consume Tab first.
 	if event.is_action_pressed(TOGGLE_ACTION):
 		toggle()
@@ -69,7 +76,12 @@ func _process(delta: float) -> void:
 	# Expire even while hidden so lists don't pile up.
 	_expire(_rays, delta)
 	_expire(_points, delta)
+	# Master switch off -> force-close and stop updating (checked live).
 	if not enabled:
+		if _shown:
+			_apply_shown(false)
+		return
+	if not _shown:
 		return
 	_update_overlay_text()
 	_world.queue_redraw()
@@ -77,10 +89,12 @@ func _process(delta: float) -> void:
 # --- Public API ---
 
 func toggle() -> void:
-	_apply_enabled(not enabled)
+	if not enabled:
+		return
+	_apply_shown(not _shown)
 
-func set_enabled(value: bool) -> void:
-	_apply_enabled(value)
+func set_shown(value: bool) -> void:
+	_apply_shown(value)
 
 # Watch a node property, shown live every frame.
 # Ex: DebugMenu.watch(self, "velocity", "Player vel")
@@ -98,13 +112,13 @@ func untrack(label: String) -> void:
 
 # Register a ray, drawn for a few frames (e.g. the enemy laser wall check).
 func register_ray(from: Vector2, to: Vector2, hit: Vector2 = Vector2.INF, ttl: float = DEFAULT_TTL) -> void:
-	if not enabled:
+	if not _shown:
 		return
 	_rays.append({"from": from, "to": to, "hit": hit, "ttl": ttl})
 
 # Register a collision point, drawn for a few frames.
 func register_point(pos: Vector2, color: Color = Color.MAGENTA, ttl: float = DEFAULT_TTL) -> void:
-	if not enabled:
+	if not _shown:
 		return
 	_points.append({"pos": pos, "color": color, "ttl": ttl})
 
@@ -132,11 +146,11 @@ func _build_overlay() -> void:
 	_label.label_settings = FontManager.pixel_label_settings(11)
 	panel.add_child(_label)
 
-func _apply_enabled(value: bool) -> void:
-	# No layers in release -> any toggle is a no-op.
+func _apply_shown(value: bool) -> void:
+	# No layers built (release/disabled) -> nothing to toggle.
 	if _overlay == null:
 		return
-	enabled = value
+	_shown = value
 	# Compat: lights up existing _draw() (player, ship_enemy, ...).
 	GameManager.show_debug = value
 	_overlay.visible = value
@@ -170,7 +184,7 @@ func _update_overlay_text() -> void:
 
 	# Quick per-group counts.
 	lines.append("--- counts ---")
-	for group in ["enemigos", "asteroides", "enemy_laser", "lasers", "saws"]:
+	for group in ["enemies", "asteroids", "enemy_laser", "lasers", "saws"]:
 		lines.append("%s: %d" % [group, tree.get_nodes_in_group(group).size()])
 
 	# Watched properties.
