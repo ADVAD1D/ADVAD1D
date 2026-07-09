@@ -20,6 +20,7 @@ extends CharacterBody2D
 @onready var hitbox: Area2D = $Hitbox
 @onready var hitbox_collider: CollisionShape2D = $Hitbox/CollisionShape2D
 @onready var sprite: Sprite2D = $Sprite2D
+@onready var muzzle: Marker2D = $Muzzle
 
 @export var ship_explosion_particles: PackedScene
 
@@ -141,7 +142,7 @@ func shoot():
 	can_shoot = false
 	lsrsound.play()
 	var laser_instance = laser_scene.instantiate()
-	laser_instance.global_position = $Muzzle.global_position
+	laser_instance.global_position = muzzle.global_position
 	var fire_direction = Vector2.UP.rotated(rotation)
 	laser_instance.start(fire_direction)
 	get_parent().add_child(laser_instance)
