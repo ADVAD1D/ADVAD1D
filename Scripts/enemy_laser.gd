@@ -5,7 +5,6 @@ extends Area2D
 var direction = Vector2.ZERO
 var is_active: bool = false
 
-
 func activate(spawn_position: Vector2, start_direction: Vector2) -> void:
 	global_position = spawn_position
 	set_direction(start_direction)
@@ -15,7 +14,6 @@ func activate(spawn_position: Vector2, start_direction: Vector2) -> void:
 	set_deferred("monitoring", true)
 	set_deferred("monitorable", true)
 
-
 func deactivate() -> void:
 	is_active = false
 	direction = Vector2.ZERO
@@ -23,7 +21,6 @@ func deactivate() -> void:
 	set_deferred("monitoring", false)
 	set_deferred("monitorable", false)
 	hide()
-
 
 # Kept for compatibility: used by laser_shield on reflect.
 func start(start_direction: Vector2):
@@ -33,15 +30,25 @@ func start(start_direction: Vector2):
 # thin arena walls (StaticBody2D, which Area2D never physically stops against).
 func _physics_process(delta: float) -> void:
 	var motion: Vector2 = direction * speed * delta
-	var space := get_world_2d().direct_space_state
-	var query := PhysicsRayQueryParameters2D.create(global_position, global_position + motion)
+	var space: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	var query: PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(global_position, global_position + motion)
 	query.collide_with_areas = false
 	query.collision_mask = 1
-	var hit := space.intersect_ray(query)
+	var hit: Dictionary = space.intersect_ray(query)
 	if hit and hit.collider is StaticBody2D:
+		_spawn_impact_particles(hit.position)
 		EnemyLaserPool.release(self)
 		return
 	global_position += motion
+
+# Spawn the impact burst at the wall hit point, parented to the arena so it
+# outlives this bullet when it gets recycled back into the pool.
+func _spawn_impact_particles(at: Vector2) -> void:
+	if not enemy_laser_particles:
+		return
+	var particles = enemy_laser_particles.instantiate()
+	get_parent().add_child(particles)
+	particles.global_position = at
 
 func set_direction(new_direction: Vector2):
 	direction = new_direction
