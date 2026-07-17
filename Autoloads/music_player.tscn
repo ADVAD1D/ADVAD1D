@@ -1,11 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://dk5052hkef5fl"]
+[gd_scene format=3 uid="uid://dk5052hkef5fl"]
 
 [ext_resource type="Script" uid="uid://cnx7j6e7dm485" path="res://Autoloads/music_player.gd" id="1_ufhka"]
 
-[node name="BackgroundMusic" type="AudioStreamPlayer"]
-volume_db = -8.0
+[node name="BackgroundMusic" type="AudioStreamPlayer" unique_id=2085921099]
+volume_db = 1.0
 script = ExtResource("1_ufhka")
 
-[node name="SFXPlayer" type="AudioStreamPlayer" parent="."]
-volume_db = 5.0
+[node name="SFXPlayer" type="AudioStreamPlayer" parent="." unique_id=922070039]
+volume_db = 1.0
 bus = &"SFX"
