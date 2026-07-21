@@ -4,7 +4,7 @@ signal volume_changed(volume_percent)
 
 const min_linear_volume = 0.0001
 
-var linear_volume: float = 0.5
+var linear_volume: float = 0.3
 
 var is_fading: bool = false
 

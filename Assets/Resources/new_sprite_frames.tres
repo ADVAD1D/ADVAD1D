@@ -74,7 +74,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_xkoin")
 }],
-"loop": 0,
+"loop": false,
 "name": &"break",
 "speed": 1.0
 }, {
@@ -88,7 +88,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_40vxd")
 }],
-"loop": 0,
+"loop": false,
 "name": &"default",
 "speed": 5.0
 }]

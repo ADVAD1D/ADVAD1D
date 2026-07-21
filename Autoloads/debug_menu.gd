@@ -27,7 +27,7 @@ const DEFAULT_TTL: float = 0.5
 # --- State ---
 
 # Master switch: set to false to fully disable the menu (Tab does nothing).
-var enabled: bool = true
+var enabled: bool = false
 
 # Runtime toggle state: whether the overlay is currently shown.
 var _shown: bool = false

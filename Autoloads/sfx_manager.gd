@@ -1,7 +1,7 @@
 extends Node
 signal sfx_volume_changed(sfx_percent)
 
-var linear_sfx_volume: float = 0.5
+var linear_sfx_volume: float = 0.3
 const min_linear_volume = 0.0001
 
 var sfx_bus_index: int
