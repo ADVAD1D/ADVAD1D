@@ -170,6 +170,7 @@ shader_parameter/warp_amount = 0.150000007125
 shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.5
 shader_parameter/vignette_opacity = 0.50000002375
+shader_parameter/low_quality = false
 
 [node name="Control" type="Control" unique_id=743528205]
 layout_mode = 3
@@ -342,7 +343,7 @@ offset_left = 383.0
 offset_top = 266.0
 offset_right = 423.0
 offset_bottom = 289.0
-text = "v0.1.6.3"
+text = "v0.1.6.4"
 label_settings = SubResource("LabelSettings_4nkqq")
 
 [node name="RelativeLabel" type="Label" parent="." unique_id=195214820]
