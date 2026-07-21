@@ -200,6 +200,15 @@ func _update_overlay_text() -> void:
 		for key in _tracked:
 			lines.append("%s: %s" % [key, str(_tracked[key])])
 
+	# Audio Volumes
+	lines.append("--- audio ---")
+	if "MusicPlayer" in get_tree().root:
+		var music_player = get_node("/root/MusicPlayer")
+		lines.append("Music Vol: %.1f%% (%.2f dB)" % [music_player.get_volume_percent(), music_player.volume_db])
+	if "SfxManager" in get_tree().root:
+		var sfx_manager = get_node("/root/SfxManager")
+		lines.append("SFX Vol: %.1f%% (%.2f dB)" % [sfx_manager.get_sfx_volume_percent(), AudioServer.get_bus_volume_db(sfx_manager.sfx_bus_index)])
+
 	_label.text = "\n".join(lines)
 
 # --- World drawing (called by _WorldDrawer._draw) ---
