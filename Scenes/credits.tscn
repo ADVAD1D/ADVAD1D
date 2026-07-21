@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cj563pbrl44fc"]
+[gd_scene format=3 uid="uid://cj563pbrl44fc"]
 
 [ext_resource type="Texture2D" uid="uid://dy6tdkwdkef2s" path="res://Assets/Sprites/creditslabel.png" id="1_gryuy"]
 [ext_resource type="Script" uid="uid://rbogeag5amhd" path="res://Scripts/credits_menu.gd" id="1_uah1q"]
@@ -54,7 +54,7 @@ font_color = Color(0, 0.19607843, 0.19607843, 1)
 outline_size = 2
 outline_color = Color(0, 1, 1, 1)
 
-[node name="CreditsPanel" type="Control"]
+[node name="CreditsPanel" type="Control" unique_id=1642734862]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -63,7 +63,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_uah1q")
 
-[node name="CreditsTexture" type="TextureRect" parent="."]
+[node name="CreditsTexture" type="TextureRect" parent="." unique_id=492662372]
 layout_mode = 0
 offset_left = 78.999985
 offset_top = -1.5258789e-05
@@ -72,7 +72,7 @@ offset_bottom = 69.999985
 scale = Vector2(3.7600012, 3.7600012)
 texture = ExtResource("1_gryuy")
 
-[node name="CloseButton" type="TextureButton" parent="CreditsTexture"]
+[node name="CloseButton" type="TextureButton" parent="CreditsTexture" unique_id=1667807037]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 29.999996
@@ -81,7 +81,7 @@ scale = Vector2(0.464379, 0.464379)
 texture_normal = ExtResource("3_7emq5")
 texture_hover = ExtResource("4_803yc")
 
-[node name="CreditsLabel" type="Label" parent="CreditsTexture"]
+[node name="CreditsLabel" type="Label" parent="CreditsTexture" unique_id=303092771]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 37.499992
@@ -92,27 +92,27 @@ scale = Vector2(0.22245532, 0.22245532)
 text = "CREDITS"
 label_settings = SubResource("LabelSettings_1bamb")
 
-[node name="AuthorLabel" type="Label" parent="CreditsTexture"]
+[node name="AuthorLabel" type="Label" parent="CreditsTexture" unique_id=92299887]
 layout_mode = 0
 offset_left = 7.7127686
 offset_top = 16.755318
 offset_right = 192.71277
 offset_bottom = 32.755318
 scale = Vector2(0.3317041, 0.3317041)
-text = "Game by ANGELUS11 and Cro128"
+text = "Game by: ANGELUS11 and Cro128"
 label_settings = SubResource("LabelSettings_uah1q")
 
-[node name="MusicLabel" type="Label" parent="CreditsTexture"]
+[node name="MusicLabel" type="Label" parent="CreditsTexture" unique_id=145972154]
 layout_mode = 0
 offset_left = 7.712768
 offset_top = 22.340424
 offset_right = 246.76349
 offset_bottom = 38.340424
 scale = Vector2(0.29816505, 0.29816505)
-text = "Music by Psychronic Games on Pixabay"
+text = "Music by: Psychronic Games"
 label_settings = SubResource("LabelSettings_7emq5")
 
-[node name="ShaderLabel" type="Label" parent="CreditsTexture"]
+[node name="ShaderLabel" type="Label" parent="CreditsTexture" unique_id=1025352636]
 layout_mode = 0
 offset_left = 7.9787245
 offset_top = 27.127655
@@ -122,7 +122,7 @@ scale = Vector2(0.3083776, 0.3083776)
 text = "CRT VISUAL SHADER by lord0Sanz"
 label_settings = SubResource("LabelSettings_1wbrc")
 
-[node name="InfoLabel" type="Label" parent="CreditsTexture"]
+[node name="InfoLabel" type="Label" parent="CreditsTexture" unique_id=1167304396]
 layout_mode = 0
 offset_left = 8.244682
 offset_top = 36.968075
@@ -139,7 +139,7 @@ Game Sound Correct With Delay by Bertrof
 https://freesound.org/s/351564/ -- License: Attribution 3.0"
 label_settings = SubResource("LabelSettings_803yc")
 
-[node name="Label" type="Label" parent="CreditsTexture"]
+[node name="Label" type="Label" parent="CreditsTexture" unique_id=743362002]
 layout_mode = 0
 offset_left = 7.7127676
 offset_top = 31.64893
@@ -149,12 +149,12 @@ scale = Vector2(0.28721133, 0.28721133)
 text = "GAME THUMBNAIL BY NESTORGMS"
 label_settings = SubResource("LabelSettings_j6nef")
 
-[node name="ButtonSound" type="AudioStreamPlayer" parent="."]
+[node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=1257679652]
 stream = ExtResource("6_1wbrc")
 pitch_scale = 0.5
 bus = &"SFX"
 
-[node name="BackSound" type="AudioStreamPlayer" parent="."]
+[node name="BackSound" type="AudioStreamPlayer" parent="." unique_id=383666266]
 stream = ExtResource("7_7emq5")
 bus = &"SFX"
 

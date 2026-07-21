@@ -83,7 +83,7 @@ text = "- ODRUU
 - CRO128
 - PAULA
 - TIPITO
-- OLIVERANDOM
+- JUANHEZ
 - NESTORGMS
 - GHOKO"
 label_settings = SubResource("LabelSettings_542ni")
@@ -98,10 +98,10 @@ offset_bottom = 147.02127
 scale = Vector2(0.3317041, 0.3317041)
 text = "- TSUNELA
 - TECTOR9
-- FAZZELLI
 - SUNTIME
 - MINDS
 - KOSHI
+- KODOMO
 - GOLTYIP"
 label_settings = SubResource("LabelSettings_542ni")
 
@@ -112,8 +112,7 @@ offset_top = 16.755318
 offset_right = 157.69145
 offset_bottom = 146.75531
 scale = Vector2(0.3317041, 0.3317041)
-text = "- KODOMO
-- ITSRODRIGO"
+text = "- ITSRODRIGO"
 label_settings = SubResource("LabelSettings_542ni")
 
 [node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=1715317948]
