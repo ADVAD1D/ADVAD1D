@@ -184,6 +184,7 @@ func _update_overlay_text() -> void:
 	if tree.current_scene:
 		lines.append("Scene: %s" % tree.current_scene.name)
 	lines.append("Paused: %s" % str(tree.paused))
+	lines.append("Controls: %s" % ("Relative" if GameManager.relative_control_active else "Global"))
 
 	# Player velocity (auto, via group).
 	var players: Array = tree.get_nodes_in_group("player")
@@ -193,7 +194,7 @@ func _update_overlay_text() -> void:
 
 	# Quick per-group counts.
 	lines.append("--- counts ---")
-	for group in ["enemies", "asteroids", "enemy_laser", "lasers", "saws"]:
+	for group in ["enemigos", "asteroides", "enemy_laser", "lasers", "saws"]:
 		lines.append("%s: %d" % [group, tree.get_nodes_in_group(group).size()])
 
 	# Watched properties.
