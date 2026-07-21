@@ -1,6 +1,4 @@
 extends Node
-## 
-##
 ## On desktop this autoload removes itself immediately (zero overhead)
 ## On web it switches every CRT ShaderMaterial in the current scene to its
 ## cheap "low_quality" path (see Shaders/CRT.gdshader), so menus and gameplay
