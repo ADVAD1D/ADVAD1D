@@ -40,6 +40,7 @@ WebOptimizer="*res://Autoloads/web_optimizer.gd"
 EnemyLaserPool="*res://Autoloads/enemy_laser_pool.gd"
 FontManager="*res://Autoloads/font_manager.gd"
 DebugMenu="*res://Autoloads/debug_menu.gd"
+_mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
 
 [display]
 
@@ -55,7 +56,7 @@ version_control/autoload_on_startup=true
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/discord_gd/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg")
+enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/discord_gd/plugin.cfg", "res://addons/godot_ai/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg")
 
 [global_group]
 
