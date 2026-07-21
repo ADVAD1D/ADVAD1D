@@ -27,7 +27,7 @@ const DEFAULT_TTL: float = 0.5
 # --- State ---
 
 # Master switch: set to false to fully disable the menu (Tab does nothing).
-var enabled: bool = false
+var enabled: bool = true
 
 # Runtime toggle state: whether the overlay is currently shown.
 var _shown: bool = false
@@ -48,6 +48,7 @@ var _points: Array = []
 var _world: Node2D          # world-space layer (respects the camera)
 var _overlay: CanvasLayer   # screen-space layer for the text panel
 var _label: Label
+var _audio_label: Label
 
 # --- Lifecycle ---
 
@@ -141,10 +142,18 @@ func _build_overlay() -> void:
 	panel.modulate = Color(1.0, 1.0, 1.0, 0.7)
 	_overlay.add_child(panel)
 
+	var hbox = HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 20)
+	panel.add_child(hbox)
+
 	_label = Label.new()
 	# Reuse the shared pixel style (see FontManager).
 	_label.label_settings = FontManager.pixel_label_settings(11)
-	panel.add_child(_label)
+	hbox.add_child(_label)
+
+	_audio_label = Label.new()
+	_audio_label.label_settings = FontManager.pixel_label_settings(11)
+	hbox.add_child(_audio_label)
 
 func _apply_shown(value: bool) -> void:
 	# No layers built (release/disabled) -> nothing to toggle.
@@ -200,16 +209,17 @@ func _update_overlay_text() -> void:
 		for key in _tracked:
 			lines.append("%s: %s" % [key, str(_tracked[key])])
 
-	# Audio Volumes
-	lines.append("--- audio ---")
-	if "MusicPlayer" in get_tree().root:
+	var audio_lines: PackedStringArray = []
+	audio_lines.append("== AUDIO ==")
+	if get_tree().root.has_node("MusicPlayer"):
 		var music_player = get_node("/root/MusicPlayer")
-		lines.append("Music Vol: %.1f%% (%.2f dB)" % [music_player.get_volume_percent(), music_player.volume_db])
-	if "SfxManager" in get_tree().root:
+		audio_lines.append("Music Vol: %.1f%% (%.2f dB)" % [music_player.get_volume_percent(), music_player.volume_db])
+	if get_tree().root.has_node("SfxManager"):
 		var sfx_manager = get_node("/root/SfxManager")
-		lines.append("SFX Vol: %.1f%% (%.2f dB)" % [sfx_manager.get_sfx_volume_percent(), AudioServer.get_bus_volume_db(sfx_manager.sfx_bus_index)])
+		audio_lines.append("SFX Vol: %.1f%% (%.2f dB)" % [sfx_manager.get_sfx_volume_percent(), AudioServer.get_bus_volume_db(sfx_manager.sfx_bus_index)])
 
 	_label.text = "\n".join(lines)
+	_audio_label.text = "\n".join(audio_lines)
 
 # --- World drawing (called by _WorldDrawer._draw) ---
 
