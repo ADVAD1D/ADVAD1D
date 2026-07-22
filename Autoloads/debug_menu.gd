@@ -27,10 +27,10 @@ const DEFAULT_TTL: float = 0.5
 # --- State ---
 
 # Master switch: set to false to fully disable the menu (Tab does nothing).
-var enabled: bool = false
+var enabled: bool = true
 
 # Toggle to only show text and hide all visual debug elements (colliders, rays, etc).
-var only_debug_text: bool = false:
+var only_debug_text: bool = true:
 	set(val):
 		only_debug_text = val
 		_apply_shown(_shown)
@@ -225,11 +225,6 @@ func _update_overlay_text() -> void:
 			if is_instance_valid(w.node):
 				lines.append("%s: %s" % [w.label, str(w.node.get(w.property))])
 
-	# Tracked values.
-	if not _tracked.is_empty():
-		lines.append("--- tracked ---")
-		for key in _tracked:
-			lines.append("%s: %s" % [key, str(_tracked[key])])
 
 	var audio_lines: PackedStringArray = []
 	audio_lines.append("== AUDIO ==")
@@ -248,6 +243,13 @@ func _update_overlay_text() -> void:
 		network_lines.append("URL: %s" % net.BASE_URL)
 		network_lines.append("Online: %s" % str(net.server_online))
 		network_lines.append("Log: %s" % net.last_network_log)
+
+	# Tracked values (placed in 3rd column).
+	if not _tracked.is_empty():
+		network_lines.append("")
+		network_lines.append("== TRACKED ==")
+		for key in _tracked:
+			network_lines.append("%s: %s" % [key, str(_tracked[key])])
 
 	_label.text = "\n".join(lines)
 	_audio_label.text = "\n".join(audio_lines)
