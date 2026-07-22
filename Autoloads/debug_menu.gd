@@ -27,7 +27,7 @@ const DEFAULT_TTL: float = 0.5
 # --- State ---
 
 # Master switch: set to false to fully disable the menu (Tab does nothing).
-var enabled: bool = true
+var enabled: bool = false
 
 # Runtime toggle state: whether the overlay is currently shown.
 var _shown: bool = false
@@ -49,6 +49,7 @@ var _world: Node2D          # world-space layer (respects the camera)
 var _overlay: CanvasLayer   # screen-space layer for the text panel
 var _label: Label
 var _audio_label: Label
+var _network_label: Label
 
 # --- Lifecycle ---
 
@@ -139,17 +140,25 @@ func _build_overlay() -> void:
 
 	var hbox = HBoxContainer.new()
 	hbox.position = Vector2(8, 8)
+	hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hbox.add_theme_constant_override("separation", 20)
 	_overlay.add_child(hbox)
 
 	_label = Label.new()
+	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	# Reuse the shared pixel style (see FontManager).
 	_label.label_settings = FontManager.pixel_label_settings(11)
 	hbox.add_child(_label)
 
 	_audio_label = Label.new()
+	_audio_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_audio_label.label_settings = FontManager.pixel_label_settings(11)
 	hbox.add_child(_audio_label)
+
+	_network_label = Label.new()
+	_network_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_network_label.label_settings = FontManager.pixel_label_settings(11)
+	hbox.add_child(_network_label)
 
 func _apply_shown(value: bool) -> void:
 	# No layers built (release/disabled) -> nothing to toggle.
@@ -223,15 +232,17 @@ func _update_overlay_text() -> void:
 		audio_lines.append("SFX Vol: %.1f%% (%.2f dB)" % [sfx_manager.get_sfx_volume_percent(), AudioServer.get_bus_volume_db(sfx_manager.sfx_bus_index)])
 
 	# Network Status
-	lines.append("--- network ---")
+	var network_lines: PackedStringArray = []
+	network_lines.append("== NETWORK ==")
 	if get_tree().root.has_node("Network"):
 		var net = get_node("/root/Network")
-		lines.append("URL: %s" % net.BASE_URL)
-		lines.append("Online: %s" % str(net.server_online))
-		lines.append("Log: %s" % net.last_network_log)
+		network_lines.append("URL: %s" % net.BASE_URL)
+		network_lines.append("Online: %s" % str(net.server_online))
+		network_lines.append("Log: %s" % net.last_network_log)
 
 	_label.text = "\n".join(lines)
 	_audio_label.text = "\n".join(audio_lines)
+	_network_label.text = "\n".join(network_lines)
 
 # --- World drawing (called by _WorldDrawer._draw) ---
 
