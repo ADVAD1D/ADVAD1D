@@ -15,6 +15,9 @@ var production_server_active = GameManager.production_server_active
 var debug_response_text_active = GameManager.debug_response_text_active
 var BASE_URL: String
 
+var server_online: bool = false
+var last_network_log: String = "Waiting for init..."
+
 #var headers = [
 #    "Content-Type: application/json; charset=utf-8",
 #    "X-App-Token: SUPER_SECRETO_GODOT_123" 
@@ -78,6 +81,7 @@ func _ready() -> void:
 		
 #this function show log messages (response codes and messages) for devs, for security reasons
 func _log_dev(message: String, respose_code: int) -> void:
+	last_network_log = message + " (" + str(respose_code) + ")"
 	if OS.is_debug_build():
 		print_rich("[color=yellow][DEV LOG][/color] " + message, respose_code)
 	else:
@@ -173,13 +177,16 @@ func send_player_phase(player_name: String, last_phase: int):
 func _on_ping_completed(result, response_code, _headers, _body):
 	if result != HTTPRequest.RESULT_SUCCESS:
 		_log_message("PING CAIDO: NOT CONECTION OR DOWN SERVER")
+		server_online = false
 		server_status_checked.emit(false)
 		return
 	if response_code == 200:
 		_log_message("SERVER WAKE AND READY!")
+		server_online = true
 		server_status_checked.emit(true)
 	else:
 		_log_dev("THE SERVER RESPONSE WITH AN ERROR", response_code)
+		server_online = false
 		server_status_checked.emit(false)
 		
 func _on_ai_completed(result, response_code, _headers, body):
@@ -306,14 +313,17 @@ func _get_persistent_device_uid():
 	return new_web_id
 	
 func _log_message(message):
+	var final_string = ""
+	if typeof(message) == TYPE_ARRAY:
+		for arg in message:
+			final_string += str(arg) + " "
+		final_string = final_string.strip_edges()
+	else:
+		final_string = str(message)
+	
+	last_network_log = final_string
+	
 	if GameManager.is_debug_text == true:
-		var final_string = ""
-		if typeof(message) == TYPE_ARRAY:
-			for arg in message:
-				final_string += str(arg) + " "
-			final_string = final_string.strip_edges()
-		else:
-			final_string = str(message)
 		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
 	else:
 		return

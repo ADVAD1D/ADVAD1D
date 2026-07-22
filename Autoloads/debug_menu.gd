@@ -12,8 +12,8 @@ const TOGGLE_ACTION: String = "debug"
 const SHAPE_GROUPS: Dictionary = {
 	"player": Color(0.2, 1.0, 0.4),
 	"player_shield": Color(0.6, 0.9, 1.0),
-	"enemigos": Color(1.0, 0.3, 0.3),
-	"asteroides": Color(1.0, 0.7, 0.2),
+	"enemies": Color(1.0, 0.3, 0.3),
+	"asteroids": Color(1.0, 0.7, 0.2),
 	"colisiones": Color(0.4, 0.6, 1.0),
 	"lasers": Color(0.3, 1.0, 1.0),
 	"enemy_laser": Color(1.0, 0.4, 0.8),
@@ -137,14 +137,10 @@ func _build_overlay() -> void:
 	_overlay.layer = 128  # above the HUD
 	add_child(_overlay)
 
-	var panel: PanelContainer = PanelContainer.new()
-	panel.position = Vector2(8, 8)
-	panel.modulate = Color(1.0, 1.0, 1.0, 0.7)
-	_overlay.add_child(panel)
-
 	var hbox = HBoxContainer.new()
+	hbox.position = Vector2(8, 8)
 	hbox.add_theme_constant_override("separation", 20)
-	panel.add_child(hbox)
+	_overlay.add_child(hbox)
 
 	_label = Label.new()
 	# Reuse the shared pixel style (see FontManager).
@@ -192,10 +188,17 @@ func _update_overlay_text() -> void:
 		var v: Vector2 = players[0].velocity
 		lines.append("Player vel: %.0f  (%.0f, %.0f)" % [v.length(), v.x, v.y])
 
-	# Quick per-group counts.
+	# Quick per-group counts (mapped to English display names).
 	lines.append("--- counts ---")
-	for group in ["enemigos", "asteroides", "enemy_laser", "lasers", "saws"]:
-		lines.append("%s: %d" % [group, tree.get_nodes_in_group(group).size()])
+	var count_groups = {
+		"enemigos": "enemies",
+		"asteroides": "asteroids",
+		"enemy_laser": "enemy_lasers",
+		"lasers": "player_lasers",
+		"saws": "saws"
+	}
+	for group_id in count_groups:
+		lines.append("%s: %d" % [count_groups[group_id], tree.get_nodes_in_group(group_id).size()])
 
 	# Watched properties.
 	if not _watches.is_empty():
@@ -218,6 +221,14 @@ func _update_overlay_text() -> void:
 	if get_tree().root.has_node("SfxManager"):
 		var sfx_manager = get_node("/root/SfxManager")
 		audio_lines.append("SFX Vol: %.1f%% (%.2f dB)" % [sfx_manager.get_sfx_volume_percent(), AudioServer.get_bus_volume_db(sfx_manager.sfx_bus_index)])
+
+	# Network Status
+	lines.append("--- network ---")
+	if get_tree().root.has_node("Network"):
+		var net = get_node("/root/Network")
+		lines.append("URL: %s" % net.BASE_URL)
+		lines.append("Online: %s" % str(net.server_online))
+		lines.append("Log: %s" % net.last_network_log)
 
 	_label.text = "\n".join(lines)
 	_audio_label.text = "\n".join(audio_lines)
