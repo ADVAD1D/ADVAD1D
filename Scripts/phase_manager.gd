@@ -109,6 +109,9 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if is_instance_valid(background_sprite) and background_sprite.material != null:
+		DebugMenu.track("Arena Grayscale", "%.2f" % background_sprite.material.get_shader_parameter("grayscale_amount"))
+
 	if not is_phase_active:
 		return
 		
