@@ -376,8 +376,14 @@ func _process(_delta: float) -> void:
 			volume_hold_timer.start()
 	
 func play_click_sound(target_volume_db: float):
-	button_sound.volume_db = target_volume_db
-	button_sound.play()
+	var player = AudioStreamPlayer.new()
+	player.stream = button_sound.stream
+	player.bus = "Master"
+	player.volume_db = target_volume_db
+	player.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(player)
+	player.play()
+	player.finished.connect(player.queue_free)
 	
 func _on_sfx_volume_changed(sfx_percent: float):
 	volume_sfx_label.text = str(int(round(sfx_percent))) + \"%\"
