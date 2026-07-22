@@ -56,6 +56,8 @@ var _overlay: CanvasLayer   # screen-space layer for the text panel
 var _label: Label
 var _audio_label: Label
 var _network_label: Label
+var _device_label: Label
+var _device_info_lines: PackedStringArray = []
 
 # --- Lifecycle ---
 
@@ -70,6 +72,13 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_world_layer()
 	_build_overlay()
+	
+	_device_info_lines.append("== DEVICE ==")
+	_device_info_lines.append("OS: %s" % OS.get_name())
+	_device_info_lines.append("CPU: %s" % OS.get_processor_name())
+	_device_info_lines.append("GPU: %s" % RenderingServer.get_video_adapter_name())
+	_device_info_lines.append("API: %s" % RenderingServer.get_video_adapter_api_version())
+	
 	_apply_shown(false)
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -166,6 +175,11 @@ func _build_overlay() -> void:
 	_network_label.label_settings = FontManager.pixel_label_settings(11)
 	hbox.add_child(_network_label)
 
+	_device_label = Label.new()
+	_device_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_device_label.label_settings = FontManager.pixel_label_settings(11)
+	hbox.add_child(_device_label)
+
 func _apply_shown(value: bool) -> void:
 	# No layers built (release/disabled) -> nothing to toggle.
 	if _overlay == null:
@@ -254,6 +268,7 @@ func _update_overlay_text() -> void:
 	_label.text = "\n".join(lines)
 	_audio_label.text = "\n".join(audio_lines)
 	_network_label.text = "\n".join(network_lines)
+	_device_label.text = "\n".join(_device_info_lines)
 
 # --- World drawing (called by _WorldDrawer._draw) ---
 
