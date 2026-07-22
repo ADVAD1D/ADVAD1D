@@ -29,6 +29,12 @@ const DEFAULT_TTL: float = 0.5
 # Master switch: set to false to fully disable the menu (Tab does nothing).
 var enabled: bool = false
 
+# Toggle to only show text and hide all visual debug elements (colliders, rays, etc).
+var only_debug_text: bool = false:
+	set(val):
+		only_debug_text = val
+		_apply_shown(_shown)
+
 # Runtime toggle state: whether the overlay is currently shown.
 var _shown: bool = false
 
@@ -165,11 +171,14 @@ func _apply_shown(value: bool) -> void:
 	if _overlay == null:
 		return
 	_shown = value
+	
+	var show_visuals = value and not only_debug_text
+	
 	# Compat: lights up existing _draw() (player, ship_enemy, ...).
-	GameManager.show_debug = value
+	GameManager.show_debug = show_visuals
 	_overlay.visible = value
-	_world.visible = value
-	if value:
+	_world.visible = show_visuals
+	if show_visuals:
 		_world.queue_redraw()
 
 # --- Text panel ---
