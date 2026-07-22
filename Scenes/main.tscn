@@ -376,6 +376,9 @@ func _process(_delta: float) -> void:
 			volume_hold_timer.start()
 	
 func play_click_sound(target_volume_db: float):
+	if button_sound.playing:
+		button_sound.stop()
+		
 	var player = AudioStreamPlayer.new()
 	player.stream = button_sound.stream
 	player.bus = 'Master'
