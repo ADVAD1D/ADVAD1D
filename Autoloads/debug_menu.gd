@@ -56,7 +56,6 @@ var _overlay: CanvasLayer   # screen-space layer for the text panel
 var _label: Label
 var _audio_label: Label
 var _network_label: Label
-var _device_label: Label
 var _device_info_lines: PackedStringArray = []
 
 # --- Lifecycle ---
@@ -175,11 +174,6 @@ func _build_overlay() -> void:
 	_network_label.label_settings = FontManager.pixel_label_settings(11)
 	hbox.add_child(_network_label)
 
-	_device_label = Label.new()
-	_device_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_device_label.label_settings = FontManager.pixel_label_settings(11)
-	hbox.add_child(_device_label)
-
 func _apply_shown(value: bool) -> void:
 	# No layers built (release/disabled) -> nothing to toggle.
 	if _overlay == null:
@@ -248,6 +242,9 @@ func _update_overlay_text() -> void:
 	if get_tree().root.has_node("SfxManager"):
 		var sfx_manager = get_node("/root/SfxManager")
 		audio_lines.append("SFX Vol: %.1f%% (%.2f dB)" % [sfx_manager.get_sfx_volume_percent(), AudioServer.get_bus_volume_db(sfx_manager.sfx_bus_index)])
+	
+	audio_lines.append("")
+	audio_lines.append_array(_device_info_lines)
 
 	# Network Status
 	var network_lines: PackedStringArray = []
@@ -268,7 +265,6 @@ func _update_overlay_text() -> void:
 	_label.text = "\n".join(lines)
 	_audio_label.text = "\n".join(audio_lines)
 	_network_label.text = "\n".join(network_lines)
-	_device_label.text = "\n".join(_device_info_lines)
 
 # --- World drawing (called by _WorldDrawer._draw) ---
 
