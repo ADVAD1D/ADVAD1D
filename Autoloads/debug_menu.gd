@@ -255,6 +255,15 @@ func _update_overlay_text() -> void:
 		network_lines.append("Online: %s" % str(net.server_online))
 		network_lines.append("Log: %s" % net.last_network_log)
 
+	# Discord Status
+	network_lines.append("")
+	network_lines.append("== DISCORD ==")
+	if ClassDB.class_exists("DiscordRPC"):
+		var is_working = DiscordRPC.get_is_discord_working()
+		network_lines.append("Working: %s" % str(is_working))
+	else:
+		network_lines.append("Plugin Not Loaded")
+
 	# Tracked values (placed in 3rd column).
 	if not _tracked.is_empty():
 		network_lines.append("")
