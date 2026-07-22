@@ -74,6 +74,9 @@ var restart_from_phase: bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if is_instance_valid(background_sprite) and background_sprite.material != null:
+		background_sprite.material.set_shader_parameter("grayscale_amount", 0.0)
+	
 	GameManager.score_updated.connect(_on_score_updated)
 
 	# Phases shown in the debug menu (Tab).
