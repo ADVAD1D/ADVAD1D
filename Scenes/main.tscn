@@ -321,6 +321,7 @@ shader_parameter/warp_amount = 0.150000007125
 shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.3
 shader_parameter/vignette_opacity = 0.800000038
+shader_parameter/low_quality = false
 
 [sub_resource type="GDScript" id="GDScript_pdsj5"]
 script/source = "extends CanvasLayer
