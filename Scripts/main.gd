@@ -21,6 +21,8 @@ func _ready() -> void:
 	#reset shader parameters after a glitch global animation
 	reset_shader_parameters()
 	
+	GameManager.current_arena_index = 0
+	
 	GameManager.can_pause = true
 	base_zoom = cam.zoom
 	player.died.connect(_on_player_died) # Replace with function body.
