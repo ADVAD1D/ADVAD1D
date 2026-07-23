@@ -36,30 +36,16 @@ signal timer_updated(time_left_string)
 @onready var success_sound: AudioStreamPlayer2D = $"../SucessSound"
 @onready var asteroids_spawner: Marker2D = $"../AsteroidSpawner"
 
-var phase_requirements = {
-	1: 500,
-	2: 1000,
-	3: 1500,
-	4: 2000,
-	5: 2500,
-	6: 3000,
-	7: 3500,
-	8: 4000,
-	9: 4500,
-	10: 5000
+var arena_phase_requirements = {
+	0: { 1: 500, 2: 1000, 3: 1500, 4: 2000, 5: 2500, 6: 3000, 7: 3500, 8: 4000, 9: 4500, 10: 5000 },
+	1: { 1: 1000, 2: 2000, 3: 3000, 4: 4000, 5: 5000, 6: 6000, 7: 7000, 8: 8000, 9: 9000, 10: 10000 },
+	2: { 1: 2000, 2: 4000, 3: 6000, 4: 8000, 5: 10000, 6: 12000, 7: 14000, 8: 16000, 9: 18000, 10: 20000 }
 }
 
-var phase_durations = {
-	1: 10.0,
-	2: 15.0,
-	3: 20.0,
-	4: 30.0,
-	5: 40.0,
-	6: 50.0,
-	7: 60.0,
-	8: 70.0,
-	9: 80.0,
-	10: 100.0
+var arena_phase_durations = {
+	0: { 1: 10.0, 2: 15.0, 3: 20.0, 4: 30.0, 5: 40.0, 6: 50.0, 7: 60.0, 8: 70.0, 9: 80.0, 10: 100.0 },
+	1: { 1: 10.0, 2: 15.0, 3: 20.0, 4: 30.0, 5: 40.0, 6: 50.0, 7: 60.0, 8: 70.0, 9: 80.0, 10: 100.0 },
+	2: { 1: 10.0, 2: 15.0, 3: 20.0, 4: 30.0, 5: 40.0, 6: 50.0, 7: 60.0, 8: 70.0, 9: 80.0, 10: 100.0 }
 }
 
 var current_phase: int = 0
@@ -74,9 +60,6 @@ var restart_from_phase: bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if is_instance_valid(background_sprite) and background_sprite.material != null:
-		background_sprite.material.set_shader_parameter("grayscale_amount", 0.0)
-	
 	GameManager.score_updated.connect(_on_score_updated)
 
 	# Phases shown in the debug menu (Tab).
@@ -136,8 +119,10 @@ func start_new_phase():
 			current_pilot_name = "Player"
 		Network.send_player_phase(current_pilot_name, current_phase)
 		
+	var reqs = arena_phase_requirements.get(GameManager.current_arena_index, arena_phase_requirements[0])
+		
 	#yes, i don't use elifs
-	if not phase_requirements.has(current_phase):
+	if not reqs.has(current_phase):
 		_log_message("You win all phases!")
 		phase_label.text = "ARENA WIN"
 		gray_scale_transition()
@@ -175,7 +160,8 @@ func start_new_phase():
 	if is_instance_valid(phase_label):
 		phase_label.text = "PHASE: " + str(current_phase)
 	
-	var current_phase_duration = phase_durations.get(current_phase, 60.0)
+	var dur = arena_phase_durations.get(GameManager.current_arena_index, arena_phase_durations[0])
+	var current_phase_duration = dur.get(current_phase, 60.0)
 	
 	phase_timer = current_phase_duration
 	
@@ -183,7 +169,7 @@ func start_new_phase():
 		time_progress_bar.max_value = current_phase_duration
 		time_progress_bar.value = current_phase_duration
 	
-	current_score_requirement = phase_requirements[current_phase]
+	current_score_requirement = reqs[current_phase]
 	phase_started.emit(current_phase, current_score_requirement)
 	apply_difficulty()
 	is_phase_active = true
@@ -224,7 +210,8 @@ func clear_the_board():
 	get_tree().call_group("enemies", "die_silently")
 	
 func apply_difficulty():
-	var progress = float(current_phase - 1) / (phase_requirements.size() - 1.0)
+	var reqs = arena_phase_requirements.get(GameManager.current_arena_index, arena_phase_requirements[0])
+	var progress = float(current_phase - 1) / (reqs.size() - 1.0)
 	
 	#sorry for the spanglish in the code
 	#ships difficulty

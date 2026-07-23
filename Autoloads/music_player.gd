@@ -29,18 +29,28 @@ var scene1_specific_playlist: Dictionary = {
 #the max size for game resource(music) for itchio browser support is 200mb on index.pck
 #ogg format is better for this
 
-var playlist = [
-	preload("res://Assets/Audio/Music/neon-rising-336846.ogg"),
-	preload("res://Assets/Audio/Music/digital-dream-391529.ogg"),
-	preload("res://Assets/Audio/Music/velvet-malware-454813.ogg"),
-	preload("res://Assets/Audio/Music/psychronic-break-forward-468745.ogg"),
-	preload("res://Assets/Audio/Music/pulsehaven-nexus-382253.ogg"),
-	preload("res://Assets/Audio/Music/blue-light-district-397940.ogg"),
-	preload("res://Assets/Audio/Music/the-fight-left-in-us-391531.ogg"),
-	preload("res://Assets/Audio/Music/psychronic-breakpoint-triumph-468746.ogg"),
-	preload("res://Assets/Audio/Music/ascending-data-418712.ogg"),
-	preload("res://Assets/Audio/Music/digital-disconnect-454806.ogg"),
-]
+var arena_playlists = {
+	0: [
+		preload("res://Assets/Audio/Music/neon-rising-336846.ogg"),
+		preload("res://Assets/Audio/Music/digital-dream-391529.ogg"),
+		preload("res://Assets/Audio/Music/velvet-malware-454813.ogg"),
+		preload("res://Assets/Audio/Music/psychronic-break-forward-468745.ogg"),
+		preload("res://Assets/Audio/Music/pulsehaven-nexus-382253.ogg"),
+		preload("res://Assets/Audio/Music/blue-light-district-397940.ogg"),
+		preload("res://Assets/Audio/Music/the-fight-left-in-us-391531.ogg"),
+		preload("res://Assets/Audio/Music/psychronic-breakpoint-triumph-468746.ogg"),
+		preload("res://Assets/Audio/Music/ascending-data-418712.ogg"),
+		preload("res://Assets/Audio/Music/digital-disconnect-454806.ogg"),
+	],
+	1: [
+		preload("res://Assets/Audio/Music/neon-rising-336846.ogg"),
+		preload("res://Assets/Audio/Music/digital-dream-391529.ogg"),
+	],
+	2: [
+		preload("res://Assets/Audio/Music/neon-rising-336846.ogg"),
+		preload("res://Assets/Audio/Music/digital-dream-391529.ogg"),
+	]
+}
 
 #licences
 #Music by <a href="https://pixabay.com/es/users/psychronic-13092015/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=336846">Douglas Gustafson</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=336846">Pixabay</a>
@@ -97,7 +107,8 @@ func play_next_shuffled_song():
 		
 	if shuffled_playlist.is_empty():
 		_log_message("Playlist finished, shuffling again!")
-		shuffled_playlist = playlist.duplicate()
+		var current_playlist = arena_playlists.get(GameManager.current_arena_index, arena_playlists[0])
+		shuffled_playlist = current_playlist.duplicate()
 		shuffled_playlist.shuffle()
 	
 	stream = shuffled_playlist.pop_front()

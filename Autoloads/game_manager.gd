@@ -12,6 +12,10 @@ var player_name_field_editable: bool = false
 var score: int = 0
 var can_add_score: bool = true
 var phase_to_start: int = 1
+
+# Arenas Base Structure
+var current_arena_index: int = 0
+var arena_names: Array[String] = ["Arena 1", "Arena 2", "Arena 3"]
 var is_shader_animation: bool = false
 var is_glitch_sound: bool = false
 var game_paused: bool = false
