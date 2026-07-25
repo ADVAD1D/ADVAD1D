@@ -9,14 +9,17 @@ signal timer_updated(time_left_string)
 @export var ship_enemy_spawner: Node2D
 @export var saw_enemy_spawner: Node2D
 
-#default times
-@export var min_shoot_timerate: float = 0.5 # = 0.5
-@export var max_shoot_timerate: float = 0.8 # = 0.8
+var min_shoot_timerate: float
+var max_shoot_timerate: float
+var min_ship_enemies: float
+var max_ship_enemies: float
+var max_saw_enemies: float
 
-@export var min_ship_enemies: float = 2.0 # = 2.0
-@export var max_ship_enemies: float = 5.0 # = 5.0
-
-@export var max_saw_enemies: float = 2.0 # = 2.0
+var arena_enemy_configs = {
+	0: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 2.0, "max_ship": 5.0, "max_saw": 2.0 },
+	1: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 3.0, "max_ship": 7.0, "max_saw": 3.0 },
+	2: { "min_shoot": 0.4, "max_shoot": 0.7, "min_ship": 4.0, "max_ship": 8.0, "max_saw": 4.0 }
+}
 
 @export var phase_cooldown_timer: float = 1.0 # = 1.0
 
@@ -60,6 +63,13 @@ var restart_from_phase: bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	var config = arena_enemy_configs.get(GameManager.current_arena_index, arena_enemy_configs[0])
+	min_shoot_timerate = config["min_shoot"]
+	max_shoot_timerate = config["max_shoot"]
+	min_ship_enemies = config["min_ship"]
+	max_ship_enemies = config["max_ship"]
+	max_saw_enemies = config["max_saw"]
+	
 	GameManager.score_updated.connect(_on_score_updated)
 
 	# Phases shown in the debug menu (Tab).
