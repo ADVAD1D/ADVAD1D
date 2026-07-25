@@ -1,0 +1,96 @@
+extends Node2D
+
+@onready var player = $PlayerInstance
+@onready var crt_material: ShaderMaterial = $UILayer/ColorRect.material
+@onready var glitch_sound: AudioStreamPlayer2D = $GlitchSound
+@onready var cam: Camera2D = $Camera2D
+@onready var saw_spawner: SawSpawner = $SawSpawner
+@onready var saw_sound: AudioStreamPlayer2D = $SawSound
+@onready var laser_wall_animated: AnimatedSprite2D = $LaserWallAnimation
+@onready var drone_sprite: AnimatedSprite2D = $DronePath/PathFollow2D/DroneSprite
+@onready var drone2_sprite: AnimatedSprite2D = $DronePath2/PathFollow2D/DroneSprite
+@onready var fade_rect: ColorRect = $UILayer/FadeRect
+
+var base_zoom: Vector2
+@export var laser_explosion_particles: PackedScene
+@export var enemy_laser_explosion: PackedScene
+@export var asteroids_explosion_particles: PackedScene
+# Called when the node enters the scene tree for the first time.
+
+func _ready() -> void:
+	#reset shader parameters after a glitch global animation
+	reset_shader_parameters()
+	
+	GameManager.current_arena_index = 1
+	
+	GameManager.can_pause = true
+	base_zoom = cam.zoom
+	player.died.connect(_on_player_died) # Replace with function body.
+	player.connect("dash", Callable(self, "_on_player_dashed"))
+	saw_spawner.first_saw_spawner.connect(saw_sound.play, CONNECT_ONE_SHOT)
+	laser_wall_animated.play()
+	drone_sprite.play()
+	drone2_sprite.play()
+	
+	if GameManager.is_shader_animation:
+		GameManager.play_glitch_effect(crt_material)
+		GameManager.is_shader_animation = false
+		
+	if GameManager.is_glitch_sound:
+		GameManager.play_glitch_sound(glitch_sound)
+		GameManager.is_glitch_sound = false
+	
+func reset_shader_parameters():
+	if is_instance_valid(crt_material):
+		crt_material.set_shader_parameter("aberration", 0.02)
+		crt_material.set_shader_parameter("distort_intensity", 0.02)
+		crt_material.set_shader_parameter("static_noise_intensity", 0.01)
+
+func _on_death_zone_area_entered(area: Area2D) -> void:
+	if area.is_in_group("asteroides"):
+		var asteroids_exp_instance = asteroids_explosion_particles.instantiate()
+		add_child(asteroids_exp_instance)
+		asteroids_exp_instance.global_position = area.global_position
+		area.queue_free()
+
+func _on_laser_zone_area_entered(area: Area2D) -> void:
+	if area.is_in_group("lasers"):
+		if laser_explosion_particles:
+			var laser_exp_instance = laser_explosion_particles.instantiate()
+			add_child(laser_exp_instance)
+			laser_exp_instance.global_position = area.global_position
+		
+		area.queue_free()
+	
+	elif area.is_in_group("enemy_laser"):
+		if enemy_laser_explosion:
+			var enemy_laser_exp_instance = enemy_laser_explosion.instantiate()
+			add_child(enemy_laser_exp_instance)
+			enemy_laser_exp_instance.global_position = area.global_position
+
+		EnemyLaserPool.release(area)
+		
+func _on_player_died() -> void:
+	GameManager.can_pause = false
+	GameManager.play_glitch_sound(glitch_sound)
+	GameManager.stop_scoring()
+	
+	var glitch_tween = GameManager.play_glitch_effect(crt_material)
+	await glitch_tween.finished
+	await get_tree().create_timer(0.01).timeout
+	
+	get_tree().call_group("saws", "die_silently")
+	get_tree().call_group("enemies", "die_silently")
+	
+	GameManager.reset_score()
+	get_tree().call_deferred("reload_current_scene")
+	
+func fade_to_scene(target_scene_path: PackedScene, duration: float = 1.5):
+	fade_rect.modulate.a = 0.0
+	fade_rect.visible = true
+	var tween = create_tween()
+	tween.tween_property(fade_rect, "modulate:a", 1.0, duration)
+	await tween.finished
+	
+	if target_scene_path:
+		get_tree().call_deferred("change_scene_to_packed", target_scene_path)
