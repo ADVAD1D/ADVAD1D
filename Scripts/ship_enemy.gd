@@ -9,6 +9,7 @@ var strafe_influence: float = 0.6
 var acceleration: float = 4.0
 var friction: float = 2.0
 var separation_strength: float = 100.0
+var separation_radius: float = 75.0
 
 @export var explosion_particles: PackedScene
 
@@ -50,6 +51,7 @@ func setup(config: Dictionary):
 	speed = config.get("speed", 250.0)
 	_log_message(config)
 	current_shoot_timer = config.get("shoot_timerate", 0.2)
+	separation_radius = config.get("separation_radius", 75.0)
 	
 	if shoot_timer != null:
 		shoot_timer.wait_time = current_shoot_timer
@@ -59,6 +61,13 @@ func _ready() -> void:
 	hitbox.hit.connect(_on_hit)
 	if is_instance_valid(shoot_timer):
 		shoot_timer.wait_time = current_shoot_timer
+		
+	if is_instance_valid(separation_area):
+		var col_shape = separation_area.get_node_or_null("CollisionShape2D")
+		if col_shape and col_shape.shape is CircleShape2D:
+			var new_shape = col_shape.shape.duplicate()
+			new_shape.radius = separation_radius
+			col_shape.shape = new_shape
 	
 	scale = Vector2.ZERO
 	var tween = create_tween()
