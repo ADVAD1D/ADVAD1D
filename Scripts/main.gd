@@ -7,21 +7,22 @@ extends Node2D
 @onready var saw_spawner: SawSpawner = $SawSpawner
 @onready var saw_sound: AudioStreamPlayer2D = $SawSound
 @onready var laser_wall_animated: AnimatedSprite2D = $LaserWallAnimation
-@onready var drone_sprite: AnimatedSprite2D = $DronePath/PathFollow2D/DroneSprite
-@onready var drone2_sprite: AnimatedSprite2D = $DronePath2/PathFollow2D/DroneSprite
+@onready var drone_sprite: AnimatedSprite2D = get_node_or_null("DronePath/PathFollow2D/DroneSprite")
+@onready var drone2_sprite: AnimatedSprite2D = get_node_or_null("DronePath2/PathFollow2D/DroneSprite")
 @onready var fade_rect: ColorRect = $UILayer/FadeRect
 
 var base_zoom: Vector2
 @export var laser_explosion_particles: PackedScene
 @export var enemy_laser_explosion: PackedScene
 @export var asteroids_explosion_particles: PackedScene
-# Called when the node enters the scene tree for the first time.
+@export var arena_index: int = 0
 
+# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	#reset shader parameters after a glitch global animation
 	reset_shader_parameters()
 	
-	GameManager.current_arena_index = 0
+	GameManager.current_arena_index = arena_index
 	
 	GameManager.can_pause = true
 	base_zoom = cam.zoom
@@ -29,8 +30,10 @@ func _ready() -> void:
 	player.connect("dash", Callable(self, "_on_player_dashed"))
 	saw_spawner.first_saw_spawner.connect(saw_sound.play, CONNECT_ONE_SHOT)
 	laser_wall_animated.play()
-	drone_sprite.play()
-	drone2_sprite.play()
+	if is_instance_valid(drone_sprite):
+		drone_sprite.play()
+	if is_instance_valid(drone2_sprite):
+		drone2_sprite.play()
 	
 	if GameManager.is_shader_animation:
 		GameManager.play_glitch_effect(crt_material)
