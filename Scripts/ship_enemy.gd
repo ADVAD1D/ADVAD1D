@@ -52,6 +52,7 @@ func setup(config: Dictionary):
 	_log_message(config)
 	current_shoot_timer = config.get("shoot_timerate", 0.2)
 	separation_radius = config.get("separation_radius", 75.0)
+	separation_strength = config.get("separation_strength", 100.0)
 	
 	if shoot_timer != null:
 		shoot_timer.wait_time = current_shoot_timer

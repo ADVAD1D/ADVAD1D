@@ -11,9 +11,9 @@ signal timer_updated(time_left_string)
 
 
 var arena_enemy_configs = {
-	0: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 2.0, "max_ship": 5.0, "max_saw": 2.0, "min_ship_spd": 250.0, "max_ship_spd": 500.0, "sep_radius": 75.0 },
-	1: { "min_shoot": 0.1, "max_shoot": 0.2, "min_ship": 5.0, "max_ship": 6.0, "max_saw": 3.0, "min_ship_spd": 400.0, "max_ship_spd": 650.0, "sep_radius": 200.0 },
-	2: { "min_shoot": 0.4, "max_shoot": 0.7, "min_ship": 4.0, "max_ship": 8.0, "max_saw": 4.0, "min_ship_spd": 300.0, "max_ship_spd": 600.0, "sep_radius": 150.0 }
+	0: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 2.0, "max_ship": 5.0, "max_saw": 2.0, "min_ship_spd": 250.0, "max_ship_spd": 500.0, "sep_radius": 75.0, "sep_strength": 100.0 },
+	1: { "min_shoot": 0.1, "max_shoot": 0.2, "min_ship": 5.0, "max_ship": 6.0, "max_saw": 3.0, "min_ship_spd": 400.0, "max_ship_spd": 650.0, "sep_radius": 250.0, "sep_strength": 600.0 },
+	2: { "min_shoot": 0.4, "max_shoot": 0.7, "min_ship": 4.0, "max_ship": 8.0, "max_saw": 4.0, "min_ship_spd": 300.0, "max_ship_spd": 600.0, "sep_radius": 150.0, "sep_strength": 300.0 }
 }
 
 @export var phase_cooldown_timer: float = 1.0 # = 1.0
@@ -216,13 +216,15 @@ func apply_difficulty():
 	var cur_min_ship_spd = config.get("min_ship_spd", 250.0)
 	var cur_max_ship_spd = config.get("max_ship_spd", 500.0)
 	var cur_sep_radius = config.get("sep_radius", 75.0)
+	var cur_sep_strength = config.get("sep_strength", 100.0)
 	
 	#ships difficulty
 	_log_message(["Apply difficult from Phase:", current_phase, "Progress: ", progress])
 	var ship_max_enemies = int(lerp(cur_min_ship, cur_max_ship, progress))
 	var ship_config = {"speed": lerp(cur_min_ship_spd, cur_max_ship_spd, progress),
 					   "shoot_timerate": lerp(cur_max_shoot, cur_min_shoot, progress),
-					   "separation_radius": cur_sep_radius} # Puedes añadir más stats
+					   "separation_radius": cur_sep_radius,
+					   "separation_strength": cur_sep_strength} # Puedes añadir más stats
 	
 	if is_instance_valid(ship_enemy_spawner):
 		ship_enemy_spawner.configure_for_phase(ship_max_enemies, ship_config)
