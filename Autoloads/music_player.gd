@@ -45,6 +45,7 @@ var arena_playlists = {
 	1: [
 		preload("res://Assets/Audio/Music/neon-rising-336846.ogg"),
 		preload("res://Assets/Audio/Music/digital-dream-391529.ogg"),
+		preload("res://Assets/Audio/Music/psychronic-the-stars-donx27t-wait-for-you-481769.ogg")
 	],
 	2: [
 		preload("res://Assets/Audio/Music/neon-rising-336846.ogg"),

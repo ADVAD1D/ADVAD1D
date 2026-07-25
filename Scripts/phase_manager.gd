@@ -12,7 +12,7 @@ signal timer_updated(time_left_string)
 
 var arena_enemy_configs = {
 	0: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 2.0, "max_ship": 5.0, "max_saw": 2.0, "min_ship_spd": 250.0, "max_ship_spd": 500.0, "sep_radius": 75.0, "sep_strength": 100.0, "can_retreat": true, "fire_range": 1500.0 },
-	1: { "min_shoot": 0.1, "max_shoot": 0.2, "min_ship": 5.0, "max_ship": 6.0, "max_saw": 3.0, "min_ship_spd": 400.0, "max_ship_spd": 650.0, "sep_radius": 350.0, "sep_strength": 500.0, "can_retreat": false, "fire_range": 3500.0 },
+	1: { "min_shoot": 0.1, "max_shoot": 0.3, "min_ship": 5.0, "max_ship": 6.0, "max_saw": 3.0, "min_ship_spd": 400.0, "max_ship_spd": 650.0, "sep_radius": 300.0, "sep_strength": 400.0, "can_retreat": false, "fire_range": 3500.0 },
 	2: { "min_shoot": 0.4, "max_shoot": 0.7, "min_ship": 4.0, "max_ship": 8.0, "max_saw": 4.0, "min_ship_spd": 300.0, "max_ship_spd": 600.0, "sep_radius": 150.0, "sep_strength": 300.0, "can_retreat": true, "fire_range": 2000.0 }
 }
 
