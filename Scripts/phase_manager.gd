@@ -11,9 +11,9 @@ signal timer_updated(time_left_string)
 
 
 var arena_enemy_configs = {
-	0: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 2.0, "max_ship": 5.0, "max_saw": 2.0 },
-	1: { "min_shoot": 0.2, "max_shoot": 0.3, "min_ship": 7.0, "max_ship": 9.0, "max_saw": 5.0 },
-	2: { "min_shoot": 0.4, "max_shoot": 0.7, "min_ship": 4.0, "max_ship": 8.0, "max_saw": 4.0 }
+	0: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 2.0, "max_ship": 5.0, "max_saw": 2.0, "min_ship_spd": 250.0, "max_ship_spd": 500.0 },
+	1: { "min_shoot": 0.2, "max_shoot": 0.3, "min_ship": 7.0, "max_ship": 9.0, "max_saw": 5.0, "min_ship_spd": 350.0, "max_ship_spd": 650.0 },
+	2: { "min_shoot": 0.4, "max_shoot": 0.7, "min_ship": 4.0, "max_ship": 8.0, "max_saw": 4.0, "min_ship_spd": 300.0, "max_ship_spd": 600.0 }
 }
 
 @export var phase_cooldown_timer: float = 1.0 # = 1.0
@@ -42,7 +42,7 @@ var arena_phase_requirements = {
 
 var arena_phase_durations = {
 	0: { 1: 10.0, 2: 15.0, 3: 20.0, 4: 30.0, 5: 40.0, 6: 50.0, 7: 60.0, 8: 70.0, 9: 80.0, 10: 100.0 },
-	1: { 1: 10.0, 2: 15.0, 3: 20.0, 4: 30.0, 5: 40.0, 6: 50.0, 7: 60.0, 8: 70.0, 9: 80.0, 10: 100.0 },
+	1: { 1: 15.0, 2: 20.0, 3: 25.0, 4: 35.0, 5: 45.0, 6: 55.0, 7: 65.0, 8: 75.0, 9: 85.0, 10: 105.0 },
 	2: { 1: 10.0, 2: 15.0, 3: 20.0, 4: 30.0, 5: 40.0, 6: 50.0, 7: 60.0, 8: 70.0, 9: 80.0, 10: 100.0 }
 }
 
@@ -213,10 +213,13 @@ func apply_difficulty():
 		cur_min_shoot = 0.6
 		cur_max_ship = 4.0
 	
+	var cur_min_ship_spd = config.get("min_ship_spd", 250.0)
+	var cur_max_ship_spd = config.get("max_ship_spd", 500.0)
+	
 	#ships difficulty
 	_log_message(["Apply difficult from Phase:", current_phase, "Progress: ", progress])
 	var ship_max_enemies = int(lerp(cur_min_ship, cur_max_ship, progress))
-	var ship_config = {"speed": lerp(250.0, 500.0, progress),
+	var ship_config = {"speed": lerp(cur_min_ship_spd, cur_max_ship_spd, progress),
 					   "shoot_timerate": lerp(cur_max_shoot, cur_min_shoot, progress)} # Puedes añadir más stats
 	
 	if is_instance_valid(ship_enemy_spawner):
