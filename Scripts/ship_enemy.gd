@@ -55,6 +55,7 @@ func setup(config: Dictionary):
 	separation_radius = config.get("separation_radius", 75.0)
 	separation_strength = config.get("separation_strength", 100.0)
 	can_retreat = config.get("can_retreat", true)
+	fire_range = config.get("fire_range", 1500.0)
 	
 	if shoot_timer != null:
 		shoot_timer.wait_time = current_shoot_timer

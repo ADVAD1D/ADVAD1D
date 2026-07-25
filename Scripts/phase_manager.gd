@@ -11,9 +11,9 @@ signal timer_updated(time_left_string)
 
 
 var arena_enemy_configs = {
-	0: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 2.0, "max_ship": 5.0, "max_saw": 2.0, "min_ship_spd": 250.0, "max_ship_spd": 500.0, "sep_radius": 75.0, "sep_strength": 100.0, "can_retreat": true },
-	1: { "min_shoot": 0.1, "max_shoot": 0.2, "min_ship": 5.0, "max_ship": 6.0, "max_saw": 3.0, "min_ship_spd": 400.0, "max_ship_spd": 650.0, "sep_radius": 250.0, "sep_strength": 600.0, "can_retreat": false },
-	2: { "min_shoot": 0.4, "max_shoot": 0.7, "min_ship": 4.0, "max_ship": 8.0, "max_saw": 4.0, "min_ship_spd": 300.0, "max_ship_spd": 600.0, "sep_radius": 150.0, "sep_strength": 300.0, "can_retreat": true }
+	0: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 2.0, "max_ship": 5.0, "max_saw": 2.0, "min_ship_spd": 250.0, "max_ship_spd": 500.0, "sep_radius": 75.0, "sep_strength": 100.0, "can_retreat": true, "fire_range": 1500.0 },
+	1: { "min_shoot": 0.1, "max_shoot": 0.2, "min_ship": 5.0, "max_ship": 6.0, "max_saw": 3.0, "min_ship_spd": 400.0, "max_ship_spd": 650.0, "sep_radius": 350.0, "sep_strength": 500.0, "can_retreat": false, "fire_range": 3500.0 },
+	2: { "min_shoot": 0.4, "max_shoot": 0.7, "min_ship": 4.0, "max_ship": 8.0, "max_saw": 4.0, "min_ship_spd": 300.0, "max_ship_spd": 600.0, "sep_radius": 150.0, "sep_strength": 300.0, "can_retreat": true, "fire_range": 2000.0 }
 }
 
 @export var phase_cooldown_timer: float = 1.0 # = 1.0
@@ -218,6 +218,7 @@ func apply_difficulty():
 	var cur_sep_radius = config.get("sep_radius", 75.0)
 	var cur_sep_strength = config.get("sep_strength", 100.0)
 	var cur_can_retreat = config.get("can_retreat", true)
+	var cur_fire_range = config.get("fire_range", 1500.0)
 	
 	#ships difficulty
 	_log_message(["Apply difficult from Phase:", current_phase, "Progress: ", progress])
@@ -226,7 +227,8 @@ func apply_difficulty():
 					   "shoot_timerate": lerp(cur_max_shoot, cur_min_shoot, progress),
 					   "separation_radius": cur_sep_radius,
 					   "separation_strength": cur_sep_strength,
-					   "can_retreat": cur_can_retreat} # Puedes añadir más stats
+					   "can_retreat": cur_can_retreat,
+					   "fire_range": cur_fire_range} # Puedes añadir más stats
 	
 	if is_instance_valid(ship_enemy_spawner):
 		ship_enemy_spawner.configure_for_phase(ship_max_enemies, ship_config)
