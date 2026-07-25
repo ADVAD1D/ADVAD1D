@@ -46,10 +46,11 @@ func spawn_enemy():
 		_log_message("Spawn Cancel: the random point in the safe radius is near")
 		return
 		
+	var cur_sep_radius = enemy_current_config.get("separation_radius", safe_spawn_radius)
 	var existing_enemies = get_tree().get_nodes_in_group("enemies")
 	for e in existing_enemies:
 		if is_instance_valid(e) and not e.is_queued_for_deletion():
-			if spawn_position.distance_to(e.global_position) < safe_spawn_radius * 2.0:
+			if spawn_position.distance_to(e.global_position) < cur_sep_radius * 1.5:
 				_log_message("Spawn Cancel: too close to another enemy")
 				return
 		

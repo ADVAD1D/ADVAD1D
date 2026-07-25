@@ -10,6 +10,7 @@ var acceleration: float = 4.0
 var friction: float = 2.0
 var separation_strength: float = 100.0
 var separation_radius: float = 75.0
+var can_retreat: bool = true
 
 @export var explosion_particles: PackedScene
 
@@ -53,6 +54,7 @@ func setup(config: Dictionary):
 	current_shoot_timer = config.get("shoot_timerate", 0.2)
 	separation_radius = config.get("separation_radius", 75.0)
 	separation_strength = config.get("separation_strength", 100.0)
+	can_retreat = config.get("can_retreat", true)
 	
 	if shoot_timer != null:
 		shoot_timer.wait_time = current_shoot_timer
@@ -98,7 +100,7 @@ func _physics_process(delta: float) -> void:
 	if distance_to_player > ideal_distance + distance_margin:
 		target_velocity = vector_to_player.normalized() * speed
 			
-	elif distance_to_player < ideal_distance - distance_margin:
+	elif distance_to_player < ideal_distance - distance_margin and can_retreat:
 		target_velocity = -vector_to_player.normalized() * speed
 	else:
 		target_velocity = vector_to_player.orthogonal().normalized() * strafe_speed
