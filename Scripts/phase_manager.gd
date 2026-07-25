@@ -9,15 +9,10 @@ signal timer_updated(time_left_string)
 @export var ship_enemy_spawner: Node2D
 @export var saw_enemy_spawner: Node2D
 
-var min_shoot_timerate: float
-var max_shoot_timerate: float
-var min_ship_enemies: float
-var max_ship_enemies: float
-var max_saw_enemies: float
 
 var arena_enemy_configs = {
 	0: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 2.0, "max_ship": 5.0, "max_saw": 2.0 },
-	1: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 3.0, "max_ship": 7.0, "max_saw": 3.0 },
+	1: { "min_shoot": 0.2, "max_shoot": 0.3, "min_ship": 7.0, "max_ship": 9.0, "max_saw": 5.0 },
 	2: { "min_shoot": 0.4, "max_shoot": 0.7, "min_ship": 4.0, "max_ship": 8.0, "max_saw": 4.0 }
 }
 
@@ -61,15 +56,7 @@ var is_phase_active: bool = false
 
 var restart_from_phase: bool = true
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var config = arena_enemy_configs.get(GameManager.current_arena_index, arena_enemy_configs[0])
-	min_shoot_timerate = config["min_shoot"]
-	max_shoot_timerate = config["max_shoot"]
-	min_ship_enemies = config["min_ship"]
-	max_ship_enemies = config["max_ship"]
-	max_saw_enemies = config["max_saw"]
-	
 	GameManager.score_updated.connect(_on_score_updated)
 
 	# Phases shown in the debug menu (Tab).
@@ -83,15 +70,6 @@ func _ready() -> void:
 	_log_message("Phase manager ready to execute")
 	_log_message("Speedrun timer started!")
 	code_label.modulate.a = 0.0
-	
-	if relative_control_active == true:
-		#shoot timerate in relative control variables
-		max_shoot_timerate = 0.9
-		min_shoot_timerate = 0.6
-		
-		#max shoot enemies in relative control
-		max_ship_enemies = 4.0
-	
 	#ready in current phase
 	if  restart_from_phase == true:
 		current_phase = GameManager.phase_to_start - 1
@@ -223,18 +201,29 @@ func apply_difficulty():
 	var reqs = arena_phase_requirements.get(GameManager.current_arena_index, arena_phase_requirements[0])
 	var progress = float(current_phase - 1) / (reqs.size() - 1.0)
 	
-	#sorry for the spanglish in the code
+	var config = arena_enemy_configs.get(GameManager.current_arena_index, arena_enemy_configs[0])
+	var cur_min_shoot = config["min_shoot"]
+	var cur_max_shoot = config["max_shoot"]
+	var cur_min_ship = config["min_ship"]
+	var cur_max_ship = config["max_ship"]
+	var cur_max_saw = config["max_saw"]
+	
+	if relative_control_active:
+		cur_max_shoot = 0.9
+		cur_min_shoot = 0.6
+		cur_max_ship = 4.0
+	
 	#ships difficulty
 	_log_message(["Apply difficult from Phase:", current_phase, "Progress: ", progress])
-	var ship_max_enemies = int(lerp(min_ship_enemies, max_ship_enemies, progress))
+	var ship_max_enemies = int(lerp(cur_min_ship, cur_max_ship, progress))
 	var ship_config = {"speed": lerp(250.0, 500.0, progress),
-					   "shoot_timerate": lerp(max_shoot_timerate, min_shoot_timerate, progress)} # Puedes añadir más stats
+					   "shoot_timerate": lerp(cur_max_shoot, cur_min_shoot, progress)} # Puedes añadir más stats
 	
 	if is_instance_valid(ship_enemy_spawner):
 		ship_enemy_spawner.configure_for_phase(ship_max_enemies, ship_config)
 		
 	#saws difficulty
-	var saw_max_enemies = int(max_saw_enemies)
+	var saw_max_enemies = int(cur_max_saw)
 	var saw_config = {"speed": lerp(700.0, 1200.0, progress)}
 	
 	if is_instance_valid(saw_enemy_spawner):
