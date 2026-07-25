@@ -18,11 +18,12 @@ var base_zoom: Vector2
 @export var arena_index: int = 0
 
 # Called when the node enters the scene tree for the first time.
+func _enter_tree() -> void:
+	GameManager.current_arena_index = arena_index
+
 func _ready() -> void:
 	#reset shader parameters after a glitch global animation
 	reset_shader_parameters()
-	
-	GameManager.current_arena_index = arena_index
 	
 	GameManager.can_pause = true
 	base_zoom = cam.zoom
