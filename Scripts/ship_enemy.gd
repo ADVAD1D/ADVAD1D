@@ -114,11 +114,18 @@ func _physics_process(delta: float) -> void:
 	
 	if not neighbors.is_empty():
 		for neighbor in neighbors:
-			separation_vector += (neighbor.global_position - global_position)
+			if neighbor == self:
+				continue
+			var diff = global_position - neighbor.global_position
+			var dist = diff.length()
+			# Separation radius is the target distance we want to keep.
+			if dist > 0 and dist < separation_radius:
+				# Weight is 1.0 when right on top of each other, 0.0 when at separation_radius edge
+				var push_weight = 1.0 - (dist / separation_radius)
+				separation_vector += diff.normalized() * push_weight
 		
-		separation_vector = -separation_vector.normalized()
-
-	target_velocity += separation_vector * separation_strength
+	if separation_vector.length() > 0:
+		target_velocity += separation_vector * separation_strength
 	
 	velocity = velocity.lerp(target_velocity, acceleration * delta)
 	move_and_slide()
