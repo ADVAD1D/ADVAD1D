@@ -46,6 +46,13 @@ func spawn_enemy():
 		_log_message("Spawn Cancel: the random point in the safe radius is near")
 		return
 		
+	var existing_enemies = get_tree().get_nodes_in_group("enemies")
+	for e in existing_enemies:
+		if is_instance_valid(e) and not e.is_queued_for_deletion():
+			if spawn_position.distance_to(e.global_position) < safe_spawn_radius * 2.0:
+				_log_message("Spawn Cancel: too close to another enemy")
+				return
+		
 	if portal_scene != null:
 		var portal_instance = portal_scene.instantiate()
 		call_deferred("add_child", portal_instance)
