@@ -24,8 +24,10 @@ func _process(_delta: float) -> void:
 
 func _on_body_entered(body: Node2D):
 	if body.is_in_group("player"):
+		for child in body.get_children():
+			if child.is_in_group("player_shield"):
+				return
 		call_deferred("_equip_shield", body)
-		
 func _equip_shield(player_node):
 	var shield = reward_scene.instantiate()
 	player_node.add_child(shield)
