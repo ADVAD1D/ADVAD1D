@@ -131,6 +131,8 @@ func start_new_phase():
 		if is_instance_valid(ship_enemy_spawner):
 			ship_enemy_spawner.stop()
 			
+		get_tree().call_group("powerup_spawners", "stop")
+			
 		if is_instance_valid(wall_to_remove):
 			wall_to_remove.queue_free()
 			

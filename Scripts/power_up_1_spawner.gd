@@ -8,7 +8,11 @@ extends Node2D
 @onready var timer = $Timer
 
 func _ready() -> void:
+	add_to_group("powerup_spawners")
 	timer.timeout.connect(_on_timer_timeout)
+
+func stop() -> void:
+	timer.stop()
 
 func _on_timer_timeout():
 	spawn_locator.progress_ratio = randf()
