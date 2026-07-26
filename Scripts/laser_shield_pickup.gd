@@ -12,7 +12,6 @@ var is_collected: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	add_to_group("pickups")
 	scale = Vector2.ZERO
 	var tween = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)
