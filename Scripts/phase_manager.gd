@@ -131,7 +131,7 @@ func start_new_phase():
 		if is_instance_valid(ship_enemy_spawner):
 			ship_enemy_spawner.stop()
 			
-		get_tree().call_group("powerup_spawners", "stop")
+		call_deferred("_stop_powerup_spawners")
 			
 		if is_instance_valid(wall_to_remove):
 			wall_to_remove.queue_free()
@@ -292,3 +292,6 @@ func _log_message(message):
 		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
 	else:
 		return
+
+func _stop_powerup_spawners():
+	get_tree().call_group("powerup_spawners", "stop")
