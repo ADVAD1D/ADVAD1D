@@ -54,10 +54,10 @@ func _on_area_entered(area: Area2D):
 func _spawn_laser_particles(spawn_pos: Vector2):
 	if laser_shield_particles:
 		var laser_shield_instance = laser_shield_particles.instantiate()
-		get_parent().add_child(laser_shield_instance)
+		get_parent().add_sibling(laser_shield_instance)
 		laser_shield_instance.global_position = spawn_pos
 		
 func _spawn_break_particles(spawn_pos: Vector2):
 	var explosion = shield_break_particles.instantiate()
-	get_parent().add_child(explosion)
+	get_parent().add_sibling(explosion)
 	explosion.global_position = spawn_pos

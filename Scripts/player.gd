@@ -214,6 +214,11 @@ func vanish():
 func _perform_death_effects():
 	player_died = true
 	
+	for child in get_children():
+		if child.is_in_group("player_shield"):
+			if child.has_method("_on_timeout"):
+				child._on_timeout()
+	
 	if ship_explosion_particles:
 		var ship_exp_instance = ship_explosion_particles.instantiate()
 		add_sibling(ship_exp_instance)
