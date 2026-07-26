@@ -27,10 +27,10 @@ const DEFAULT_TTL: float = 0.5
 # --- State ---
 
 # Master switch: set to false to fully disable the menu (Tab does nothing).
-var enabled: bool = true
+var enabled: bool = false
 
 # Toggle to only show text and hide all visual debug elements (colliders, rays, etc).
-var only_debug_text: bool = true:
+var only_debug_text: bool = false:
 	set(val):
 		only_debug_text = val
 		_apply_shown(_shown)

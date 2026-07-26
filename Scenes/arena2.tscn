@@ -550,15 +550,15 @@ energy = 0.5
 texture = SubResource("GradientTexture2D_fevyy")
 
 [node name="UpLightRight" type="PointLight2D" parent="MainLight2D" unique_id=1047623433]
-position = Vector2(31.6489, -17.5418)
-rotation = -0.00507933
+position = Vector2(66.666664, 5.28043)
+rotation = 1.5478803
 scale = Vector2(0.36698, 0.184983)
 skew = 0.292145
 texture = SubResource("GradientTexture2D_hibaj")
 
 [node name="UpLightLeft" type="PointLight2D" parent="MainLight2D" unique_id=1902912502]
-position = Vector2(-31.383, -18.7948)
-rotation = -3.09272
+position = Vector2(-67.15427, 5.877088)
+rotation = -1.5534201
 scale = Vector2(0.392089, -0.154698)
 skew = -0.251327
 texture = SubResource("GradientTexture2D_hibaj")
