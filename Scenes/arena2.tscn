@@ -246,7 +246,7 @@ size = Vector2(370, 60)
 shader = ExtResource("8_344ge")
 shader_parameter/overlay = true
 shader_parameter/resolution = Vector2(640, 480)
-shader_parameter/brightness = 2.5
+shader_parameter/brightness = 2.8
 shader_parameter/scanlines_opacity = 0.0
 shader_parameter/scanlines_width = 0.03
 shader_parameter/grille_opacity = 0.2
@@ -447,7 +447,7 @@ sprite_frames = SubResource("SpriteFrames_ee4r6")
 frame_progress = 0.11896144
 
 [node name="PointLight2D" type="PointLight2D" parent="LaserWallAnimation" unique_id=2005219912]
-position = Vector2(8.1860485, 21.328396)
+position = Vector2(1.163971, 0.7857628)
 scale = Vector2(0.78052336, 0.550036)
 energy = 3.59
 texture = SubResource("GradientTexture2D_ee4r6")
@@ -505,7 +505,7 @@ debug_color = Color(0.951971, 0, 0.560989, 0.42)
 [node name="WallCorner5" type="StaticBody2D" parent="Walls" unique_id=1990885998 groups=["colisiones"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallCorner5" unique_id=149562438]
-position = Vector2(-577.6236, 1310.4192)
+position = Vector2(-573.58417, 1333.517)
 scale = Vector2(0.9999998, 0.9999998)
 shape = SubResource("RectangleShape2D_7k868")
 debug_color = Color(0.107837, 0.647894, 0, 0.42)
@@ -513,7 +513,7 @@ debug_color = Color(0.107837, 0.647894, 0, 0.42)
 [node name="WallCorner6" type="StaticBody2D" parent="Walls" unique_id=2037643243]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallCorner6" unique_id=1455537419]
-position = Vector2(638.7697, 1305.1954)
+position = Vector2(632.8863, 1338.1366)
 scale = Vector2(0.9999998, 0.9999998)
 shape = SubResource("RectangleShape2D_hpc6h")
 debug_color = Color(0, 0.64846, 0.180047, 0.42)
@@ -697,7 +697,7 @@ shape = SubResource("RectangleShape2D_aa8k8")
 debug_color = Color(1, 0.0470588, 0, 0.419608)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2091898546 node_paths=PackedStringArray("player_target")]
-zoom = Vector2(0.15, 0.15)
+zoom = Vector2(0.17, 0.17)
 limit_left = -1915
 limit_top = -1420
 limit_right = 1870
