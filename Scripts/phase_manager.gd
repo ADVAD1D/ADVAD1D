@@ -9,13 +9,6 @@ signal timer_updated(time_left_string)
 @export var ship_enemy_spawner: Node2D
 @export var saw_enemy_spawner: Node2D
 
-
-var arena_enemy_configs = {
-	0: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 2.0, "max_ship": 5.0, "max_saw": 2.0, "min_ship_spd": 250.0, "max_ship_spd": 500.0, "sep_radius": 75.0, "sep_strength": 100.0, "can_retreat": true, "fire_range": 1500.0 },
-	1: { "min_shoot": 0.2, "max_shoot": 0.3, "min_ship": 5.0, "max_ship": 6.0, "max_saw": 3.0, "min_ship_spd": 400.0, "max_ship_spd": 650.0, "sep_radius": 300.0, "sep_strength": 300.0, "can_retreat": false, "fire_range": 3500.0 },
-	2: { "min_shoot": 0.4, "max_shoot": 0.7, "min_ship": 4.0, "max_ship": 8.0, "max_saw": 4.0, "min_ship_spd": 300.0, "max_ship_spd": 600.0, "sep_radius": 150.0, "sep_strength": 300.0, "can_retreat": true, "fire_range": 2000.0 }
-}
-
 @export var phase_cooldown_timer: float = 1.0 # = 1.0
 
 @export var wall_to_remove: StaticBody2D
@@ -34,16 +27,119 @@ var arena_enemy_configs = {
 @onready var success_sound: AudioStreamPlayer2D = $"../SucessSound"
 @onready var asteroids_spawner: Marker2D = $"../AsteroidSpawner"
 
+var arena_enemy_configs = {
+	#0: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 2.0, "max_ship": 5.0, "max_saw": 2.0, "min_ship_spd": 250.0, "max_ship_spd": 500.0, "sep_radius": 75.0, "sep_strength": 100.0, "can_retreat": true, "fire_range": 1500.0 },
+	0: { "min_shoot": 0.5,
+		"max_shoot": 0.8,
+		"min_ship": 2.0, 
+		"max_ship": 5.0, 
+		"max_saw": 2.0, 
+		"min_ship_spd": 250.0, 
+		"max_ship_spd": 500.0, 
+		"sep_radius": 75.0, 
+		"sep_strength": 100.0, 
+		"can_retreat": true, 
+		"fire_range": 1500.0 },
+		
+	1: { "min_shoot": 0.2, 
+		"max_shoot": 0.3, 
+		"min_ship": 5.0, 
+		"max_ship": 6.0, 
+		"max_saw": 3.0, 
+		"min_ship_spd": 400.0, 
+		"max_ship_spd": 650.0, 
+		"sep_radius": 300.0, 
+		"sep_strength": 300.0, 
+		"can_retreat": false, 
+		"fire_range": 3500.0 },
+		
+	2: { "min_shoot": 0.4, 
+		"max_shoot": 0.7, 
+		"min_ship": 4.0, 
+		"max_ship": 8.0, 
+		"max_saw": 4.0, 
+		"min_ship_spd": 300.0, 
+		"max_ship_spd": 600.0, 
+		"sep_radius": 150.0, 
+		"sep_strength": 300.0, 
+		"can_retreat": true, 
+		"fire_range": 2000.0 }
+}
+
 var arena_phase_requirements = {
-	0: { 1: 500, 2: 1000, 3: 1500, 4: 2000, 5: 2500, 6: 3000, 7: 3500, 8: 4000, 9: 4500, 10: 5000 },
-	1: { 1: 1000, 2: 2000, 3: 3000, 4: 4000, 5: 5000, 6: 6000, 7: 7000, 8: 8000, 9: 9000, 10: 10000 },
-	2: { 1: 2000, 2: 4000, 3: 6000, 4: 8000, 5: 10000, 6: 12000, 7: 14000, 8: 16000, 9: 18000, 10: 20000 }
+	0: { 
+		1: 500, 
+		2: 1000, 
+		3: 1500, 
+		4: 2000, 
+		5: 2500, 
+		6: 3000, 
+		7: 3500, 
+		8: 4000, 
+		9: 4500, 
+		10: 5000 },
+	
+	1: { 
+		1: 1000, 
+		2: 2000, 
+		3: 3000, 
+		4: 4000, 
+		5: 5000, 
+		6: 6000, 
+		7: 7000, 
+		8: 8000, 
+		9: 9000, 
+		10: 10000 },
+	
+	2: { 
+		1: 2000, 
+		2: 4000, 
+		3: 6000, 
+		4: 8000, 
+		5: 10000, 
+		6: 12000, 
+		7: 14000, 
+		8: 16000, 
+		9: 18000, 
+		10: 20000 }
 }
 
 var arena_phase_durations = {
-	0: { 1: 10.0, 2: 15.0, 3: 20.0, 4: 30.0, 5: 40.0, 6: 50.0, 7: 60.0, 8: 70.0, 9: 80.0, 10: 100.0 },
-	1: { 1: 15.0, 2: 20.0, 3: 25.0, 4: 35.0, 5: 45.0, 6: 55.0, 7: 65.0, 8: 75.0, 9: 85.0, 10: 105.0 },
-	2: { 1: 10.0, 2: 15.0, 3: 20.0, 4: 30.0, 5: 40.0, 6: 50.0, 7: 60.0, 8: 70.0, 9: 80.0, 10: 100.0 }
+	0: { 
+		1: 10.0, 
+		2: 15.0, 
+		3: 20.0, 
+		4: 30.0, 
+		5: 40.0, 
+		6: 50.0, 
+		7: 60.0, 
+		8: 70.0, 
+		9: 80.0, 
+		10: 100.0 },
+		
+	1: { 
+		1: 15.0, 
+		2: 20.0, 
+		3: 25.0, 
+		4: 35.0, 
+		5: 45.0, 
+		6: 55.0, 
+		7: 65.0, 
+		8: 75.0, 
+		9: 85.0, 
+		10: 105.0 },
+		
+	2: { 
+		1: 10.0, 
+		2: 15.0, 
+		3: 20.0, 
+		4: 30.0, 
+		5: 40.0, 
+		6: 50.0, 
+		7: 60.0, 
+		8: 70.0, 
+		9: 80.0, 
+		10: 100.0 }
 }
 
 var current_phase: int = 0

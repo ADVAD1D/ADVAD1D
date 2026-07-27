@@ -43,7 +43,9 @@ func _ready() -> void:
 	if GameManager.is_glitch_sound:
 		GameManager.play_glitch_sound(glitch_sound)
 		GameManager.is_glitch_sound = false
-	
+		
+	GameManager.unfreeze_frame()
+
 func reset_shader_parameters():
 	if is_instance_valid(crt_material):
 		crt_material.set_shader_parameter("aberration", 0.02)
@@ -83,10 +85,8 @@ func _on_player_died() -> void:
 	await glitch_tween.finished
 	await get_tree().create_timer(0.01).timeout
 	
-	get_tree().call_group("saws", "die_silently")
-	get_tree().call_group("enemies", "die_silently")
-	
 	GameManager.reset_score()
+	await GameManager.freeze_frame()
 	get_tree().call_deferred("reload_current_scene")
 	
 func fade_to_scene(target_scene_path: PackedScene, duration: float = 1.5):

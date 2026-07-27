@@ -38,6 +38,7 @@ var dash_buffered: bool = false
 var buffered_direction: Vector2 = Vector2.ZERO
 var main_camera: Camera2D
 var dash_camera_shake: float = 45.0
+var dash_tween: Tween
 var hitbox_disabled: bool = false
 
 func _ready() -> void:
@@ -165,9 +166,11 @@ func do_dash(direction: Vector2):
 		get_parent().add_child(dash_particles_instance)
 		dash_particles_instance.global_position = global_position
 	
-	var tween = create_tween()
-	tween.tween_property(sprite, "modulate", Color(2, 2, 2, 1), 0.4).set_ease(Tween.EASE_OUT)
-	tween.tween_property(sprite, "modulate", Color.WHITE, 0.3).set_ease(Tween.EASE_IN)
+	if dash_tween:
+		dash_tween.kill()
+	dash_tween = create_tween()
+	dash_tween.tween_property(sprite, "modulate", Color(2, 2, 2, 1), 0.4).set_ease(Tween.EASE_OUT)
+	dash_tween.tween_property(sprite, "modulate", Color.WHITE, 0.3).set_ease(Tween.EASE_IN)
 	
 	hitbox_collider.set_deferred("disabled", true)
 	await get_tree().create_timer(dash_duration).timeout
@@ -219,12 +222,13 @@ func _perform_death_effects():
 			if child.has_method("_on_timeout"):
 				child._on_timeout()
 	
-	if ship_explosion_particles:
-		var ship_exp_instance = ship_explosion_particles.instantiate()
-		add_sibling(ship_exp_instance)
-		ship_exp_instance.position = position
+	if dash_tween:
+		dash_tween.kill()
 		
-	hide()
+	var current_brightness = max(sprite.modulate.r, max(sprite.modulate.g, sprite.modulate.b))
+	sprite.modulate = Color(max(1.0, current_brightness), 0, 0, sprite.modulate.a)
+	if engine_trail:
+		engine_trail.emitting = false
 	player_collider.set_deferred("disabled", true)
 	
 func _on_hitbox_area_entered(area: Area2D) -> void:

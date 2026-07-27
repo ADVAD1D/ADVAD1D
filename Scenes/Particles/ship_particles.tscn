@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://d1y6lma6f3pit"]
+[gd_scene format=3 uid="uid://d1y6lma6f3pit"]
 
 [ext_resource type="Texture2D" uid="uid://di4x68imfa2f" path="res://Assets/Sprites/alanave.png" id="1_q1ine"]
 [ext_resource type="Script" uid="uid://be4wdfbd8u1y2" path="res://Scripts/ship_particles.gd" id="2_qmjxr"]
@@ -37,7 +37,7 @@ scale_curve = SubResource("CurveTexture_qmjxr")
 color_ramp = SubResource("GradientTexture1D_6yxf3")
 color_initial_ramp = SubResource("GradientTexture1D_65o23")
 
-[node name="ShipParticles" type="GPUParticles2D"]
+[node name="ShipParticles" type="GPUParticles2D" unique_id=401830053]
 z_index = 2
 emitting = false
 texture = ExtResource("1_q1ine")

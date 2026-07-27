@@ -202,3 +202,26 @@ func reset_game_state():
 	_log_message("Game Manager: Restart Game State...")
 	phase_to_start = 1
 	reset_score()
+
+var _transition_layer: CanvasLayer
+var _transition_rect: TextureRect
+
+func freeze_frame():
+	await RenderingServer.frame_post_draw
+	var img = get_viewport().get_texture().get_image()
+	var tex = ImageTexture.create_from_image(img)
+	
+	if not is_instance_valid(_transition_layer):
+		_transition_layer = CanvasLayer.new()
+		_transition_layer.layer = 100
+		add_child(_transition_layer)
+		
+		_transition_rect = TextureRect.new()
+		_transition_layer.add_child(_transition_rect)
+		
+	_transition_rect.texture = tex
+	_transition_layer.show()
+
+func unfreeze_frame():
+	if is_instance_valid(_transition_layer):
+		_transition_layer.hide()
