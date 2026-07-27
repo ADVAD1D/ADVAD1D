@@ -9,6 +9,7 @@ extends Area2D
 signal died
 
 @onready var separation_area: Area2D = $SeparationArea
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 var metal_sound: AudioStreamPlayer2D = preload("res://Assets/Audio/AudioScenes/saw_explosion_sound.tscn").instantiate()
 
@@ -65,7 +66,7 @@ func die_and_respawn():
 	if is_dying:
 		return
 	is_dying = true
-	$CollisionShape2D.set_deferred("disabled", true)
+	collision_shape.set_deferred("disabled", true)
 	
 	var saw_particles_instance = saw_particles.instantiate()
 	add_sibling(saw_particles_instance)
@@ -83,7 +84,7 @@ func die_silently():
 	if is_dying:
 		return
 	is_dying = true
-	$CollisionShape2D.set_deferred("disabled", true)
+	collision_shape.set_deferred("disabled", true)
 	
 	var saw_particles_instance = saw_particles.instantiate()
 	add_sibling(saw_particles_instance)

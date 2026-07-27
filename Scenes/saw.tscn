@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://cljshiwenhoau"]
+[gd_scene format=3 uid="uid://cljshiwenhoau"]
 
 [ext_resource type="Script" uid="uid://d1yd1goxj7d46" path="res://Scripts/saw.gd" id="1_4qbox"]
 [ext_resource type="PackedScene" uid="uid://5r1c4072iu8o" path="res://Scenes/Particles/saw_particles.tscn" id="2_1kxu7"]
@@ -55,42 +55,42 @@ scale_curve = SubResource("CurveTexture_c323r")
 color_ramp = SubResource("GradientTexture1D_1h6d2")
 color_initial_ramp = SubResource("GradientTexture1D_ngmcx")
 
-[node name="Saw" type="Area2D" groups=["saws"]]
+[node name="Saw" type="Area2D" unique_id=1658076583 groups=["saws"]]
 collision_layer = 5
 script = ExtResource("1_4qbox")
 saw_particles = ExtResource("2_1kxu7")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1848339012]
 scale = Vector2(3.13572, 3.13572)
 texture = ExtResource("2_4qbox")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2143117207]
 z_index = 5
 scale = Vector2(0.88, 0.88)
 shape = SubResource("CircleShape2D_1kxu7")
 debug_color = Color(0.96652, 0.113815, 0.368096, 0.42)
 
-[node name="SeparationArea" type="Area2D" parent="."]
+[node name="SeparationArea" type="Area2D" parent="." unique_id=1058011850]
 scale = Vector2(1.4712, 1.4712)
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SeparationArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SeparationArea" unique_id=1600415779]
 shape = SubResource("CircleShape2D_4qbox")
 debug_color = Color(0.802253, 0.41887, 0, 0.42)
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=1101860408]
 scale = Vector2(2.91489, 2.91489)
 energy = 10.62
 texture = SubResource("GradientTexture2D_mk2w8")
 
-[node name="MetalSound" type="AudioStreamPlayer2D" parent="."]
+[node name="MetalSound" type="AudioStreamPlayer2D" parent="." unique_id=458643521]
 stream = ExtResource("3_mk2w8")
 volume_db = -6.466
 pitch_scale = 0.5
 bus = &"SFX"
 
-[node name="Trail" type="GPUParticles2D" parent="."]
+[node name="Trail" type="GPUParticles2D" parent="." unique_id=321274180]
 position = Vector2(-63, -14)
 process_material = SubResource("ParticleProcessMaterial_rnbvy")
 

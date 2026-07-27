@@ -5,12 +5,13 @@ extends Area2D
 @export var saw_particles: PackedScene
 
 #this variable takes the elements in nodes tree
-#CharacterBody hereda de la clase padre de Node, funciona bien al tiparla así
+#CharacterBody inherits from the Node parent class; it works well when typed that way.
 @export var player: Node2D
 
 @onready var metal_sound: AudioStreamPlayer2D = $MetalSound
 @onready var shoot_timer: Timer = $ShootTimer
 @onready var laser_sound: AudioStreamPlayer2D = $LsrSound
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var laser_scene = preload("res://Scenes/laser.tscn")
 
 #muzzles
@@ -80,7 +81,7 @@ func _on_area_entered(area: Area2D) -> void:
 func die():
 	is_dying = true
 	set_physics_process(false)
-	$CollisionShape2D.set_deferred("disabled", true)
+	collision_shape.set_deferred("disabled", true)
 	
 	var saw_particles_instance = saw_particles.instantiate()
 	get_parent().add_child(saw_particles_instance)
