@@ -28,7 +28,18 @@ signal timer_updated(time_left_string)
 @onready var asteroids_spawner: Marker2D = $"../AsteroidSpawner"
 
 var arena_enemy_configs = {
-	#0: { "min_shoot": 0.5, "max_shoot": 0.8, "min_ship": 2.0, "max_ship": 5.0, "max_saw": 2.0, "min_ship_spd": 250.0, "max_ship_spd": 500.0, "sep_radius": 75.0, "sep_strength": 100.0, "can_retreat": true, "fire_range": 1500.0 },
+	#0: { "min_shoot": 0.5, 
+		#"max_shoot": 0.8, 
+		#"min_ship": 2.0, 
+		#"max_ship": 5.0, 
+		#"max_saw": 2.0, 
+		#"min_ship_spd": 250.0, 
+		#"max_ship_spd": 500.0, 
+		#"sep_radius": 75.0, 
+		#"sep_strength": 100.0, 
+		#"can_retreat": true, 
+		#"fire_range": 1500.0 },
+		
 	0: { "min_shoot": 0.5,
 		"max_shoot": 0.8,
 		"min_ship": 2.0, 
