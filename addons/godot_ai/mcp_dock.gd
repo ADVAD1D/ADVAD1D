@@ -48,6 +48,9 @@ const DEV_MODE_SETTING := "godot_ai/dev_mode"
 ## not tip-of-main, which may have drifted from that build's UI.
 const PORT_CONFLICT_DOCS_PATH := "docs/port-conflicts.md"
 const REPO_BLOB_BASE := "https://github.com/hi-godot/godot-ai/blob"
+## Opened by the "How to install uv" button. See _on_install_uv for why the
+## dock links here instead of running an installer itself.
+const UV_INSTALL_DOCS_URL := "https://docs.astral.sh/uv/getting-started/installation/"
 const CLIENT_STATUS_REFRESH_COOLDOWN_MSEC := 15 * 1000
 const CLIENT_STATUS_REFRESH_TIMEOUT_MSEC := 30 * 1000
 const CLIENT_ACTION_TIMEOUT_MSEC := 30 * 1000
@@ -120,6 +123,13 @@ var _client_rows: Dictionary = {}
 # during tab-away/tab-back churn. See #166 and #226.
 var _drift_banner: VBoxContainer
 var _drift_label: Label
+## Set when the user clicks "How to install uv"; consumed by the next
+## application focus-in so the uv row is re-probed after the user has had a
+## chance to install, not immediately. See _on_install_uv and _notification.
+## (Deliberately spelled without the focus-in constant name: the guard in
+## tests/unit/test_editor_focus_refocus.py locates the notification handler
+## by first occurrence of that token.)
+var _uv_recheck_pending := false
 ## Handles for the Setup section's "Server" row. `_update_status` keeps
 ## the label text/color in sync with `McpConnection.server_version` so the
 ## dock reports the TRUE running server version, not the plugin's
@@ -450,6 +460,15 @@ func _notification(what: int) -> void:
 	elif what == NOTIFICATION_APPLICATION_FOCUS_IN:
 		if _should_refresh_client_statuses_on_focus_in():
 			_request_client_status_refresh(false)
+		## Re-probe uv only when the user actually went off to install it
+		## (see _on_install_uv). `check_uv_version()` is cached, so an
+		## ungated refresh here would usually be free — but after the
+		## button invalidated that cache it costs one blocking
+		## `uvx --version`, and this notification must not grow a probe on
+		## the common focus-in path. One-shot: clear before refreshing.
+		if _uv_recheck_pending:
+			_uv_recheck_pending = false
+			_refresh_setup_status.call_deferred()
 
 
 func _should_refresh_client_statuses_on_focus_in() -> bool:
@@ -985,6 +1004,12 @@ func _update_status() -> void:
 		status_text = "Disconnected"
 		status_color = Color.RED
 
+	## keep_server_on_exit (#800): the reaper env opt-outs are staged at
+	## spawn, so a mid-session toggle only lands on the next server start —
+	## say so while the running server still carries the old behavior.
+	if connected and ClientConfigurator.keep_server_on_exit() != bool(server_status.get("keep_alive", false)):
+		status_text += " — keep-server-on-exit applies after Restart"
+
 	_update_crash_panel(server_status)
 	_refresh_server_version_label(server_status)
 
@@ -1108,13 +1133,36 @@ static func _crash_body_for_state(state: int, server_status: Dictionary = {}) ->
 				return foreign_message
 			return "Another process is already bound to port %d. Pick a free port or stop the other process." % port
 		ServerStateScript.CRASHED:
-			## Both spawn attempts failed on the uvx tier — almost always
-			## means PyPI hasn't propagated this version yet (~10 min after
-			## publish). `_start_server` already tried `--refresh` once, so
-			## the next realistic move is to wait and reload.
+			## #805: a specific crash diagnosis from the lifecycle (e.g. the
+			## flapping-occupant latch) beats the generic launch-mode copy.
+			## Generic crash paths clear the message, so stale text from an
+			## earlier state can't leak in here.
+			var crash_message := str(server_status.get("message", ""))
+			if not crash_message.is_empty():
+				return crash_message
+			## Both spawn attempts failed on the uvx tier — stock releases:
+			## PyPI lag. Local builds (version with +metadata): almost always the
+			## dev venv was not found (unresolved junction/symlink) so uvx tried
+			## a pin that may lack checkout-local extras.
 			if ClientConfigurator.get_server_launch_mode() == "uvx":
 				var version := ClientConfigurator.get_plugin_version()
-				return "The server exited before the WebSocket handshake, even after a `uvx --refresh` retry. If this is a brand-new release, PyPI's index may still be propagating (~10 min). Wait a moment and click Reload Plugin to retry, or check Godot's output log for Python's traceback. Target: godot-ai==%s." % version
+				var pin := ClientConfigurator._pypi_pin_version(version)
+				if pin != version:
+					## `%` binds tighter than `+` in GDScript — format the fully
+					## concatenated string, never the last fragment alone.
+					return (
+						"The server exited before the WebSocket handshake. "
+						+ "Local plugin version is %s (PEP 440 local build metadata) — uvx pins PyPI godot-ai==%s. "
+						+ "If you need checkout-local server code, ensure addons/godot_ai resolves to your "
+						+ "dev tree (symlink/junction) with a `.venv`, or set GODOT_AI_VENV_PYTHON to that "
+						+ "venv's python binary, then Reload Plugin. Log should show 'MCP | using dev venv: ...'."
+					) % [version, pin]
+				return (
+					"The server exited before the WebSocket handshake, even after a `uvx --refresh` retry. "
+					+ "If this is a brand-new release, PyPI's index may still be propagating (~10 min). "
+					+ "Wait a moment and click Reload Plugin to retry, or check Godot's output log for Python's traceback. "
+					+ "Target: godot-ai==%s."
+				) % pin
 			return "The server exited before the WebSocket handshake. Check Godot's output log (bottom panel) for Python's traceback."
 		ServerStateScript.NO_COMMAND:
 			return "No godot-ai server found. Install `uv` via the Setup panel above, or run `pip install godot-ai`."
@@ -1647,7 +1695,11 @@ func _refresh_setup_status() -> void:
 	else:
 		_setup_container.add_child(_make_status_row("uv", "not found", Color.RED))
 		var install_btn := Button.new()
-		install_btn.text = "Install uv"
+		install_btn.text = "How to install uv"
+		install_btn.tooltip_text = (
+			"Opens the official uv installation docs. Godot AI deliberately does "
+			+ "not run the installer for you — see _on_install_uv."
+		)
 		install_btn.pressed.connect(_on_install_uv)
 		_setup_container.add_child(install_btn)
 
@@ -1668,16 +1720,11 @@ func _install_mode_tooltip() -> String:
 
 
 func _resolve_plugin_symlink_target() -> String:
-	var addons_path := ProjectSettings.globalize_path("res://addons/godot_ai")
-	var dir := DirAccess.open(addons_path.get_base_dir())
-	if dir == null or not dir.is_link(addons_path):
+	var logical := ProjectSettings.globalize_path("res://addons/godot_ai").rstrip("/").rstrip("\\")
+	var resolved := ClientConfigurator.resolve_addons_realpath()
+	if resolved.is_empty() or resolved == logical:
 		return ""
-	var target := dir.read_link(addons_path)
-	if target.is_empty():
-		return ""
-	if target.is_relative_path():
-		target = addons_path.get_base_dir().path_join(target).simplify_path()
-	return target
+	return resolved
 
 
 static func _compact_uv_version_text(uv_version: String) -> String:
@@ -1830,21 +1877,42 @@ func _connected_status_text() -> String:
 	return "Server connected"
 
 
+## Open uv's official install documentation rather than executing an
+## installer on the user's behalf.
+##
+## This used to shell out to `curl -LsSf https://astral.sh/uv/install.sh | sh`
+## (and the PowerShell `irm … | iex` equivalent). That is arbitrary remote
+## code execution as the editor user, one dock click deep, with no version
+## pin, no checksum, and no signature — while this same plugin verifies its
+## OWN updates with an RSA-4096 signature over a SHA-256 sidecar, pinned to a
+## GitHub host and this repo's release-asset path. Holding a third-party
+## installer to a weaker standard than our own payload is the wrong trade,
+## and pinning a digest here would only cover the bootstrap script, not the
+## uv binary it goes on to fetch.
+##
+## Opening the docs keeps the discovery value of the button (the user still
+## learns uv is missing and how to get it) while leaving the decision to
+## install — and the choice of install method — with the user. Mirrors the
+## dock's existing "Run this manually" fallback for client CLIs.
 func _on_install_uv() -> void:
-	match OS.get_name():
-		"Windows":
-			OS.execute("powershell", ["-ExecutionPolicy", "ByPass", "-c", "irm https://astral.sh/uv/install.ps1 | iex"], [], false)
-		_:
-			OS.execute("bash", ["-c", "curl -LsSf https://astral.sh/uv/install.sh | sh"], [], false)
-	## Drop the cached uvx path AND the cached `uvx --version` so the
-	## next `_refresh_setup_status` finds and reads the freshly-installed
-	## binary instead of returning the pre-install "not found" result.
+	OS.shell_open(UV_INSTALL_DOCS_URL)
+	## Drop the cached uvx path AND the cached `uvx --version` so that once
+	## the user has installed uv (in a terminal, from the docs we just
+	## opened), the dock finds the new binary instead of replaying the
+	## cached "not found" result for the rest of the session.
 	## Routing through the configurator matters on Windows, where the
 	## CLI-finder cache key is `uvx.exe` — invalidating just `"uvx"`
 	## would leave the cache stale and the dock would keep showing
 	## "uv: not found" for the rest of the session.
 	ClientConfigurator.invalidate_uv_detection()
-	_refresh_setup_status.call_deferred()
+	## Deliberately do NOT refresh here. `OS.shell_open` returns as soon as
+	## the browser is handed the URL, so an immediate refresh would run long
+	## before the user could install anything and would simply re-cache
+	## "not found" — undoing the invalidation above. (The old shell-out was
+	## a blocking `OS.execute`, so refreshing straight after it was correct
+	## then; it stopped being correct when the installer call went away.)
+	## Re-probe when the editor regains focus instead — see _notification.
+	_uv_recheck_pending = true
 
 
 # --- Client section ---

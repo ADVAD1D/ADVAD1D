@@ -46,6 +46,7 @@ const MAX_PORT := 65535
 const SUGGEST_PORT_MAX_PROBES := 64
 const SETTING_WS_PORT := "godot_ai/ws_port"
 const SETTING_STARTUP_TRACE := "godot_ai/log_startup_timing"
+const SETTING_KEEP_SERVER_ON_EXIT := "godot_ai/keep_server_on_exit"
 const _DISCOVERY_TIMEOUT_MS := 3000
 
 
@@ -85,6 +86,7 @@ static func ensure_settings_registered() -> void:
 	_register_port_setting(es, McpSettings.SETTING_HTTP_PORT, DEFAULT_HTTP_PORT)
 	_register_port_setting(es, SETTING_WS_PORT, DEFAULT_WS_PORT)
 	_register_bool_setting(es, SETTING_STARTUP_TRACE, false)
+	_register_bool_setting(es, SETTING_KEEP_SERVER_ON_EXIT, false)
 
 
 static func _register_port_setting(es: EditorSettings, key: String, default_port: int) -> void:
@@ -116,6 +118,21 @@ static func startup_trace_enabled() -> bool:
 	if raw == "1" or raw == "true" or raw == "yes" or raw == "on":
 		return true
 	var setting: Variant = _editor_setting_lookup(SETTING_STARTUP_TRACE)
+	if setting != null:
+		return bool(setting)
+	return false
+
+
+## keep_server_on_exit (#800): when enabled, editor teardown detaches from
+## the managed server instead of killing it, and the spawn env opts the
+## server out of both self-reap paths (owner-PID watchdog, session-idle
+## backstop) — so MCP clients connected over HTTP stay served across editor
+## sessions, and the next editor start adopts the survivor. Off by default:
+## "server dies with the editor" stays the shipped behavior. Read via
+## _editor_setting_lookup for the same worker-thread reason as
+## startup_trace_enabled (#691).
+static func keep_server_on_exit() -> bool:
+	var setting: Variant = _editor_setting_lookup(SETTING_KEEP_SERVER_ON_EXIT)
 	if setting != null:
 		return bool(setting)
 	return false
@@ -309,6 +326,7 @@ static func warm_env_snapshot() -> void:
 	McpPathTemplate.warm_env_snapshot(extras)
 	_editor_setting_lookup(MODE_OVERRIDE_SETTING)
 	_editor_setting_lookup(SETTING_STARTUP_TRACE)
+	_editor_setting_lookup(SETTING_KEEP_SERVER_ON_EXIT)
 
 
 static func client_status_probe_snapshot(id: String) -> Dictionary:
@@ -471,6 +489,16 @@ static func get_plugin_version() -> String:
 	return "0.0.1"
 
 
+## Strip PEP 440 local build metadata for PyPI pins: `3.0.2+local.1` → `3.0.2`.
+## Pre-release segments (`3.1.0-rc1`) are preserved — only `+…` is removed.
+static func _pypi_pin_version(version: String) -> String:
+	var v := version.strip_edges()
+	var plus := v.find("+")
+	if plus >= 0:
+		v = v.substr(0, plus)
+	return v
+
+
 ## Override for the dev-vs-user heuristic. Accepted values:
 ##   "dev"   — force dev-checkout mode (skip update check + self-install)
 ##   "user"  — force user-install mode (run update check, allow self-install)
@@ -564,6 +592,11 @@ static func get_server_command(refresh: bool = false) -> Array[String]:
 	var uvx := find_uvx()
 	if not uvx.is_empty():
 		var version := get_plugin_version()
+		## PEP 440 local build tags (e.g. 3.0.2+local.1) are not on PyPI.
+		## Pin uvx to the public base version so the server still boots;
+		## checkout-local extras need the dev_venv tier above
+		## (symlink/junction → repo .venv).
+		var pypi_version := _pypi_pin_version(version)
 		## Pin to the EXACT plugin version rather than `~=<minor>`. Under the
 		## tilde form, uvx was happy to reuse a cached tool env that matched
 		## the minor constraint — so an install that first spawned 1.2.0 kept
@@ -572,11 +605,17 @@ static func get_server_command(refresh: bool = false) -> Array[String]:
 		## otherwise uvx installs the exact version fresh. Keeps plugin and
 		## server version in lockstep without needing `--refresh-package` on
 		## every spawn. See issue #133.
-		print("MCP | using uvx (godot-ai==%s)%s" % [version, " [refresh]" if refresh else ""])
+		if pypi_version != version:
+			print(
+				"MCP | using uvx (godot-ai==%s; local plugin %s not on PyPI)%s"
+				% [pypi_version, version, " [refresh]" if refresh else ""]
+			)
+		else:
+			print("MCP | using uvx (godot-ai==%s)%s" % [pypi_version, " [refresh]" if refresh else ""])
 		var cmd: Array[String] = [uvx]
 		if refresh:
 			cmd.append("--refresh")
-		cmd.append_array(["--from", "godot-ai==%s" % version, "godot-ai"])
+		cmd.append_array(["--from", "godot-ai==%s" % pypi_version, "godot-ai"])
 		return cmd
 
 	var system_cmd := _find_system_install()
@@ -715,8 +754,51 @@ static func _cached_venv_python() -> String:
 	return cached
 
 
+## Absolute path to `res://addons/godot_ai`, resolving Windows junctions /
+## POSIX symlinks via `DirAccess.read_link`. Unresolved globalize_path only
+## walks the *logical* project path (e.g. MyGame/addons/godot_ai → MyGame)
+## and never reaches a fork checkout's `.venv` (…/godot-ai/.venv).
+static func resolve_addons_realpath() -> String:
+	var addons_path := ProjectSettings.globalize_path("res://addons/godot_ai").rstrip("/").rstrip("\\")
+	if addons_path.is_empty():
+		return ""
+	var parent := addons_path.get_base_dir()
+	var dir := DirAccess.open(parent)
+	if dir != null and dir.is_link(addons_path):
+		var target := dir.read_link(addons_path)
+		if not target.is_empty():
+			if target.is_relative_path():
+				target = parent.path_join(target).simplify_path()
+			return target.rstrip("/").rstrip("\\")
+	return addons_path
+
+
 static func _find_venv_python() -> String:
-	return _find_venv_python_in(ProjectSettings.globalize_path("res://").rstrip("/"))
+	## Optional hard override (junction edge cases / CI).
+	var env_py := McpPathTemplate.env_lookup("GODOT_AI_VENV_PYTHON").strip_edges()
+	if not env_py.is_empty():
+		if FileAccess.file_exists(env_py):
+			return env_py
+		## An explicit override pointing nowhere is a misconfiguration the
+		## user needs to see — falling through silently would make the dev
+		## venv appear randomly ignored.
+		push_warning(
+			"godot-ai: GODOT_AI_VENV_PYTHON is set but no file exists at '%s'; ignoring override."
+			% env_py
+		)
+	## 1) Walk up from the open project (classic monorepo / test_project layout).
+	var from_project := _find_venv_python_in(
+		ProjectSettings.globalize_path("res://").rstrip("/").rstrip("\\")
+	)
+	if not from_project.is_empty():
+		return from_project
+	## 2) Junctioned plugin: resolve reparse target, then walk up to fork root.
+	var addons_real := resolve_addons_realpath()
+	if not addons_real.is_empty():
+		var from_addons := _find_venv_python_in(addons_real)
+		if not from_addons.is_empty():
+			return from_addons
+	return ""
 
 
 ## Pure path-based lookup so tests can drive it with a scratch dir instead of
@@ -729,15 +811,17 @@ static func _find_venv_python() -> String:
 ## the uvx tier, so the dev_venv misidentification has no escape hatch — the
 ## detection has to be right the first time.
 static func _find_venv_python_in(start_dir: String) -> String:
-	var dir := start_dir.rstrip("/")
+	var dir := start_dir.rstrip("/").rstrip("\\")
 	var python_name := "python" if OS.get_name() != "Windows" else "python.exe"
 	var venv_dir := ".venv/bin/" if OS.get_name() != "Windows" else ".venv/Scripts/"
-	for i in 5:
+	## 8 hops: game project roots are shallow; junctioned plugins sit at
+	## <repo>/plugin/addons/godot_ai (4) and nested worktrees may be deeper.
+	for i in 8:
 		var venv_path := dir.path_join(venv_dir + python_name)
 		if FileAccess.file_exists(venv_path) and DirAccess.dir_exists_absolute(dir.path_join("src/godot_ai")):
 			return venv_path
 		var parent := dir.get_base_dir()
-		if parent == dir:
+		if parent == dir or parent.is_empty():
 			break
 		dir = parent
 	return ""
