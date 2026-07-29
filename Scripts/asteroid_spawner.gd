@@ -5,6 +5,7 @@ extends Marker2D
 @export var target_radius: float = 250.0
 @export var player_node: CharacterBody2D
 @export var safe_radius: float = 1250.0
+@export var speed_multiplier: float = 1.0
 
 @onready var timer: Timer = $Timer
 
@@ -24,7 +25,8 @@ func create_asteroid():
 		var direction_from_player = (spawn_position - player_node.global_position).normalized()
 		spawn_position = player_node.global_position + direction_from_player * safe_radius 
 	
-	var asteroid_instance: Area2D = asteroid_scene.instantiate()
+	var asteroid_instance = asteroid_scene.instantiate()
+	asteroid_instance.speed_multiplier = self.speed_multiplier
 	get_parent().add_child(asteroid_instance)
 	asteroid_instance.global_position = spawn_position
 	

@@ -2,12 +2,13 @@ extends Area2D
 
 var speed: float
 var direction: Vector2
+var speed_multiplier: float = 1.0
 
 @export var explosion_scene: PackedScene
 @export var asteroid_explosion_sound: PackedScene
 
 func _ready() -> void:
-	speed = randf_range(500.0, 1000.0)
+	speed = randf_range(500.0, 1000.0) * speed_multiplier
 	scale = Vector2.ZERO
 	var tween = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)

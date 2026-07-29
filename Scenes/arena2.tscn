@@ -575,13 +575,13 @@ position = Vector2(3.98833, -460.012)
 scale = Vector2(1.29883, 1.29883)
 script = ExtResource("3_jjvhh")
 asteroid_scene = ExtResource("4_kry3j")
-spawn_margin = 2500.0
-target_radius = 1450.0
+spawn_margin = 2000.0
+target_radius = 400.0
 player_node = NodePath("../PlayerInstance")
 safe_radius = 1650.0
 
 [node name="Timer" type="Timer" parent="AsteroidSpawner" unique_id=1699534625]
-wait_time = 0.05
+wait_time = 0.1
 autostart = true
 
 [node name="DeathZone" type="Area2D" parent="." unique_id=7960278]
