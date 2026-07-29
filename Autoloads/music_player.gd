@@ -43,11 +43,10 @@ var arena_playlists = {
 		preload("res://Assets/Audio/Music/digital-disconnect-454806.ogg"),
 	],
 	1: [
-		preload("res://Assets/Audio/Music/neon-rising-336846.ogg"),
-		preload("res://Assets/Audio/Music/digital-dream-391529.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-the-stars-donx27t-wait-for-you-481769.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-breach-vector-521613.ogg"),
-		preload("res://Assets/Audio/Music/psychronic-the-architectx27s-gaze-521611.mp3"),
+		preload("res://Assets/Audio/Music/psychronic-the-architectx27s-gaze-521611.ogg"),
+		preload("res://Assets/Audio/Music/psychronic-carrier-signal-468740.ogg"),
 	],
 	2: [
 		preload("res://Assets/Audio/Music/neon-rising-336846.ogg"),

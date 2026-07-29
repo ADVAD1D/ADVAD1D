@@ -27,10 +27,10 @@ const DEFAULT_TTL: float = 0.5
 # --- State ---
 
 # Master switch: set to false to fully disable the menu (Tab does nothing).
-var enabled: bool = false
+var enabled: bool = true
 
 # Toggle to only show text and hide all visual debug elements (colliders, rays, etc).
-var only_debug_text: bool = false:
+var only_debug_text: bool = true:
 	set(val):
 		only_debug_text = val
 		_apply_shown(_shown)
@@ -245,6 +245,18 @@ func _update_overlay_text() -> void:
 	
 	audio_lines.append("")
 	audio_lines.append_array(_device_info_lines)
+	
+	# Phase Info
+	audio_lines.append("")
+	audio_lines.append("== PHASE INFO ==")
+	if tree.current_scene and tree.current_scene.has_node("PhaseNode"):
+		var phase_node = tree.current_scene.get_node("PhaseNode")
+		audio_lines.append("Phase: %d" % phase_node.current_phase)
+		audio_lines.append("Active: %s" % str(phase_node.is_phase_active))
+		audio_lines.append("Timer: %.1f s" % phase_node.phase_timer)
+		audio_lines.append("Score: %d / %d" % [GameManager.score, phase_node.current_score_requirement])
+	else:
+		audio_lines.append("No PhaseNode active")
 
 	# Network Status
 	var network_lines: PackedStringArray = []
