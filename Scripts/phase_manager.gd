@@ -359,6 +359,8 @@ func fade_out_objective_label():
 	#browsers can't show some characters, for this reason change win text in this version
 	if browser_support == true:
 		objective_label.text = "CONGRATULATIONS!"
+	elif GameManager.current_arena_index == 1:
+		objective_label.text = "bWVudGFs"
 	else:
 		objective_label.text = "> (ツ)"
 		
