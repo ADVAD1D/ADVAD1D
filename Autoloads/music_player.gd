@@ -47,6 +47,7 @@ var arena_playlists = {
 		preload("res://Assets/Audio/Music/digital-dream-391529.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-the-stars-donx27t-wait-for-you-481769.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-breach-vector-521613.ogg"),
+		preload("res://Assets/Audio/Music/psychronic-the-architectx27s-gaze-521611.mp3"),
 	],
 	2: [
 		preload("res://Assets/Audio/Music/neon-rising-336846.ogg"),
@@ -76,6 +77,8 @@ func _ready() -> void:
 	_emit_volume_changed()
 	_on_scene_changed()
 	
+var current_playing_arena_index: int = -1
+
 func _on_music_finished():
 	call_deferred("play_next_shuffled_song")
 	
@@ -85,6 +88,7 @@ func _on_scene_changed():
 	
 	if scene1_specific_playlist.has(current_scene_path):
 		var specific_song = scene1_specific_playlist[current_scene_path]
+		current_playing_arena_index = -1 # No longer in an arena
 		
 		if stream != specific_song:
 			stream = specific_song
@@ -95,10 +99,13 @@ func _on_scene_changed():
 			
 	elif current_scene_path in no_music_scenes:
 		stop()
+		current_playing_arena_index = -1
 		return
 			
-	elif not playing:
-		play_next_shuffled_song()
+	else:
+		if not playing or current_playing_arena_index != GameManager.current_arena_index:
+			shuffled_playlist.clear()
+			play_next_shuffled_song()
 
 func play_next_shuffled_song():
 	var current_scene_path = get_tree().current_scene.scene_file_path
@@ -112,6 +119,8 @@ func play_next_shuffled_song():
 		var current_playlist = arena_playlists.get(GameManager.current_arena_index, arena_playlists[0])
 		shuffled_playlist = current_playlist.duplicate()
 		shuffled_playlist.shuffle()
+	
+	current_playing_arena_index = GameManager.current_arena_index
 	
 	stream = shuffled_playlist.pop_front()
 	volume_db = linear_to_db(linear_volume)
