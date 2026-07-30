@@ -222,7 +222,14 @@ func start_new_phase():
 		var codelabel_tween = create_tween()
 		
 		# (object, property, final value, duration)
-		codelabel_tween.tween_property(code_label, "modulate:a", 1.0, 1.0)
+		if GameManager.current_arena_index == 1:
+			code_label.text = ">ZGVhdGhhcmVuYQ=="
+			codelabel_tween.tween_property(code_label, "modulate:a", 1.0, 1.0)
+		elif GameManager.current_arena_index == 2:
+			code_label.text = "bWFpbmFyZW5h"
+			codelabel_tween.tween_property(code_label, "modulate:a", 1.0, 1.0)
+		else:
+			codelabel_tween.tween_property(code_label, "modulate:a", 1.0, 1.0)
 		
 		if is_instance_valid(objective_label):
 			fade_out_objective_label()
