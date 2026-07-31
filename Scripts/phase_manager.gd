@@ -331,16 +331,29 @@ func apply_difficulty():
 	var cur_can_retreat = config.get("can_retreat", true)
 	var cur_fire_range = config.get("fire_range", 1500.0)
 	
-	#ships difficulty
+	# ==========================================
+	# SHIPS DIFFICULTY & PARAMETER INSTANTIATION
+	# ==========================================
 	_log_message(["Apply difficult from Phase:", current_phase, "Progress: ", progress])
-	var ship_max_enemies = int(lerp(cur_min_ship, cur_max_ship, progress))
-	var ship_config = {"speed": lerp(cur_min_ship_spd, cur_max_ship_spd, progress),
-					   "shoot_timerate": lerp(cur_max_shoot, cur_min_shoot, progress),
-					   "separation_radius": cur_sep_radius,
-					   "separation_strength": cur_sep_strength,
-					   "can_retreat": cur_can_retreat,
-					   "fire_range": cur_fire_range} # Puedes añadir más stats
 	
+	# Calculate the maximum number of enemy ships for the current phase using linear interpolation (lerp).
+	# This scales the number of enemies smoothly from 'cur_min_ship' (at phase 1) to 'cur_max_ship' (at the last phase).
+	var ship_max_enemies = int(lerp(cur_min_ship, cur_max_ship, progress))
+	
+	# Pack all the calculated properties into a dictionary. This acts as a configuration blueprint 
+	# that will be sent to the spawner. Using lerp() allows stats like speed and fire rate to 
+	# become progressively harder as the player advances through the phases.
+	var ship_config = {
+		"speed": lerp(cur_min_ship_spd, cur_max_ship_spd, progress),
+		"shoot_timerate": lerp(cur_max_shoot, cur_min_shoot, progress), # Note: max_shoot is used first because a lower timer value means faster shooting
+		"separation_radius": cur_sep_radius,
+		"separation_strength": cur_sep_strength,
+		"can_retreat": cur_can_retreat,
+		"fire_range": cur_fire_range
+	}
+	
+	# If the spawner node exists in the scene, we inject the calculated parameters into it.
+	# The spawner will then read this dictionary and assign these properties to every new ship it instantiates.
 	if is_instance_valid(ship_enemy_spawner):
 		ship_enemy_spawner.configure_for_phase(ship_max_enemies, ship_config)
 		

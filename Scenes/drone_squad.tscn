@@ -107,7 +107,7 @@ drones = [NodePath("AnimatedSprite2D"), NodePath("AnimatedSprite2D2"), NodePath(
 traverse_time = 15.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1150103325]
-scale = Vector2(2.5, 2.5)
+scale = Vector2(2.7, 2.7)
 sprite_frames = SubResource("SpriteFrames_27wjk")
 
 [node name="Marker2D" type="Marker2D" parent="AnimatedSprite2D" unique_id=1135804910]
@@ -115,7 +115,7 @@ position = Vector2(-0.39999998, 14.4)
 
 [node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="." unique_id=12069403]
 position = Vector2(119.00001, 0)
-scale = Vector2(2.5, 2.5)
+scale = Vector2(2.7, 2.7)
 sprite_frames = SubResource("SpriteFrames_cn68v")
 frame = 1
 frame_progress = 0.9507437
@@ -125,16 +125,16 @@ position = Vector2(-0.79999995, 6.3999996)
 
 [node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="." unique_id=1515882224]
 position = Vector2(236.00002, 0)
-scale = Vector2(2.5, 2.5)
+scale = Vector2(2.7, 2.7)
 sprite_frames = SubResource("SpriteFrames_6ofn2")
-frame_progress = 0.5543452
+frame_progress = 0.017997947
 
 [node name="Marker2D" type="Marker2D" parent="AnimatedSprite2D3" unique_id=343352866]
 position = Vector2(0, 19.999998)
 
 [node name="AnimatedSprite2D4" type="AnimatedSprite2D" parent="." unique_id=1210998995]
 position = Vector2(349.00003, 0)
-scale = Vector2(2.5, 2.5)
+scale = Vector2(2.7, 2.7)
 sprite_frames = SubResource("SpriteFrames_uiwms")
 frame_progress = 0.054852214
 
