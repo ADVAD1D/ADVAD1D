@@ -8,6 +8,14 @@ var is_active: bool = false
 func activate(spawn_position: Vector2, start_direction: Vector2) -> void:
 	global_position = spawn_position
 	set_direction(start_direction)
+	modulate = Color.WHITE # Resetear el color general
+	
+	# Restaurar materiales y luces por si fue usado por un Drone (que lo vuelve verde)
+	if has_node("Sprite2D"):
+		get_node("Sprite2D").material = null
+	if has_node("PointLight2D"):
+		get_node("PointLight2D").color = Color.WHITE
+		
 	is_active = true
 	show()
 	set_physics_process(true)

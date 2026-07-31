@@ -1,0 +1,142 @@
+[gd_scene format=3 uid="uid://c0ug0q1fcf453"]
+
+[ext_resource type="Script" uid="uid://oeg03lonoq6t" path="res://Scripts/drone_squad.gd" id="1_7h03e"]
+[ext_resource type="Texture2D" uid="uid://bb6sx2kfcrcwd" path="res://Assets/Sprites/Drones/drone1.png" id="2_4rmg0"]
+[ext_resource type="Texture2D" uid="uid://deycby2u22urt" path="res://Assets/Sprites/Drones/drone2.png" id="3_d2w4k"]
+[ext_resource type="Texture2D" uid="uid://cndhxhynukyac" path="res://Assets/Sprites/Drones/drone3.png" id="4_et0pg"]
+[ext_resource type="Texture2D" uid="uid://w2fhcntxqvr5" path="res://Assets/Sprites/Drones/drone4.png" id="5_orv0y"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jjw61"]
+atlas = ExtResource("2_4rmg0")
+region = Rect2(0, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ruxmn"]
+atlas = ExtResource("2_4rmg0")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_27wjk"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jjw61")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ruxmn")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pp58l"]
+atlas = ExtResource("3_d2w4k")
+region = Rect2(0, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cfhin"]
+atlas = ExtResource("3_d2w4k")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cn68v"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pp58l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cfhin")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kjkm0"]
+atlas = ExtResource("4_et0pg")
+region = Rect2(0, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6xq3j"]
+atlas = ExtResource("4_et0pg")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8ifki"]
+atlas = ExtResource("4_et0pg")
+region = Rect2(100, 0, 50, 50)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6ofn2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kjkm0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6xq3j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8ifki")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_imjl6"]
+atlas = ExtResource("5_orv0y")
+region = Rect2(0, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q1hf4"]
+atlas = ExtResource("5_orv0y")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_uiwms"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_imjl6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q1hf4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="Node2D" type="Node2D" unique_id=1217995551 node_paths=PackedStringArray("drones")]
+script = ExtResource("1_7h03e")
+drones = [NodePath("AnimatedSprite2D"), NodePath("AnimatedSprite2D2"), NodePath("AnimatedSprite2D3"), NodePath("AnimatedSprite2D4")]
+traverse_time = 15.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1150103325]
+scale = Vector2(2.5, 2.5)
+sprite_frames = SubResource("SpriteFrames_27wjk")
+
+[node name="Marker2D" type="Marker2D" parent="AnimatedSprite2D" unique_id=1135804910]
+position = Vector2(-0.39999998, 14.4)
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="." unique_id=12069403]
+position = Vector2(119.00001, 0)
+scale = Vector2(2.5, 2.5)
+sprite_frames = SubResource("SpriteFrames_cn68v")
+frame = 1
+frame_progress = 0.9507437
+
+[node name="Marker2D" type="Marker2D" parent="AnimatedSprite2D2" unique_id=615861587]
+position = Vector2(-0.79999995, 6.3999996)
+
+[node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="." unique_id=1515882224]
+position = Vector2(236.00002, 0)
+scale = Vector2(2.5, 2.5)
+sprite_frames = SubResource("SpriteFrames_6ofn2")
+frame_progress = 0.5543452
+
+[node name="Marker2D" type="Marker2D" parent="AnimatedSprite2D3" unique_id=343352866]
+position = Vector2(0, 19.999998)
+
+[node name="AnimatedSprite2D4" type="AnimatedSprite2D" parent="." unique_id=1210998995]
+position = Vector2(349.00003, 0)
+scale = Vector2(2.5, 2.5)
+sprite_frames = SubResource("SpriteFrames_uiwms")
+frame_progress = 0.054852214
+
+[node name="Marker2D" type="Marker2D" parent="AnimatedSprite2D4" unique_id=1906123184]
+position = Vector2(0.79999995, 15.199999)

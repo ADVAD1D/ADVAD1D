@@ -16,6 +16,7 @@
 [ext_resource type="AudioStream" uid="uid://iavnej1hm2io" path="res://Assets/Audio/195491__alienxxx__glitch_001.wav" id="9_ynf5e"]
 [ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scripts/ambient_particles.gd" id="12_6iyac"]
 [ext_resource type="AudioStream" uid="uid://dlu22wl4fxr36" path="res://Assets/Audio/783832__chungus43a__milling-machine-motor.wav" id="12_b3802"]
+[ext_resource type="PackedScene" uid="uid://c0ug0q1fcf453" path="res://Scenes/drone_squad.tscn" id="12_muh8k"]
 [ext_resource type="PackedScene" uid="uid://s72gvn2mqhx2" path="res://Scenes/main_menu.tscn" id="13_536cc"]
 [ext_resource type="Texture2D" uid="uid://kq3gdmq8xgwi" path="res://Assets/Sprites/resumebutton1.png" id="13_hdf80"]
 [ext_resource type="AudioStream" uid="uid://bwoq355ggrir4" path="res://Assets/Audio/351564__bertrof__game-sound-correct-with-delay.wav" id="13_pdsj5"]
@@ -967,6 +968,9 @@ spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 [node name="Timer" type="Timer" parent="LaserShieldSpawner" unique_id=1198465110]
 wait_time = 7.0
 autostart = true
+
+[node name="DroneSquad" parent="." unique_id=1217995551 instance=ExtResource("12_muh8k")]
+position = Vector2(-154, -1108)
 
 [node name="EnemySpawnPath" type="Path2D" parent="." unique_id=975837261]
 position = Vector2(65.614105, 0)
