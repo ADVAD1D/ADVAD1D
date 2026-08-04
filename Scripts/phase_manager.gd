@@ -154,13 +154,9 @@ var arena_phase_durations = {
 }
 
 var current_phase: int = 0
-
 var phase_timer: float
-
 var current_score_requirement: int
-
 var is_phase_active: bool = false
-
 var restart_from_phase: bool = true
 
 func _ready() -> void:

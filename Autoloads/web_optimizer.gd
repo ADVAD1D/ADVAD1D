@@ -4,9 +4,8 @@ extends Node
 ## cheap "low_quality" path (see Shaders/CRT.gdshader), so menus and gameplay
 ## drop the expensive warp / chromatic-aberration / animated-noise passes
 ## without having to edit each of the ~9 scenes by hand
-
 func _ready() -> void:
-	if not OS.has_feature("web"):
+	if not OS.has_feature("web") and not GameManager.force_web_mode:
 		# Desktop / native: nothing to do, don't pay for the node_added signal
 		queue_free()
 		return

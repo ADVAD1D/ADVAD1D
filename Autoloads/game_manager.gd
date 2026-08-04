@@ -22,6 +22,7 @@ var game_paused: bool = false
 var can_pause: bool = true
 var show_debug: bool = false
 var show_fps: bool = false
+var force_web_mode: bool = false
 #IMPORTANT: this bool change the value to _log_message function in some scripts!
 var is_debug_text : bool = false
 var debug_response_text_active: bool = false
