@@ -72,6 +72,9 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("Shoot") and can_shoot:
 			shoot()
 			
+	# --- RELATIVE MOVEMENT (Tank/Asteroids Controls) ---
+	# In this mode, Left/Right inputs purely rotate the ship on its axis.
+	# Up/Down inputs apply thrust forward or backward relative to the direction the ship is currently facing.
 	if relative_control_active == true:
 		var rotation_direction = Input.get_axis("Move_Left", "Move_Right")
 		rotation_speed = 5.0
@@ -91,6 +94,9 @@ func _physics_process(delta: float) -> void:
 			do_dash(forward_vec)
 			
 	else:
+		# --- ABSOLUTE MOVEMENT (Standard Top-Down Arcade Controls) ---
+		# In this mode, the input vector translates directly to world-space movement (e.g., Up always moves north).
+		# The ship's rotation is automatically interpolated (lerped) to face the direction it is moving.
 		var direction = Input.get_vector("Move_Left", "Move_Right", "Move_Up", "Move_Down")
 		
 		if direction != Vector2.ZERO:
@@ -103,24 +109,31 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity = velocity.lerp(Vector2.ZERO, friction * delta)
 			
+		# --- DASH BUFFERING SYSTEM ---
 		if Input.is_action_just_pressed("dash") and can_dash:
 			var move_direction = Input.get_vector("Move_Left", "Move_Right", "Move_Up", "Move_Down")
 			
 			if move_direction == Vector2.ZERO:
 				move_direction = -transform.y
 			
+			# If the ship is already facing the right way, dash immediately.
+			# Otherwise, buffer the dash input so it triggers as soon as the ship finishes rotating.
 			if can_start_dash(move_direction):
 				do_dash(move_direction.normalized())
 			else:
 				dash_buffered = true
 				buffered_direction = move_direction.normalized()
 			
+		# Execute the buffered dash once rotation aligns with the intended direction
 		if dash_buffered and can_dash and can_start_dash(buffered_direction):
 			do_dash(buffered_direction)
 			dash_buffered = false
 			
 	engine_trail.emitting = is_moving
 		
+	# --- APPLY MOVEMENT AND COLLISIONS ---
+	# Executes the final calculated velocity using Godot's built-in physics.
+	# move_and_slide() automatically handles sliding against walls and objects.
 	if velocity != Vector2.ZERO:
 		var collision = move_and_slide()
 		
@@ -131,6 +144,9 @@ func _physics_process(delta: float) -> void:
 	if GameManager.show_debug:
 		queue_redraw()
 		
+# --- DASH: ALIGNMENT CHECK ---
+# Ensures the ship is visually facing the intended dash direction before dashing.
+# Returns true if the current rotation is within 6 degrees of the target direction.
 func can_start_dash(direction: Vector2) -> bool:
 	if direction == Vector2.ZERO:
 		return false
@@ -151,6 +167,8 @@ func shoot():
 	await get_tree().create_timer(shoot_timerate).timeout
 	can_shoot = true
 	
+# --- DASH: EXECUTION AND EFFECTS ---
+# Handles the entire dash sequence: visual effects, invincibility, and physics push.
 func do_dash(direction: Vector2):
 	if main_camera:
 		main_camera.shake(dash_camera_shake, dash_duration)
@@ -166,17 +184,20 @@ func do_dash(direction: Vector2):
 		get_parent().add_child(dash_particles_instance)
 		dash_particles_instance.global_position = global_position
 	
+	# Visual flash effect using Tween
 	if dash_tween:
 		dash_tween.kill()
 	dash_tween = create_tween()
 	dash_tween.tween_property(sprite, "modulate", Color(2, 2, 2, 1), 0.4).set_ease(Tween.EASE_OUT)
 	dash_tween.tween_property(sprite, "modulate", Color.WHITE, 0.3).set_ease(Tween.EASE_IN)
 	
+	# Invincibility frames (i-frames): disable hitbox during dash
 	hitbox_collider.set_deferred("disabled", true)
 	await get_tree().create_timer(dash_duration).timeout
 	
 	is_dashing = false
 	
+	# Restore hitbox and wait for cooldown before allowing another dash
 	hitbox_collider.set_deferred("disabled", false)
 	await get_tree().create_timer(dash_cooldown).timeout
 	can_dash = true
