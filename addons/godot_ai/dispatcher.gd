@@ -40,6 +40,7 @@ const DEFERRED_TIMEOUT_MS_BY_COMMAND := {
 	"stop_project": 4500,
 	"run_project": 6000,
 	"take_screenshot": 30000,
+	"check_client_status": 30000,
 	"game_eval": 15000,
 	"game_command": 15000,
 	"scan_filesystem": 30000,
@@ -79,6 +80,12 @@ func register_lazy(command_name: String, handler_key: String, method: StringName
 ## plugin.gd can release RefCounted handlers before Godot reloads their
 ## class_name scripts (issue #46). After clear(), the dispatcher is inert.
 func clear() -> void:
+	## Stop lazy handlers before releasing the cache. Handler-owned polling
+	## coroutines retain any in-flight worker and deferred-response connection
+	## across frames, then join only after the worker is no longer alive.
+	for instance in _lazy_handler_cache.values():
+		if is_instance_valid(instance) and instance.has_method("prepare_for_teardown"):
+			instance.call("prepare_for_teardown")
 	_handlers.clear()
 	## Release lazily-constructed handler instances (and the ctor args that
 	## reference plugin-lifetime objects) at the same teardown point where
@@ -93,8 +100,6 @@ func clear() -> void:
 	_log_buffer = null
 	_surfaced_error_tracker = null
 	pause_target = null
-
-
 ## Drop queued-but-unexecuted commands. Called by the connection on
 ## disconnect (#712): commands queued by the previous connection must not
 ## execute under the next one — the requester is gone, its in-flight
@@ -225,7 +230,12 @@ func _dispatch(cmd: Dictionary) -> Dictionary:
 		result = ErrorCodes.make(ErrorCodes.UNKNOWN_COMMAND, "Unknown command: %s" % command)
 
 	if result.get("_deferred", false):
-		_register_deferred(request_id, command)
+		## A handler may attach `_deferred_timeout_ms` to its deferred sentinel
+		## to claim a per-request budget larger than its command's shared entry
+		## (e.g. game_command's `input_sequence`, which steps frames well past
+		## the 15s that suits one-shot game ops). 0/absent falls back to the
+		## per-command table.
+		_register_deferred(request_id, command, int(result.get("_deferred_timeout_ms", 0)))
 		if mcp_logging:
 			_log_buffer.log("[defer] %s (request %s)" % [command, request_id])
 		return result
@@ -359,13 +369,21 @@ func _materialize_lazy_command(command: String) -> Dictionary:
 	return {}
 
 
-func _register_deferred(request_id: String, command: String) -> void:
+func _register_deferred(request_id: String, command: String, timeout_override_ms: int = 0) -> void:
 	if request_id.is_empty():
 		return
+	## A positive per-request override wins over the per-command table so a
+	## single deferred call can claim more headroom without globally widening
+	## the command's budget (see _dispatch: input_sequence needs ~30s, but the
+	## other game_command ops must keep their tight 15s).
+	var timeout_ms: int = (
+		timeout_override_ms if timeout_override_ms > 0
+		else _deferred_timeout_ms_for_command(command)
+	)
 	_pending_deferred[request_id] = {
 		"command": command,
 		"started_ms": Time.get_ticks_msec(),
-		"timeout_ms": _deferred_timeout_ms_for_command(command),
+		"timeout_ms": timeout_ms,
 	}
 
 

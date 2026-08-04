@@ -13,3 +13,11 @@ func _init() -> void:
 	}
 	server_key_path = PackedStringArray(["servers"])
 	entry_extra_fields = {"type": "http"}
+	## Attach migration (#838). Identical format to vscode.gd — Insiders ships
+	## the same mcpConfiguration.ts schema; see that descriptor for citations.
+	command_shape = McpClient.CommandShape.FLAT
+	command_transport_key = "type"
+	command_transport_value = "stdio"
+	command_legacy_keys = PackedStringArray(["url", "headers"])
+	command_user_fields = PackedStringArray(["env", "envFile", "cwd", "sandboxEnabled", "dev"])
+	command_supports_url_fallback = true

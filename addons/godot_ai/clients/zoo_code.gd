@@ -19,3 +19,18 @@ func _init() -> void:
 	entry_extra_fields = {"type": "streamable-http"}
 	## Preserve user-controlled state across reconfigure, parallel to Roo/Kilo.
 	entry_initial_fields = {"disabled": false, "alwaysAllow": []}
+	## Attach migration (#838). Zoo's stdio zod schema is Roo's: flat
+	## command/args/env(+cwd), `type: z.enum(["stdio"]).optional()`, and
+	## url/headers explicitly forbidden on stdio entries (McpHub.ts) — so both
+	## are legacy keys and the documented type pin repins "streamable-http".
+	command_shape = McpClient.CommandShape.FLAT
+	command_transport_key = "type"
+	command_transport_value = "stdio"
+	command_legacy_keys = PackedStringArray(["url", "headers"])
+	command_initial_fields = {"disabled": false, "alwaysAllow": []}
+	command_user_fields = PackedStringArray([
+		"disabled", "alwaysAllow", "timeout", "watchPaths", "disabledTools",
+		"env", "cwd",
+	])
+	command_timeout_fields = PackedStringArray(["timeout"])
+	command_supports_url_fallback = true

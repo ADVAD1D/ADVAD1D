@@ -14,10 +14,11 @@ extends RefCounted
 ## Callable workaround from #192.
 
 ## CONFIGURED_MISMATCH = an entry with our `SERVER_NAME` exists in the user's
-## client config, but its URL doesn't match `http_url()` — typical after the
-## user changes `godot_ai/http_port` and reloads. Distinguishing this from
-## `NOT_CONFIGURED` lets the dock surface a "your saved client URLs are stale"
-## banner instead of conflating it with "you never configured this client".
+## client config, but its URL or launch command doesn't match the current
+## ports/version/exclusions — typical after a setting change or update.
+## Distinguishing this from `NOT_CONFIGURED` lets the dock surface a "your
+## saved client configuration is stale" banner instead of conflating it with
+## "you never configured this client".
 enum Status { NOT_CONFIGURED, CONFIGURED, CONFIGURED_MISMATCH, ERROR }
 
 
@@ -36,6 +37,17 @@ static func status_label(status: McpClient.Status) -> String:
 			return "configured_mismatch"
 	return "error"
 
+
+## One-line configure success message, shared by every strategy so the dock
+## and the `client_manage` tool describe the transport that was actually
+## written. Command-shape clients register the stdio `godot-ai attach`
+## bridge — the URL-era "(HTTP: <url>)" suffix would name a transport the
+## write never touched (found live in the #838 Windows smoke).
+static func configured_message(client: McpClient, server_url: String) -> String:
+	if client.command_shape != CommandShape.NONE:
+		return "%s configured (stdio attach)" % client.display_name
+	return "%s configured (HTTP: %s)" % [client.display_name, server_url]
+
 var id: String = ""                              ## stable key, e.g. "cursor"
 var display_name: String = ""                    ## "Cursor"
 var config_type: String = ""                     ## "json" | "toml" | "yaml" | "cli"
@@ -44,6 +56,33 @@ var config_type: String = ""                     ## "json" | "toml" | "yaml" | "
 ## {"darwin": "~/...", "windows": "$APPDATA/...", "linux": "$XDG_CONFIG_HOME/..."}
 ## Keys may also use "unix" as a shorthand for darwin+linux.
 var path_template: Dictionary = {}
+
+## Optional ordered path candidates by platform. Each value is an Array of
+## templates; one `*` may appear in a directory segment so packaged-app roots
+## can be discovered without hardcoding publisher hashes.
+##
+## Resolution contract:
+##   1. Existing files win in descriptor order, except that a unique wildcard
+##      match is authoritative even before its config leaf exists. A matching
+##      package root therefore creates inside that package rather than writing
+##      a fallback path that may become invisible after copy-on-write. When
+##      that private leaf is new, Configure seeds it from the first later
+##      existing candidate so read-through content is not shadowed.
+##   2. If no file or wildcard package match exists, the first non-wildcard
+##      template is the deterministic create target.
+##   3. Multiple matches within any wildcard group are ambiguous and fail
+##      closed instead of choosing an arbitrary package.
+##
+## Exact-file and config-home environment overrides still have higher
+## priority. When this map has no entry for the current platform,
+## `path_template` remains the fallback.
+var config_path_candidates: Dictionary = {}
+
+## De-duplicate persistent path-ambiguity warnings across recurring status
+## refreshes. The actionable message still returns on every resolution; only
+## the editor-console echo is single-shot until the ambiguity clears/changes.
+var _last_config_path_warning := ""
+var _config_path_warning_mutex := Mutex.new()
 
 ## Path inside the config object where the per-server map lives.
 ## Cursor / Claude Desktop / most others: ["mcpServers"]
@@ -77,24 +116,76 @@ var entry_extra_fields: Dictionary = {}
 ## restores that contract under the data-only descriptor model.
 var entry_initial_fields: Dictionary = {}
 
-## stdio→HTTP bridge mode for clients that don't speak HTTP natively.
-##   NONE    — entry is `{[entry_url_field]: url, **entry_extra_fields,
-##             ...entry_initial_fields (only for new entries)}`
-##   FLAT    — Claude Desktop shape: `{"command": <uvx>, "args": [...bridge...]}`
-##             Verifier ALSO accepts a future url-style entry.
+## Client-owned stdio launch shape. Each strategy renders the shape in its
+## config language:
 ##
-## Enum (vs. String) so a typo in a descriptor fails at parse time instead of
-## silently falling through `match` to the non-bridge path.
-enum UvxBridge { NONE, FLAT }
-var entry_uvx_bridge: UvxBridge = UvxBridge.NONE
+## - FLAT — `command` string + `args` array as sibling keys. JSON and YAML
+##   strategies. A client whose docs require a type discriminator next to the
+##   flat keys (VS Code's `type: "stdio"`, Claude Code's fallback file) stays
+##   FLAT and declares it via `command_transport_key` / `command_transport_value`,
+##   so TYPED_FLAT remains reserved vocabulary.
+## - COMMAND_ARRAY — the launch argv carried as one array. In the JSON
+##   strategy the entry's `command` field IS that array (OpenCode's
+##   `"command": ["uvx", …]`). In the TOML strategy the launcher renders as a
+##   `command = "…"` line plus an `args = […]` array (Codex, Grok) — the name
+##   refers to the argv-as-TOML-array body it emits.
+## - NESTED_COMMAND — command/args nested inside a sub-object. Reserved; no
+##   current client needs it and strategies reject it with an actionable error.
+##
+## CLI-registered clients (`config_type == "cli"`) express the launch through
+## `cli_register_template` tokens instead; their `command_shape` governs the
+## JSON-fallback file rendering (Claude Code, #463).
+##
+## Values are data-only shared vocabulary; keeping them data-only avoids
+## reintroducing the descriptor Callable race from #229.
+enum CommandShape { NONE, FLAT, TYPED_FLAT, COMMAND_ARRAY, NESTED_COMMAND }
+var command_shape: CommandShape = CommandShape.NONE
+
+## Whether manual instructions may offer the client's native URL transport as
+## an alternative to its command shape. This is capability metadata, not a
+## consequence of `command_shape`: Codex supports a URL block, while Claude
+## Desktop's local `claude_desktop_config.json` entries are stdio-only.
+var command_supports_url_fallback: bool = false
+
+## Optional discriminator required by a client's command transport shape
+## (for example `type = "stdio"`). Empty means command+args are sufficient.
+var command_transport_key: String = ""
+var command_transport_value: Variant = null
+
+## Keys from the legacy transport that Configure must delete. Codex removes
+## `url`, because Codex rejects a server entry containing both URL and stdio
+## launch fields.
+var command_legacy_keys: PackedStringArray = PackedStringArray()
+
+## Keys inside a preserved JSON `env` object that belonged to a legacy launch
+## shape and must be removed during migration. Other environment values remain
+## user-owned and survive Configure. Currently consumed by the JSON strategy.
+var command_env_legacy_keys: PackedStringArray = PackedStringArray()
+
+## Defaults seeded only for a new entry. Reconfigure preserves user values.
+## Codex uses this for enabled/startup/tool timeout defaults.
+var command_initial_fields: Dictionary = {}
+
+## Declarative documentation of fields owned by the user and timeout fields
+## supported by this client. Strategies preserve these values and tests pin
+## the descriptor contract; no control flow lives on the descriptor.
+var command_user_fields: PackedStringArray = PackedStringArray()
+var command_timeout_fields: PackedStringArray = PackedStringArray()
 
 ## Paths whose existence implies the user has this client installed.
 ## Used purely for the dock's "installed" badge. `is_installed()` additionally
-## checks `resolved_config_path()`, so a config relocated via
-## `config_home_env` is detected without listing it here.
+## checks `resolved_config_path()`, so a config relocated via an environment
+## override is detected without listing it here.
 var detect_paths: PackedStringArray = PackedStringArray()
 
-# Config-home env override ---------------------------------------------------
+# Config-path env overrides --------------------------------------------------
+## Some clients name the exact config file in an environment variable
+## (OpenCode: `$OPENCODE_CONFIG`). When the variable is set and non-empty, it
+## wins over directory-valued `config_home_env` and `path_template`. Relative
+## values fail closed because the editor and client may have different working
+## directories; auto-configuration cannot safely assume they resolve alike.
+var config_file_env: String = ""
+
 ## Some clients honor an env var that relocates their entire config home
 ## (Codex: `$CODEX_HOME/config.toml`; Claude Code: `$CLAUDE_CONFIG_DIR/.claude.json`).
 ## When `config_home_env` names an env var that is set and non-empty,
@@ -113,7 +204,10 @@ var config_home_env_subpath: String = ""
 var cli_names: PackedStringArray = PackedStringArray()
 ## Argument templates with `{name}` and `{url}` tokens; the strategy
 ## substitutes them at call time. Tokens are matched verbatim — no escaping
-## semantics, no shell expansion. Populated by CLI descriptors (`claude_code`, `kimi_code`).
+## semantics, no shell expansion. Command-shape templates additionally use the
+## whole-element tokens `{command}` / `{args...}` (see `McpCliStrategy.format_args`).
+## Populated by CLI descriptors (currently `claude_code`; `kimi_code` moved to
+## mcp.json in #813).
 var cli_register_template: PackedStringArray = PackedStringArray()
 var cli_unregister_template: PackedStringArray = PackedStringArray()
 ## Args run to read current state; stdout is scanned for the server name and
@@ -131,15 +225,137 @@ var toml_legacy_section_aliases: PackedStringArray = PackedStringArray()
 var toml_body_template: PackedStringArray = PackedStringArray()
 
 
-## Resolved absolute config path for this client on the current OS.
-## A set, non-empty `config_home_env` env var overrides `path_template`
-## (issue #617: e.g. CODEX_HOME relocates ~/.codex — writing the default
-## path would false-succeed while Codex reads elsewhere).
+## Resolved absolute config path for this client on the current OS. Exact-file
+## overrides win first, followed by directory-valued `config_home_env`, then
+## ordered candidates / `path_template`. Ignoring either override can write a
+## file the client never reads and false-succeed.
 func resolved_config_path() -> String:
+	return str(resolved_config_path_details().get("path", ""))
+
+
+## Detailed sibling used by status/configure/remove so safe resolution
+## failures reach the dock instead of collapsing into NOT_CONFIGURED. `error`
+## is empty for ordinary unsupported/missing path mappings to preserve the
+## long-standing status behavior for clients not installed on this platform.
+func resolved_config_path_details() -> Dictionary:
+	## Reflected reads: after an in-session self-update, an instance created
+	## before the update can answer Nil for vars the update added, and the
+	## typed calls below would each hard-error (Nil -> Dictionary, #850's
+	## per-row error wall). Fail with the
+	## one repair message instead; the registry's coherence probe drives the
+	## same text on the status path.
+	var candidates: Variant = get("config_path_candidates")
+	var template: Variant = get("path_template")
+	var file_env: Variant = get("config_file_env")
+	if not (candidates is Dictionary) or not (template is Dictionary) or not (file_env is String):
+		return {"path": "", "error": McpClientRegistry.RESTART_TO_FINISH_UPDATE}
+	var file_override := config_file_override_details()
+	if not str(file_override.get("path", "")).is_empty() or not str(file_override.get("error", "")).is_empty():
+		_clear_config_path_warning()
+		return file_override
 	var override := config_home_override()
 	if not override.is_empty():
-		return override
-	return McpPathTemplate.resolve(path_template)
+		_clear_config_path_warning()
+		return {"path": override, "error": ""}
+	var candidate_key := McpPathTemplate.platform_key(candidates)
+	if not candidate_key.is_empty():
+		return _resolve_ordered_config_path_candidates(candidates[candidate_key])
+	_clear_config_path_warning()
+	return {"path": McpPathTemplate.resolve(template), "error": ""}
+
+
+## The exact-file env override plus any fail-closed diagnostic. Empty path and
+## error means no override applies (no mapping, unset, or blank env var).
+func config_file_override_details() -> Dictionary:
+	if config_file_env.is_empty():
+		return {"path": "", "error": ""}
+	## env_lookup, not OS.get_environment: this can run on dock workers (#691).
+	var raw_path := McpPathTemplate.env_lookup(config_file_env).strip_edges()
+	if raw_path.is_empty():
+		return {"path": "", "error": ""}
+	var expanded := McpPathTemplate.expand(raw_path)
+	if not expanded.is_absolute_path():
+		return {
+			"path": "",
+			"error": "%s's $%s override must be an absolute config-file path; got %s" % [
+				display_name, config_file_env, raw_path,
+			],
+		}
+	if DirAccess.dir_exists_absolute(expanded):
+		return {
+			"path": "",
+			"error": "%s's $%s override must point to a config file, not a directory: %s" % [
+				display_name, config_file_env, expanded,
+			],
+		}
+	return {"path": expanded, "error": ""}
+
+
+func _resolve_ordered_config_path_candidates(templates: Variant) -> Dictionary:
+	if not (templates is Array or templates is PackedStringArray):
+		_clear_config_path_warning()
+		return {"path": "", "error": ""}
+	var ordered_templates: Array = []
+	for template_variant in templates:
+		ordered_templates.append(str(template_variant))
+	var fallback_create_path := ""
+	for index in range(ordered_templates.size()):
+		var template := str(ordered_templates[index])
+		var group := McpPathTemplate.expand_path_candidates(template)
+		if group.size() > 1:
+			var message := (
+				"%s has multiple matching config package paths for %s: %s. "
+				+ "Remove the stale package installation or edit the intended config manually."
+			) % [display_name, template, ", ".join(group)]
+			_warn_config_path_once(message)
+			return {"path": "", "error": message}
+		if group.is_empty():
+			continue
+		var path := String(group[0])
+		if FileAccess.file_exists(path):
+			_clear_config_path_warning()
+			return {"path": path, "error": ""}
+		# A wildcard only resolves when its package directory exists. Treat that
+		# installation evidence as authoritative and create its private config
+		# directly instead of relying on copy-on-write read-through. Preserve
+		# anything currently visible through read-through by naming the first
+		# later existing candidate as a one-time seed source.
+		if template.contains("*"):
+			var seed_path := _first_existing_later_candidate(ordered_templates, index + 1)
+			_clear_config_path_warning()
+			return {"path": path, "error": "", "seed_path": seed_path}
+		if fallback_create_path.is_empty():
+			fallback_create_path = path
+	_clear_config_path_warning()
+	return {"path": fallback_create_path, "error": ""}
+
+
+func _first_existing_later_candidate(templates: Array, start_index: int) -> String:
+	for index in range(start_index, templates.size()):
+		var group := McpPathTemplate.expand_path_candidates(str(templates[index]))
+		# A seed is optional. Never choose among an ambiguous later wildcard;
+		# the authoritative target was already resolved by the earlier group.
+		if group.size() != 1:
+			continue
+		var path := String(group[0])
+		if FileAccess.file_exists(path):
+			return path
+	return ""
+
+
+func _warn_config_path_once(message: String) -> void:
+	_config_path_warning_mutex.lock()
+	var should_warn := message != _last_config_path_warning
+	_last_config_path_warning = message
+	_config_path_warning_mutex.unlock()
+	if should_warn:
+		push_warning(message)
+
+
+func _clear_config_path_warning() -> void:
+	_config_path_warning_mutex.lock()
+	_last_config_path_warning = ""
+	_config_path_warning_mutex.unlock()
 
 
 ## The env-var-relocated config path, or "" when no override applies
@@ -178,9 +394,9 @@ func is_installed() -> bool:
 			return not cfg.is_empty() and FileAccess.file_exists(cfg)
 		return false
 	for p in detect_paths:
-		var resolved := McpPathTemplate.expand(p)
-		if not resolved.is_empty() and (FileAccess.file_exists(resolved) or DirAccess.dir_exists_absolute(resolved)):
-			return true
+		for resolved in McpPathTemplate.expand_path_candidates(p):
+			if FileAccess.file_exists(resolved) or DirAccess.dir_exists_absolute(resolved):
+				return true
 	# Fall back to "config file already exists" — usually means installed at some point.
 	var cfg := resolved_config_path()
 	return not cfg.is_empty() and FileAccess.file_exists(cfg)
@@ -201,47 +417,3 @@ static func _packed_slice(packed: PackedStringArray, from: int, to: int) -> Pack
 	for i in range(from, to):
 		out.append(packed[i])
 	return out
-
-
-# ---------- stdio→http bridge helpers (Claude Desktop) --------------------
-
-## Pinned mcp-proxy release used by every stdio-only client's bridge. uvx's
-## cache key is version-specific, so pinning guarantees all users run the
-## same vetted bridge — a malicious or broken future release on PyPI can't
-## silently break everyone's Configure flow. Bump deliberately when the
-## upstream publishes something we want.
-const MCP_PROXY_VERSION := "0.11.0"
-
-
-## Resolve `uvx` to an absolute path. GUI-launched apps (Claude Desktop)
-## often run with a minimal PATH that excludes ~/.local/bin on macOS /
-## Linux, so a bare "uvx" string in the config would fail at spawn time
-## with the same "Server disconnected" symptom we're trying to cure. The
-## shared three-tier McpCliFinder covers the well-known install dirs;
-## returns bare "uvx" as a last-resort fallback so the entry is still
-## well-formed even if the lookup failed.
-static func resolve_uvx_path() -> String:
-	var names: Array[String] = []
-	names.append("uvx.exe" if OS.get_name() == "Windows" else "uvx")
-	var resolved := McpCliFinder.find(names)
-	return resolved if not resolved.is_empty() else "uvx"
-
-
-## Build the `mcp-proxy` bridge argv (without the leading uvx command).
-## Callers splice this into the client-specific command shape.
-static func mcp_proxy_bridge_args(url: String) -> Array:
-	return ["mcp-proxy==" + MCP_PROXY_VERSION, "--transport", "streamablehttp", url]
-
-
-## Environment overrides written alongside every auto-configured uvx-bridge
-## entry. `UV_LINK_MODE=copy` tells uv to copy shared C extensions into each
-## `builds-v0\.tmpXXXXXX\` build venv instead of hard-linking them from
-## `archive-v0\`. On Windows that breaks the lock race documented in
-## `utils/uv_cache_cleanup.gd` and the README — the running godot-ai server
-## holds `_pydantic_core.pyd` mapped, the build venv's hard-linked copy
-## inherits the lock, uv's post-install cleanup fails, and the MCP launcher
-## reports "pywin32 wheel invalid / file in use" with no working transport.
-## Cost on macOS/Linux is a few extra MB in the uvx cache — well worth it
-## to keep one config shape across platforms.
-static func bridge_env_for_uvx() -> Dictionary:
-	return {"UV_LINK_MODE": "copy"}

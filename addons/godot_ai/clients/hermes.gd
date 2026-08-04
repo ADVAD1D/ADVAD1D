@@ -31,8 +31,15 @@ func _init() -> void:
 	entry_extra_fields = {}
 	entry_initial_fields = {}
 
-	# No UVX bridge needed - Hermes is HTTP-native.
-	entry_uvx_bridge = UvxBridge.NONE
+	## Attach migration (#838). Hermes stdio entries are flat command/args/env
+	## (hermes-agent.nousresearch.com/docs/user-guide/features/mcp), transport
+	## inferred exactly like the URL form — which is why `url` and the
+	## HTTP-only `headers` must not survive next to a command: an entry with
+	## both picks the wrong transport. `enabled`/`tools`/`env` stay user-owned.
+	command_shape = McpClient.CommandShape.FLAT
+	command_legacy_keys = PackedStringArray(["url", "headers"])
+	command_user_fields = PackedStringArray(["enabled", "tools", "env"])
+	command_supports_url_fallback = true
 
 	# Hermes is "installed" wherever the config.yaml lives; presence of the
 	# file is sufficient for the dock's installed badge.

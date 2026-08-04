@@ -19,6 +19,15 @@ func _init() -> void:
 	## `disabled` is user-state (they may have flipped the entry off in the
 	## UI); seeded on first Configure but preserved across reconfigure.
 	entry_initial_fields = {"disabled": false}
+	## Attach migration (#838). Antigravity stdio entries are flat
+	## command/args/env with no type discriminator — transport is inferred
+	## from `command` vs `serverUrl` presence (antigravity.google/docs/mcp),
+	## so the legacy `serverUrl` must not survive next to a command.
+	command_shape = McpClient.CommandShape.FLAT
+	command_legacy_keys = PackedStringArray(["serverUrl"])
+	command_initial_fields = {"disabled": false}
+	command_user_fields = PackedStringArray(["disabled", "disabledTools", "authProviderType", "env"])
+	command_supports_url_fallback = true
 	detect_paths = PackedStringArray(path_template.values() + [
 		"~/.gemini/antigravity/mcp_config.json",
 		"$USERPROFILE/.gemini/antigravity/mcp_config.json",

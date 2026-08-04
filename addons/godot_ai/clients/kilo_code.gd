@@ -20,3 +20,19 @@ func _init() -> void:
 	## entry off, or auto-approved specific tools). Seed on first Configure
 	## but preserve across reconfigure — see `entry_initial_fields` in `_base.gd`.
 	entry_initial_fields = {"disabled": false, "alwaysAllow": []}
+	## Attach migration (#838). UNLIKE its Roo siblings the stdio entry must be
+	## TYPELESS: Kilo's v7 platform treats this file as a migration source and
+	## routes on `type` — any http type value sends the entry down the remote
+	## branch where it is dropped for lack of a url, and only a bare
+	## command/args/env entry is verified to work in BOTH the legacy extension
+	## and the v7 migrator (packages/opencode/src/kilocode/mcp-migrator.ts).
+	## `type` therefore joins the legacy keys instead of being repinned.
+	command_shape = McpClient.CommandShape.FLAT
+	command_legacy_keys = PackedStringArray(["url", "type", "headers"])
+	command_initial_fields = {"disabled": false, "alwaysAllow": []}
+	command_user_fields = PackedStringArray([
+		"disabled", "alwaysAllow", "timeout", "cwd", "watchPaths",
+		"disabledTools", "env",
+	])
+	command_timeout_fields = PackedStringArray(["timeout"])
+	command_supports_url_fallback = true

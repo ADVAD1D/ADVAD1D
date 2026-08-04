@@ -45,6 +45,12 @@ var _server_pid: int = -1
 var _server_keep_alive := false
 var _server_spawn_ms: int = 0
 var _server_exit_ms: int = 0
+## Elapsed-since-spawn at the first watch tick that saw the spawn PID dead, or
+## 0 when it is alive / has been healed onto the real PID. Only meaningful
+## while a Windows trampoline handoff is being waited out (#797): it preserves
+## the true exit time so a diagnosis raised after the wait still reports when
+## the process actually died. Reset per spawn alongside `_server_spawn_ms`.
+var _spawn_dead_since_ms: int = 0
 
 ## Version metadata. `expected_version` is what the plugin shipped with;
 ## `actual_version` is what the live server reported via handshake_ack.
@@ -497,17 +503,25 @@ static func _incompatible_server_message(
 	## walking the process tree. See #416.
 	var package_path := _live_package_path_for_message(live)
 	var path_suffix := " (loaded from %s)" % package_path if not package_path.is_empty() else ""
+	## After a plugin update, the usual occupant is a backend kept alive by
+	## AI-client attach bridges still pinned to the previous version (their
+	## leases outrank us — #669/#839, we must not kill it). Name that repair
+	## first; "stop the old server" alone reads as a dead end when the server
+	## respawns the moment the user kills it.
+	var repair := (
+		"If AI-client attach bridges are keeping it alive, run Configure all to "
+		+ "repin them, then restart those client apps — the old server exits on "
+		+ "its own. Otherwise stop it manually or change both HTTP and WS ports."
+	)
 	if not version.is_empty():
 		if actual_ws_port > 0 and actual_ws_port != expected_ws_port:
 			return (
 				"Port %d is occupied by godot-ai server v%s using WS port %d%s; "
-				+ "plugin expects v%s with WS port %d. Stop the old server or "
-				+ "change both HTTP and WS ports."
-			) % [port, version, actual_ws_port, path_suffix, expected_version, expected_ws_port]
+				+ "plugin expects v%s with WS port %d. %s"
+			) % [port, version, actual_ws_port, path_suffix, expected_version, expected_ws_port, repair]
 		return (
-			"Port %d is occupied by godot-ai server v%s%s; plugin expects v%s. "
-			+ "Stop the old server or change both HTTP and WS ports."
-		) % [port, version, path_suffix, expected_version]
+			"Port %d is occupied by godot-ai server v%s%s; plugin expects v%s. %s"
+		) % [port, version, path_suffix, expected_version, repair]
 	var status_code := int(live.get("status_code", 0))
 	if status_code > 0:
 		return (
@@ -940,6 +954,7 @@ func _start_server_impl(async_gen: int) -> void:
 	if spawned_pid > 0:
 		_server_spawn_ms = Time.get_ticks_msec()
 		_server_exit_ms = 0
+		_spawn_dead_since_ms = 0
 		_server_keep_alive = keep_alive_env_set
 		_host._server_started_this_session = true
 		transition_state(McpServerStateScript.SPAWNING)
@@ -967,6 +982,160 @@ func _start_server_impl(async_gen: int) -> void:
 		push_warning("MCP | failed to start server")
 
 
+## Is the watched spawn PID's death still explainable as a launcher handoff
+## rather than a server exit? (#797)
+##
+## Observed on Windows 11 with a uv-created venv: one boot in four logged
+## "server exited after 5146ms" while the real server kept running and was
+## then adopted. The watched PID had died on a healthy boot, and because the
+## server had not yet written its pid-file there was nothing to heal onto, so
+## the watch crossed SPAWN_GRACE_MS and reported an exit — rescued only by the
+## crash-survivor adoption path.
+##
+## A uv venv's `python.exe` is a shim rather than the interpreter, and the real
+## server does run under a *different* PID than the one `OS.create_process`
+## hands back. But the original report's suspected mechanism — that the shim
+## exits once its child is up — is **disproven**, not merely unconfirmed. A
+## 12-boot run on Windows 11 with a uv venv found the spawned trampoline alive
+## on every boot, with the child owning both the pid-file and the listener; a
+## CI runner showed the same. The shim is a live parent for the process's whole
+## life, so it is not what kills the watched PID.
+##
+## Two consequences worth keeping straight. First, this gate is keyed to the
+## observable condition — watched PID dead, no pid-file yet — not to any theory
+## of why it died, so it stays correct whatever the cause. Second, and less
+## comfortable: in that same 12-boot run the false "server exited" line never
+## appeared AND the watched PID never died, so the guard never fired. Those
+## clean boots are evidence the symptom did not reproduce, NOT evidence this
+## guard fixes it. The true cause of the original 1-in-4 report is still
+## unknown; if it resurfaces, start from that rather than from the trampoline.
+##
+## `real_pid <= 0` means no pid-file exists yet, and that reliably means "this
+## server has not published one" rather than "stale leftover": `start_server`
+## wipes the pid-file immediately before every spawn. So an absent pid-file
+## plus a dead spawn PID inside the window is the handoff signature.
+##
+## Deliberately gated to Windows. POSIX uv venvs exec rather than trampoline,
+## so a dead spawn PID there really is a dead server, and delaying its
+## diagnosis would only slow down honest crash reporting on the platforms
+## where this cannot happen. `os_name` is a parameter rather than an
+## `OS.get_name()` call so the Windows path is exercisable from any host.
+static func is_spawn_handoff_pending(
+	os_name: String, real_pid: int, elapsed_ms: int, window_ms: int
+) -> bool:
+	if os_name != "Windows":
+		return false
+	if real_pid > 0:
+		return false
+	return elapsed_ms < window_ms
+
+
+## First-write-wins stamp for the elapsed time at which the spawn PID was first
+## observed dead (#797).
+##
+## A diagnosis raised after waiting out a handoff must still report when the
+## process actually exited, not when the wait gave up — the point of #797 is an
+## honest log line. Returns the existing stamp once one is set, so later ticks
+## in the same wait cannot overwrite it; `<= 0` means "not yet stamped",
+## matching how the field is cleared per spawn.
+static func first_death_stamp(current_stamp_ms: int, elapsed_ms: int) -> int:
+	return current_stamp_ms if current_stamp_ms > 0 else elapsed_ms
+
+
+## One-line forensic snapshot taken the moment a spawn is judged to have
+## fast-exited (#797).
+##
+## #797 reported `server exited after 5146ms` on a healthy Windows boot, once
+## in four. It is still unexplained: a 12-boot run on the reported
+## configuration reproduced neither the symptom nor its suspected mechanism —
+## the uv trampoline was alive on every boot, with the child owning the
+## pid-file and the listener, so the shim's exit is ruled out as the cause.
+## What killed that watched PID is unknown, and the log line at the time
+## carried no evidence to answer it with.
+##
+## So capture the state at the moment of judgement rather than asking the next
+## person to reproduce a 1-in-4 bug under observation. Everything here is read
+## through seams the surrounding diagnosis already uses, on a path that only
+## runs when a spawn is being declared dead, so it costs nothing in the
+## healthy case.
+## Deliberately does NOT scrape the port for listener PIDs. This runs from the
+## 1 Hz watch loop, on a live frame, so a `_find_all_pids_on_port` subprocess
+## here would stall the editor for a diagnostic. Deferring it via
+## `_run_blocking` was the alternative and is worse: that helper is
+## `await`-based, so it would turn this, `_diagnose_spawn_fast_exit` and
+## `check_server_health` into coroutines — making the watch callback resume
+## across arbitrary frames while its branches set terminal state and trigger
+## re-adoption walks. That is the teardown-ordering hazard
+## `_invalidate_async_startup` exists to contain, and it is not worth taking
+## on for a log line.
+##
+## Little is lost: the probe on the very next line already establishes whether
+## a godot-ai server answers on the port, and `_diagnose_spawn_port_conflict`
+## names a foreign occupant when there is one. If you are tempted to add the
+## PID list back, put it behind that existing conflict path rather than here.
+func _log_spawn_exit_forensics() -> void:
+	var spawn_pid := int(_server_pid)
+	var pid_file_pid := int(_host._read_pid_file_for_proof())
+	## Computed here rather than accepted as a parameter. The caller's
+	## `elapsed` IS `_spawn_dead_since_ms` — #837 passes the true death time so
+	## the user-facing "server exited after Nms" line stays honest — so taking
+	## it would make these two fields report the same number, collapsing the
+	## exact distinction they exist to record.
+	var diagnosed_at_ms := 0
+	if int(_server_spawn_ms) > 0:
+		diagnosed_at_ms = Time.get_ticks_msec() - int(_server_spawn_ms)
+	_host._log_buffer.log(format_spawn_exit_forensics({
+		"os": OS.get_name(),
+		"launch_mode": ClientConfigurator.get_server_launch_mode(),
+		"elapsed_ms": diagnosed_at_ms,
+		## Differs from elapsed_ms when a Windows handoff window was waited out
+		## (#824/#837): the true death time versus when we gave up on it.
+		"first_dead_ms": int(_spawn_dead_since_ms),
+		"spawn_pid": spawn_pid,
+		## Re-read rather than trusted from the watch tick: if the spawn PID is
+		## alive HERE, the death that triggered this was transient, which is a
+		## different bug from a process that really exited.
+		"spawn_alive": spawn_pid > 0 and bool(_host._pid_alive_for_proof(spawn_pid)),
+		"pid_file_pid": pid_file_pid,
+		"pid_file_alive": pid_file_pid > 0 and bool(_host._pid_alive_for_proof(pid_file_pid)),
+	}))
+
+
+## Render the forensic snapshot. Pure so the format is testable without a live
+## editor, and kept to one line so it survives log truncation in a bug report.
+static func format_spawn_exit_forensics(facts: Dictionary) -> String:
+	var spawn_pid := int(facts.get("spawn_pid", 0))
+	var pid_file_pid := int(facts.get("pid_file_pid", 0))
+	## The single most diagnostic bit, stated rather than left to be inferred:
+	## a live pid-file process while the watched one is gone is the launcher
+	## handoff shape; both gone is a real crash.
+	var shape := "unknown"
+	var spawn_alive := bool(facts.get("spawn_alive", false))
+	var file_alive := bool(facts.get("pid_file_alive", false))
+	if spawn_alive:
+		shape = "watched_pid_still_alive"
+	elif file_alive and pid_file_pid != spawn_pid:
+		shape = "handoff_child_alive"
+	elif not file_alive and pid_file_pid <= 0:
+		shape = "no_pid_file_published"
+	else:
+		shape = "all_dead"
+	return (
+		"#797 spawn-exit forensics: shape=%s os=%s launch=%s elapsed=%dms "
+		+ "first_dead=%dms spawn_pid=%d(alive=%s) pid_file_pid=%d(alive=%s)"
+	) % [
+		shape,
+		str(facts.get("os", "")),
+		str(facts.get("launch_mode", "")),
+		int(facts.get("elapsed_ms", 0)),
+		int(facts.get("first_dead_ms", 0)),
+		spawn_pid,
+		str(spawn_alive),
+		pid_file_pid,
+		str(file_alive),
+	]
+
+
 ## Watch-loop callback (1 Hz, capped by SERVER_WATCH_MS).
 ## `--pid-file` is the source of truth on Windows / uvx where the
 ## launcher PID dies quickly after spawning the real interpreter.
@@ -978,6 +1147,7 @@ func check_server_health() -> void:
 	var real_pid := PortResolver.read_pid_file()
 	var spawn_pid := int(_server_pid)
 	if real_pid > 0 and real_pid != spawn_pid and PortResolver.pid_alive(real_pid):
+		_spawn_dead_since_ms = 0
 		_server_pid = real_pid
 		## The spawn record initially contains the launcher PID so same-session
 		## teardown can kill it. Heal it as soon as the server publishes its
@@ -988,8 +1158,13 @@ func check_server_health() -> void:
 		## recovery, so the fast-exit re-adopt budget refreshes.
 		_readopt_after_spawn_exit_retried = false
 	elif not PortResolver.pid_alive(spawn_pid):
+		_spawn_dead_since_ms = first_death_stamp(_spawn_dead_since_ms, elapsed)
+		if is_spawn_handoff_pending(
+			OS.get_name(), real_pid, elapsed, int(_host.SPAWN_HANDOFF_MS)
+		):
+			return
 		if elapsed >= int(_host.SPAWN_GRACE_MS) and not McpServerStateScript.is_terminal_diagnosis(_server_state):
-			_diagnose_spawn_fast_exit(elapsed)
+			_diagnose_spawn_fast_exit(_spawn_dead_since_ms)
 		return
 	if elapsed >= int(_host.SERVER_WATCH_MS):
 		## Survived startup — mid-session crashes surface via WebSocket disconnect.
@@ -1018,6 +1193,7 @@ func check_server_health() -> void:
 ##   3. #172: stale uvx index -> one `--refresh` respawn.
 ##   4. Otherwise -> CRASHED, pointing at the Godot output log.
 func _diagnose_spawn_fast_exit(elapsed: int) -> void:
+	_log_spawn_exit_forensics()
 	var live: Dictionary = _host._probe_live_server_status_for_port(
 		ClientConfigurator.http_port()
 	)
@@ -1160,6 +1336,7 @@ func respawn_with_refresh() -> void:
 	if spawn_pid > 0:
 		_server_spawn_ms = Time.get_ticks_msec()
 		_server_exit_ms = 0
+		_spawn_dead_since_ms = 0
 		_server_keep_alive = keep_alive_env_set
 		var current_version := _expected_server_version()
 		_host._set_ws_auth_token(ws_token)
@@ -1295,8 +1472,85 @@ func recover_strong_port_occupant(port: int, wait_s: float, pre_kill_live: Dicti
 func teardown_for_editor_exit() -> void:
 	if _server_keep_alive:
 		detach_server()
-	else:
-		stop_server()
+		return
+	## #824: a backend we spawned may be keeping one or more MCP clients alive
+	## through their `godot-ai attach` bridges. Killing it because *this* editor
+	## is closing takes the server out from under them: an in-flight call can
+	## become TRANSPORT_OUTCOME_UNKNOWN, and every bridge has to establish a new
+	## backend before the next editor can reconnect. A live lease means the
+	## backend has consumers beyond this editor, so hand it over instead.
+	var leased := active_lease_count_at_exit()
+	if leased > 0:
+		## Give up kill authority along with the process: dropping the managed
+		## record means the next editor adopts it through the external branch
+		## rather than as a managed server it may kill. The server's own
+		## pid-file is deliberately left in place — it is the backend's
+		## publication, not our claim on it, and adoption reads it.
+		##
+		## The Python side remains the reaper of record: a plugin-spawned
+		## backend keeps its idle backstop armed (only keep_server_on_exit
+		## disarms it) and that backstop is lease-aware, so this defers the
+		## stop to "no editors AND no leases AND grace elapsed" rather than
+		## leaking the process.
+		_host._clear_managed_server_record()
+		detach_server(
+			"detaching server: %d attach lease(s) still held, leaving it to the "
+			% leased
+			+ "server's own idle reaper"
+		)
+		return
+	stop_server()
+
+
+## Active attach-bridge leases on the backend this editor manages, or 0 when
+## there is nothing to consult (#824).
+##
+## Returns 0 — preserving the historical kill-on-exit behavior — for every
+## uncertain case: no managed PID, a probe that fails or times out, a server
+## that does not identify as godot-ai, or one too old to publish the field.
+## That direction is deliberate. A false 0 costs what today already costs
+## (the backend is stopped and bridges reconnect); a false positive would
+## leave a process running on a guess.
+##
+## Bounded by the status probe's own timeout (SERVER_STATUS_PROBE_TIMEOUT_MS),
+## which is what keeps editor exit from hanging on a wedged HTTP server.
+func active_lease_count_at_exit() -> int:
+	var pid := int(_server_pid)
+	if pid <= 0:
+		return 0
+	## Only a process we can still prove is our godot-ai server earns the
+	## benefit of the doubt. The lease count comes from whoever answers on the
+	## port, which is not by itself proof that it IS the process we are about
+	## to stop — another editor's backend, or an attach-owned one, could hold
+	## the port after ours died. Requiring the same alive+branded proof
+	## `stop_server` uses before its kill closes that gap: without it, a
+	## stranger's leases could talk this editor out of stopping its own server.
+	##
+	## Failing this check is harmless either way. A dead PID has nothing to
+	## kill, and a recycled-but-unbranded PID is rejected by stop_server's own
+	## gate (#686) — both land on the historical path.
+	if not _host._pid_alive_for_proof(pid):
+		return 0
+	if not _host._pid_cmdline_is_godot_ai_for_proof(pid):
+		return 0
+	return active_lease_count(
+		_host._probe_live_server_status_for_port(ClientConfigurator.http_port())
+	)
+
+
+## Read the advisory lease count out of a `/godot-ai/status` payload.
+##
+## Gated on the payload identifying as godot-ai, so an unrelated process
+## answering on the port cannot talk this editor out of a clean stop. A
+## missing field means an older backend that predates #824; it reads as 0,
+## which keeps that pairing on today's behavior.
+static func active_lease_count(live: Dictionary) -> int:
+	if not _live_status_identifies_godot_ai(live):
+		return 0
+	var raw: Variant = live.get("active_lease_count")
+	if raw == null:
+		return 0
+	return maxi(0, int(raw))
 
 
 ## keep_server_on_exit (#800): editor teardown that leaves the server
@@ -1306,14 +1560,20 @@ func teardown_for_editor_exit() -> void:
 ## session's start_server walk adopts the survivor through the existing
 ## record-matches branch (#758/#774). Explicit stops (dock Restart,
 ## update reload) still route through stop_server and kill as before.
-func detach_server() -> void:
+## `log_reason` names why the server is being left alive; the default is the
+## keep_server_on_exit wording this function was written for. #824 reuses the
+## same bookkeeping for the active-lease handover, and a shared log line would
+## have reported the wrong cause for it.
+func detach_server(
+	log_reason: String = "keep_server_on_exit: leaving server running"
+) -> void:
 	_invalidate_async_startup()
 	_host._stop_server_watch()
 	var detached_pid := int(_server_pid)
 	_server_pid = -1
 	transition_state(McpServerStateScript.STOPPED)
 	if detached_pid > 0:
-		print("MCP | keep_server_on_exit: leaving server running (PID %d)" % detached_pid)
+		print("MCP | %s (PID %d)" % [log_reason, detached_pid])
 
 
 func stop_server() -> void:
@@ -1370,7 +1630,7 @@ func stop_server() -> void:
 	transition_state(McpServerStateScript.STOPPED)
 
 	## Server's `_pydantic_core.pyd` hard-link is now released — sweep
-	## stale uvx builds before they trip the next `uvx mcp-proxy`.
+	## stale uvx builds before they trip the next attach launcher.
 	UvCacheCleanup.purge_stale_builds()
 
 
@@ -1568,7 +1828,7 @@ func force_restart_server() -> void:
 	## Same rationale as `stop_server`: the server child python just
 	## released its `pydantic_core` mapping, so this is the only window in
 	## which the hard-linked copies under `builds-v0\.tmp*` are deletable.
-	## Sweep before respawning so the upcoming `uvx mcp-proxy` build doesn't
+	## Sweep before respawning so the next uvx attach build doesn't
 	## inherit the same cleanup-failure path that triggered the restart.
 	UvCacheCleanup.purge_stale_builds()
 	reset_for_force_restart()

@@ -15,3 +15,15 @@ func _init() -> void:
 		"windows": "$APPDATA/Zed/settings.json",
 	}
 	server_key_path = PackedStringArray(["context_servers"])
+	## Attach migration (#838). Current Zed's context_servers entries are an
+	## untagged serde enum discriminated by shape: `command` (string) + args/env
+	## → stdio, `url` → HTTP (zed.dev/docs/ai/mcp; settings_content/project.rs).
+	## BECAUSE the enum is untagged, HTTP-only keys left next to `command`
+	## (`url`, `headers`, `oauth`) make the entry match no variant and break it —
+	## removing them on migration is load-bearing, not cosmetic. `enabled`,
+	## `remote`, and `timeout` are user-state on the stdio variant.
+	command_shape = McpClient.CommandShape.FLAT
+	command_legacy_keys = PackedStringArray(["url", "headers", "oauth"])
+	command_user_fields = PackedStringArray(["enabled", "remote", "timeout", "env"])
+	command_timeout_fields = PackedStringArray(["timeout"])
+	command_supports_url_fallback = true
