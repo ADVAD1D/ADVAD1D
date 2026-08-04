@@ -565,7 +565,6 @@ skew = -0.251327
 texture = SubResource("GradientTexture2D_hibaj")
 
 [node name="BottomLight" type="PointLight2D" parent="MainLight2D" unique_id=499554263]
-visible = false
 texture_filter = 2
 position = Vector2(-0.53191495, 48.210022)
 scale = Vector2(1.39539, 0.648821)
