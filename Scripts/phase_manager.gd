@@ -52,11 +52,11 @@ var arena_enemy_configs = {
 		"can_retreat": true, 
 		"fire_range": 1500.0 },
 		
-	1: { "min_shoot": 0.2, 
-		"max_shoot": 0.3, 
-		"min_ship": 5.0, 
-		"max_ship": 6.0, 
-		"max_saw": 3.0, 
+	1: { "min_shoot": 0.2, #0.2
+		"max_shoot": 0.3, #0.3
+		"min_ship": 5.0, #5.0
+		"max_ship": 6.0, #6.0
+		"max_saw": 3.0, #3.0
 		"min_ship_spd": 400.0, 
 		"max_ship_spd": 650.0, 
 		"sep_radius": 300.0, 
