@@ -7,7 +7,7 @@ extends Node2D
 @export var shoot_interval: float = 0.5
 @export var spawn_distance_x: float = 6000.0 # Adjust according to the arena size
 @export_group("Audio")
-@export var laser_pitch_scale: float = 0.48
+@export var laser_pitch_scale: float = 0.60
 @export var laser_volume_db: float = -18.32
 
 var current_drone: AnimatedSprite2D = null
