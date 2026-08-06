@@ -6,6 +6,9 @@ extends Node2D
 @export var spawn_delay_max: float = 3.0
 @export var shoot_interval: float = 0.5
 @export var spawn_distance_x: float = 6000.0 # Adjust according to the arena size
+@export_group("Audio")
+@export var laser_pitch_scale: float = 0.48
+@export var laser_volume_db: float = -18.32
 
 var current_drone: AnimatedSprite2D = null
 var is_moving: bool = false
@@ -13,6 +16,7 @@ var is_moving: bool = false
 @onready var respawn_timer: Timer = Timer.new()
 
 var green_material: ShaderMaterial
+var laser_sound_player: AudioStreamPlayer2D
 
 func _ready() -> void:
 	# Create a shader to convert color from red to green without losing quality
@@ -35,6 +39,13 @@ func _ready() -> void:
 	add_child(respawn_timer)
 	respawn_timer.one_shot = true
 	respawn_timer.timeout.connect(_spawn_random_drone)
+	
+	laser_sound_player = AudioStreamPlayer2D.new()
+	laser_sound_player.stream = preload("res://Assets/Audio/laser_sound.wav")
+	laser_sound_player.volume_db = laser_volume_db
+	laser_sound_player.pitch_scale = laser_pitch_scale
+	laser_sound_player.bus = &"SFX"
+	add_child(laser_sound_player)
 	
 	# Start the cycle
 	_spawn_random_drone()
@@ -96,6 +107,10 @@ func _shoot_laser(spawn_pos: Vector2) -> void:
 	if EnemyLaserPool:
 		var laser = EnemyLaserPool.acquire(get_tree().current_scene, spawn_pos, Vector2.DOWN)
 		if laser:
+			# Play the laser sound at the spawn position
+			laser_sound_player.global_position = spawn_pos
+			laser_sound_player.play()
+			
 			# Apply the green shader to the sprite
 			if laser.has_node("Sprite2D"):
 				laser.get_node("Sprite2D").material = green_material
