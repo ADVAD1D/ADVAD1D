@@ -189,7 +189,7 @@ func play_glitch_effect(crt_material):
 	tween.chain().tween_property(crt_material, "shader_parameter/aberration", 1.0, 0.1)
 	tween.chain().tween_property(crt_material, "shader_parameter/aberration", -1.0, 0.1)
 	
-	# Se consolidó la animación para evitar que dos Tweens afecten 'aberration' a la vez
+	# Consolidated animation to prevent two Tweens from affecting 'aberration' simultaneously
 	tween.chain().tween_property(crt_material, "shader_parameter/aberration", 0.01, 0.1)
 	tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.01, 0.1)
 	tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.01, 0.1)
