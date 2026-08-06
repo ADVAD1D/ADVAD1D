@@ -46,6 +46,8 @@ uniform bool low_quality = false;
 
 // Generate random value
 vec2 random(vec2 uv) {
+    // Wrap to 0-2PI to prevent precision loss in sin() with large TIME values
+    uv = fract(uv / 6.28318530718) * 6.28318530718;
     uv = vec2(dot(uv, vec2(127.1, 311.7)), dot(uv, vec2(269.5, 183.3)));
     return -1.0 + 2.0 * fract(sin(uv) * 43758.5453123);
 }
@@ -92,7 +94,8 @@ float border(vec2 uv) {
 float vignette(vec2 uv) {
     uv *= 1.0 - uv.xy;
     float vig = uv.x * uv.y * 15.0;
-    return pow(vig, vignette_intensity * vignette_opacity);
+    // Using 0.00001 prevents the GPU error of calculating pow(0.0, exponent) which yields NaN
+    return pow(max(vig, 0.00001), vignette_intensity * vignette_opacity);
 }
 
 void fragment() {
@@ -128,6 +131,10 @@ void fragment() {
         text.b = texture(SCREEN_TEXTURE, text_uv).b;
     }
     text.a = 1.0;
+    
+    // IMPORTANT: Prevent overlapping additive explosions from generating Infinity values
+    // Inf * 0.0 (from scanlines) generates NaN (Not a Number) which renders as red triangles
+    text.rgb = clamp(text.rgb, vec3(0.0), vec3(100.0));
 
     // Apply CRT grille
     if (grille_opacity > 0.0) {
