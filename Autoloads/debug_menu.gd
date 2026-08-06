@@ -27,7 +27,8 @@ const DEFAULT_TTL: float = 0.5
 # --- State ---
 
 # Master switch: set to false to fully disable the menu (Tab does nothing).
-var enabled: bool = false
+##real variable reference to game manager toggle flag
+##var show_debug_menu: bool = GameManager.show_debug_menu
 
 # Toggle to only show text and hide all visual debug elements (colliders, rays, etc).
 var only_debug_text: bool = false:
@@ -82,7 +83,7 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Master switch off -> ignore Tab entirely.
-	if not enabled:
+	if not GameManager.show_debug_menu:
 		return
 	# _unhandled_input so normal UI can consume Tab first.
 	if event.is_action_pressed(TOGGLE_ACTION):
@@ -93,7 +94,7 @@ func _process(delta: float) -> void:
 	_expire(_rays, delta)
 	_expire(_points, delta)
 	# Master switch off -> force-close and stop updating (checked live).
-	if not enabled:
+	if not GameManager.show_debug_menu:
 		if _shown:
 			_apply_shown(false)
 		return
@@ -105,7 +106,7 @@ func _process(delta: float) -> void:
 # --- Public API ---
 
 func toggle() -> void:
-	if not enabled:
+	if not GameManager.show_debug_menu:
 		return
 	_apply_shown(not _shown)
 
