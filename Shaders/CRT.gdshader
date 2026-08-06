@@ -46,6 +46,8 @@ uniform bool low_quality = false;
 
 // Generate random value
 vec2 random(vec2 uv) {
+    // Envolver a 0-2PI para prevenir pérdida de precisión en sin() con tiempos altos
+    uv = fract(uv / 6.28318530718) * 6.28318530718;
     uv = vec2(dot(uv, vec2(127.1, 311.7)), dot(uv, vec2(269.5, 183.3)));
     return -1.0 + 2.0 * fract(sin(uv) * 43758.5453123);
 }
@@ -92,7 +94,8 @@ float border(vec2 uv) {
 float vignette(vec2 uv) {
     uv *= 1.0 - uv.xy;
     float vig = uv.x * uv.y * 15.0;
-    return pow(vig, vignette_intensity * vignette_opacity);
+    // Usar 0.00001 evita el error de GPU de calcular pow(0.0, exponente) que da NaN
+    return pow(max(vig, 0.00001), vignette_intensity * vignette_opacity);
 }
 
 void fragment() {
@@ -128,6 +131,10 @@ void fragment() {
         text.b = texture(SCREEN_TEXTURE, text_uv).b;
     }
     text.a = 1.0;
+    
+    // IMPORTANTE: Prevenir que explosiones aditivas superpuestas generen valores Infinitos
+    // Inf * 0.0 (de las scanlines) genera NaN (Not a Number) y se renderiza como triángulos rojos
+    text.rgb = clamp(text.rgb, vec3(0.0), vec3(100.0));
 
     // Apply CRT grille
     if (grille_opacity > 0.0) {
