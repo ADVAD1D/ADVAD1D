@@ -87,6 +87,23 @@ The project is organized into the following main folders:
   - In debug builds the service logs extra information via `_log_dev()`; those logs are suppressed in release builds.
   - Make sure `APP_TOKEN` is available via `EnvParser` and configure `GameManager` flags (`production_server_active`, `start_server`) before testing.
 
+## Web Export Architecture & Performance
+
+ADVAD features a web (HTML5) export that runs entirely within the browser. However, due to WebAssembly and Godot 4 export limitations, the web version operates in **Single-Threaded Mode**.
+
+### Why is performance lower on Web?
+Unlike the native desktop builds (Windows/Linux) which utilize Godot's multithreading capabilities to dispatch rendering, physics, and scripting across multiple CPU cores, the web version forces all engine subsystems to run sequentially on a single browser thread. 
+This hardware bottleneck, combined with the browser's execution overhead and WebGL2 limitations (compared to native Vulkan), results in significantly fewer system resources being available. Heavy GPU tasks, particularly complex pixel shaders and high-density particle systems, can severely impact framerates.
+
+### How we mitigate this (The `web_optimizer` Autoload)
+To ensure the game remains fast and responsive on browsers without maintaining two separate codebases, we implemented a dynamic degradation system via `Autoloads/web_optimizer.gd`.
+
+1. **Environment Detection:** Upon game initialization, the engine detects if the environment is a browser (`OS.has_feature("web")`).
+2. **Automated Shader Fallbacks:** The `web_optimizer.gd` singleton connects to the SceneTree's `node_added` signal. Every time a new scene loads, it recursively scans all `CanvasItem` nodes.
+3. **Low-Quality Flags:** If it detects a `ShaderMaterial` utilizing our heavy `CRT.gdshader`, it dynamically forces the `low_quality = true` parameter.
+4. **Shader Branching:** Inside the shader, this flag disables the most expensive mathematical operations (like multi-layered `sin()` film-grain noise), reducing the GPU instruction count per pixel drastically while preserving the core aesthetic.
+5. **Zero Desktop Overhead:** If the game is running natively, `web_optimizer.gd` immediately calls `queue_free()` on itself during `_ready()`, ensuring absolutely zero overhead or recursive tree-scanning for desktop players.
+
 ## Credits
 
 -   **Development and Design:** ANGELUS11 and Cro128
