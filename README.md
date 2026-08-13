@@ -104,6 +104,20 @@ To ensure the game remains fast and responsive on browsers without maintaining t
 4. **Shader Branching:** Inside the shader, this flag disables the most expensive mathematical operations (like multi-layered `sin()` film-grain noise), reducing the GPU instruction count per pixel drastically while preserving the core aesthetic.
 5. **Zero Desktop Overhead:** If the game is running natively, `web_optimizer.gd` immediately calls `queue_free()` on itself during `_ready()`, ensuring absolutely zero overhead or recursive tree-scanning for desktop players.
 
+## Memory Management & Object Pooling
+
+To maintain a stable frame rate (especially important in a bullet-hell environment and on lower-end/web platforms), the game uses an **Object Pooling** pattern for high-frequency objects, most notably the enemy lasers.
+
+### How it works (`Autoloads/enemy_laser_pool.gd`)
+Instead of calling `instantiate()` every time an enemy fires and `queue_free()` every time a laser hits a wall or player, the game uses a pre-allocated pool:
+1. **Pre-warming:** During startup (`_ready`), the `enemy_laser_pool.gd` singleton instantiates a set number of lasers (`PREWARM_COUNT = 40`) and immediately deactivates them, storing them in an `_available` array.
+2. **Acquisition:** When an enemy shoots, it calls `EnemyLaserPool.acquire()`. The pool pops an inactive laser from the array, moves it to the desired position, and calls `activate()` on it. If the pool is empty, it dynamically instantiates a new one to prevent breaking the game.
+3. **Deactivation & Recycling:** In the `enemy_laser.gd` script, when a bullet hits an object, it triggers `EnemyLaserPool.release(self)` instead of destroying itself. The `activate()` and `deactivate()` methods toggle the physics processing (`set_physics_process`), collision monitoring, and visibility. The pool then pushes the bullet back into the `_available` array for reuse.
+
+### Why is this important?
+- **Prevents GC Spikes:** Continuously creating and deleting nodes forces the engine's memory allocator to work overtime. In Godot, frequent `queue_free()` calls during intense combat can trigger garbage collection spikes, causing micro-stutters.
+- **CPU Efficiency:** Toggling a node's physics processing boolean (`set_physics_process(false)`) is magnitudes faster than removing it from the SceneTree and parsing a new PackedScene from disk/memory.
+
 ## Credits
 
 -   **Development and Design:** ANGELUS11 and Cro128

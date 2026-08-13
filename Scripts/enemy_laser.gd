@@ -1,10 +1,16 @@
 extends Area2D
+## Enemy Laser Projectile.
+## This node is designed to be managed by `EnemyLaserPool`. Instead of using `queue_free()`, 
+## it is activated and deactivated, hiding and disabling its physics/collision processing 
+## until it is needed again, drastically saving CPU overhead.
 
 @export var speed = 1400
 @export var enemy_laser_particles: PackedScene
 var direction = Vector2.ZERO
 var is_active: bool = false
 
+## Wakes up the laser from the pool. Resets its position, direction, and colors,
+## and turns on its physics processing and collision monitoring.
 func activate(spawn_position: Vector2, start_direction: Vector2) -> void:
 	global_position = spawn_position
 	set_direction(start_direction)
@@ -22,6 +28,8 @@ func activate(spawn_position: Vector2, start_direction: Vector2) -> void:
 	set_deferred("monitoring", true)
 	set_deferred("monitorable", true)
 
+## Puts the laser to sleep. Turns off physics and collision, and hides the sprite.
+## Used by `EnemyLaserPool` when recycling.
 func deactivate() -> void:
 	is_active = false
 	direction = Vector2.ZERO
@@ -34,8 +42,9 @@ func deactivate() -> void:
 func start(start_direction: Vector2):
 	set_direction(start_direction)
 
-# Raycast the current->next segment so fast bullets can't tunnel through the
-# thin arena walls (StaticBody2D, which Area2D never physically stops against).
+## Raycasts the current->next segment so fast bullets can't tunnel through the
+## thin arena walls (StaticBody2D, which Area2D never physically stops against).
+## Upon hit, it releases itself back to the pool instead of destroying itself.
 func _physics_process(delta: float) -> void:
 	var motion: Vector2 = direction * speed * delta
 	var space: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
@@ -49,8 +58,8 @@ func _physics_process(delta: float) -> void:
 		return
 	global_position += motion
 
-# Spawn the impact burst at the wall hit point, parented to the arena so it
-# outlives this bullet when it gets recycled back into the pool.
+## Spawns the impact burst at the wall hit point. Parented to the arena so it
+## outlives this bullet when it gets recycled back into the pool.
 func _spawn_impact_particles(at: Vector2) -> void:
 	if not enemy_laser_particles:
 		return
