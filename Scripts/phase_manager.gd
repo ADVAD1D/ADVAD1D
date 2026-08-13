@@ -58,7 +58,7 @@ var arena_enemy_configs = {
 		"max_ship": 6.0, #6.0
 		"max_saw": 3.0, #3.0
 		"min_ship_spd": 400.0, 
-		"max_ship_spd": 650.0, 
+		"max_ship_spd": 500.0, 
 		"sep_radius": 300.0, 
 		"sep_strength": 300.0, 
 		"can_retreat": false, 

@@ -581,7 +581,7 @@ player_node = NodePath("../PlayerInstance")
 safe_radius = 1650.0
 
 [node name="Timer" type="Timer" parent="AsteroidSpawner" unique_id=1699534625]
-wait_time = 0.08
+wait_time = 0.07
 autostart = true
 
 [node name="DeathZone" type="Area2D" parent="." unique_id=7960278]
