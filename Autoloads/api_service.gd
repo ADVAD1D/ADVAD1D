@@ -1,5 +1,8 @@
 extends Node
-
+## Singleton responsible for handling all HTTP communications with the ADVAD backend.
+## Uses multiple HTTPRequest nodes to allow concurrent requests (e.g., pinging the server
+## while checking the leaderboard) without blocking the thread or throwing errors.
+## Requires a valid APP_TOKEN injected via EnvParser for authentication.
 signal server_status_checked(is_online: bool)
 signal ai_response_received(text: String)
 signal request_failed(error_msg: String)
@@ -87,6 +90,8 @@ func _log_dev(message: String, respose_code: int) -> void:
 	else:
 		pass
 
+## Pings the root endpoint of the API to wake up the server (e.g., if hosted on a free tier like Render).
+## Emits `server_status_checked` upon completion.
 func wake_up_server():
 	if BASE_URL == "":
 		_log_message("API SERVICE: URL NOT FOUND IN THE CONSTANT")
@@ -97,12 +102,16 @@ func wake_up_server():
 	if response != OK:
 		_log_message("LOCAL ERROR TO CONNECT SERVER")
 		
+## Checks if the user's persistent device UID is already registered in the database.
+## Used for seamless auto-login on startup.
 func check_my_identity():
 	var url = BASE_URL + "/whoami"
 	_log_message("API SERVICE: Scanning digital DNA for auto-login...")
 	
 	_whoami_http.request(url, headers, HTTPClient.METHOD_GET)
 		
+## Sends a prompt to the AI integration endpoint.
+## Rejects the request if another AI query is currently in progress to prevent spam.
 func ask_godot_ai(prompt: String):
 	if BASE_URL.strip_edges().is_empty():
 		_log_message("API SERVICE: ERROR. URL IS EMPTY")
@@ -127,6 +136,8 @@ func ask_godot_ai(prompt: String):
 	if response != OK:
 		request_failed.emit("ERROR, CANNOT SEND THE REQUEST")
 		
+## Checks if a pilot name is available (not taken by another player).
+## Emits `name_check_completed` with a boolean indicating availability.
 func check_pilot_name(pilot_name: String):
 	if BASE_URL.strip_edges().is_empty():
 		_log_message("API ERROR: URL IS EMPTY")
@@ -148,6 +159,8 @@ func check_pilot_name(pilot_name: String):
 		_log_message("LOCAL ERROR: The name query could not be processed.")
 		name_check_completed.emit(false, "Local Network Error")
 		
+## Records the player's highest phase reached into the leaderboard database.
+## Fails silently (with a log/signal) if the request fails or is duplicated.
 func send_player_phase(player_name: String, last_phase: int):
 	if BASE_URL.strip_edges().is_empty():
 		_log_message("API ERROR: URL IS EMPTY")

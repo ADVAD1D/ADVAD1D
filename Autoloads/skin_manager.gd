@@ -1,10 +1,12 @@
+## Singleton that handles ship skin selection and stores the hardcoded catalog of all available ships.
+## NOTE: Persistence (save/load of selected_ship_index) lives in GameManager.
 extends Node
-signal ship_selection_changed(new_ship_data)
-# Handles ship skin selection and its data catalog.
-# NOTE: persistence (save/load of selected_ship_index) lives in GameManager.
 
-#this dictionary defines ships data (name, author name, texture)
-#this list start with index 0
+signal ship_selection_changed(new_ship_data)
+
+## Array of dictionaries defining all available ship skins.
+## Each dictionary contains "name" (String), "author" (String), and "texture" (Texture2D).
+## The index in this array corresponds to the ship's ID used in save files.
 var ship_data = [
 	{
 		"name": "ship1",

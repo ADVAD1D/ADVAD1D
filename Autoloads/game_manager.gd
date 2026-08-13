@@ -1,4 +1,7 @@
 extends Node
+## Central state manager for the game. Handles global variables such as score,
+## current arena phase, debug toggles, and feature flags. Also manages the 
+## persistence system (save/load) across different platforms (Web vs Desktop).
 
 #signals
 signal score_updated(new_score)
@@ -16,13 +19,19 @@ var phase_to_start: int = 1
 # Arenas Base Structure
 var current_arena_index: int = 0
 var arena_names: Array[String] = ["Arena 1", "Arena 2", "Arena 3"]
+# --- Feature Flags & Settings ---
 var is_shader_animation: bool = false
 var is_glitch_sound: bool = false
 var game_paused: bool = false
 var can_pause: bool = true
+
+# --- Debug & Environment Flags ---
 var show_debug: bool = false
 var show_debug_menu: bool = false
 var show_fps: bool = false
+
+## Forces the game to use Web-mode optimizations (e.g., lightweight shaders).
+## Used by web_optimizer.gd.
 var force_web_mode: bool = false
 #IMPORTANT: this bool change the value to _log_message function in some scripts!
 var is_debug_text : bool = false
@@ -31,10 +40,17 @@ var ai_last_response: String = ""
 var is_scroll_active: bool = false
 var start_server: bool = true
 var production_server_active = true
+
+## True if the game is running on HTML5/Web. Disables local file saving for config.
 var browser_support: bool = false
+
+## Toggles admin-specific UI options or abilities.
 var admin_control: bool = false
+
+## Toggles rotational movement vs absolute directional movement.
 var relative_control_active: bool = false
-#speedrun global variables
+
+# --- Speedrun Tracking ---
 var speedrun_mode_active: bool = false
 var is_speedrun_running: bool = false
 var speedrun_time: float = 0.0
@@ -79,6 +95,10 @@ func get_formatted_speedrun_time() -> String:
 	return "%02d:%02d.%03d" % [minutes, seconds, milliseconds]
 	
 #save and load data functions
+
+## Serializes and saves game configuration to user://save_game.json.
+## On Web builds (browser_support = true), it only saves the player's name 
+## as local file persistence is not fully supported or is constrained in browsers.
 func save_data():
 	var data: Dictionary
 	if browser_support == true:
