@@ -152,6 +152,14 @@ var command_supports_url_fallback: bool = false
 var command_transport_key: String = ""
 var command_transport_value: Variant = null
 
+## Whether this client's Windows stdio entry must launch through the
+## GUI-subsystem pythonw bootstrap (#827). The bootstrap exists for clients
+## that run console-subsystem MCP commands in a visible terminal (Codex);
+## Electron-family spawners hide child consoles themselves, and at least one
+## (Antigravity) hangs tool calls when handed a GUI-subsystem executable
+## (#863). Set false to write the plain console launcher on Windows.
+var needs_consoleless_launcher: bool = true
+
 ## Keys from the legacy transport that Configure must delete. Codex removes
 ## `url`, because Codex rejects a server entry containing both URL and stdio
 ## launch fields.

@@ -28,6 +28,11 @@ func _init() -> void:
 	command_initial_fields = {"disabled": false}
 	command_user_fields = PackedStringArray(["disabled", "disabledTools", "authProviderType", "env"])
 	command_supports_url_fallback = true
+	## Antigravity's spawner hangs stdio tool calls when the entry launches a
+	## GUI-subsystem pythonw.exe (#863), and it hides child console windows
+	## itself, so the visible-terminal problem the bootstrap solves (#827)
+	## never applies. Write the plain console launcher on Windows.
+	needs_consoleless_launcher = false
 	detect_paths = PackedStringArray(path_template.values() + [
 		"~/.gemini/antigravity/mcp_config.json",
 		"$USERPROFILE/.gemini/antigravity/mcp_config.json",

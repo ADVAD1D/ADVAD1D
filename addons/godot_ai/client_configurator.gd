@@ -571,6 +571,7 @@ static func _config_path_resolution_error(client: Client) -> String:
 # --- Strategy dispatch + verify (testable seam) --------------------------
 
 static func _dispatch_configure(client: Client, url: String, launch: Dictionary = {}) -> Dictionary:
+	launch = launch_for_client(client, launch)
 	match client.config_type:
 		"json":
 			return JsonStrategy.configure(client, SERVER_NAME, url, launch)
@@ -627,17 +628,17 @@ static func _dispatch_check_status_with_cli_path_details(
 		"json":
 			var launch := {}
 			if client.command_shape != Client.CommandShape.NONE:
-				launch = _resolved_or_discovered_launch(resolved_launch, launch_context)
+				launch = _resolved_or_discovered_launch(client, resolved_launch, launch_context)
 			return JsonStrategy.check_status_details(client, SERVER_NAME, url, launch)
 		"toml":
 			var launch := {}
 			if client.command_shape != Client.CommandShape.NONE:
-				launch = _resolved_or_discovered_launch(resolved_launch, launch_context)
+				launch = _resolved_or_discovered_launch(client, resolved_launch, launch_context)
 			return TomlStrategy.check_status_details(client, SERVER_NAME, url, launch)
 		"yaml":
 			var yaml_launch := {}
 			if client.command_shape != Client.CommandShape.NONE:
-				yaml_launch = _resolved_or_discovered_launch(resolved_launch, launch_context)
+				yaml_launch = _resolved_or_discovered_launch(client, resolved_launch, launch_context)
 			return YamlStrategy.check_status_details(client, SERVER_NAME, url, yaml_launch)
 		"cli":
 			# Command-shape CLI clients register through their CLI, but the entry
@@ -647,7 +648,7 @@ static func _dispatch_check_status_with_cli_path_details(
 			# pin, or exclusion list — which scanning `mcp list` stdout cannot,
 			# so it is preferred even when the CLI binary resolves.
 			if client.command_shape != Client.CommandShape.NONE and client.has_json_fallback():
-				var command_launch := _resolved_or_discovered_launch(resolved_launch, launch_context)
+				var command_launch := _resolved_or_discovered_launch(client, resolved_launch, launch_context)
 				return JsonStrategy.check_status_details(client, SERVER_NAME, url, command_launch)
 			var resolved_cli := cli_path if not cli_path.is_empty() else CliStrategy.resolve_cli_path(client)
 			# #463: with no CLI binary, read the JSON fallback config so a
@@ -655,23 +656,24 @@ static func _dispatch_check_status_with_cli_path_details(
 			if resolved_cli.is_empty() and client.has_json_fallback():
 				var fallback_launch := {}
 				if client.command_shape != Client.CommandShape.NONE:
-					fallback_launch = _resolved_or_discovered_launch(resolved_launch, launch_context)
+					fallback_launch = _resolved_or_discovered_launch(client, resolved_launch, launch_context)
 				return JsonStrategy.check_status_details(client, SERVER_NAME, url, fallback_launch)
 			var cli_launch := {}
 			if client.command_shape != Client.CommandShape.NONE:
-				cli_launch = _resolved_or_discovered_launch(resolved_launch, launch_context)
+				cli_launch = _resolved_or_discovered_launch(client, resolved_launch, launch_context)
 			return CliStrategy.check_status_details(client, SERVER_NAME, url, resolved_cli, cli_launch)
 	return {"status": Client.Status.NOT_CONFIGURED, "error_msg": ""}
 
 
 static func _resolved_or_discovered_launch(
-	resolved_launch: Dictionary, launch_context: Dictionary
+	client: Client, resolved_launch: Dictionary, launch_context: Dictionary
 ) -> Dictionary:
-	return (
+	var launch := (
 		resolved_launch
 		if not resolved_launch.is_empty()
 		else resolve_attach_launch(launch_context)
 	)
+	return launch_for_client(client, launch)
 
 
 ## After a configure/remove returns ok, re-read the live status. If it doesn't
@@ -715,7 +717,7 @@ static func manual_command(id: String) -> String:
 		return "Config path unavailable: %s" % path_error
 	var context := capture_launch_context() if client.command_shape != Client.CommandShape.NONE else {}
 	var launch := (
-		resolve_attach_launch(context)
+		launch_for_client(client, resolve_attach_launch(context))
 		if client.command_shape != Client.CommandShape.NONE
 		else {}
 	)
@@ -917,12 +919,40 @@ static func _finalize_attach_launch(
 			"Windows requires pythonw.exe to launch the MCP bridge without opening a terminal window. Repair this Python or uv installation, then retry Configure."
 		)
 
+	## `console_command`/`console_args` carry the unwrapped console-subsystem
+	## launch for clients that opt out of pythonw via
+	## `needs_consoleless_launcher = false` (#863). Strategies only consume
+	## `command`/`args`/`ok`; `launch_for_client` swaps the shapes per client.
 	if tier == "dev_venv":
-		return {"ok": true, "tier": tier, "command": pythonw, "args": args}
+		return {
+			"ok": true, "tier": tier, "command": pythonw, "args": args,
+			"console_command": command, "console_args": args,
+		}
 
 	var wrapped_args: Array[String] = ["-c", _WINDOWS_STDIO_BOOTSTRAP, command]
 	wrapped_args.append_array(args)
-	return {"ok": true, "tier": tier, "command": pythonw, "args": wrapped_args}
+	return {
+		"ok": true, "tier": tier, "command": pythonw, "args": wrapped_args,
+		"console_command": command, "console_args": args,
+	}
+
+
+## Select the launch shape a specific client should see. Clients with
+## `needs_consoleless_launcher = false` (Antigravity, #863) get the plain
+## console command captured by `_finalize_attach_launch`; everyone else keeps
+## the pythonw shape unchanged. Idempotent: the returned dict carries no
+## console keys, so a second application is a no-op.
+static func launch_for_client(client: Client, launch: Dictionary) -> Dictionary:
+	if client == null or client.needs_consoleless_launcher:
+		return launch
+	if not launch.has("console_command"):
+		return launch
+	var selected := launch.duplicate(true)
+	selected["command"] = selected["console_command"]
+	selected["args"] = selected["console_args"]
+	selected.erase("console_command")
+	selected.erase("console_args")
+	return selected
 
 
 static func _resolve_consoleless_python(

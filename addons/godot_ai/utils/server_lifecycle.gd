@@ -151,9 +151,14 @@ var _active_blocking_thread: Thread = null
 ##
 ## Returns null (without joining) when `_invalidate_async_startup` took
 ## ownership of the thread mid-flight — the walk is stale at that point
-## and must bail at its next staleness check, so callers assign the
-## result to an untyped local BEFORE the staleness check (a typed
-## assignment would trip on the null first).
+## and must bail. Callers therefore assign the result to an untyped
+## local and bail on `_async_stale(...) or result == null` BEFORE any
+## typed use — a typed assignment (or a bool()/int() constructor, both
+## of which have no Nil form) trips on the null first. The null check is
+## not redundant with the generation check: a caller that loses the slot
+## without a generation bump — an invariant violation, but exactly what
+## a concurrent fire-and-forget `_run_blocking` user produces — must
+## still unwind instead of crashing on the Nil.
 func _run_blocking(work: Callable) -> Variant:
 	if not defer_blocking_work:
 		return work.call()
@@ -407,7 +412,12 @@ static func _managed_record_has_version_drift(record_version: String, current_ve
 
 # ---- Incompatible-server bookkeeping ----------------------------------
 
-func _set_incompatible_server(live: Dictionary, expected_version: String, port: int) -> void:
+func _set_incompatible_server(
+	live: Dictionary,
+	expected_version: String,
+	port: int,
+	caller_owns_worker_slot := false
+) -> void:
 	## Latches the incompatible diagnosis into manager state and asks
 	## the dock to re-sweep client rows so they don't show stale green.
 	## Threads the caller's `live` snapshot through the recovery proof
@@ -420,10 +430,25 @@ func _set_incompatible_server(live: Dictionary, expected_version: String, port: 
 	## either. Everything user-visible (status message, connection block,
 	## version-check disarm) is latched synchronously before the first
 	## await; only the recovery verdict and the suggested-port diagnostic
-	## arrive with the worker. Sync callers (handshake verdicts, the
-	## force-restart failure arm) fire-and-forget the tail; the startup
-	## walk awaits it so `_run_blocking`'s single-active-worker tracking
-	## keeps one owner at a time.
+	## arrive with the worker.
+	##
+	## `_run_blocking` tracks a single active worker, so the tail below
+	## needs exclusive ownership of that slot. The startup walk awaits
+	## this call with `caller_owns_worker_slot=true` — it already owns the
+	## slot and serializes the tail behind its own blocking ops. Sync
+	## callers (the handshake verdicts via `handle_server_version_*`, the
+	## force-restart failure arm) fire-and-forget the tail and leave the
+	## flag false, so the head takes ownership for them: a handshake
+	## verdict lands from `_process` while a startup walk can still be
+	## suspended in `_run_blocking`, and starting the tail's worker then
+	## would steal the slot — the walk's op is orphaned from the
+	## `_invalidate_async_startup` join guarantee and its resume gets a
+	## null without a generation bump (the Nil-into-Dictionary crash on
+	## the incompatible-occupant walk). Cancelling the walk first mirrors
+	## the recovery click (#712): the diagnosis in hand supersedes
+	## whatever the walk was still probing for.
+	if not caller_owns_worker_slot:
+		_invalidate_async_startup()
 	transition_state(McpServerStateScript.INCOMPATIBLE)
 	_connection_blocked = true
 	_server_expected_version = expected_version
@@ -464,7 +489,7 @@ func _set_incompatible_server(live: Dictionary, expected_version: String, port: 
 			return {"proof": "", "pids": []}
 		return _host._evaluate_recovery_port_occupant_proof(port, live, record)
 	)
-	if _async_stale(async_gen):
+	if _async_stale(async_gen) or proof_result == null:
 		return
 	var proof: Dictionary = proof_result
 	var proof_name := str(proof.get("proof", ""))
@@ -481,7 +506,7 @@ func _set_incompatible_server(live: Dictionary, expected_version: String, port: 
 		var suggested_result: Variant = await _run_blocking(func() -> Variant:
 			return ClientConfigurator.suggest_free_port(port + 1)
 		)
-		if _async_stale(async_gen):
+		if _async_stale(async_gen) or suggested_result == null:
 			return
 		print("MCP | port %d occupant not recoverable (no ownership proof); suggested free port %d (set godot_ai/http_port)" % [port, int(suggested_result)])
 	## Second sweep so the dock's recovery affordance reflects the verdict
@@ -698,11 +723,12 @@ func _start_server_impl(async_gen: int) -> void:
 	## The worker closures re-check the host: the plugin can be freed while
 	## a bounded shell probe is still running, and the generation check only
 	## protects state after resume, not calls inside the task (#682 review).
-	var port_in_use := bool(await _run_blocking(func() -> Variant:
+	var port_in_use_result: Variant = await _run_blocking(func() -> Variant:
 		return is_instance_valid(_host) and _host._is_port_in_use(port)
-	))
-	if _async_stale(async_gen):
+	)
+	if _async_stale(async_gen) or port_in_use_result == null:
 		return
+	var port_in_use := bool(port_in_use_result)
 	if not port_in_use:
 		## #745: after an editor crash (or under multi-editor churn) the
 		## managed server keeps running, yet the bind probe can still say
@@ -722,7 +748,7 @@ func _start_server_impl(async_gen: int) -> void:
 				return {}
 			return _host._probe_live_server_status_for_port(port)
 		)
-		if _async_stale(async_gen):
+		if _async_stale(async_gen) or evidence_result == null:
 			return
 		var evidence: Dictionary = evidence_result
 		if _live_status_identifies_godot_ai(evidence):
@@ -745,7 +771,7 @@ func _start_server_impl(async_gen: int) -> void:
 				return {}
 			return _host._probe_live_server_status_for_port(port)
 		)
-		if _async_stale(async_gen):
+		if _async_stale(async_gen) or live_result == null:
 			return
 		var live: Dictionary = live_result
 		var live_version := str(_host._verified_status_version(live))
@@ -770,7 +796,7 @@ func _start_server_impl(async_gen: int) -> void:
 					return {"proof": "", "pids": []}
 				return _host._evaluate_strong_port_occupant_proof(port, live, record)
 			)
-			if _async_stale(async_gen):
+			if _async_stale(async_gen) or adoption_proof_result == null:
 				return
 			var adoption_proof: Dictionary = adoption_proof_result
 			var proof_pids: Array[int] = []
@@ -810,15 +836,17 @@ func _start_server_impl(async_gen: int) -> void:
 					return {}
 				return _host._probe_live_server_status_for_port(port)
 			)
-			if _async_stale(async_gen):
+			if _async_stale(async_gen) or post_recovery_result == null:
 				return
 			var post_recovery_live: Dictionary = post_recovery_result
-			## Awaited (#712): the diagnosis tail runs its own _run_blocking
-			## proof, and the walk must stay the single owner of the
-			## active-worker slot until that lands. The status message is
-			## latched before the tail's first await, so the push_warning
-			## below reads the final text either way.
-			await _set_incompatible_server(post_recovery_live, current_version, port)
+			## Awaited with caller_owns_worker_slot=true (#712): the
+			## diagnosis tail runs its own _run_blocking proof, and the walk
+			## stays the single owner of the active-worker slot by
+			## serializing that tail behind this await instead of letting it
+			## re-take the slot. The status message is latched before the
+			## tail's first await, so the push_warning below reads the final
+			## text either way.
+			await _set_incompatible_server(post_recovery_live, current_version, port, true)
 			if _async_stale(async_gen):
 				return
 			_startup_path = McpStartupPathScript.INCOMPATIBLE
@@ -836,7 +864,7 @@ func _start_server_impl(async_gen: int) -> void:
 	var server_cmd_result: Variant = await _run_blocking(func() -> Variant:
 		return ClientConfigurator.get_server_command()
 	)
-	if _async_stale(async_gen):
+	if _async_stale(async_gen) or server_cmd_result == null:
 		return
 	var server_cmd: Array = server_cmd_result
 	if server_cmd.is_empty():
@@ -1432,7 +1460,7 @@ func recover_strong_port_occupant(port: int, wait_s: float, pre_kill_live: Dicti
 			return {"proof": "", "pids": []}
 		return _host._evaluate_strong_port_occupant_proof(port, pre_kill_live, record)
 	)
-	if _async_stale(async_gen):
+	if _async_stale(async_gen) or proof_result == null:
 		return false
 	var proof: Dictionary = proof_result
 	var targets: Array[int] = []
@@ -1441,7 +1469,7 @@ func recover_strong_port_occupant(port: int, wait_s: float, pre_kill_live: Dicti
 		return false
 
 	print("MCP | strong proof: %s" % str(proof.get("proof", "")))
-	var freed := bool(await _run_blocking(func() -> Variant:
+	var freed_result: Variant = await _run_blocking(func() -> Variant:
 		if not is_instance_valid(_host):
 			return false
 		## verify_brand=true: the proof above ran in a separate _run_blocking
@@ -1452,10 +1480,10 @@ func recover_strong_port_occupant(port: int, wait_s: float, pre_kill_live: Dicti
 			print("MCP | killed pids %s on port %d" % [str(killed), port])
 		_host._wait_for_port_free(port, wait_s)
 		return not bool(_host._is_port_in_use(port))
-	))
-	if _async_stale(async_gen):
+	)
+	if _async_stale(async_gen) or freed_result == null:
 		return false
-	if not freed:
+	if not bool(freed_result):
 		return false
 
 	_host._clear_managed_server_record()
@@ -1704,7 +1732,7 @@ func recover_incompatible_server() -> bool:
 			return {"proof": "", "pids": []}
 		return _host._evaluate_recovery_port_occupant_proof(port, {}, record)
 	)
-	if _async_stale(async_gen):
+	if _async_stale(async_gen) or proof_result == null:
 		return false
 	var proof: Dictionary = proof_result
 	var targets: Array[int] = []
@@ -1729,7 +1757,7 @@ func recover_incompatible_server() -> bool:
 		_host._wait_for_port_free(port, 5.0)
 		return not bool(_host._is_port_in_use(port))
 	)
-	if _async_stale(async_gen):
+	if _async_stale(async_gen) or freed_result == null:
 		return false
 	if not bool(freed_result):
 		## Kill failed; re-latch INCOMPATIBLE so the dock keeps the
