@@ -186,6 +186,10 @@ func reset_score() -> void:
 	can_add_score = true
 	score_updated.emit(score)
 	
+## Internal logging system for development tracking.
+## Parses heterogeneous input messages (Strings, Arrays, mixed types) into a single 
+## standardized String to prevent crashes and ensure clean console output.
+## Only prints when `is_debug_text` is active in the environment.
 func _log_message(message):
 	if is_debug_text == true:
 		var final_string = ""

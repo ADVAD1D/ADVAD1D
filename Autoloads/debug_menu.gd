@@ -31,7 +31,7 @@ const DEFAULT_TTL: float = 0.5
 ##var show_debug_menu: bool = GameManager.show_debug_menu
 
 # Toggle to only show text and hide all visual debug elements (colliders, rays, etc).
-var only_debug_text: bool = false:
+var only_debug_text: bool = true:
 	set(val):
 		only_debug_text = val
 		_apply_shown(_shown)
