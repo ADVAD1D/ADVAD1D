@@ -225,16 +225,16 @@ func _draw() -> void:
 func die():
 	if player_died:
 		return
-	
+	## The perform death effects func instanciates every time to death and animate the tween
 	_perform_death_effects()
 	died.emit()
 
 func vanish():
 	if player_died:
 		return
-	
 	_perform_death_effects()
-
+	
+## Simple perform death effect: the sprite turned to red color in modulate
 func _perform_death_effects():
 	player_died = true
 	

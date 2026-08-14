@@ -371,7 +371,7 @@ func fade_out_objective_label():
 	if browser_support == true:
 		objective_label.text = "CONGRATULATIONS!"
 	elif GameManager.current_arena_index == 1:
-		objective_label.text = "bWVudGFs"
+		objective_label.text = "bWVudGFs" #base64 encrypted text easter egg
 	else:
 		objective_label.text = "> (ツ)"
 		
