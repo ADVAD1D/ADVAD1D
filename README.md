@@ -118,6 +118,35 @@ Instead of calling `instantiate()` every time an enemy fires and `queue_free()` 
 - **Prevents GC Spikes:** Continuously creating and deleting nodes forces the engine's memory allocator to work overtime. In Godot, frequent `queue_free()` calls during intense combat can trigger garbage collection spikes, causing micro-stutters.
 - **CPU Efficiency:** Toggling a node's physics processing boolean (`set_physics_process(false)`) is magnitudes faster than removing it from the SceneTree and parsing a new PackedScene from disk/memory.
 
+## Development
+
+If you are setting up the project for development and contributing to the AI integrations, you will need to configure the Model Context Protocol (MCP) connection via the `godot-ai` plugin.
+
+### Prerequisites
+- **Godot 4.5+** (4.6 Engine Version)
+- **uv** (for the Python server dependencies)
+- **An MCP client** (Claude Code | Codex | Antigravity)
+
+### Installing `uv`
+We use `uv` to manage the Python dependencies required for the MCP connection. You can install it using the standalone scripts or your preferred package manager:
+
+**Standalone Installers:**
+- **macOS / Linux:** `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- **Windows (PowerShell):** `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+
+**Package Managers:**
+- **Arch:** `sudo pacman -S uv`
+- **Debian / Ubuntu:** `sudo apt install uv`
+- **Fedora:** `sudo dnf install uv`
+- **macOS (Homebrew):** `brew install uv`
+
+### Installing the Plugin (From Source)
+If the plugin is missing from your local repository or you want to update to the latest version, install it from source:
+```bash
+git clone https://github.com/hi-godot/godot-ai.git
+cp -r godot-ai/plugin/addons/godot_ai your-project/addons/
+```
+
 ## Credits
 
 -   **Development and Design:** ANGELUS11 and Cro128

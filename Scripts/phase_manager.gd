@@ -413,5 +413,6 @@ func _log_message(message):
 	else:
 		return
 
+#stop powerup spawners in finish all phases to avoid entities memory leaks
 func _stop_powerup_spawners():
 	get_tree().call_group("powerup_spawners", "stop")
