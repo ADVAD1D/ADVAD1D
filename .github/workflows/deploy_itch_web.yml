@@ -5,10 +5,10 @@ on:
   workflow_dispatch: 
 
 env:
-  GODOT_VERSION: 4.6-stable
-  GODOT_EXECUTABLE_URL: https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_linux.x86_64.zip
-  GODOT_TEMPLATES_URL: https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_export_templates.tpz
-  EXPORT_TEMPLATE_DIR: 4.6.stable 
+  GODOT_VERSION: 4.7.1-stable
+  GODOT_EXECUTABLE_URL: https://github.com/godotengine/godot/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip
+  GODOT_TEMPLATES_URL: https://github.com/godotengine/godot/releases/download/4.7.1-stable/Godot_v4.7.1-stable_export_templates.tpz
+  EXPORT_TEMPLATE_DIR: 4.7.1-stable
 
 jobs:
   export-and-publish:
