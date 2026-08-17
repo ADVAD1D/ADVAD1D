@@ -5,11 +5,14 @@ extends Control
 @onready var objective_label: Label = $ObjectiveLabel
 @onready var fps_label: Label = $FPSContainer/FPSLabel
 @onready var speedrun_label: Label = $SpeedrunLabel
+@onready var mobile_joystick: VirtualJoystick = $CanvasLayer/VirtualJoystick
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var phase_manager = get_tree().root.get_node("Main/PhaseNode") # Replace with function body.
 	fps_toggled()
+	if not GameManager.mobile_mode_active:
+		mobile_joystick.hide()
 	if not GameManager.speedrun_mode_active:
 		speedrun_label.hide()
 	else:

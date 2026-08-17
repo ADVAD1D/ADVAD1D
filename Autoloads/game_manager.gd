@@ -25,6 +25,8 @@ var is_glitch_sound: bool = false
 var game_paused: bool = false
 var can_pause: bool = true
 
+# mobile compatibility bool
+var mobile_mode_active: bool = true
 # --- Debug & Environment Flags ---
 var show_debug: bool = false
 var show_debug_menu: bool = false

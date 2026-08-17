@@ -276,3 +276,10 @@ func _log_message(message):
 		print_rich("[color=yellow][DEV LOG][/color] " + final_string)
 	else:
 		return
+
+func _exit_tree() -> void:
+	# Release inputs to prevent ghost movement from the virtual joystick on scene restart
+	Input.action_release("Move_Left")
+	Input.action_release("Move_Right")
+	Input.action_release("Move_Up")
+	Input.action_release("Move_Down")
