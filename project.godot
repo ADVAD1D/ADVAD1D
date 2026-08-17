@@ -40,6 +40,7 @@ WebOptimizer="*res://Autoloads/web_optimizer.gd"
 EnemyLaserPool="*res://Autoloads/enemy_laser_pool.gd"
 FontManager="*res://Autoloads/font_manager.gd"
 DebugMenu="*res://Autoloads/debug_menu.gd"
+MobileOptimizer="*res://Autoloads/mobile_optimizer.gd"
 _mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
 
 [display]
