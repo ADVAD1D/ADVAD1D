@@ -104,6 +104,18 @@ To ensure the game remains fast and responsive on browsers without maintaining t
 4. **Shader Branching:** Inside the shader, this flag disables the most expensive mathematical operations (like multi-layered `sin()` film-grain noise), reducing the GPU instruction count per pixel drastically while preserving the core aesthetic.
 5. **Zero Desktop Overhead:** If the game is running natively, `web_optimizer.gd` immediately calls `queue_free()` on itself during `_ready()`, ensuring absolutely zero overhead or recursive tree-scanning for desktop players.
 
+## Mobile Export Architecture & Optimization
+
+When compiling for Android or iOS, ADVAD encounters specific hardware quirks regarding touch inputs, extremely high-resolution displays, and high-refresh-rate screens (e.g., 90Hz or 120Hz).
+
+### How we mitigate this (The `MobileOptimizer` Autoload)
+To ensure the mobile experience remains smooth and responsive without draining the device's battery, we use the `Autoloads/mobile_optimizer.gd` singleton:
+
+1. **Environment Detection:** Upon startup, it checks if `OS.get_name()` is "Android" or "iOS". If so, it automatically forces `GameManager.mobile_mode_active = true`, initializing the Virtual Joystick on the HUD.
+2. **Frame Pacing & FPS Capping:** On modern phones with 90Hz+ screens, running Godot's physics and rendering loops unrestrained can cause severe frame pacing issues. The game may run at irregular rates like 70-80 FPS, which leads to desynced frame intervals and noticeable micro-stuttering during virtual joystick movement. To fix this, the optimizer strictly limits the engine to 60 FPS (`Engine.max_fps = 60`), stabilizing the physics interpolation and ensuring smooth touch movement.
+3. **Automated Shader Downgrades:** Similar to the web optimizer, it hooks into the `node_added` signal to dynamically inject the `low_quality = true` parameter into any active CRT `ShaderMaterial`. This prevents the phone's GPU from evaluating expensive distortion mathematics on 2K/4K displays.
+4. **Wake Lock:** Forces `DisplayServer.keep_screen_on = true` to prevent the device from sleeping when the player holds a single finger on the joystick for extended periods.
+
 ## Memory Management & Object Pooling
 
 To maintain a stable frame rate (especially important in a bullet-hell environment and on lower-end/web platforms), the game uses an **Object Pooling** pattern for high-frequency objects, most notably the enemy lasers.
