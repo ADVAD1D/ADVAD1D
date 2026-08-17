@@ -271,8 +271,13 @@ func _update_overlay_text() -> void:
 	# Discord Status
 	network_lines.append("")
 	network_lines.append("== DISCORD ==")
-	if ClassDB.class_exists("DiscordRPC"):
-		var is_working = DiscordRPC.get_is_discord_working()
+	if Engine.has_singleton("DiscordRPC"):
+		var discord = Engine.get_singleton("DiscordRPC")
+		var is_working = discord.call("get_is_discord_working")
+		network_lines.append("Working: %s" % str(is_working))
+	elif get_tree().root.has_node("DiscordRPC"):
+		var discord = get_tree().root.get_node("DiscordRPC")
+		var is_working = discord.call("get_is_discord_working")
 		network_lines.append("Working: %s" % str(is_working))
 	else:
 		network_lines.append("Plugin Not Loaded")
