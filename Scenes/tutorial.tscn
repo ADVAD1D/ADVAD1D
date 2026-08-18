@@ -17,6 +17,7 @@
 [ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scripts/ambient_particles.gd" id="12_2nb4t"]
 [ext_resource type="AudioStream" uid="uid://bwoq355ggrir4" path="res://Assets/Audio/351564__bertrof__game-sound-correct-with-delay.wav" id="12_ap3ea"]
 [ext_resource type="Texture2D" uid="uid://bqegjjrpcw6r3" path="res://Assets/Sprites/Buttons/joystick-behind.png" id="17_dxsep"]
+[ext_resource type="Texture2D" uid="uid://c3nt5r6awyif4" path="res://Assets/Sprites/Buttons/dash_button.png" id="17_lexqi"]
 [ext_resource type="Texture2D" uid="uid://bvsm651l64kcs" path="res://Assets/Sprites/Buttons/joystick-front.png" id="18_lexqi"]
 [ext_resource type="Texture2D" uid="uid://cbnksbra3vaqx" path="res://Assets/Sprites/Buttons/shoot_button_unpressed.png" id="19_pkgwa"]
 
@@ -263,6 +264,18 @@ size = Vector2(164.5, 20)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rp1ed"]
 size = Vector2(385.732, 45.4165)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_radxo"]
+texture = ExtResource("17_dxsep")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1cu4j"]
+texture = ExtResource("18_lexqi")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_djl3p"]
+texture = ExtResource("17_dxsep")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_73805"]
+texture = ExtResource("18_lexqi")
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_bbpun"]
 shader = ExtResource("6_h2ono")
 shader_parameter/overlay = true
@@ -329,18 +342,6 @@ scale_max = 40.0
 color_ramp = SubResource("GradientTexture1D_jkdf5")
 color_initial_ramp = SubResource("GradientTexture1D_6iyac")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_radxo"]
-texture = ExtResource("17_dxsep")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1cu4j"]
-texture = ExtResource("18_lexqi")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_djl3p"]
-texture = ExtResource("17_dxsep")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_73805"]
-texture = ExtResource("18_lexqi")
-
 [node name="Tutorial" type="Node2D" unique_id=1756924719]
 script = ExtResource("1_ys4pu")
 transition_sound = ExtResource("12_ap3ea")
@@ -353,6 +354,7 @@ offset_top = -202922.53
 offset_right = -250234.86
 offset_bottom = -202882.53
 scale = Vector2(110.67999, 110.67999)
+mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1165789232]
@@ -382,6 +384,7 @@ offset_top = -1816.9999
 offset_right = -2201.0
 offset_bottom = -1776.9999
 scale = Vector2(110.67999, 110.67999)
+mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="PlayerInstance" parent="." unique_id=115402973 instance=ExtResource("2_i6t4g")]
@@ -758,6 +761,38 @@ position_smoothing_enabled = true
 script = ExtResource("4_i6t4g")
 player_target = NodePath("../PlayerInstance")
 
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1837734082]
+
+[node name="VirtualJoystick" type="VirtualJoystick" parent="CanvasLayer" unique_id=1878231151]
+offset_left = 85.0
+offset_top = 180.0
+offset_right = 130.0
+offset_bottom = 230.0
+scale = Vector2(0.73858047, 0.73858047)
+theme_override_styles/normal_joystick = SubResource("StyleBoxTexture_radxo")
+theme_override_styles/normal_tip = SubResource("StyleBoxTexture_1cu4j")
+theme_override_styles/pressed_joystick = SubResource("StyleBoxTexture_djl3p")
+theme_override_styles/pressed_tip = SubResource("StyleBoxTexture_73805")
+joystick_mode = 1
+tip_size = 75.0
+clampzone_ratio = 2.0
+action_left = &"Move_Left"
+action_right = &"Move_Right"
+action_up = &"Move_Up"
+action_down = &"Move_Down"
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="CanvasLayer" unique_id=985425159]
+position = Vector2(445, 170)
+scale = Vector2(1.9772272, 1.9772272)
+texture_normal = ExtResource("19_pkgwa")
+action = "Shoot"
+
+[node name="TouchScreenButton2" type="TouchScreenButton" parent="CanvasLayer" unique_id=907076504]
+position = Vector2(391, 151)
+scale = Vector2(1.56, 1.56)
+texture_normal = ExtResource("17_lexqi")
+action = "dash"
+
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=686653617]
 
 [node name="ColorRect" type="ColorRect" parent="UILayer" unique_id=11868472]
@@ -771,6 +806,7 @@ offset_right = 1414.0
 offset_bottom = 3796.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="PauseMenu" type="CanvasLayer" parent="." unique_id=874881202]
 process_mode = 3
@@ -823,32 +859,6 @@ amount = 200
 lifetime = 10.0
 process_material = SubResource("ParticleProcessMaterial_pkgwa")
 script = ExtResource("12_2nb4t")
-
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1837734082]
-
-[node name="VirtualJoystick" type="VirtualJoystick" parent="CanvasLayer" unique_id=1878231151]
-offset_left = 70.0
-offset_top = 181.0
-offset_right = 110.0
-offset_bottom = 231.0
-scale = Vector2(0.73858047, 0.73858047)
-theme_override_styles/normal_joystick = SubResource("StyleBoxTexture_radxo")
-theme_override_styles/normal_tip = SubResource("StyleBoxTexture_1cu4j")
-theme_override_styles/pressed_joystick = SubResource("StyleBoxTexture_djl3p")
-theme_override_styles/pressed_tip = SubResource("StyleBoxTexture_73805")
-joystick_mode = 1
-tip_size = 75.0
-clampzone_ratio = 2.0
-action_left = &"Move_Left"
-action_right = &"Move_Right"
-action_up = &"Move_Up"
-action_down = &"Move_Down"
-
-[node name="TouchScreenButton" type="TouchScreenButton" parent="CanvasLayer" unique_id=985425159]
-position = Vector2(416, 172)
-scale = Vector2(1.9772272, 1.9772272)
-texture_normal = ExtResource("19_pkgwa")
-action = "Shoot"
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]

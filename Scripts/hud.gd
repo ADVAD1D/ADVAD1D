@@ -19,10 +19,15 @@ func _ready() -> void:
 			if control.has_method("hide"):
 				control.hide()
 	else:
-		# Make all mobile controls semi-transparent so they don't block the player's view
-		for control in mobile_controls_layer.get_children():
-			if "modulate" in control:
-				control.modulate.a = 0.5
+		if not GameManager.using_touch_controls:
+			for control in mobile_controls_layer.get_children():
+				if control.has_method("hide"):
+					control.hide()
+		else:
+			# Make all mobile controls semi-transparent so they don't block the player's view
+			for control in mobile_controls_layer.get_children():
+				if "modulate" in control:
+					control.modulate.a = 0.5
 	if not GameManager.speedrun_mode_active:
 		speedrun_label.hide()
 	else:
@@ -68,6 +73,15 @@ func _on_window_resized() -> void:
 
 func _on_phase_started(_phase_number: int, score_requirement: int):
 	objective_label.text = "> " + str(score_requirement)
+
+func _input(event: InputEvent) -> void:
+	if GameManager.mobile_mode_active and mobile_controls_layer:
+		if event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
+			GameManager.using_touch_controls = false
+			mobile_controls_layer.hide()
+		elif event is InputEventScreenTouch or event is InputEventScreenDrag:
+			GameManager.using_touch_controls = true
+			mobile_controls_layer.show()
 
 func _process(_delta: float) -> void:
 	if GameManager.speedrun_mode_active:

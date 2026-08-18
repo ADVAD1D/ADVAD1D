@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://bqegjjrpcw6r3" path="res://Assets/Sprites/Buttons/joystick-behind.png" id="11_am52h"]
 [ext_resource type="Texture2D" uid="uid://bvsm651l64kcs" path="res://Assets/Sprites/Buttons/joystick-front.png" id="12_yttkt"]
 [ext_resource type="Texture2D" uid="uid://cbnksbra3vaqx" path="res://Assets/Sprites/Buttons/shoot_button_unpressed.png" id="13_yttkt"]
+[ext_resource type="Texture2D" uid="uid://c3nt5r6awyif4" path="res://Assets/Sprites/Buttons/dash_button.png" id="14_mt778"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_fqivn"]
 font = ExtResource("4_8glcj")
@@ -192,10 +193,10 @@ label_settings = ExtResource("1_sprlj")
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1245403165]
 
 [node name="VirtualJoystick" type="VirtualJoystick" parent="CanvasLayer" unique_id=2036408314]
-offset_left = 70.0
-offset_top = 181.0
-offset_right = 110.0
-offset_bottom = 231.0
+offset_left = 85.0
+offset_top = 180.0
+offset_right = 130.0
+offset_bottom = 230.0
 scale = Vector2(0.73858047, 0.73858047)
 theme_override_styles/normal_joystick = SubResource("StyleBoxTexture_cna6x")
 theme_override_styles/normal_tip = SubResource("StyleBoxTexture_mt778")
@@ -210,7 +211,13 @@ action_up = &"Move_Up"
 action_down = &"Move_Down"
 
 [node name="TouchScreenButton" type="TouchScreenButton" parent="CanvasLayer" unique_id=1811632039]
-position = Vector2(416, 172)
+position = Vector2(445, 170)
 scale = Vector2(1.9772272, 1.9772272)
 texture_normal = ExtResource("13_yttkt")
 action = "Shoot"
+
+[node name="TouchScreenButton2" type="TouchScreenButton" parent="CanvasLayer" unique_id=2024643616]
+position = Vector2(391, 151)
+scale = Vector2(1.56, 1.56)
+texture_normal = ExtResource("14_mt778")
+action = "dash"

@@ -24,10 +24,15 @@ func _ready() -> void:
 			if control.has_method("hide"):
 				control.hide()
 	else:
-		# Make all mobile controls semi-transparent so they don't block the player's view
-		for control in mobile_controls_layer.get_children():
-			if "modulate" in control:
-				control.modulate.a = 0.5
+		if not GameManager.using_touch_controls:
+			for control in mobile_controls_layer.get_children():
+				if control.has_method("hide"):
+					control.hide()
+		else:
+			# Make all mobile controls semi-transparent so they don't block the player's view
+			for control in mobile_controls_layer.get_children():
+				if "modulate" in control:
+					control.modulate.a = 0.5
 				
 	ResourceLoader.load_threaded_request("res://Scenes/main.tscn")
 	
@@ -102,8 +107,14 @@ func _on_tutorial_timer_timeout():
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Skip") and admin_control == true:
 		change_to_next()
-	else:
-		pass
+		
+	if GameManager.mobile_mode_active and mobile_controls_layer:
+		if event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
+			GameManager.using_touch_controls = false
+			mobile_controls_layer.hide()
+		elif event is InputEventScreenTouch or event is InputEventScreenDrag:
+			GameManager.using_touch_controls = true
+			mobile_controls_layer.show()
 		
 func change_to_next():
 	var next_scene = ResourceLoader.load_threaded_get("res://Scenes/main.tscn")

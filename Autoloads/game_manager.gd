@@ -27,6 +27,7 @@ var can_pause: bool = true
 
 # mobile compatibility bool
 var mobile_mode_active: bool = true
+var using_touch_controls: bool = true
 # --- Debug & Environment Flags ---
 var show_debug: bool = false
 var show_debug_menu: bool = false
