@@ -2,6 +2,8 @@ extends GPUParticles2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if GameManager.mobile_mode_active:
+		lifetime = 0.4
 	emitting = true # Replace with function body.
 
 func _on_finished() -> void:

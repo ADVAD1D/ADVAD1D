@@ -1,10 +1,12 @@
 extends GPUParticles2D
+@onready var sound: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
-
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	emitting = true # Replace with function body.
-
+	if GameManager.mobile_mode_active:
+		lifetime = 0.4
+	emitting = true
+	get_tree().current_scene.add_child(sound)
+	sound.play()
 
 func _on_finished() -> void:
-	queue_free() # Replace with function body.
+	queue_free()

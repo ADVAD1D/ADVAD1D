@@ -28,7 +28,7 @@ var can_pause: bool = true
 # mobile compatibility bool
 var mobile_mode_active: bool = true
 var using_touch_controls: bool = true
-var disable_auto_hide_mobile_controls: bool = true # Set to true to test mobile UI on PC with keyboard
+var disable_auto_hide_mobile_controls: bool = false # Set to true to test mobile UI on PC with keyboard
 var mobile_layout: Dictionary = {}
 # --- Debug & Environment Flags ---
 var show_debug: bool = false
@@ -226,24 +226,23 @@ func _log_message(message):
 
 #global shader animation (apply to scenes)
 func play_glitch_effect(crt_material):
-	if mobile_mode_active:
-		# Temporarily restore full shader power during the death animation
-		crt_material.set_shader_parameter("low_quality", false)
-		crt_material.set_shader_parameter("roll", true)
-		
 	var tween = create_tween()
-	tween.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN_OUT)
-
-	tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.1, 0.1)
-	tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.1, 0.1)
-
-	tween.chain().tween_property(crt_material, "shader_parameter/aberration", 1.0, 0.1)
-	tween.chain().tween_property(crt_material, "shader_parameter/aberration", -1.0, 0.1)
 	
-	# Consolidated animation to prevent two Tweens from affecting 'aberration' simultaneously
-	tween.chain().tween_property(crt_material, "shader_parameter/aberration", 0.01, 0.1)
-	tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.01, 0.1)
-	tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.01, 0.1)
+	if mobile_mode_active:
+		# EXTREME OPTIMIZATION: Keep low_quality enabled, just flick the aberration slightly
+		tween.set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property(crt_material, "shader_parameter/aberration", 0.5, 0.1)
+		tween.chain().tween_property(crt_material, "shader_parameter/aberration", -0.5, 0.1)
+		tween.chain().tween_property(crt_material, "shader_parameter/aberration", 0.01, 0.1)
+	else:
+		tween.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN_OUT)
+		tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.1, 0.1)
+		tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.1, 0.1)
+		tween.chain().tween_property(crt_material, "shader_parameter/aberration", 1.0, 0.1)
+		tween.chain().tween_property(crt_material, "shader_parameter/aberration", -1.0, 0.1)
+		tween.chain().tween_property(crt_material, "shader_parameter/aberration", 0.01, 0.1)
+		tween.parallel().tween_property(crt_material, "shader_parameter/distort_intensity", 0.01, 0.1)
+		tween.parallel().tween_property(crt_material, "shader_parameter/static_noise_intensity", 0.01, 0.1)
 
 	return tween
 	
