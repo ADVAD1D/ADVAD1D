@@ -9,6 +9,7 @@ extends Node2D
 @onready var cam: Camera2D = $Camera2D
 @onready var laser_wall_animated: AnimatedSprite2D = $LaserWallAnimation
 @onready var fade_in_rect: ColorRect = $ColorRect1
+@onready var mobile_controls_layer: CanvasLayer = $CanvasLayer
 @onready var admin_control: bool = GameManager.admin_control
 
 var base_zoom: Vector2
@@ -17,6 +18,17 @@ var base_zoom: Vector2
 # Called when the node enters the scene tree for the first time.
 
 func _ready() -> void:
+	if not GameManager.mobile_mode_active:
+		# Hide all virtual buttons and joysticks modularly
+		for control in mobile_controls_layer.get_children():
+			if control.has_method("hide"):
+				control.hide()
+	else:
+		# Make all mobile controls semi-transparent so they don't block the player's view
+		for control in mobile_controls_layer.get_children():
+			if "modulate" in control:
+				control.modulate.a = 0.5
+				
 	ResourceLoader.load_threaded_request("res://Scenes/main.tscn")
 	
 	fade_in_rect.visible = true
