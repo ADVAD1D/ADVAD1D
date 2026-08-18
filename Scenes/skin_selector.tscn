@@ -57,6 +57,7 @@ shader_parameter/warp_amount = 0.150000007125
 shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 1.0
 shader_parameter/vignette_opacity = 0.586000027835
+shader_parameter/low_quality = false
 
 [sub_resource type="LabelSettings" id="LabelSettings_qwen4"]
 font = ExtResource("3_sum1o")
@@ -92,8 +93,13 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -33.0
+offset_top = -16.0
+offset_right = -33.0
+offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.1162976, 1.1162976)
 texture = ExtResource("1_0s6pj")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=481073188]

@@ -25,6 +25,8 @@ func apply_performance_settings():
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 		# Wake Lock: Prevent the screen from sleeping while playing
 		DisplayServer.screen_set_keep_on(true)
+		# Dynamically expand the viewport to fill Ultrawide screens without black bars
+		get_tree().root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND
 	else:
 		# 0 means unlimited FPS (or handled by Desktop V-Sync)
 		Engine.max_fps = 0
@@ -46,3 +48,11 @@ func _apply_to_scene(scene: Node) -> void:
 			var shader: Shader = (mat as ShaderMaterial).shader
 			if shader != null and shader.resource_path.contains("CRT"):
 				(mat as ShaderMaterial).set_shader_parameter("low_quality", true)
+				# Flatten the curve and reduce black borders for mobile ultrawide screens
+				(mat as ShaderMaterial).set_shader_parameter("warp_amount", 0.05)
+				(mat as ShaderMaterial).set_shader_parameter("vignette_intensity", 0.7)
+				(mat as ShaderMaterial).set_shader_parameter("vignette_opacity", 0.3)
+				
+				# Extreme Mobile Optimizations: Cut heavy GPU branches
+				(mat as ShaderMaterial).set_shader_parameter("roll", false) # Disables animated sine-wave screen rolling
+				(mat as ShaderMaterial).set_shader_parameter("discolor", false) # Disables expensive greyscale/pow color math

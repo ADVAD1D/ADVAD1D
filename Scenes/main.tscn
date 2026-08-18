@@ -76,7 +76,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_pdsj5")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 5.0
 }]
@@ -353,6 +353,32 @@ func _ready() -> void:
 	
 	SfxManager.sfx_volume_changed.connect(_on_sfx_volume_changed)
 	_on_sfx_volume_changed(SfxManager.get_sfx_volume_percent())
+	
+	if GameManager.mobile_mode_active:
+		get_tree().root.size_changed.connect(_on_window_resized)
+		_on_window_resized()
+
+func _on_window_resized() -> void:
+	var center_x = get_viewport().get_visible_rect().size.x / 2.0
+	var center_y = get_viewport().get_visible_rect().size.y / 2.0
+	
+	# Restore original positions relative to center (Original 520x300 -> Center: 260x150)
+	
+	# unPauseButton (Original X=198, Y=88 -> Offsets: X=-62, Y=-62)
+	unpause_button.anchor_left = 0.5
+	unpause_button.anchor_right = 0.5
+	unpause_button.anchor_top = 0.5
+	unpause_button.anchor_bottom = 0.5
+	unpause_button.position.x = center_x - 62.0
+	unpause_button.position.y = center_y - 62.0
+	
+	# QuitButton (Original X=199, Y=158 -> Offsets: X=-61, Y=+8)
+	quit_button.anchor_left = 0.5
+	quit_button.anchor_right = 0.5
+	quit_button.anchor_top = 0.5
+	quit_button.anchor_bottom = 0.5
+	quit_button.position.x = center_x - 61.0
+	quit_button.position.y = center_y + 8.0
 	
 func _process(_delta: float) -> void:
 	if volume_hold_timer.is_stopped():

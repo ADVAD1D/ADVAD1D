@@ -91,7 +91,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_yhxw7")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 2.0
 }]
@@ -188,8 +188,8 @@ skin_selector_scene = ExtResource("3_5n0dv")
 chat_console_scene = ExtResource("4_1xund")
 
 [node name="Background" type="AnimatedSprite2D" parent="." unique_id=1566181270]
-position = Vector2(258.99997, 529)
-scale = Vector2(5.373841, 5.373841)
+position = Vector2(262, 529)
+scale = Vector2(6.3616652, 6.3616652)
 sprite_frames = SubResource("SpriteFrames_trj04")
 autoplay = "default"
 frame = 4

@@ -106,15 +106,23 @@ To ensure the game remains fast and responsive on browsers without maintaining t
 
 ## Mobile Export Architecture & Optimization
 
-When compiling for Android or iOS, ADVAD encounters specific hardware quirks regarding touch inputs, extremely high-resolution displays, and high-refresh-rate screens (e.g., 90Hz or 120Hz).
+When compiling for Android or iOS, ADVAD encounters specific hardware quirks regarding touch inputs, extremely high-resolution displays, high-refresh-rate screens (e.g., 90Hz or 120Hz), and modern Ultrawide aspect ratios (20:9 or 21:9).
 
 ### How we mitigate this (The `MobileOptimizer` Autoload)
 To ensure the mobile experience remains smooth and responsive without draining the device's battery, we use the `Autoloads/mobile_optimizer.gd` singleton:
 
 1. **Environment Detection:** Upon startup, it checks if `OS.get_name()` is "Android" or "iOS". If so, it automatically forces `GameManager.mobile_mode_active = true`, initializing the Virtual Joystick on the HUD.
 2. **Frame Pacing & FPS Capping:** On modern phones with 90Hz+ screens, running Godot's physics and rendering loops unrestrained can cause severe frame pacing issues. The game may run at irregular rates like 70-80 FPS, which leads to desynced frame intervals and noticeable micro-stuttering during virtual joystick movement. To fix this, the optimizer strictly limits the engine to 60 FPS (`Engine.max_fps = 60`), stabilizing the physics interpolation and ensuring smooth touch movement.
-3. **Automated Shader Downgrades:** Similar to the web optimizer, it hooks into the `node_added` signal to dynamically inject the `low_quality = true` parameter into any active CRT `ShaderMaterial`. This prevents the phone's GPU from evaluating expensive distortion mathematics on 2K/4K displays.
-4. **Wake Lock:** Forces `DisplayServer.keep_screen_on = true` to prevent the device from sleeping when the player holds a single finger on the joystick for extended periods.
+3. **Automated Extreme Shader Downgrades:** It hooks into the `node_added` signal to dynamically inject the `low_quality = true` parameter into any active CRT `ShaderMaterial`. Furthermore, it completely disables the `roll` (distortion animation), `discolor` (expensive grayscale/pow color math), and sets `grille_opacity` to `0.0` (skipping 3x trigonometric `sin()` calculations per pixel). This prevents the phone's GPU from melting on 2K/4K displays.
+4. **Wake Lock:** Forces `DisplayServer.screen_set_keep_on(true)` to prevent the device from sleeping when the player holds a single finger on the joystick for extended periods.
+
+### Dynamic Ultrawide UI Adaptation
+The original PC game UI was hardcoded via absolute coordinates for a 520x300 aspect ratio. Instead of maintaining separate `.tscn` layouts for Mobile and PC, we programmed a purely mathematical runtime approach:
+
+1. **Aspect Expansion:** `mobile_optimizer.gd` dynamically changes the window stretch mode to `CONTENT_SCALE_ASPECT_EXPAND` at runtime. This removes the engine's black bars and allows the camera to natively render the expanded ultrawide dimensions on mobile devices.
+2. **Mathematical Re-anchoring:** Rather than manually overriding Godot anchors, individual UI scripts (`hud.gd`, `main_menu.gd`, `skin_selector.gd`, and the pause menu) connect to the `size_changed` signal. When the ultrawide expansion happens, a script algorithm calculates the new absolute center (`size / 2.0`) and perfectly shifts all floating elements (Text labels, Resume buttons, Main Menu groupings) using their original relative offsets.
+3. **Smart Exclusions:** Certain background elements (like the `SkinPanel` in the skin selector) are excluded from the re-centering algorithm so they naturally stretch across the entire viewport, covering the extra horizontal space without leaving black voids.
+4. **Platform Pruning:** Elements irrelevant to mobile devices (like the `ChatConsoleButton` in the main menu) are dynamically hidden (`hide()`) via code during `_ready` if `mobile_mode_active` is true.
 
 ## Memory Management & Object Pooling
 

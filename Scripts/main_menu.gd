@@ -22,6 +22,8 @@ var is_scrolling: bool = true
 var feedback_tween: Tween
 var feedback_label_lifetime: float = 2.0
 
+var original_positions = {}
+
 func _ready() -> void:
 	GameManager.can_pause = false
 	GameManager.reset_speedrun()
@@ -30,6 +32,31 @@ func _ready() -> void:
 	relative_label.visible = false
 	
 	_setup_buttons()
+	
+	if GameManager.mobile_mode_active:
+		if has_node("ChatConsoleButton"):
+			get_node("ChatConsoleButton").hide()
+			
+		_save_original_positions()
+		get_tree().root.size_changed.connect(_on_window_resized)
+		_on_window_resized()
+
+func _save_original_positions() -> void:
+	for child in get_children():
+		if "position" in child:
+			# Ignore full-screen modals
+			if child == credits_panel or child == special_thanks_panel:
+				continue
+			original_positions[child] = child.position
+
+func _on_window_resized() -> void:
+	# The original menu is designed for 520x300 (Center = 260)
+	var current_center_x = get_viewport().get_visible_rect().size.x / 2.0
+	var offset_x = current_center_x - 260.0
+	
+	for child in original_positions.keys():
+		if is_instance_valid(child):
+			child.position.x = original_positions[child].x + offset_x
 
 func _setup_buttons() -> void:
 	# Autoconnect all audio hovers/focuses for any button inside this menu

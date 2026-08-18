@@ -17,6 +17,7 @@ var back_scene: String = "res://Scenes/main_menu.tscn"
 @onready var system_warning_label: Label = $SystemMessage
 
 var message_tween: Tween
+var original_positions = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -31,6 +32,28 @@ func _ready() -> void:
 	Network.name_check_completed.connect(_on_name_checked)
 	Network.identity_recovered.connect(_on_identity_recovered)
 	Network.check_my_identity()
+	
+	if GameManager.mobile_mode_active:
+		_save_original_positions()
+		get_tree().root.size_changed.connect(_on_window_resized)
+		_on_window_resized()
+
+func _save_original_positions() -> void:
+	for child in get_children():
+		if "position" in child:
+			# Ignore the background so it can stretch naturally
+			if child.name == "SkinPanel":
+				continue
+			original_positions[child] = child.position
+
+func _on_window_resized() -> void:
+	# The original menu is designed for 520x300 (Center = 260)
+	var current_center_x = get_viewport().get_visible_rect().size.x / 2.0
+	var offset_x = current_center_x - 260.0
+	
+	for child in original_positions.keys():
+		if is_instance_valid(child):
+			child.position.x = original_positions[child].x + offset_x
 	
 func _on_identity_recovered(recovered_name: String):
 	if recovered_name != "":
