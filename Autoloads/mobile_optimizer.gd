@@ -24,13 +24,13 @@ func apply_performance_settings():
 		# Turn off V-Sync (usually forced by Android anyway, but saves overhead)
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 		# Wake Lock: Prevent the screen from sleeping while playing
-		DisplayServer.keep_screen_on = true
+		DisplayServer.screen_set_keep_on(true)
 	else:
 		# 0 means unlimited FPS (or handled by Desktop V-Sync)
 		Engine.max_fps = 0
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
 		# Allow desktop monitors to sleep normally
-		DisplayServer.keep_screen_on = false
+		DisplayServer.screen_set_keep_on(false)
 
 func _on_node_added(node: Node) -> void:
 	# A new top-level scene was added under the root (i.e. change_scene_*)
