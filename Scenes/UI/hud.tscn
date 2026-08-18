@@ -191,17 +191,16 @@ label_settings = ExtResource("1_sprlj")
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1245403165]
 
 [node name="VirtualJoystick" type="VirtualJoystick" parent="CanvasLayer" unique_id=2036408314]
-offset_left = 83.00001
-offset_top = 219.0
-offset_right = 123.00001
-offset_bottom = 259.0
-scale = Vector2(0.57857984, 0.57857984)
+offset_left = 81.99999
+offset_top = 213.0
+offset_right = 121.99999
+offset_bottom = 253.0
+scale = Vector2(0.73858047, 0.73858047)
 theme_override_styles/normal_joystick = SubResource("StyleBoxTexture_cna6x")
 theme_override_styles/normal_tip = SubResource("StyleBoxTexture_mt778")
 theme_override_styles/pressed_joystick = SubResource("StyleBoxTexture_8km2t")
 theme_override_styles/pressed_tip = SubResource("StyleBoxTexture_k24i8")
-joystick_mode = 1
-tip_size = 70.0
+tip_size = 75.0
 clampzone_ratio = 2.0
 action_left = &"Move_Left"
 action_right = &"Move_Right"
