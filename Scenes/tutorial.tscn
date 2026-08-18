@@ -16,6 +16,9 @@
 [ext_resource type="AudioStream" uid="uid://iavnej1hm2io" path="res://Assets/Audio/195491__alienxxx__glitch_001.wav" id="11_t6ver"]
 [ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scripts/ambient_particles.gd" id="12_2nb4t"]
 [ext_resource type="AudioStream" uid="uid://bwoq355ggrir4" path="res://Assets/Audio/351564__bertrof__game-sound-correct-with-delay.wav" id="12_ap3ea"]
+[ext_resource type="Texture2D" uid="uid://bqegjjrpcw6r3" path="res://Assets/Sprites/Buttons/joystick-behind.png" id="17_dxsep"]
+[ext_resource type="Texture2D" uid="uid://bvsm651l64kcs" path="res://Assets/Sprites/Buttons/joystick-front.png" id="18_lexqi"]
+[ext_resource type="Texture2D" uid="uid://cbnksbra3vaqx" path="res://Assets/Sprites/Buttons/shoot_button_unpressed.png" id="19_pkgwa"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fevyy"]
 atlas = ExtResource("3_p8jf4")
@@ -41,7 +44,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_pdsj5")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 5.0
 }]
@@ -283,6 +286,7 @@ shader_parameter/warp_amount = 0.150000007125
 shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 1.0
 shader_parameter/vignette_opacity = 1.0
+shader_parameter/low_quality = false
 
 [sub_resource type="GDScript" id="GDScript_jb51l"]
 script/source = "extends CanvasLayer
@@ -324,6 +328,18 @@ scale_min = 20.0
 scale_max = 40.0
 color_ramp = SubResource("GradientTexture1D_jkdf5")
 color_initial_ramp = SubResource("GradientTexture1D_6iyac")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_radxo"]
+texture = ExtResource("17_dxsep")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1cu4j"]
+texture = ExtResource("18_lexqi")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_djl3p"]
+texture = ExtResource("17_dxsep")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_73805"]
+texture = ExtResource("18_lexqi")
 
 [node name="Tutorial" type="Node2D" unique_id=1756924719]
 script = ExtResource("1_ys4pu")
@@ -807,6 +823,32 @@ amount = 200
 lifetime = 10.0
 process_material = SubResource("ParticleProcessMaterial_pkgwa")
 script = ExtResource("12_2nb4t")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1837734082]
+
+[node name="VirtualJoystick" type="VirtualJoystick" parent="CanvasLayer" unique_id=1878231151]
+offset_left = 70.0
+offset_top = 181.0
+offset_right = 110.0
+offset_bottom = 231.0
+scale = Vector2(0.73858047, 0.73858047)
+theme_override_styles/normal_joystick = SubResource("StyleBoxTexture_radxo")
+theme_override_styles/normal_tip = SubResource("StyleBoxTexture_1cu4j")
+theme_override_styles/pressed_joystick = SubResource("StyleBoxTexture_djl3p")
+theme_override_styles/pressed_tip = SubResource("StyleBoxTexture_73805")
+joystick_mode = 1
+tip_size = 75.0
+clampzone_ratio = 2.0
+action_left = &"Move_Left"
+action_right = &"Move_Right"
+action_up = &"Move_Up"
+action_down = &"Move_Down"
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="CanvasLayer" unique_id=985425159]
+position = Vector2(416, 172)
+scale = Vector2(1.9772272, 1.9772272)
+texture_normal = ExtResource("19_pkgwa")
+action = "Shoot"
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]
