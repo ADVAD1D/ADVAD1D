@@ -41,6 +41,7 @@ shader_parameter/warp_amount = 0.2000000095
 shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.5
 shader_parameter/vignette_opacity = 1.0
+shader_parameter/low_quality = false
 
 [node name="Abduction" type="Node2D" unique_id=1983550431]
 script = ExtResource("1_s02xp")
@@ -87,8 +88,8 @@ scale = Vector2(68.14068, 68.14068)
 color = Color(0, 0, 0, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=556465002]
-position = Vector2(-3, 127)
-scale = Vector2(16.725534, 16.725534)
+position = Vector2(-16, 277)
+scale = Vector2(21.986403, 21.986403)
 texture = ExtResource("1_nlkhs")
 script = ExtResource("2_k0sn5")
 

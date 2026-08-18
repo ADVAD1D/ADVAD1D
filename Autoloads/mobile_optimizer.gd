@@ -49,9 +49,9 @@ func _apply_to_scene(scene: Node) -> void:
 			if shader != null and shader.resource_path.contains("CRT"):
 				(mat as ShaderMaterial).set_shader_parameter("low_quality", true)
 				# Flatten the curve and reduce black borders for mobile ultrawide screens
-				(mat as ShaderMaterial).set_shader_parameter("warp_amount", 0.05)
+				(mat as ShaderMaterial).set_shader_parameter("warp_amount", false)
 				(mat as ShaderMaterial).set_shader_parameter("vignette_intensity", 0.7)
-				(mat as ShaderMaterial).set_shader_parameter("vignette_opacity", 0.3)
+				(mat as ShaderMaterial).set_shader_parameter("vignette_opacity", 0.4)
 				
 				# Extreme Mobile Optimizations: Cut heavy GPU branches
 				(mat as ShaderMaterial).set_shader_parameter("roll", false) # Disables animated sine-wave screen rolling

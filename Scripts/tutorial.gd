@@ -18,6 +18,10 @@ var base_zoom: Vector2
 # Called when the node enters the scene tree for the first time.
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	if mobile_controls_layer:
+		mobile_controls_layer.process_mode = Node.PROCESS_MODE_PAUSABLE
+		
 	if not GameManager.mobile_mode_active:
 		# Hide all virtual buttons and joysticks modularly
 		for control in mobile_controls_layer.get_children():
@@ -33,6 +37,14 @@ func _ready() -> void:
 			for control in mobile_controls_layer.get_children():
 				if "modulate" in control:
 					control.modulate.a = 0.5
+				
+				# Restore user's custom layout position
+				var saved_pos = GameManager.get_mobile_layout(control.name)
+				if saved_pos != Vector2.INF:
+					if "global_position" in control:
+						control.global_position = saved_pos
+					elif "position" in control:
+						control.position = saved_pos
 				
 	ResourceLoader.load_threaded_request("res://Scenes/main.tscn")
 	
@@ -110,8 +122,9 @@ func _input(event: InputEvent) -> void:
 		
 	if GameManager.mobile_mode_active and mobile_controls_layer:
 		if event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
-			GameManager.using_touch_controls = false
-			mobile_controls_layer.hide()
+			if not GameManager.disable_auto_hide_mobile_controls:
+				GameManager.using_touch_controls = false
+				mobile_controls_layer.hide()
 		elif event is InputEventScreenTouch or event is InputEventScreenDrag:
 			GameManager.using_touch_controls = true
 			mobile_controls_layer.show()

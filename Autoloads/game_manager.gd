@@ -28,6 +28,8 @@ var can_pause: bool = true
 # mobile compatibility bool
 var mobile_mode_active: bool = true
 var using_touch_controls: bool = true
+var disable_auto_hide_mobile_controls: bool = true # Set to true to test mobile UI on PC with keyboard
+var mobile_layout: Dictionary = {}
 # --- Debug & Environment Flags ---
 var show_debug: bool = false
 var show_debug_menu: bool = false
@@ -67,6 +69,9 @@ const save_path: String = "user://save_game.json"
 func _ready() -> void:
 	randomize()
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	# Disable Android's default behavior of instantly killing the app on Back button press
+	get_tree().quit_on_go_back = false
+	
 	if OS.has_feature("web"):
 		browser_support = true
 	if start_server == true:
@@ -75,7 +80,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	fps = Engine.get_frames_per_second()
-	if speedrun_mode_active and is_speedrun_running:
+	if speedrun_mode_active and is_speedrun_running and not get_tree().paused:
 		speedrun_time += delta
 		
 #speedrun functions
@@ -119,7 +124,8 @@ func save_data():
 			"fps_mode": show_fps,
 			"speedrun_mode_state": speedrun_mode_active,
 			"scroll_bar_state": is_scroll_active,
-			"pilot_name": player_name
+			"pilot_name": player_name,
+			"mobile_layout": mobile_layout
 		}
 		_log_message(["saved game!, selected skin", SkinManager.selected_ship_index])
 		_log_message(["Relative controls: ", relative_control_active])
@@ -168,6 +174,18 @@ func load_data():
 	if data and "pilot_name" in data:
 		player_name = String(data["pilot_name"])
 		_log_message(["Loaded player name: ", player_name])
+		
+	if data and "mobile_layout" in data:
+		mobile_layout = data["mobile_layout"]
+
+func save_mobile_layout(node_name: String, pos: Vector2):
+	mobile_layout[node_name] = {"x": pos.x, "y": pos.y}
+
+func get_mobile_layout(node_name: String) -> Vector2:
+	if node_name in mobile_layout:
+		var pos_dict = mobile_layout[node_name]
+		return Vector2(pos_dict["x"], pos_dict["y"])
+	return Vector2.INF
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause") and can_pause:
@@ -208,6 +226,11 @@ func _log_message(message):
 
 #global shader animation (apply to scenes)
 func play_glitch_effect(crt_material):
+	if mobile_mode_active:
+		# Temporarily restore full shader power during the death animation
+		crt_material.set_shader_parameter("low_quality", false)
+		crt_material.set_shader_parameter("roll", true)
+		
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN_OUT)
 
@@ -254,3 +277,14 @@ func freeze_frame():
 func unfreeze_frame():
 	if is_instance_valid(_transition_layer):
 		_transition_layer.hide()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		# If we are in a playable scene, toggle pause instead of quitting
+		var current_scene = get_tree().current_scene
+		if current_scene and current_scene.name in ["Main", "Tutorial", "Arena2"]:
+			if can_pause:
+				toggle_pause()
+		else:
+			# If we are in a menu, quit gracefully
+			get_tree().quit()

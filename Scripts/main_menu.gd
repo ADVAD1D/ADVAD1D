@@ -57,6 +57,13 @@ func _on_window_resized() -> void:
 	for child in original_positions.keys():
 		if is_instance_valid(child):
 			child.position.x = original_positions[child].x + offset_x
+			
+	# Center the inner textures of the full-screen modals manually
+	if is_instance_valid(credits_panel) and credits_panel.has_node("CreditsTexture"):
+		credits_panel.get_node("CreditsTexture").position.x = 79.0 + offset_x
+		
+	if is_instance_valid(special_thanks_panel) and special_thanks_panel.has_node("CreditsTexture"):
+		special_thanks_panel.get_node("CreditsTexture").position.x = 79.0 + offset_x
 
 func _setup_buttons() -> void:
 	# Autoconnect all audio hovers/focuses for any button inside this menu

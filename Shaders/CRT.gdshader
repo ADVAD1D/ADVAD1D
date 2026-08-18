@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
 // Add required screen texture uniform
-uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear;
 
 // Display settings
 uniform bool overlay = false;
@@ -75,6 +75,7 @@ float noise(vec2 uv) {
 
 // Screen warping
 vec2 warp(vec2 uv) {
+    if (warp_amount < 0.06) { return uv; } // EXTREME OPTIMIZATION: skip warp math on mobile
     vec2 delta = uv - 0.5;
     float delta2 = dot(delta.xy, delta.xy);
     float delta4 = delta2 * delta2;
@@ -83,6 +84,7 @@ vec2 warp(vec2 uv) {
 
 // Screen border
 float border(vec2 uv) {
+    if (warp_amount < 0.06) { return 1.0; } // EXTREME OPTIMIZATION: skip border math on mobile
     float radius = min(warp_amount, 0.08);
     radius = max(min(min(abs(radius * 2.0), abs(1.0)), abs(1.0)), 1e-5);
     vec2 abs_uv = abs(uv * 2.0 - 1.0) - vec2(1.0, 1.0) + radius;
@@ -126,9 +128,21 @@ void fragment() {
         text.g = texture(SCREEN_TEXTURE, text_uv + roll_uv * 1.2 - vec2(aberration, 0.0) * 0.1).g;
         text.b = texture(SCREEN_TEXTURE, text_uv + roll_uv).b;
     } else {
-        text.r = texture(SCREEN_TEXTURE, text_uv + vec2(aberration, 0.0) * 0.1).r;
-        text.g = texture(SCREEN_TEXTURE, text_uv - vec2(aberration, 0.0) * 0.1).g;
-        text.b = texture(SCREEN_TEXTURE, text_uv).b;
+        if (low_quality) {
+            // EXTREME OPTIMIZATION: Sample texture only once on mobile (saves massive memory bandwidth)
+            // But if aberration spikes (player death glitch), temporarily enable the 3-pass effect
+            if (abs(aberration) > 0.05) {
+                text.r = texture(SCREEN_TEXTURE, text_uv + vec2(aberration, 0.0) * 0.1).r;
+                text.g = texture(SCREEN_TEXTURE, text_uv - vec2(aberration, 0.0) * 0.1).g;
+                text.b = texture(SCREEN_TEXTURE, text_uv).b;
+            } else {
+                text = texture(SCREEN_TEXTURE, text_uv);
+            }
+        } else {
+            text.r = texture(SCREEN_TEXTURE, text_uv + vec2(aberration, 0.0) * 0.1).r;
+            text.g = texture(SCREEN_TEXTURE, text_uv - vec2(aberration, 0.0) * 0.1).g;
+            text.b = texture(SCREEN_TEXTURE, text_uv).b;
+        }
     }
     text.a = 1.0;
     
@@ -137,10 +151,11 @@ void fragment() {
     text.rgb = clamp(text.rgb, vec3(0.0), vec3(100.0));
 
     // Apply CRT grille
-    if (grille_opacity > 0.0) {
-        float gr = smoothstep(0.85, 0.95, abs(sin(uv.y * (resolution.y * 3.14159265))));
-        float gg = smoothstep(0.85, 0.95, abs(sin(1.05 + uv.y * (resolution.y * 3.14159265))));
-        float gb = smoothstep(0.85, 0.95, abs(sin(2.1 + uv.y * (resolution.y * 3.14159265))));
+    if (grille_opacity > 0.0 && !low_quality) {
+        float gr, gg, gb;
+        gr = smoothstep(0.85, 0.95, abs(sin(uv.y * (resolution.y * 3.14159265))));
+        gg = smoothstep(0.85, 0.95, abs(sin(1.05 + uv.y * (resolution.y * 3.14159265))));
+        gb = smoothstep(0.85, 0.95, abs(sin(2.1 + uv.y * (resolution.y * 3.14159265))));
 
         text.r = mix(text.r, text.r * gr, grille_opacity);
         text.g = mix(text.g, text.g * gg, grille_opacity);
@@ -151,8 +166,9 @@ void fragment() {
     text.rgb = clamp(text.rgb * brightness, 0.0, 1.0);
 
     // Apply scanlines
-    if (scanlines_opacity > 0.0) {
-        float scan = smoothstep(scanlines_width, scanlines_width + 0.5, abs(sin(uv.y * (resolution.y * 3.14159265))));
+    if (scanlines_opacity > 0.0 && !low_quality) {
+        float scan;
+        scan = smoothstep(scanlines_width, scanlines_width + 0.5, abs(sin(uv.y * (resolution.y * 3.14159265))));
         text.rgb = mix(text.rgb, text.rgb * vec3(scan), scanlines_opacity);
     }
 
@@ -164,7 +180,7 @@ void fragment() {
     }
 
     // Apply static
-    if (static_noise_intensity > 0.0) {
+    if (static_noise_intensity > 0.0 && (!low_quality || static_noise_intensity > 0.05)) {
         text.rgb += clamp(random((ceil(uv * resolution) / resolution) + fract(TIME)).x, 0.0, 1.0) * static_noise_intensity;
     }
 
@@ -181,7 +197,7 @@ void fragment() {
     if (discolor) {
         vec3 greyscale = vec3(dot(text.rgb, vec3(0.333)));
         text.rgb = mix(text.rgb, greyscale, 0.5);
-        float midpoint = pow(0.5, 2.2);
+        float midpoint = 0.21763764; // Constant for pow(0.5, 2.2)
         text.rgb = (text.rgb - vec3(midpoint)) * 1.2 + midpoint;
     }
 

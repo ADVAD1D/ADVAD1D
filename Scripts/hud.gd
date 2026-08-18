@@ -10,6 +10,10 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	if mobile_controls_layer:
+		mobile_controls_layer.process_mode = Node.PROCESS_MODE_PAUSABLE
+		
 	var phase_manager = get_tree().root.get_node("Main/PhaseNode") # Replace with function body.
 	fps_toggled()
 	
@@ -28,6 +32,14 @@ func _ready() -> void:
 			for control in mobile_controls_layer.get_children():
 				if "modulate" in control:
 					control.modulate.a = 0.5
+				
+				# Restore user's custom layout position
+				var saved_pos = GameManager.get_mobile_layout(control.name)
+				if saved_pos != Vector2.INF:
+					if "global_position" in control:
+						control.global_position = saved_pos
+					elif "position" in control:
+						control.position = saved_pos
 	if not GameManager.speedrun_mode_active:
 		speedrun_label.hide()
 	else:
@@ -74,14 +86,53 @@ func _on_window_resized() -> void:
 func _on_phase_started(_phase_number: int, score_requirement: int):
 	objective_label.text = "> " + str(score_requirement)
 
+var dragged_node: Node = null
+var drag_offset: Vector2 = Vector2.ZERO
+
 func _input(event: InputEvent) -> void:
 	if GameManager.mobile_mode_active and mobile_controls_layer:
 		if event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
-			GameManager.using_touch_controls = false
-			mobile_controls_layer.hide()
+			if not GameManager.disable_auto_hide_mobile_controls:
+				GameManager.using_touch_controls = false
+				mobile_controls_layer.hide()
 		elif event is InputEventScreenTouch or event is InputEventScreenDrag:
 			GameManager.using_touch_controls = true
 			mobile_controls_layer.show()
+			
+		# Layout dragging logic during pause
+		if get_tree().paused and mobile_controls_layer.visible:
+			if event is InputEventScreenTouch:
+				if event.pressed:
+					for control in mobile_controls_layer.get_children():
+						if _is_point_inside(control, event.position):
+							dragged_node = control
+							var node_pos = control.global_position if "global_position" in control else control.position
+							drag_offset = node_pos - event.position
+							get_viewport().set_input_as_handled()
+							break
+				else:
+					if dragged_node != null:
+						var final_pos = dragged_node.global_position if "global_position" in dragged_node else dragged_node.position
+						GameManager.save_mobile_layout(dragged_node.name, final_pos)
+						GameManager.save_data() # Persist to disk immediately
+					dragged_node = null
+					
+			elif event is InputEventScreenDrag and dragged_node != null:
+				if "global_position" in dragged_node:
+					dragged_node.global_position = event.position + drag_offset
+				elif "position" in dragged_node:
+					dragged_node.position = event.position + drag_offset
+				get_viewport().set_input_as_handled()
+
+func _is_point_inside(node: Node, point: Vector2) -> bool:
+	if node is Control:
+		var rect = Rect2(node.global_position, node.size * node.scale)
+		return rect.has_point(point)
+	elif node.is_class("TouchScreenButton"):
+		if node.texture_normal:
+			var rect = Rect2(node.global_position, node.texture_normal.get_size() * node.global_scale)
+			return rect.has_point(point)
+	return false
 
 func _process(_delta: float) -> void:
 	if GameManager.speedrun_mode_active:
