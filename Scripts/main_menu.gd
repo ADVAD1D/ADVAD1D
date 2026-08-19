@@ -25,6 +25,9 @@ var feedback_label_lifetime: float = 2.0
 var original_positions = {}
 
 func _ready() -> void:
+	if has_node("UILayer/ColorRect"):
+		get_node("UILayer/ColorRect").visible = GameManager.retro_shader_active
+
 	GameManager.can_pause = false
 	GameManager.reset_speedrun()
 	
@@ -142,6 +145,22 @@ func _setup_buttons() -> void:
 			back_sound.play()
 			GameManager.save_data()
 		)
+		
+	if has_node("RetroShaderButton"):
+		var retro_btn = get_node("RetroShaderButton")
+		if GameManager.mobile_mode_active:
+			retro_btn.set_pressed_no_signal(GameManager.retro_shader_active)
+			retro_btn.pressed.connect(back_sound.play)
+			retro_btn.toggled.connect(func(toggled_on):
+				GameManager.retro_shader_active = toggled_on
+				_log_message(["Retro Shader", toggled_on])
+				GameManager.save_data()
+				# We can apply the shader logic here immediately for visual feedback
+				if has_node("UILayer/ColorRect"):
+					get_node("UILayer/ColorRect").visible = toggled_on
+			)
+		else:
+			retro_btn.hide()
 
 func _connect_audio_to_buttons(node: Node) -> void:
 	if node is BaseButton:

@@ -38,8 +38,6 @@
 [ext_resource type="Texture2D" uid="uid://bads1tb0f3f4w" path="res://Assets/Sprites/cronometer_button_hover.png" id="22_y82t1"]
 [ext_resource type="Texture2D" uid="uid://3kekm84e6s7l" path="res://Assets/Sprites/fps_button.png" id="25_bmhhk"]
 [ext_resource type="Texture2D" uid="uid://cofvkwairia8d" path="res://Assets/Sprites/fps_button_hover.png" id="26_pddej"]
-[ext_resource type="Texture2D" uid="uid://deyomkrcmj2xp" path="res://Assets/Sprites/shaders_button_unpressed.png" id="27_ko05x"]
-[ext_resource type="Texture2D" uid="uid://bqgh0umjum2y8" path="res://Assets/Sprites/shaders_button_pressed.png" id="28_43km2"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_48xlc"]
 atlas = ExtResource("1_28flt")
@@ -317,9 +315,9 @@ offset_right = 212.0
 offset_bottom = 249.0
 scale = Vector2(0.89481026, 0.89481026)
 toggle_mode = true
-texture_normal = ExtResource("27_ko05x")
-texture_hover = ExtResource("28_43km2")
-texture_focused = ExtResource("28_43km2")
+texture_normal = ExtResource("25_bmhhk")
+texture_hover = ExtResource("26_pddej")
+texture_focused = ExtResource("26_pddej")
 
 [node name="GithubLabel" type="Label" parent="." unique_id=1823666510]
 layout_mode = 0
