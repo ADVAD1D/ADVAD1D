@@ -19,10 +19,10 @@ func _ready():
 ## Applies framerate and performance settings based on the current mobile mode
 func apply_performance_settings():
 	if GameManager.mobile_mode_active:
-		# Let the hardware compositor (SurfaceFlinger) manage frame pacing via V-Sync. 
-		# Disabling V-Sync or capping at 60 FPS on 90Hz/120Hz screens causes severe micro-stuttering (tirones).
-		Engine.max_fps = 0
-		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
+		# Limit to 60 FPS to stabilize physics/movement and save battery
+		Engine.max_fps = 60
+		# Turn off V-Sync (usually forced by Android anyway, but saves overhead)
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 		# Wake Lock: Prevent the screen from sleeping while playing
 		DisplayServer.screen_set_keep_on(true)
 		# Dynamically expand the viewport to fill Ultrawide screens without black bars

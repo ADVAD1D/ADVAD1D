@@ -157,6 +157,7 @@ var current_phase: int = 0
 var phase_timer: float
 var current_score_requirement: int
 var is_phase_active: bool = false
+var last_time_string: String = ""
 var restart_from_phase: bool = true
 
 func _ready() -> void:
@@ -189,10 +190,12 @@ func _process(delta: float) -> void:
 	if is_instance_valid(time_progress_bar):
 		time_progress_bar.value = phase_timer
 	
-	@warning_ignore("integer_division")
 	var minutes = int(phase_timer) / 60
 	var seconds = int(phase_timer) % 60
-	timer_updated.emit("%02d:%02d" % [minutes, seconds])
+	var new_time_string = "%02d:%02d" % [minutes, seconds]
+	if new_time_string != last_time_string:
+		last_time_string = new_time_string
+		timer_updated.emit(new_time_string)
 	
 	if phase_timer <= 0:
 		_on_phase_failure()
