@@ -26,7 +26,7 @@ var game_paused: bool = false
 var can_pause: bool = true
 
 # mobile compatibility bool
-var mobile_mode_active: bool = true
+var mobile_mode_active: bool = false
 var using_touch_controls: bool = true
 var disable_auto_hide_mobile_controls: bool = false # Set to true to test mobile UI on PC with keyboard
 var mobile_layout: Dictionary = {}
