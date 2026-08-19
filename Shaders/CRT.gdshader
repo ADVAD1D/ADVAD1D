@@ -96,6 +96,14 @@ float border(vec2 uv) {
 float vignette(vec2 uv) {
     uv *= 1.0 - uv.xy;
     float vig = uv.x * uv.y * 15.0;
+    
+    if (low_quality) {
+        // EXTREME OPTIMIZATION: pow(x, exponent) is slow on mobile GPUs. 
+        // vignette_intensity * vignette_opacity is around 0.28 (0.7 * 0.4).
+        // sqrt(sqrt(x)) = pow(x, 0.25), which is insanely fast and visually almost identical!
+        return clamp(sqrt(sqrt(max(vig, 0.0))), 0.0, 1.0);
+    }
+    
     // Using 0.00001 prevents the GPU error of calculating pow(0.0, exponent) which yields NaN
     return pow(max(vig, 0.00001), vignette_intensity * vignette_opacity);
 }
@@ -105,8 +113,8 @@ void fragment() {
     vec2 uv = overlay ? warp(SCREEN_UV) : warp(UV);
     vec2 text_uv = uv;
 
-    // Handle pixelation
-    if (pixelate) {
+    // Handle pixelation (expensive UV math)
+    if (pixelate && !low_quality) {
         text_uv = ceil(uv * resolution) / resolution;
     }
 
@@ -114,7 +122,7 @@ void fragment() {
     float roll_line = 0.0;
     vec2 roll_uv = vec2(0.0);
 
-    if (roll || noise_opacity > 0.0) {
+    if ((roll || noise_opacity > 0.0) && !low_quality) {
         float time = roll ? TIME : 0.0;
         roll_line = smoothstep(0.3, 0.9, sin(uv.y * roll_size - (time * roll_speed)));
         roll_line *= roll_line * smoothstep(0.3, 0.9, sin(uv.y * roll_size * roll_variation - (time * roll_speed * roll_variation)));
@@ -179,13 +187,15 @@ void fragment() {
         text.rgb = clamp(mix(text.rgb, text.rgb + nl, noise_opacity), vec3(0.0), vec3(1.0));
     }
 
-    // Apply static
-    if (static_noise_intensity > 0.0 && (!low_quality || static_noise_intensity > 0.05)) {
+    // Apply static noise
+    if (!low_quality && static_noise_intensity > 0.0) {
         text.rgb += clamp(random((ceil(uv * resolution) / resolution) + fract(TIME)).x, 0.0, 1.0) * static_noise_intensity;
     }
 
     // Apply border and vignette
-    text.rgb *= border(uv);
+    if (!low_quality) {
+        text.rgb *= border(uv);
+    }
     text.rgb *= vignette(uv);
 
     // Handle clip warp
@@ -194,7 +204,7 @@ void fragment() {
     }
 
     // Apply VHS discoloration
-    if (discolor) {
+    if (discolor && !low_quality) {
         vec3 greyscale = vec3(dot(text.rgb, vec3(0.333)));
         text.rgb = mix(text.rgb, greyscale, 0.5);
         float midpoint = 0.21763764; // Constant for pow(0.5, 2.2)

@@ -56,6 +56,9 @@ func _apply_to_scene(scene: Node) -> void:
 				# Extreme Mobile Optimizations: Cut heavy GPU branches
 				(mat as ShaderMaterial).set_shader_parameter("roll", false) # Disables animated sine-wave screen rolling
 				(mat as ShaderMaterial).set_shader_parameter("discolor", false) # Disables expensive greyscale/pow color math
+				(mat as ShaderMaterial).set_shader_parameter("pixelate", false) # Disables UV rounding math
+				(mat as ShaderMaterial).set_shader_parameter("noise_opacity", 0.0) # Prevents useless roll_uv calculations
+				(mat as ShaderMaterial).set_shader_parameter("static_noise_intensity", 0.0) # Cuts per-pixel random/sin generation
 				
 				# If the user disabled the retro shader completely for performance, hide the node
 				if not GameManager.retro_shader_active:
