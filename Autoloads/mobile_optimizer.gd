@@ -21,8 +21,8 @@ func apply_performance_settings():
 	if GameManager.mobile_mode_active:
 		# Limit to 60 FPS to stabilize physics/movement and save battery
 		Engine.max_fps = 60
-		# Turn off V-Sync (usually forced by Android anyway, but saves overhead)
-		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+		# Turn ON V-Sync to perfectly pace 60 FPS into 120Hz/90Hz compositors when Android UI overlays appear
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
 		# Wake Lock: Prevent the screen from sleeping while playing
 		DisplayServer.screen_set_keep_on(true)
 		# Dynamically expand the viewport to fill Ultrawide screens without black bars
