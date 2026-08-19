@@ -73,10 +73,6 @@ destructibles=""
 allies=""
 player_shield=""
 
-[physics]
-
-common/physics_interpolation=true
-
 [input]
 
 Move_Up={
