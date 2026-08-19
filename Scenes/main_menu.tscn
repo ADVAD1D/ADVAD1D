@@ -215,7 +215,7 @@ offset_right = 328.0
 offset_bottom = 239.0
 texture_normal = ExtResource("5_m3bi6")
 texture_hover = ExtResource("6_wyh8j")
-texture_focused = ExtResource("6_wyh8j")
+texture_pressed = ExtResource("6_wyh8j")
 
 [node name="GithubButton" type="TextureButton" parent="." unique_id=306455585]
 layout_mode = 0
@@ -226,7 +226,7 @@ offset_bottom = 215.0
 scale = Vector2(1.3591198, 1.2314774)
 texture_normal = ExtResource("8_tt8ml")
 texture_hover = ExtResource("9_fmarx")
-texture_focused = ExtResource("9_fmarx")
+texture_pressed = ExtResource("9_fmarx")
 
 [node name="DiscordButton" type="TextureButton" parent="." unique_id=351157286]
 layout_mode = 0
@@ -237,7 +237,7 @@ offset_bottom = 1200.0
 scale = Vector2(0.05017208, 0.05017208)
 texture_normal = ExtResource("7_mkpwh")
 texture_hover = ExtResource("8_4nkqq")
-texture_focused = ExtResource("8_4nkqq")
+texture_pressed = ExtResource("8_4nkqq")
 
 [node name="FullScreenButton" type="TextureButton" parent="." unique_id=1991512864]
 layout_mode = 0
@@ -248,6 +248,7 @@ offset_bottom = 207.0
 scale = Vector2(0.8175782, 0.8175782)
 toggle_mode = true
 action_mode = 1
+focus_mode = 0
 texture_normal = ExtResource("9_jr6u5")
 texture_pressed = ExtResource("10_6m47u")
 texture_hover = ExtResource("11_84iac")
@@ -261,7 +262,7 @@ offset_bottom = 197.0
 scale = Vector2(0.7554791, 0.7554791)
 texture_normal = ExtResource("12_84iac")
 texture_hover = ExtResource("13_5n0dv")
-texture_focused = ExtResource("13_5n0dv")
+texture_pressed = ExtResource("13_5n0dv")
 
 [node name="ChatConsoleButton" type="TextureButton" parent="." unique_id=1393632435]
 layout_mode = 0
@@ -272,7 +273,7 @@ offset_bottom = 197.0
 scale = Vector2(0.7928984, 0.7928984)
 texture_normal = ExtResource("18_6vfk8")
 texture_hover = ExtResource("19_1xund")
-texture_focused = ExtResource("19_1xund")
+texture_pressed = ExtResource("19_1xund")
 
 [node name="SpeedrunButton" type="TextureButton" parent="." unique_id=1647756487]
 layout_mode = 0
@@ -283,9 +284,10 @@ offset_bottom = 197.0
 scale = Vector2(0.7886959, 0.7886959)
 toggle_mode = true
 action_mode = 1
+focus_mode = 0
 texture_normal = ExtResource("21_aylim")
 texture_hover = ExtResource("22_y82t1")
-texture_focused = ExtResource("22_y82t1")
+texture_pressed = ExtResource("22_y82t1")
 
 [node name="ControlsButton" type="TextureButton" parent="." unique_id=993854923]
 layout_mode = 0
@@ -296,9 +298,10 @@ offset_bottom = 203.0
 scale = Vector2(0.91145045, 0.91145045)
 toggle_mode = true
 action_mode = 1
+focus_mode = 0
 texture_normal = ExtResource("17_hkdq0")
 texture_hover = ExtResource("18_xcoo4")
-texture_focused = ExtResource("18_xcoo4")
+texture_pressed = ExtResource("18_xcoo4")
 
 [node name="FPSButton" type="TextureButton" parent="." unique_id=1365186964]
 layout_mode = 0
@@ -309,9 +312,10 @@ offset_bottom = 221.0
 scale = Vector2(0.89481026, 0.89481026)
 toggle_mode = true
 action_mode = 1
+focus_mode = 0
 texture_normal = ExtResource("25_bmhhk")
 texture_hover = ExtResource("26_pddej")
-texture_focused = ExtResource("26_pddej")
+texture_pressed = ExtResource("26_pddej")
 
 [node name="RetroShaderButton" type="TextureButton" parent="." unique_id=1849201947]
 layout_mode = 0
@@ -322,9 +326,10 @@ offset_bottom = 249.0
 scale = Vector2(0.89481026, 0.89481026)
 toggle_mode = true
 action_mode = 1
+focus_mode = 0
 texture_normal = ExtResource("27_ko05x")
 texture_hover = ExtResource("28_43km2")
-texture_focused = ExtResource("28_43km2")
+texture_pressed = ExtResource("28_43km2")
 
 [node name="GithubLabel" type="Label" parent="." unique_id=1823666510]
 layout_mode = 0
@@ -409,19 +414,19 @@ scale = Vector2(1.829739, 1.829739)
 layout_mode = 2
 texture_normal = ExtResource("5_opfnp")
 texture_hover = ExtResource("6_cp0ys")
-texture_focused = ExtResource("6_cp0ys")
+texture_pressed = ExtResource("6_cp0ys")
 
 [node name="CreditsButton" type="TextureButton" parent="VBoxContainer" unique_id=2114862343]
 layout_mode = 2
 texture_normal = ExtResource("9_5egv6")
 texture_hover = ExtResource("10_vtepg")
-texture_focused = ExtResource("10_vtepg")
+texture_pressed = ExtResource("10_vtepg")
 
 [node name="QuitButton" type="TextureButton" parent="VBoxContainer" unique_id=111436286]
 layout_mode = 2
 texture_normal = ExtResource("7_yhxw7")
 texture_hover = ExtResource("8_trj04")
-texture_focused = ExtResource("8_trj04")
+texture_pressed = ExtResource("8_trj04")
 
 [node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=155312952]
 stream = ExtResource("10_16hvj")
