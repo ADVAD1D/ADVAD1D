@@ -14,14 +14,19 @@ func _ready() -> void:
 	
 	enter_key.modulate.a = 0.0
 	
-	var enter_fadein_tween = create_tween()
-	enter_fadein_tween.tween_property(enter_key, "modulate:a", 1.0, 1.5)
+	if GameManager.mobile_mode_active:
+		enter_key.visible = false
+		skip_label.text = "TAP TO SKIP"
+		skip_label.position.x -= 50.0
+	else:
+		var enter_fadein_tween = create_tween()
+		enter_fadein_tween.tween_property(enter_key, "modulate:a", 1.0, 1.5)
 	
 	var skip_fadein_tween = create_tween()
 	skip_fadein_tween.tween_property(skip_label, "modulate:a", 1.0, 1.5)
 	
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("Skip"):
+	if event.is_action_pressed("Skip") or (event is InputEventScreenTouch and event.pressed):
 		get_tree().change_scene_to_packed(next_scene)
 
 func start_sequence():

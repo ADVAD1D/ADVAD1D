@@ -2,6 +2,8 @@ extends Node2D
 
 @export var transition_sound: AudioStream
 
+@onready var ui_turorial_layer: Node2D = $UITutorialLayer
+
 @onready var tutorial_timer: Timer = $TutorialTimer
 @onready var player = $PlayerInstance
 @onready var crt_material: ShaderMaterial = $UILayer/ColorRect.material
@@ -27,7 +29,11 @@ func _ready() -> void:
 		for control in mobile_controls_layer.get_children():
 			if control.has_method("hide"):
 				control.hide()
-	else:
+	else: #if gamemanager.mobile_mode_active == true
+		for sprite in ui_turorial_layer.get_children():
+			if sprite.has_method("hide"):
+				sprite.hide()
+				
 		if not GameManager.using_touch_controls:
 			for control in mobile_controls_layer.get_children():
 				if control.has_method("hide"):
