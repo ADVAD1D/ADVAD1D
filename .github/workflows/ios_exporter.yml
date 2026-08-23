@@ -25,6 +25,27 @@ jobs:
                   mkdir -p ~/Library/Application\ Support/Godot/export_templates/4.7.1.stable/
                   mv templates/* ~/Library/Application\ Support/Godot/export_templates/4.7.1.stable/
 
+            - name: Inject Export Presets
+              env:
+                  PRESETS_FILE: ${{ secrets.EXPORT_PRESETS_CFG }}
+              run: |
+                  echo "Create and inject export_presets.cfg from secrets..."
+                  printf "%s\n" "$PRESETS_FILE" > export_presets.cfg
+
+            - name: Inject Environment Variables (.env)
+              env:
+                  MY_APP_TOKEN: ${{ secrets.APP_TOKEN }}
+              run: |
+                  echo "Fabric file from .env secrets..."
+                  echo "APP_TOKEN=$MY_APP_TOKEN" > .env
+
+            - name: Import Godot Assets
+              run: |
+                  echo "Importing assets for the first time..."
+                  /Applications/Godot.app/Contents/MacOS/Godot --headless --editor --quit || true
+                  echo "Second pass of importation (necessary for heavy audio in Godot 4)..."
+                  /Applications/Godot.app/Contents/MacOS/Godot --headless --editor --quit || true
+
             - name: Prepare output folder
               run: mkdir -p advad-builds/ios
 
