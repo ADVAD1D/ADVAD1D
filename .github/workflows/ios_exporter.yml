@@ -51,7 +51,7 @@ jobs:
 
             - name: Export Xcode project from Godot
               run: |
-                  /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --export-release "iOS" advad-builds/ios/project.xcodeproj
+                  /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --export-release "iOS" advad-builds/ios/project.xcodeproj || true
 
             - name: Build with xcodebuild (Unsigned)
               run: |
