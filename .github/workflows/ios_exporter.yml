@@ -1,0 +1,55 @@
+name: Export iOS (Unsigned IPA)
+
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+jobs:
+    build-ios:
+        runs-on: macos-latest
+        timeout-minutes: 15
+        steps:
+            - name: Clone repository
+              uses: actions/checkout@v4
+
+            - name: Download and install Godot and Export Templates
+              run: |
+                  curl -L -o godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_macos.universal.zip"
+                  unzip godot.zip
+                  mv Godot.app /Applications/
+
+                  curl -L -o templates.tpz "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_export_templates.tpz"
+                  unzip templates.tpz
+
+                  mkdir -p ~/Library/Application\ Support/Godot/export_templates/4.7.1.stable/
+                  mv templates/* ~/Library/Application\ Support/Godot/export_templates/4.7.1.stable/
+
+            - name: Prepare output folder
+              run: mkdir -p advad-builds/ios
+
+            - name: Export Xcode project from Godot
+              run: |
+                  /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --export-release "iOS" advad-builds/ios/project.xcodeproj
+
+            - name: Build with xcodebuild (Unsigned)
+              run: |
+                  xcodebuild -project advad-builds/ios/project.xcodeproj \
+                    -configuration Release \
+                    -destination generic/platform=iOS \
+                    CODE_SIGNING_REQUIRED=NO \
+                    CODE_SIGNING_ALLOWED=NO \
+                    CONFIGURATION_BUILD_DIR=$(pwd)/advad-builds/ios/build/Release-iphoneos \
+                    build
+
+            - name: Package as IPA
+              run: |
+                  mkdir -p Payload
+                  mv advad-builds/ios/build/Release-iphoneos/*.app Payload/
+                  zip -r game.ipa Payload
+
+            - name: Upload IPA to GitHub Artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ios-unsigned-ipa
+                  path: game.ipa
