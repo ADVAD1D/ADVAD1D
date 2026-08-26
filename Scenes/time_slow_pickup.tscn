@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://mjsfrhy7mt7v"]
+
+[ext_resource type="Script" uid="uid://cocl5bb5b7seu" path="res://Scripts/power_up_pickup.gd" id="1_novpv"]
+[ext_resource type="Texture2D" uid="uid://bw3odgujjc0cv" path="res://Assets/Sprites/time_slow_pickup.png" id="2_3fch6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8daol"]
+size = Vector2(21.895422, 20)
+
+[node name="PowerUp1Pickup" type="Area2D" unique_id=1740692872]
+script = ExtResource("1_novpv")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1094982343]
+scale = Vector2(0.61771005, 0.61771005)
+texture = ExtResource("2_3fch6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1209426861]
+position = Vector2(5.4185597e-07, 0)
+scale = Vector2(1.3286189, 1.3286189)
+shape = SubResource("RectangleShape2D_8daol")
+debug_color = Color(0, 0.6, 0.69803923, 0.1764706)

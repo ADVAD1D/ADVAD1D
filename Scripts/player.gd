@@ -61,8 +61,10 @@ func _physics_process(delta: float) -> void:
 	if player_died:
 		return
 		
+	var unscaled_delta = delta / Engine.time_scale if Engine.time_scale > 0.0 else delta
+		
 	if is_dashing:
-		move_and_collide(velocity * delta)
+		move_and_collide(velocity * unscaled_delta)
 		return
 		
 	var relative_control_active: bool = GameManager.relative_control_active
@@ -78,16 +80,16 @@ func _physics_process(delta: float) -> void:
 	if relative_control_active == true:
 		var rotation_direction = Input.get_axis("Move_Left", "Move_Right")
 		rotation_speed = 5.0
-		rotation += rotation_direction * rotation_speed * delta
+		rotation += rotation_direction * rotation_speed * unscaled_delta
 		
 		var input_thrust = Input.get_axis("Move_Up", "Move_Down")
 		var direction_relative = Vector2.UP.rotated(rotation) * -input_thrust
 		
 		if input_thrust != 0:
-			velocity = velocity.lerp(direction_relative * speed, acceleration * delta)
+			velocity = velocity.lerp(direction_relative * speed, acceleration * unscaled_delta)
 			is_moving = true
 		else:
-			velocity = velocity.lerp(Vector2.ZERO, friction * delta)
+			velocity = velocity.lerp(Vector2.ZERO, friction * unscaled_delta)
 			
 		if Input.is_action_just_pressed("dash") and can_dash:
 			var forward_vec = Vector2.UP.rotated(rotation)
@@ -100,14 +102,14 @@ func _physics_process(delta: float) -> void:
 		var direction = Input.get_vector("Move_Left", "Move_Right", "Move_Up", "Move_Down")
 		
 		if direction != Vector2.ZERO:
-			velocity = velocity.lerp(direction * speed, acceleration * delta)
+			velocity = velocity.lerp(direction * speed, acceleration * unscaled_delta)
 			is_moving = true
 			
 			if not is_dashing:
 				var target_rotation = direction.angle() + PI/2
 				rotation = lerp_angle(rotation, target_rotation, 0.22)
 		else:
-			velocity = velocity.lerp(Vector2.ZERO, friction * delta)
+			velocity = velocity.lerp(Vector2.ZERO, friction * unscaled_delta)
 			
 		# --- DASH BUFFERING SYSTEM ---
 		if Input.is_action_just_pressed("dash") and can_dash:
@@ -132,10 +134,12 @@ func _physics_process(delta: float) -> void:
 	engine_trail.emitting = is_moving
 		
 	# --- APPLY MOVEMENT AND COLLISIONS ---
-	# Executes the final calculated velocity using Godot's built-in physics.
-	# move_and_slide() automatically handles sliding against walls and objects.
 	if velocity != Vector2.ZERO:
+		var original_velocity = velocity
+		if Engine.time_scale > 0.0:
+			velocity = velocity / Engine.time_scale
 		var collision = move_and_slide()
+		velocity = original_velocity
 		
 		if collision:
 			velocity = Vector2.ZERO
@@ -164,7 +168,7 @@ func shoot():
 	laser_instance.start(fire_direction)
 	get_parent().add_child(laser_instance)
 	
-	await get_tree().create_timer(shoot_timerate).timeout
+	await get_tree().create_timer(shoot_timerate, false, false, true).timeout
 	can_shoot = true
 	
 # --- DASH: EXECUTION AND EFFECTS ---
@@ -193,13 +197,13 @@ func do_dash(direction: Vector2):
 	
 	# Invincibility frames (i-frames): disable hitbox during dash
 	hitbox_collider.set_deferred("disabled", true)
-	await get_tree().create_timer(dash_duration).timeout
+	await get_tree().create_timer(dash_duration, false, false, true).timeout
 	
 	is_dashing = false
 	
 	# Restore hitbox and wait for cooldown before allowing another dash
 	hitbox_collider.set_deferred("disabled", false)
-	await get_tree().create_timer(dash_cooldown).timeout
+	await get_tree().create_timer(dash_cooldown, false, false, true).timeout
 	can_dash = true
 
 func _draw() -> void:

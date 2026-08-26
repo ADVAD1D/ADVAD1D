@@ -11,7 +11,8 @@ func start(start_direction: Vector2):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	position += direction * speed * delta
+	var unscaled_delta = delta / Engine.time_scale if Engine.time_scale > 0.0 else delta
+	position += direction * speed * unscaled_delta
 
 func _on_area_entered(area: Area2D) -> void:
 	if area.is_in_group("asteroides"):

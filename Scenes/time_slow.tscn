@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bix4xitime_slow"]
+
+[ext_resource type="Script" uid="uid://dhpvx7b0aocud" path="res://Scripts/time_slow.gd" id="1_slow"]
+
+[node name="TimeSlow" type="Node2D"]
+script = ExtResource("1_slow")

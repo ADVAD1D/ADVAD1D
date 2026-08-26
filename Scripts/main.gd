@@ -47,6 +47,17 @@ func _ready() -> void:
 	GameManager.unfreeze_frame()
 
 func reset_shader_parameters():
+	Engine.time_scale = 1.0
+	var bg = get_node_or_null("Sprite2D")
+	if GameManager.phase_to_start <= 10:
+		if bg and bg.material:
+			bg.material.set_shader_parameter("grayscale_amount", 0.0)
+		
+	var master_bus = AudioServer.get_bus_index("Master")
+	for i in range(AudioServer.get_bus_effect_count(master_bus)):
+		if AudioServer.get_bus_effect(master_bus, i) is AudioEffectPitchShift:
+			AudioServer.get_bus_effect(master_bus, i).pitch_scale = 1.0
+			
 	if is_instance_valid(crt_material):
 		crt_material.set_shader_parameter("aberration", 0.02)
 		crt_material.set_shader_parameter("distort_intensity", 0.02)
@@ -78,6 +89,25 @@ func _on_laser_zone_area_entered(area: Area2D) -> void:
 		EnemyLaserPool.release(area)
 		
 func _on_player_died() -> void:
+	Engine.time_scale = 1.0
+	
+	# Reset shader and audio pitch
+	var bg = get_node_or_null("Sprite2D")
+	if GameManager.phase_to_start <= 10:
+		if bg and bg.material:
+			bg.material.set_shader_parameter("grayscale_amount", 0.0)
+		
+	var master_bus = AudioServer.get_bus_index("Master")
+	for i in range(AudioServer.get_bus_effect_count(master_bus)):
+		if AudioServer.get_bus_effect(master_bus, i) is AudioEffectPitchShift:
+			AudioServer.get_bus_effect(master_bus, i).pitch_scale = 1.0
+			
+	# Reset modules for entities
+	for g in ["asteroides", "enemigos", "enemy_laser", "saws"]:
+		for node in get_tree().get_nodes_in_group(g):
+			if is_instance_valid(node) and node is CanvasItem:
+				node.modulate = Color.WHITE
+		
 	GameManager.can_pause = false
 	GameManager.play_glitch_sound(glitch_sound)
 	GameManager.stop_scoring()
