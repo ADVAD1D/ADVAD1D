@@ -58,9 +58,6 @@ func reset_shader_parameters():
 
 func _on_death_zone_area_entered(area: Area2D) -> void:
 	if area.is_in_group("asteroides"):
-		var asteroids_exp_instance = asteroids_explosion_particles.instantiate()
-		add_child(asteroids_exp_instance)
-		asteroids_exp_instance.global_position = area.global_position
 		area.queue_free()
 
 func _on_laser_zone_area_entered(area: Area2D) -> void:
