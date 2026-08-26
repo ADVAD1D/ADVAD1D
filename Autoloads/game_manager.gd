@@ -66,6 +66,7 @@ var fps: float = 0.0
 const save_path: String = "user://save_game.json"
 #windows: %APPDATA%\Godot\app_userdata\ProjectName
 #linux: ~/.local/share/godot/app_userdata/ProjectName/
+#android/ios: user://
 
 func _ready() -> void:
 	randomize()
