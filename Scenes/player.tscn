@@ -120,10 +120,10 @@ bus = &"SFX"
 position = Vector2(-1.08043, 28.6315)
 scale = Vector2(7.82663, 6.55636)
 amount = 10
-lifetime = 0.3
+lifetime = 0.1
 preprocess = 0.45
 explosiveness = 0.25
-trail_lifetime = 0.5
+trail_lifetime = 0.1
 process_material = SubResource("ParticleProcessMaterial_pu2lt")
 
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=505839961]

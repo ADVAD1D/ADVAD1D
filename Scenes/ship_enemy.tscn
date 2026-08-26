@@ -101,7 +101,7 @@ bus = &"SFX"
 position = Vector2(-0.4, 20)
 scale = Vector2(0.99999994, 0.99999994)
 amount = 10
-lifetime = 0.3
+lifetime = 0.1
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_6b5vx")
 

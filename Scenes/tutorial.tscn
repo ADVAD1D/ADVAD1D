@@ -858,7 +858,7 @@ bus = &"SFX"
 z_index = 3
 position = Vector2(-4, 219)
 amount = 200
-lifetime = 10.0
+lifetime = 1.6
 process_material = SubResource("ParticleProcessMaterial_pkgwa")
 script = ExtResource("12_2nb4t")
 

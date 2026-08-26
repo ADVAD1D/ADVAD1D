@@ -40,6 +40,11 @@ func _ready() -> void:
 		GameManager.play_glitch_effect(crt_material)
 		GameManager.is_shader_animation = false
 		
+	if GameManager.mobile_mode_active and GameManager.phase_to_start <= 10:
+		var ambient = get_node_or_null("AmbientParticles")
+		if ambient:
+			ambient.emitting = false
+			
 	if GameManager.is_glitch_sound:
 		GameManager.play_glitch_sound(glitch_sound)
 		GameManager.is_glitch_sound = false

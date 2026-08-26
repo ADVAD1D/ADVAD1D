@@ -218,6 +218,12 @@ func start_new_phase():
 		fade_out_time_bar()
 		if GameManager.is_speedrun_running:
 			GameManager.stop_speedrun()
+			
+		if GameManager.mobile_mode_active:
+			var ambient = get_node_or_null("../AmbientParticles")
+			if ambient:
+				ambient.emitting = true
+				
 		var codelabel_tween = create_tween()
 		
 		# (object, property, final value, duration)
