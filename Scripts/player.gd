@@ -61,10 +61,8 @@ func _physics_process(delta: float) -> void:
 	if player_died:
 		return
 		
-	var unscaled_delta = delta / Engine.time_scale if Engine.time_scale > 0.0 else delta
-		
 	if is_dashing:
-		move_and_collide(velocity * unscaled_delta)
+		move_and_collide(velocity * delta)
 		return
 		
 	var relative_control_active: bool = GameManager.relative_control_active
@@ -80,16 +78,16 @@ func _physics_process(delta: float) -> void:
 	if relative_control_active == true:
 		var rotation_direction = Input.get_axis("Move_Left", "Move_Right")
 		rotation_speed = 5.0
-		rotation += rotation_direction * rotation_speed * unscaled_delta
+		rotation += rotation_direction * rotation_speed * delta
 		
 		var input_thrust = Input.get_axis("Move_Up", "Move_Down")
 		var direction_relative = Vector2.UP.rotated(rotation) * -input_thrust
 		
 		if input_thrust != 0:
-			velocity = velocity.lerp(direction_relative * speed, acceleration * unscaled_delta)
+			velocity = velocity.lerp(direction_relative * speed, acceleration * delta)
 			is_moving = true
 		else:
-			velocity = velocity.lerp(Vector2.ZERO, friction * unscaled_delta)
+			velocity = velocity.lerp(Vector2.ZERO, friction * delta)
 			
 		if Input.is_action_just_pressed("dash") and can_dash:
 			var forward_vec = Vector2.UP.rotated(rotation)
@@ -102,14 +100,14 @@ func _physics_process(delta: float) -> void:
 		var direction = Input.get_vector("Move_Left", "Move_Right", "Move_Up", "Move_Down")
 		
 		if direction != Vector2.ZERO:
-			velocity = velocity.lerp(direction * speed, acceleration * unscaled_delta)
+			velocity = velocity.lerp(direction * speed, acceleration * delta)
 			is_moving = true
 			
 			if not is_dashing:
 				var target_rotation = direction.angle() + PI/2
 				rotation = lerp_angle(rotation, target_rotation, 0.22)
 		else:
-			velocity = velocity.lerp(Vector2.ZERO, friction * unscaled_delta)
+			velocity = velocity.lerp(Vector2.ZERO, friction * delta)
 			
 		# --- DASH BUFFERING SYSTEM ---
 		if Input.is_action_just_pressed("dash") and can_dash:
@@ -135,11 +133,7 @@ func _physics_process(delta: float) -> void:
 		
 	# --- APPLY MOVEMENT AND COLLISIONS ---
 	if velocity != Vector2.ZERO:
-		var original_velocity = velocity
-		if Engine.time_scale > 0.0:
-			velocity = velocity / Engine.time_scale
 		var collision = move_and_slide()
-		velocity = original_velocity
 		
 		if collision:
 			velocity = Vector2.ZERO
