@@ -46,7 +46,9 @@
 [ext_resource type="PackedScene" uid="uid://ddbj5g23l6doc" path="res://Scenes/powerup1.tscn" id="40_aqgau"]
 [ext_resource type="Script" uid="uid://cnmvll76uwvp0" path="res://Scripts/laser_shield_spawner.gd" id="40_kwxat"]
 [ext_resource type="PackedScene" uid="uid://bn8jtbmvulvxr" path="res://Scenes/laser_shield_pickup.tscn" id="41_kqrg6"]
+[ext_resource type="PackedScene" uid="uid://mjsfrhy7mt7v" path="res://Scenes/time_slow_pickup.tscn" id="42_jut3y"]
 [ext_resource type="PackedScene" uid="uid://cv6iiauo728sf" path="res://Scenes/laser_shield.tscn" id="42_nwwfm"]
+[ext_resource type="PackedScene" path="res://Scenes/time_slow.tscn" id="43_time_slow"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_s8vy0"]
 shader = ExtResource("5_nwwfm")
@@ -423,6 +425,14 @@ func _on_music_volume_changed(volume_percent: float):
 	
 func _on_quit_button_pressed():
 	get_tree().paused = false
+	if get_parent().has_method(\"reset_shader_parameters\"):
+		get_parent().reset_shader_parameters()
+			
+	for g in [\"asteroides\", \"enemigos\", \"enemy_laser\", \"saws\"]:
+		for node in get_tree().get_nodes_in_group(g):
+			if is_instance_valid(node) and node is CanvasItem:
+				node.modulate = Color.WHITE
+					
 	get_tree().change_scene_to_packed(menu_scene)
 	
 func toggle_show(is_paused : bool) -> void :
@@ -1158,6 +1168,16 @@ spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="Timer" type="Timer" parent="PowerUp1Spawner" unique_id=213500583]
 wait_time = 10.0
+autostart = true
+
+[node name="TimeSlowSpawner" type="Node2D" parent="." unique_id=1028134838 node_paths=PackedStringArray("spawn_locator")]
+script = ExtResource("37_o1aky")
+pickup_scene = ExtResource("42_jut3y")
+reward_scene = ExtResource("43_time_slow")
+spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+
+[node name="Timer" type="Timer" parent="TimeSlowSpawner" unique_id=459495674]
+wait_time = 20.0
 autostart = true
 
 [node name="LaserShieldSpawner" type="Node2D" parent="." unique_id=771242446 node_paths=PackedStringArray("spawn_locator")]

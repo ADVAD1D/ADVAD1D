@@ -24,6 +24,9 @@ func _process(_delta: float) -> void:
 
 func _on_body_entered(body: Node2D):
 	if body.is_in_group("player"):
+		if reward_scene and "time_slow" in reward_scene.resource_path:
+			if get_tree().get_nodes_in_group("time_slow_effect").size() > 0:
+				return # Skip pickup if time slow is already active
 		call_deferred("_handle_pickup")
 		
 func _handle_pickup():
