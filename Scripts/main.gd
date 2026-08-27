@@ -40,7 +40,7 @@ func _ready() -> void:
 		GameManager.play_glitch_effect(crt_material)
 		GameManager.is_shader_animation = false
 		
-	if GameManager.mobile_mode_active and GameManager.phase_to_start <= 10:
+	if (GameManager.mobile_mode_active or OS.has_feature("web") or GameManager.force_web_mode) and GameManager.phase_to_start <= 10:
 		var ambient = get_node_or_null("AmbientParticles")
 		if ambient:
 			ambient.emitting = false
@@ -68,7 +68,7 @@ func reset_shader_parameters():
 		crt_material.set_shader_parameter("distort_intensity", 0.02)
 		crt_material.set_shader_parameter("static_noise_intensity", 0.01)
 		
-		if GameManager.mobile_mode_active:
+		if GameManager.mobile_mode_active or OS.has_feature("web") or GameManager.force_web_mode:
 			crt_material.set_shader_parameter("low_quality", true)
 			crt_material.set_shader_parameter("roll", false)
 

@@ -219,7 +219,7 @@ func start_new_phase():
 		if GameManager.is_speedrun_running:
 			GameManager.stop_speedrun()
 			
-		if GameManager.mobile_mode_active:
+		if GameManager.mobile_mode_active or OS.has_feature("web") or GameManager.force_web_mode:
 			var ambient = get_node_or_null("../AmbientParticles")
 			if ambient:
 				ambient.emitting = true

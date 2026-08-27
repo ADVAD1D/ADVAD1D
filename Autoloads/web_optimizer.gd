@@ -29,3 +29,10 @@ func _apply_to_scene(scene: Node) -> void:
 			var shader: Shader = (mat as ShaderMaterial).shader
 			if shader != null and shader.resource_path.contains("CRT"):
 				(mat as ShaderMaterial).set_shader_parameter("low_quality", true)
+				# Extreme Web Optimizations: Cut heavy GPU branches
+				(mat as ShaderMaterial).set_shader_parameter("warp_amount", false)
+				(mat as ShaderMaterial).set_shader_parameter("roll", false)
+				(mat as ShaderMaterial).set_shader_parameter("discolor", false)
+				(mat as ShaderMaterial).set_shader_parameter("pixelate", false)
+				(mat as ShaderMaterial).set_shader_parameter("noise_opacity", 0.0)
+				(mat as ShaderMaterial).set_shader_parameter("static_noise_intensity", 0.0)
