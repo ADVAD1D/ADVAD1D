@@ -93,6 +93,14 @@ func _on_laser_zone_area_entered(area: Area2D) -> void:
 
 		EnemyLaserPool.release(area)
 		
+	elif area.is_in_group("asteroides"):
+		if arena_index == 1 and asteroids_explosion_particles:
+			var ast_exp_instance = asteroids_explosion_particles.instantiate()
+			add_child(ast_exp_instance)
+			ast_exp_instance.global_position = area.global_position
+			
+		area.queue_free()
+		
 func _on_player_died() -> void:
 	Engine.time_scale = 1.0
 	
