@@ -54,6 +54,8 @@ const VisionRoutingScript := preload("res://addons/godot_ai/vision_routing.gd")
 const ExportPlugin := preload("res://addons/godot_ai/export/mcp_export_plugin.gd")
 const ClientConfigurator := preload("res://addons/godot_ai/client_configurator.gd")
 const WindowsPortReservation := preload("res://addons/godot_ai/utils/windows_port_reservation.gd")
+const McpToolRegistry := preload("res://addons/godot_ai/custom_tools/mcp_tool_registry.gd")
+const McpServiceLocator := preload("res://addons/godot_ai/custom_tools/mcp_service_locator.gd")
 
 ## Handlers are intentionally NOT preloaded here (#736). The old
 ## `const X := preload("res://addons/godot_ai/handlers/...")` block pulled
@@ -81,10 +83,25 @@ const HANDLERS_DIR := "res://addons/godot_ai/handlers/"
 ## resolver, and characterization tests share one source of truth.
 const SERVER_PID_FILE := PortResolver.SERVER_PID_FILE
 
-## How long we watch the spawned server for early exit. If the process is
-## still alive when this expires, we stop watching. Mid-session crashes
-## after this point get caught by the WebSocket disconnect flow.
+## How long we watch the spawned server for early exit once it has PROVEN it
+## started — i.e. published its pid-file. If the process is still alive when
+## this expires, we stop watching. Mid-session crashes after this point get
+## caught by the WebSocket disconnect flow.
 const SERVER_WATCH_MS := 30 * 1000
+## Watch ceiling for a spawn that has NOT yet published its pid-file (#896).
+##
+## The short window above justifies itself with "mid-session crashes surface
+## via WebSocket disconnect" — which is only true for a server that got far
+## enough to be connected to. A cold `uvx` spawn on a slow link can still be
+## resolving and downloading its ~67-package environment at 30s, having proven
+## nothing; stopping the watch there means a launcher that dies at 45s is never
+## observed, `_diagnose_spawn_fast_exit` never runs (it is only reachable from
+## inside the watch), and the plugin redials forever while the dock shows a
+## bare "Disconnected".
+##
+## Sized to cover that download. Independent of any pre-warm: this window has
+## to hold even when nothing warmed the cache first.
+const SERVER_COLD_START_WATCH_MS := 180 * 1000
 ## Python's import graph (FastMCP + Rich + uvicorn) plus the pid-file write
 ## take a beat on cold starts, especially on Windows. Hold off on declaring
 ## a spawn a crash until this window elapses so the watch loop has time to
@@ -153,6 +170,8 @@ var _dock
 var _debugger_plugin
 var _vision_routing
 var _export_plugin
+var _custom_tool_registry
+var _custom_tool_service_locator
 ## Spawn / stop / adopt orchestration plus state machine; allocated in
 ## `_init` so test fixtures (which never enter the tree) can drive
 ## `_start_server`. Owns `_server_pid`, `_server_state`, the version-
@@ -255,6 +274,15 @@ func _enter_tree() -> void:
 	## extend this plugin but never enter the tree — keep the synchronous
 	## default and can call-then-assert.
 	_lifecycle.defer_blocking_work = true
+	## A completed self-update means the user's Update click already
+	## authorized replacing the previous-version backend. Armed BEFORE the
+	## startup walk (a peek, not a drain — `_flush_pending_self_update_telemetry`
+	## below still owns the read-and-clear) so the walk can weak-proof-kill
+	## the stale server an attach bridge kept alive, and bounded retries
+	## absorb the bridge-respawn port race, instead of latching INCOMPATIBLE
+	## and waiting for a manual recovery click.
+	if _pending_self_update_succeeded():
+		_lifecycle.authorize_stale_recovery()
 	_start_server()
 	_startup_trace_phase("server_start")
 
@@ -287,6 +315,10 @@ func _enter_tree() -> void:
 		and not ServerStateScript.is_terminal_diagnosis(_lifecycle.get_state())
 	):
 		_arm_server_version_check()
+	## Replay the custom-tool catalog on (re)connect so tools registered
+	## before the initial connection or during a disconnect window reach
+	## the server — send_event silently drops while _connected is false.
+	_connection.connection_state_changed.connect(_on_connection_state_changed)
 
 	_telemetry = Telemetry.new(_connection)
 
@@ -489,6 +521,15 @@ func _enter_tree() -> void:
 	add_child(_connection)
 	_startup_trace_phase("handlers_registered")
 
+	# Custom tool registry
+	_custom_tool_service_locator = McpServiceLocator.new()
+	_custom_tool_service_locator.setup(_connection, _log_buffer)
+	_custom_tool_registry = McpToolRegistry.new()
+	_custom_tool_registry.setup(_dispatcher, _custom_tool_service_locator)
+	_custom_tool_registry.tools_changed.connect(_on_custom_tools_changed)
+	_custom_tool_registry.mark_ready()
+	_startup_trace_phase("custom_tools_ready")
+
 	# Dock panel
 	_dock = Dock.new()
 	_dock.vision_routing = _vision_routing
@@ -518,6 +559,28 @@ func record_dev_server_toggle(action: String) -> void:
 	_telemetry.record_dev_server_toggle(action)
 
 
+## Non-draining read of the runner's pending self-update marker. Peeked
+## before `_start_server` (the drain in `_flush_pending_self_update_telemetry`
+## runs later, after the dock attaches) so the startup walk knows an update
+## just completed. Only a `status == "success"` marker counts: a failed
+## install left the OLD plugin version enabled, and killing a same-version
+## backend is not this path's business.
+func _pending_self_update_succeeded() -> bool:
+	var settings := EditorInterface.get_editor_settings()
+	if settings == null:
+		return false
+	var key := UPDATE_RELOAD_RUNNER_SCRIPT.PENDING_SELF_UPDATE_TELEMETRY_KEY
+	if not settings.has_setting(key):
+		return false
+	var raw := str(settings.get_setting(key))
+	if raw.is_empty():
+		return false
+	var parsed = JSON.parse_string(raw)
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return false
+	return str(parsed.get("status", "")) == "success"
+
+
 ## Drain any self_update event written by `update_reload_runner` during the
 ## previous disable -> enable window.
 func _flush_pending_self_update_telemetry() -> void:
@@ -528,9 +591,23 @@ func _flush_pending_self_update_telemetry() -> void:
 	var status := str(parsed.get("status", "unknown"))
 	var error := str(parsed.get("error", ""))
 	## Positional args: GDScript doesn't support keyword args in calls
-	## (unlike Python). from_version + to_version are empty strings here
-	## — only ``status`` and ``error`` are known at flush time.
-	_telemetry.record_self_update(status, "", "", error)
+	## (unlike Python). from/to versions ride the marker since the repin
+	## gate landed; markers written by older runners simply lack them.
+	var from_version := str(parsed.get("from_version", ""))
+	var to_version := str(parsed.get("to_version", ""))
+	_telemetry.record_self_update(status, from_version, to_version, error)
+	## After a successful update, previously-configured client entries still
+	## pin the old server version; arm the dock's one-shot auto-repin so its
+	## first healthy status sweep rewrites them without the user having to
+	## click through the drift banner. The dock repins ONLY entries whose
+	## sole drift is the old version pin — it needs `from_version` to render
+	## that comparison, so a marker from an older runner (no version fields)
+	## arms nothing and the drift banner stays the manual path. `has_method`
+	## (not a typed call): the dock script is one of the files the update
+	## just overwrote, and the untyped-reference convention applies across
+	## that boundary.
+	if status == "success" and _dock != null and _dock.has_method("notify_self_update_success"):
+		_dock.notify_self_update_success(from_version)
 
 
 
@@ -546,6 +623,12 @@ func _exit_tree() -> void:
 		_server_started_this_session = false
 		_headless_disabled = false
 		return
+
+	if _custom_tool_registry != null:
+		_custom_tool_registry.clear()
+		_custom_tool_registry = null
+
+	_custom_tool_service_locator = null
 
 	## Outer-to-inner teardown. Dispatcher Callables hold RefCounted handlers
 	## alive past the point where Godot reloads their class_name scripts — the
@@ -1078,11 +1161,12 @@ func _on_server_version_unverified() -> void:
 	_update_process_enabled()
 
 
-## Start a 1s-tick timer that watches the spawned server for up to
-## SERVER_WATCH_MS. If the process dies inside the window we drain the
-## captured pipes and mark the server as crashed so the dock can surface
-## what went wrong. After the window expires we close the pipes so they
-## don't pin file descriptors or fill their kernel buffers. See #146.
+## Start a 1s-tick timer that watches the spawned server through its cold-start
+## window, then for SERVER_WATCH_MS after pid-file publication. If the process
+## dies inside the active window we drain the captured pipes and mark the server
+## as crashed so the dock can surface what went wrong. After the window expires
+## we close the pipes so they don't pin file descriptors or fill their kernel
+## buffers. See #146 and #896.
 func _start_server_watch() -> void:
 	_stop_server_watch()
 	_server_watch_timer = Timer.new()
@@ -1358,6 +1442,14 @@ func _evaluate_recovery_port_occupant_proof(
 		return {"proof": "status_name", "pids": _find_all_pids_on_port(port)}
 
 	return {"proof": "", "pids": []}
+
+
+## Seam over the static pre-warm so lifecycle recovery flows can fire it
+## through the host (`_host._prewarm_server_package(...)`) and test stubs
+## can record the call instead of spawning a real uvx process. Worker-safe:
+## the static touches only CliFinder (mutex-guarded) and OS.create_process.
+func _prewarm_server_package(version: String) -> int:
+	return ClientConfigurator.prewarm_server_package(version)
 
 
 func _recover_strong_port_occupant(port: int, wait_s: float, pre_kill_live: Dictionary = {}) -> bool:
@@ -1797,12 +1889,22 @@ func _resume_connection_after_recovery() -> void:
 	_arm_server_version_check()
 
 
-func recover_incompatible_server() -> bool:
+func recover_incompatible_server(user_initiated: bool = true, stale_version: String = "") -> bool:
+	## A user's click (the dock's Restart) authorizes the bounded
+	## stale-occupant retry for this episode, so a bridge respawning the old
+	## version and winning the post-kill bind race gets re-killed
+	## automatically instead of dead-ending the click in a terminal state.
+	## The automatic triggers (post-update handshake mismatch, fast-exit
+	## re-walk) call with `user_initiated=false` and only SPEND from the
+	## already-authorized budget — re-arming there would unbound the
+	## kill/respawn loop against a persistent respawner.
+	if user_initiated:
+		_lifecycle.authorize_stale_recovery()
 	## `await` because the manager's recovery is a coroutine in production
 	## (#678): `_resume_connection_after_recovery` gates on the post-walk
 	## state, so it must not run until the respawn walk has completed. With
 	## `defer_blocking_work` off this completes synchronously.
-	if not await _lifecycle.recover_incompatible_server():
+	if not await _lifecycle.recover_incompatible_server(stale_version):
 		return false
 	_resume_connection_after_recovery()
 	return true
@@ -2006,3 +2108,37 @@ func can_restart_managed_server() -> bool:
 	## means this plugin spawned/adopted a managed server; a non-empty
 	## managed record is the cross-session proof used by the drift branch.
 	return _lifecycle.can_restart_managed_server()
+
+
+func _on_custom_tools_changed() -> void:
+	if _connection == null:
+		push_warning("MCP | connection isn't established")
+		return
+	var tool_list: Array[Dictionary] = []
+	## Send all definitions plus their state: the server hides disabled tools
+	## from fresh tools/list responses but retains a callable tombstone so a
+	## client using a cached promoted name receives CUSTOM_TOOL_DISABLED.
+	for spec in _custom_tool_registry.all():
+		tool_list.append({
+			"name": spec.name,
+			"description": spec.description,
+			"params_schema": spec.params_schema,
+			"source": spec.source,
+			"deferred": spec.deferred,
+			"timeout_ms": spec.timeout_ms,
+			"requires_writable": spec.requires_writable,
+			"undoable": spec.undoable,
+			"promoted": spec.promoted,
+			"enabled": _custom_tool_registry.is_tool_enabled(spec.name)
+		})
+	_connection.send_event("custom_tools_changed", {"tools": tool_list})
+
+
+## On (re)connect, replay the current custom-tool catalog so tools
+## registered before the initial connection or during a disconnect
+## window reach the server. send_event silently drops while
+## _connected is false (connection.gd::_send_json), so without this
+## replay those tools only surface on the next registry mutation.
+func _on_connection_state_changed(is_open: bool) -> void:
+	if is_open and _custom_tool_registry != null:
+		_on_custom_tools_changed()
