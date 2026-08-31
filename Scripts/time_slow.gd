@@ -8,12 +8,15 @@ func _ready() -> void:
 	add_to_group("time_slow_effect")
 	Engine.time_scale = slow_factor
 	
-	# Pitch shift audio
-	var master_bus = AudioServer.get_bus_index("Master")
-	var pitch_idx = _get_or_add_pitch_effect(master_bus)
-	if pitch_idx != -1:
-		AudioServer.set_bus_effect_enabled(master_bus, pitch_idx, true)
-		AudioServer.get_bus_effect(master_bus, pitch_idx).pitch_scale = slow_factor
+	# Pitch logic
+	if OS.has_feature("web") or GameManager.force_web_mode:
+		AudioServer.playback_speed_scale = slow_factor
+	else:
+		var master_bus = AudioServer.get_bus_index("Master")
+		var pitch_idx = _get_or_add_pitch_effect(master_bus)
+		if pitch_idx != -1:
+			AudioServer.set_bus_effect_enabled(master_bus, pitch_idx, true)
+			AudioServer.get_bus_effect(master_bus, pitch_idx).pitch_scale = slow_factor
 	
 	var main_scene = get_tree().current_scene
 	var tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
@@ -35,9 +38,14 @@ func _ready() -> void:
 	await get_tree().create_timer(slow_duration, false, false, true).timeout
 	
 	Engine.time_scale = 1.0
-	if pitch_idx != -1:
-		AudioServer.get_bus_effect(master_bus, pitch_idx).pitch_scale = 1.0
-		AudioServer.set_bus_effect_enabled(master_bus, pitch_idx, false)
+	if OS.has_feature("web") or GameManager.force_web_mode:
+		AudioServer.playback_speed_scale = 1.0
+	else:
+		var master_bus = AudioServer.get_bus_index("Master")
+		var pitch_idx = _get_or_add_pitch_effect(master_bus)
+		if pitch_idx != -1:
+			AudioServer.get_bus_effect(master_bus, pitch_idx).pitch_scale = 1.0
+			AudioServer.set_bus_effect_enabled(master_bus, pitch_idx, false)
 	
 	if not is_instance_valid(main_scene):
 		queue_free()
@@ -63,3 +71,5 @@ func _get_or_add_pitch_effect(bus_idx: int) -> int:
 	var effect = AudioEffectPitchShift.new()
 	AudioServer.add_bus_effect(bus_idx, effect)
 	return AudioServer.get_bus_effect_count(bus_idx) - 1
+
+

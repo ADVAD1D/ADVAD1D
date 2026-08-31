@@ -58,11 +58,14 @@ func reset_shader_parameters():
 		if bg and bg.material:
 			bg.material.set_shader_parameter("grayscale_amount", 0.0)
 		
-	var master_bus = AudioServer.get_bus_index("Master")
-	for i in range(AudioServer.get_bus_effect_count(master_bus)):
-		if AudioServer.get_bus_effect(master_bus, i) is AudioEffectPitchShift:
-			AudioServer.get_bus_effect(master_bus, i).pitch_scale = 1.0
-			AudioServer.set_bus_effect_enabled(master_bus, i, false)
+	if OS.has_feature("web") or GameManager.force_web_mode:
+		AudioServer.playback_speed_scale = 1.0
+	else:
+		var master_bus = AudioServer.get_bus_index("Master")
+		for i in range(AudioServer.get_bus_effect_count(master_bus)):
+			if AudioServer.get_bus_effect(master_bus, i) is AudioEffectPitchShift:
+				AudioServer.get_bus_effect(master_bus, i).pitch_scale = 1.0
+				AudioServer.set_bus_effect_enabled(master_bus, i, false)
 			
 	if is_instance_valid(crt_material):
 		crt_material.set_shader_parameter("aberration", 0.02)
@@ -108,11 +111,14 @@ func _on_player_died() -> void:
 		if bg and bg.material:
 			bg.material.set_shader_parameter("grayscale_amount", 0.0)
 		
-	var master_bus = AudioServer.get_bus_index("Master")
-	for i in range(AudioServer.get_bus_effect_count(master_bus)):
-		if AudioServer.get_bus_effect(master_bus, i) is AudioEffectPitchShift:
-			AudioServer.get_bus_effect(master_bus, i).pitch_scale = 1.0
-			AudioServer.set_bus_effect_enabled(master_bus, i, false)
+	if OS.has_feature("web") or GameManager.force_web_mode:
+		AudioServer.playback_speed_scale = 1.0
+	else:
+		var master_bus = AudioServer.get_bus_index("Master")
+		for i in range(AudioServer.get_bus_effect_count(master_bus)):
+			if AudioServer.get_bus_effect(master_bus, i) is AudioEffectPitchShift:
+				AudioServer.get_bus_effect(master_bus, i).pitch_scale = 1.0
+				AudioServer.set_bus_effect_enabled(master_bus, i, false)
 	# Reset modules for entities
 	for g in ["asteroides", "enemigos", "enemy_laser", "saws"]:
 		for node in get_tree().get_nodes_in_group(g):
