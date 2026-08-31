@@ -7,7 +7,7 @@ env:
   GODOT_VERSION: 4.7.1-stable
   GODOT_EXECUTABLE_URL: https://github.com/godotengine/godot/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip
   GODOT_TEMPLATES_URL: https://github.com/godotengine/godot/releases/download/4.7.1-stable/Godot_v4.7.1-stable_export_templates.tpz
-  EXPORT_TEMPLATE_DIR: 4.7.1-stable
+  EXPORT_TEMPLATE_DIR: 4.7.1.stable
   WEBSITE_REPO: ANGELUSD11/ANGELUSD11.github.io
   WEBSITE_BRANCH: main
   WEBSITE_DEST_DIR: public/advad-game
