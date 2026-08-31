@@ -62,6 +62,7 @@ func reset_shader_parameters():
 	for i in range(AudioServer.get_bus_effect_count(master_bus)):
 		if AudioServer.get_bus_effect(master_bus, i) is AudioEffectPitchShift:
 			AudioServer.get_bus_effect(master_bus, i).pitch_scale = 1.0
+			AudioServer.set_bus_effect_enabled(master_bus, i, false)
 			
 	if is_instance_valid(crt_material):
 		crt_material.set_shader_parameter("aberration", 0.02)
@@ -111,7 +112,7 @@ func _on_player_died() -> void:
 	for i in range(AudioServer.get_bus_effect_count(master_bus)):
 		if AudioServer.get_bus_effect(master_bus, i) is AudioEffectPitchShift:
 			AudioServer.get_bus_effect(master_bus, i).pitch_scale = 1.0
-			
+			AudioServer.set_bus_effect_enabled(master_bus, i, false)
 	# Reset modules for entities
 	for g in ["asteroides", "enemigos", "enemy_laser", "saws"]:
 		for node in get_tree().get_nodes_in_group(g):

@@ -12,6 +12,7 @@ func _ready() -> void:
 	var master_bus = AudioServer.get_bus_index("Master")
 	var pitch_idx = _get_or_add_pitch_effect(master_bus)
 	if pitch_idx != -1:
+		AudioServer.set_bus_effect_enabled(master_bus, pitch_idx, true)
 		AudioServer.get_bus_effect(master_bus, pitch_idx).pitch_scale = slow_factor
 	
 	var main_scene = get_tree().current_scene
@@ -36,6 +37,7 @@ func _ready() -> void:
 	Engine.time_scale = 1.0
 	if pitch_idx != -1:
 		AudioServer.get_bus_effect(master_bus, pitch_idx).pitch_scale = 1.0
+		AudioServer.set_bus_effect_enabled(master_bus, pitch_idx, false)
 	
 	if not is_instance_valid(main_scene):
 		queue_free()
