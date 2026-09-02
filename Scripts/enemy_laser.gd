@@ -22,6 +22,12 @@ func activate(spawn_position: Vector2, start_direction: Vector2) -> void:
 	if has_node("PointLight2D"):
 		get_node("PointLight2D").color = Color.WHITE
 		
+	# Restaurar grupos por si fue rebotado por el escudo del jugador
+	if is_in_group("lasers"):
+		remove_from_group("lasers")
+	if not is_in_group("enemy_laser"):
+		add_to_group("enemy_laser")
+		
 	is_active = true
 	show()
 	set_physics_process(true)
