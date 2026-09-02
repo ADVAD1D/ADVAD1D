@@ -27,7 +27,7 @@ var can_pause: bool = true
 var retro_shader_active: bool = true
 
 # mobile compatibility bool
-var mobile_mode_active: bool = true
+var mobile_mode_active: bool = false
 var using_touch_controls: bool = true
 var disable_auto_hide_mobile_controls: bool = false # Set to true to test mobile UI on PC with keyboard
 var mobile_layout: Dictionary = {}
@@ -52,6 +52,7 @@ var browser_support: bool = false
 
 ## Toggles admin-specific UI options or abilities.
 var admin_control: bool = false
+var mute_game: bool = false
 
 ## Toggles rotational movement vs absolute directional movement.
 var relative_control_active: bool = false
@@ -71,6 +72,7 @@ const save_path: String = "user://save_game.json"
 func _ready() -> void:
 	randomize()
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	mute_master_channel()
 	# Disable Android's default behavior of instantly killing the app on Back button press
 	get_tree().quit_on_go_back = false
 	
@@ -284,6 +286,9 @@ func freeze_frame():
 func unfreeze_frame():
 	if is_instance_valid(_transition_layer):
 		_transition_layer.hide()
+		
+func mute_master_channel():
+	AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), mute_game)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:

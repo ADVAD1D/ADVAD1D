@@ -43,8 +43,8 @@ func _on_area_entered(area: Area2D):
 		metal_sound.play()
 		
 		if area.has_method("set_direction"):
-			Callable(area, "set_direction").call_deferred(-area.direction)
-			#change the group
+			var normal = (area.global_position - global_position).normalized()
+			area.set_direction(area.direction.bounce(normal))
 			area.call_deferred("remove_from_group", "enemy_laser")
 			area.call_deferred("add_to_group", "lasers")
 			
