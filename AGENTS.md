@@ -57,3 +57,7 @@
 - `died` - Player death.
 - `server_status_checked(is_online)` - API server status.
 - `ai_response_received(text)` - AI response received.
+## Agent Rules & Boundaries
+1. **No Git Commands:** Agents are strictly prohibited from executing Git commands (commit, push, pull, etc.). Version control is exclusively managed by the developer. 
+2. **Ask Permission for Commands:** Agents must ALWAYS ask for explicit permission before executing ANY terminal command on the system.
+3. **No Unauthorized Scripting:** Agents must ask for permission before creating or running any Python scripts, utility scripts, or node search scripts.

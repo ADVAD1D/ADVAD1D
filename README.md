@@ -172,6 +172,13 @@ git clone https://github.com/hi-godot/godot-ai.git
 cp -r godot-ai/plugin/addons/godot_ai your-project/addons/
 ```
 
+## Agent Rules & Boundaries
+
+The following rules apply to any LLM, AI coding assistant, or Agent operating within this repository:
+1. **No Git Commands:** Agents are strictly prohibited from executing Git commands (commit, push, pull, etc.). Version control is exclusively managed by the developer.
+2. **Ask Permission for Commands:** Agents must ALWAYS ask for explicit permission before executing ANY terminal command on the system.
+3. **No Unauthorized Scripting:** Agents must ask for permission before creating or running any Python scripts, utility scripts, or node search scripts.
+
 ## Credits
 
 -   **Development and Design:** ANGELUS11 and Cro128
