@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://qfrlx31ingdm"]
+[gd_scene format=3 uid="uid://qfrlx31ingdm"]
 
 [ext_resource type="Script" uid="uid://ch5b5ohdp314i" path="res://Scripts/dash_particles.gd" id="1_r1aea"]
 
@@ -33,7 +33,7 @@ scale_curve = SubResource("CurveTexture_uctwq")
 color_ramp = SubResource("GradientTexture1D_8yv8o")
 color_initial_ramp = SubResource("GradientTexture1D_ubxch")
 
-[node name="GPUParticles2D" type="GPUParticles2D"]
+[node name="GPUParticles2D" type="GPUParticles2D" unique_id=180598098]
 scale = Vector2(14.411268, 14.411268)
 emitting = false
 amount = 20
