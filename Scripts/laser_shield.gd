@@ -36,15 +36,26 @@ func play_all(animation_name: String):
 		if is_instance_valid(sprite):
 			sprite.play(animation_name)
 		
+var last_impact_time: int = 0
+
 func _on_area_entered(area: Area2D):
 	if area.is_in_group("enemy_laser"):
-		play_all("break")
-		call_deferred("_spawn_laser_particles", area.global_position)
-		metal_sound.play()
+		var current_time = Time.get_ticks_msec()
+		if current_time - last_impact_time > 50:
+			play_all("break")
+			call_deferred("_spawn_laser_particles", area.global_position)
+			metal_sound.play()
+			last_impact_time = current_time
 		
 		if area.has_method("set_direction"):
+			# OPTIMIZATION (Mobile/Web): We use native C++ math (bounce) synchronously 
+			# instead of Callable(area, "set_direction").call_deferred(). 
+			# Creating dynamic Callables for dozens of lasers simultaneously saturates memory 
+			# and causes severe lag/stuttering on mobile and web CPUs.
 			var normal = (area.global_position - global_position).normalized()
 			area.set_direction(area.direction.bounce(normal))
+			
+			# Groups MUST be changed deferred to avoid corrupting the physics engine state.
 			area.call_deferred("remove_from_group", "enemy_laser")
 			area.call_deferred("add_to_group", "lasers")
 			
