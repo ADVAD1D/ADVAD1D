@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://fcafgnv8sg0t"]
+[gd_scene format=3 uid="uid://fcafgnv8sg0t"]
 
 [ext_resource type="Texture2D" uid="uid://dnutwgdk62yv3" path="res://Assets/Sprites/ship_enemy_particles.png" id="1_3pvn4"]
 [ext_resource type="Script" uid="uid://datoayxuels3x" path="res://Scripts/enemy_ship_exp_particles.gd" id="2_wm7ww"]
@@ -38,7 +38,7 @@ scale_curve = SubResource("CurveTexture_wc416")
 color_ramp = SubResource("GradientTexture1D_y1j6a")
 color_initial_ramp = SubResource("GradientTexture1D_f4876")
 
-[node name="GPUParticles2D" type="GPUParticles2D"]
+[node name="GPUParticles2D" type="GPUParticles2D" unique_id=997885991]
 scale = Vector2(3.6400013, 3.6400013)
 emitting = false
 texture = ExtResource("1_3pvn4")

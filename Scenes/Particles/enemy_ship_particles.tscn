@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://ct5mpwv8axj52"]
+[gd_scene format=3 uid="uid://ct5mpwv8axj52"]
 
 [ext_resource type="Texture2D" uid="uid://c8m6laqobfju7" path="res://Assets/Sprites/enemy_laser.png" id="1_1wrnq"]
 [ext_resource type="Script" uid="uid://c56mbp7t8fey7" path="res://Scripts/enemy_ship_particles.gd" id="2_1wrnq"]
@@ -33,7 +33,7 @@ scale_curve = SubResource("CurveTexture_6rrr5")
 color_ramp = SubResource("GradientTexture1D_1krf0")
 color_initial_ramp = SubResource("GradientTexture1D_xx037")
 
-[node name="GPUParticles2D" type="GPUParticles2D"]
+[node name="GPUParticles2D" type="GPUParticles2D" unique_id=462832229]
 emitting = false
 amount = 15
 texture = ExtResource("1_1wrnq")

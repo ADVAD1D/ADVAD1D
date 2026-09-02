@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://5r1c4072iu8o"]
+[gd_scene format=3 uid="uid://5r1c4072iu8o"]
 
 [ext_resource type="Texture2D" uid="uid://o81fbjmikfi0" path="res://Assets/Sprites/sawparticle.png" id="1_a7ldg"]
 [ext_resource type="Script" uid="uid://cs70fd85pixj5" path="res://Scripts/saw_particles.gd" id="2_uacgd"]
@@ -39,7 +39,7 @@ scale_curve = SubResource("CurveTexture_x2ebu")
 color_ramp = SubResource("GradientTexture1D_xins3")
 color_initial_ramp = SubResource("GradientTexture1D_5lcct")
 
-[node name="SawParticles" type="GPUParticles2D"]
+[node name="SawParticles" type="GPUParticles2D" unique_id=2129113917]
 scale = Vector2(2, 2)
 emitting = false
 texture = ExtResource("1_a7ldg")

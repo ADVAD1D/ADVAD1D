@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bki3b3v25kne5"]
+[gd_scene format=3 uid="uid://bki3b3v25kne5"]
 
 [ext_resource type="Texture2D" uid="uid://b83i0j45sb22j" path="res://Assets/Sprites/laser_shield_particles.png" id="1_yg3in"]
 [ext_resource type="Script" uid="uid://cfn46vj0do2j3" path="res://Scripts/laser_shield_break.gd" id="2_g1t1d"]
@@ -24,7 +24,7 @@ scale_min = 7.0
 scale_max = 10.0
 scale_curve = SubResource("CurveTexture_us7ca")
 
-[node name="GPUParticles2D" type="GPUParticles2D"]
+[node name="GPUParticles2D" type="GPUParticles2D" unique_id=387492824]
 scale = Vector2(1.9793239, 1.9793239)
 emitting = false
 texture = ExtResource("1_yg3in")

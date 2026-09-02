@@ -71,5 +71,3 @@ func _get_or_add_pitch_effect(bus_idx: int) -> int:
 	var effect = AudioEffectPitchShift.new()
 	AudioServer.add_bus_effect(bus_idx, effect)
 	return AudioServer.get_bus_effect_count(bus_idx) - 1
-
-

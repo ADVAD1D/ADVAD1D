@@ -10,6 +10,7 @@ signal died
 
 @onready var separation_area: Area2D = $SeparationArea
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
+@onready var trail: GPUParticles2D = $Trail
 
 var metal_sound: AudioStreamPlayer2D = preload("res://Assets/Audio/AudioScenes/saw_explosion_sound.tscn").instantiate()
 
@@ -29,6 +30,10 @@ func _ready() -> void:
 	var tween = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)
 	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.2)
+	
+	if GameManager.mobile_mode_active:
+		if has_node("Trail"):
+			trail.lifetime = 0.4
 
 func _physics_process(delta: float) -> void:
 	rotation_degrees += rotation_speed * delta

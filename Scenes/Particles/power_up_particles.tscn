@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cmcsvsmm6ibwi"]
+[gd_scene format=3 uid="uid://cmcsvsmm6ibwi"]
 
 [ext_resource type="Texture2D" uid="uid://by6s0mv3si4wy" path="res://Assets/Sprites/powerup1particle.png" id="1_ymdje"]
 [ext_resource type="Script" uid="uid://d4ex72b5igd2e" path="res://Scripts/power_up_particles.gd" id="2_t0td2"]
@@ -39,7 +39,7 @@ scale_curve = SubResource("CurveTexture_cakxq")
 color_ramp = SubResource("GradientTexture1D_qheyd")
 color_initial_ramp = SubResource("GradientTexture1D_fpuoh")
 
-[node name="PowerUpParticles" type="GPUParticles2D"]
+[node name="PowerUpParticles" type="GPUParticles2D" unique_id=662868108]
 scale = Vector2(1.9230657, 1.9230657)
 emitting = false
 texture = ExtResource("1_ymdje")
