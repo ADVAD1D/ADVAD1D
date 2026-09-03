@@ -33,7 +33,7 @@ func _ready() -> void:
 	
 	if GameManager.mobile_mode_active:
 		if has_node("Trail"):
-			trail.lifetime = 0.4
+			trail.lifetime = 0.2
 
 func _physics_process(delta: float) -> void:
 	rotation_degrees += rotation_speed * delta
