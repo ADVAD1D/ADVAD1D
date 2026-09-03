@@ -204,6 +204,12 @@ var ship_data = [
 		"name": "ship33",
 		"author": "RobloxIris",
 		"texture": preload("res://Assets/Sprites/Ships/ship33.png")
+	},
+	
+	{
+		"name": "ship34",
+		"author": "Golty1p",
+		"texture": preload("res://Assets/Sprites/Ships/ship34.png")
 	}
 ]
 
