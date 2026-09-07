@@ -35,7 +35,6 @@ func _ready() -> void:
 	
 	if GameManager.mobile_mode_active:
 		for light in find_children("*", "PointLight2D", true, false):
-			light.enabled = false
 			light.shadow_enabled = false
 			
 	if is_instance_valid(drone_sprite):
