@@ -25,6 +25,10 @@ boot_splash/use_filter=false
 config/icon="uid://xy0iuk8w6ung"
 config/windows_native_icon="res://Ship2scaled.ico"
 
+[audio]
+
+buses/default_bus_layout="uid://cn7ss37mcgp38"
+
 [autoload]
 
 SkinManager="*res://Autoloads/skin_manager.gd"

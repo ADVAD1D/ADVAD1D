@@ -10,7 +10,7 @@ extends Node2D
 @onready var drone_sprite: AnimatedSprite2D = get_node_or_null("DronePath/PathFollow2D/DroneSprite")
 @onready var drone2_sprite: AnimatedSprite2D = get_node_or_null("DronePath2/PathFollow2D/DroneSprite")
 @onready var fade_rect: ColorRect = $UILayer/FadeRect
-@onready var bottom_light: PointLight2D = $MainLight2D/BottomLight
+@onready var main_light: PointLight2D = $MainLight2D
 
 var base_zoom: Vector2
 @export var laser_explosion_particles: PackedScene
@@ -32,7 +32,12 @@ func _ready() -> void:
 	player.connect("dash", Callable(self, "_on_player_dashed"))
 	saw_spawner.first_saw_spawner.connect(saw_sound.play, CONNECT_ONE_SHOT)
 	laser_wall_animated.play()
-	bottom_light.shadow_enabled = false
+	
+	if GameManager.mobile_mode_active:
+		for light in find_children("*", "PointLight2D", true, false):
+			light.enabled = false
+			light.shadow_enabled = false
+			
 	if is_instance_valid(drone_sprite):
 		drone_sprite.play()
 	if is_instance_valid(drone2_sprite):

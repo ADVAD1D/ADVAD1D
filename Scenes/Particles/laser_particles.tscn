@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dohhwkxxtna34"]
+[gd_scene format=3 uid="uid://dohhwkxxtna34"]
 
 [ext_resource type="Texture2D" uid="uid://c4nc6xv4hc424" path="res://Assets/Sprites/shoot.png" id="1_bwm2k"]
 [ext_resource type="Script" uid="uid://buu2wviubuh2m" path="res://Scripts/laser_particles.gd" id="2_3rj2p"]
@@ -27,7 +27,7 @@ gravity = Vector3(0, 98, 0)
 color_ramp = SubResource("GradientTexture1D_fhi5n")
 color_initial_ramp = SubResource("GradientTexture1D_3rj2p")
 
-[node name="GPUParticles2D" type="GPUParticles2D"]
+[node name="GPUParticles2D" type="GPUParticles2D" unique_id=1064939831]
 emitting = false
 amount = 15
 texture = ExtResource("1_bwm2k")
