@@ -43,7 +43,17 @@ func _ready() -> void:
 	if (GameManager.mobile_mode_active or OS.has_feature("web") or GameManager.force_web_mode) and GameManager.phase_to_start <= 10:
 		var ambient = get_node_or_null("AmbientParticles")
 		if ambient:
-			ambient.emitting = false
+			if OS.has_feature("web") or GameManager.force_web_mode:
+				# WebGL stutter workaround: force compilation invisibly
+				ambient.modulate.a = 0.0 # 100% invisible to the user
+				get_tree().create_timer(1.0).timeout.connect(func():
+					if is_instance_valid(ambient):
+						ambient.emitting = false
+						ambient.modulate.a = 1.0
+				)
+			else:
+				# Mobile: immediate disable to save GPU performance, mobile compiles faster later
+				ambient.emitting = false
 			
 	if GameManager.is_glitch_sound:
 		GameManager.play_glitch_sound(glitch_sound)
