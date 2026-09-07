@@ -69,10 +69,18 @@ const save_path: String = "user://save_game.json"
 #linux: ~/.local/share/godot/app_userdata/ProjectName/
 #android/ios: user://
 
+var preloaded_main: PackedScene
+var preloaded_tutorial: PackedScene
+var preloaded_arena2: PackedScene
+
 func _ready() -> void:
 	randomize()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	mute_master_channel()
+	
+	# Precarga de escenas masivas para evitar tirones en Web
+	_preload_heavy_scenes()
+
 	# Disable Android's default behavior of instantly killing the app on Back button press
 	get_tree().quit_on_go_back = false
 	
@@ -81,6 +89,18 @@ func _ready() -> void:
 	if start_server == true:
 		Network.wake_up_server()
 	load_data()
+
+func _preload_heavy_scenes():
+	if browser_support or OS.has_feature("web"):
+		_log_message("Preloading heavy scenes for the Web version...")
+	else:
+		_log_message("Preloading heavy scenes...")
+		
+	# By keeping these variables alive in the Autoload (GameManager) 
+	# Godot keeps them in RAM, making get_tree().change_scene_to_file() instantaneous.
+	preloaded_main = load("res://Scenes/main.tscn")
+	preloaded_tutorial = load("res://Scenes/tutorial.tscn")
+	preloaded_arena2 = load("res://Scenes/arena2.tscn")
 
 func _process(delta: float) -> void:
 	fps = Engine.get_frames_per_second()

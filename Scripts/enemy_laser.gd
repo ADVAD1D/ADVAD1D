@@ -48,16 +48,24 @@ func deactivate() -> void:
 func start(start_direction: Vector2):
 	set_direction(start_direction)
 
+var _ray_query: PhysicsRayQueryParameters2D
+
+func _ready() -> void:
+	_ray_query = PhysicsRayQueryParameters2D.new()
+	_ray_query.collide_with_areas = false
+	_ray_query.collision_mask = 1
+
 ## Raycasts the current->next segment so fast bullets can't tunnel through the
 ## thin arena walls (StaticBody2D, which Area2D never physically stops against).
 ## Upon hit, it releases itself back to the pool instead of destroying itself.
 func _physics_process(delta: float) -> void:
 	var motion: Vector2 = direction * speed * delta
 	var space: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
-	var query: PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(global_position, global_position + motion)
-	query.collide_with_areas = false
-	query.collision_mask = 1
-	var hit: Dictionary = space.intersect_ray(query)
+	
+	_ray_query.from = global_position
+	_ray_query.to = global_position + motion
+	
+	var hit: Dictionary = space.intersect_ray(_ray_query)
 	if hit and hit.collider is StaticBody2D:
 		_spawn_impact_particles(hit.position)
 		EnemyLaserPool.release(self)
