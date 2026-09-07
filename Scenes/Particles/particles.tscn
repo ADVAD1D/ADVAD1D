@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://df8hpgwrn52l8"]
+[gd_scene format=3 uid="uid://df8hpgwrn52l8"]
 
 [ext_resource type="Texture2D" uid="uid://cepnfb4qe6mjq" path="res://Assets/Sprites/asteroidparticlebig.png" id="1_bilbs"]
 [ext_resource type="Script" uid="uid://3ifsbbn0rkik" path="res://Scripts/particles.gd" id="2_d1cxn"]
@@ -33,7 +33,7 @@ scale_curve = SubResource("CurveTexture_1cx5h")
 color_ramp = SubResource("GradientTexture1D_7cmwn")
 color_initial_ramp = SubResource("GradientTexture1D_k4hqv")
 
-[node name="AsteroidsExplosion" type="GPUParticles2D"]
+[node name="AsteroidsExplosion" type="GPUParticles2D" unique_id=1376204031]
 scale = Vector2(10.28, 10.28)
 emitting = false
 amount = 25

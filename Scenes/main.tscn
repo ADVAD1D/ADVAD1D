@@ -711,7 +711,7 @@ texture = SubResource("GradientTexture2D_b3802")
 [node name="Rightlight" type="PointLight2D" parent="MainLight2D" unique_id=36411309]
 position = Vector2(64.8136, 9.81579)
 rotation = -3.12224
-scale = Vector2(0.422627, 0.347391)
+scale = Vector2(0.3452385, 0.2837792)
 skew = -0.00183356
 energy = 0.5
 texture = SubResource("GradientTexture2D_fevyy")
@@ -719,7 +719,7 @@ texture = SubResource("GradientTexture2D_fevyy")
 [node name="Leftlight" type="PointLight2D" parent="MainLight2D" unique_id=571429207]
 position = Vector2(-64.0479, 10.1757)
 rotation = 1.58322
-scale = Vector2(0.303801, 0.425917)
+scale = Vector2(0.25441763, 0.35668346)
 skew = -0.00679803
 energy = 0.5
 texture = SubResource("GradientTexture2D_fevyy")
@@ -727,21 +727,21 @@ texture = SubResource("GradientTexture2D_fevyy")
 [node name="UpLightRight" type="PointLight2D" parent="MainLight2D" unique_id=1047623433]
 position = Vector2(31.6489, -17.5418)
 rotation = -0.00507933
-scale = Vector2(0.36698, 0.184983)
+scale = Vector2(0.29935735, 0.15089656)
 skew = 0.292145
 texture = SubResource("GradientTexture2D_hibaj")
 
 [node name="UpLightLeft" type="PointLight2D" parent="MainLight2D" unique_id=1902912502]
 position = Vector2(-31.383, -18.7948)
 rotation = -3.09272
-scale = Vector2(0.392089, -0.154698)
+scale = Vector2(0.31581327, -0.12460355)
 skew = -0.251327
 texture = SubResource("GradientTexture2D_hibaj")
 
 [node name="BottomLight" type="PointLight2D" parent="MainLight2D" unique_id=499554263]
 texture_filter = 2
 position = Vector2(-0.132979, 26.7005)
-scale = Vector2(1.39539, 0.648821)
+scale = Vector2(0.89984787, 0.41840646)
 texture = SubResource("GradientTexture2D_pdsj5")
 
 [node name="AsteroidSpawner" type="Marker2D" parent="." unique_id=1962139469 node_paths=PackedStringArray("player_node")]
