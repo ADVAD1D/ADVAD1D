@@ -943,7 +943,7 @@ mouse_filter = 2
 visible = false
 offset_right = 77.532364
 offset_bottom = 91.99513
-scale = Vector2(6.7068768, 6.7068768)
+scale = Vector2(9.866876, 9.866876)
 color = Color(0, 0, 0, 1)
 
 [node name="PauseMenu" type="CanvasLayer" parent="." unique_id=774716050]
