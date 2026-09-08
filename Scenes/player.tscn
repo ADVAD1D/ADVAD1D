@@ -19,51 +19,16 @@ _limits = [-360.0, 360.0, 0.0, 1.0]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.272436, 275.458), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 3
 
-[sub_resource type="CurveTexture" id="CurveTexture_fkybt"]
-curve = SubResource("Curve_vgqql")
-
-[sub_resource type="Gradient" id="Gradient_x3wgy"]
-colors = PackedColorArray(0.0784314, 0.356863, 0.454902, 1, 0, 1, 0.94902, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_3smsa"]
-gradient = SubResource("Gradient_x3wgy")
-
-[sub_resource type="Gradient" id="Gradient_8erm5"]
-colors = PackedColorArray(0, 0.458667, 0.64, 1, 0, 1, 0.94902, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_f1ek2"]
-gradient = SubResource("Gradient_8erm5")
-
 [sub_resource type="Curve" id="Curve_tx1dd"]
 _limits = [0.0, 440.75, 0.0, 1.0]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.89393944, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_gymyn"]
-curve = SubResource("Curve_tx1dd")
+[sub_resource type="Gradient" id="Gradient_8erm5"]
+colors = PackedColorArray(0, 0.458667, 0.64, 1, 0, 1, 0.94902, 1)
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pu2lt"]
-particle_flag_disable_z = true
-emission_shape_scale = Vector3(1, 0, 1)
-emission_shape = 6
-emission_ring_axis = Vector3(0, 0, 1)
-emission_ring_height = 1.0
-emission_ring_radius = 1.0
-emission_ring_inner_radius = 0.0
-emission_ring_cone_angle = 90.0
-angle_min = 108.2
-angle_max = 578.8
-angle_curve = SubResource("CurveTexture_fkybt")
-radial_velocity_min = -2.23517e-05
-radial_velocity_max = 16.45
-gravity = Vector3(0, 98, 0)
-radial_accel_min = -5.23
-radial_accel_max = 65.36
-scale_min = 20.0
-scale_max = 30.0
-scale_curve = SubResource("CurveTexture_gymyn")
-color_ramp = SubResource("GradientTexture1D_f1ek2")
-color_initial_ramp = SubResource("GradientTexture1D_3smsa")
+[sub_resource type="Gradient" id="Gradient_x3wgy"]
+colors = PackedColorArray(0.0784314, 0.356863, 0.454902, 1, 0, 1, 0.94902, 1)
 
 [sub_resource type="Gradient" id="Gradient_vgqql"]
 offsets = PackedFloat32Array(0.053333335, 0.7133333)
@@ -116,15 +81,29 @@ volume_db = 4.648
 pitch_scale = 0.76
 bus = &"SFX"
 
-[node name="EngineTrail" type="GPUParticles2D" parent="." unique_id=264179076]
+[node name="EngineTrail" type="CPUParticles2D" parent="." unique_id=1642092671]
 position = Vector2(-1.08043, 28.6315)
 scale = Vector2(7.82663, 6.55636)
 amount = 10
 lifetime = 0.1
 preprocess = 0.45
 explosiveness = 0.25
-trail_lifetime = 0.1
-process_material = SubResource("ParticleProcessMaterial_pu2lt")
+fixed_fps = 30
+draw_order = 1
+emission_shape = 6
+emission_ring_inner_radius = 0.0
+emission_ring_radius = 1.0
+gravity = Vector2(0, 98)
+radial_accel_min = -5.23
+radial_accel_max = 65.36
+angle_min = 108.2
+angle_max = 578.8
+angle_curve = SubResource("Curve_vgqql")
+scale_amount_min = 20.0
+scale_amount_max = 30.0
+scale_amount_curve = SubResource("Curve_tx1dd")
+color_ramp = SubResource("Gradient_8erm5")
+color_initial_ramp = SubResource("Gradient_x3wgy")
 
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=505839961]
 scale = Vector2(1.87453, 1.87453)

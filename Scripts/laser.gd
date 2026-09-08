@@ -21,8 +21,8 @@ func _on_area_entered(area: Area2D) -> void:
 		
 		if enemy_laser_particles:
 			var enemy_particles_instance = enemy_laser_particles.instantiate()
-			get_parent().add_child(enemy_particles_instance)
 			enemy_particles_instance.global_position = (global_position + area.global_position) / 2
+			get_parent().call_deferred("add_child", enemy_particles_instance)
 
 		EnemyLaserPool.release(area)
 		queue_free()

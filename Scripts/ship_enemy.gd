@@ -164,8 +164,8 @@ func die_and_respawn():
 	shoot_marker.set_deferred("disabled", true)
 	
 	var particles_instance = explosion_particles.instantiate()
-	add_sibling(particles_instance)
-	particles_instance.position = position
+	particles_instance.global_position = global_position
+	get_parent().call_deferred("add_child", particles_instance)
 	
 	hide()
 	get_tree().current_scene.add_child(explosion_sound)
@@ -186,8 +186,8 @@ func die_silently():
 	shoot_marker.set_deferred("disabled", true)
 	
 	var particles_instance = explosion_particles.instantiate()
-	add_sibling(particles_instance)
-	particles_instance.position = position
+	particles_instance.global_position = global_position
+	get_parent().call_deferred("add_child", particles_instance)
 	
 	hide()
 	get_tree().current_scene.add_child(explosion_sound)

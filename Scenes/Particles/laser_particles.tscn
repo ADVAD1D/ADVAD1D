@@ -3,37 +3,27 @@
 [ext_resource type="Texture2D" uid="uid://c4nc6xv4hc424" path="res://Assets/Sprites/shoot.png" id="1_bwm2k"]
 [ext_resource type="Script" uid="uid://buu2wviubuh2m" path="res://Scripts/laser_particles.gd" id="2_3rj2p"]
 
+[sub_resource type="Gradient" id="Gradient_xx037"]
+colors = PackedColorArray(0.236528, 0.879723, 1, 1, 1, 1, 1, 1)
+
 [sub_resource type="Gradient" id="Gradient_bwm2k"]
 offsets = PackedFloat32Array(0, 0.975524, 1)
 colors = PackedColorArray(0, 0.833333, 1, 1, 0.314206, 0.779662, 1, 1, 8.08597e-06, 0.976427, 0.917715, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_3rj2p"]
-gradient = SubResource("Gradient_bwm2k")
-
-[sub_resource type="Gradient" id="Gradient_xx037"]
-colors = PackedColorArray(0.236528, 0.879723, 1, 1, 1, 1, 1, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_fhi5n"]
-gradient = SubResource("Gradient_xx037")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1krf0"]
-particle_flag_disable_z = true
-emission_shape_scale = Vector3(1, 0, 1)
-spread = 180.0
-flatness = 1.0
-initial_velocity_min = 60.0
-initial_velocity_max = 120.0
-gravity = Vector3(0, 98, 0)
-color_ramp = SubResource("GradientTexture1D_fhi5n")
-color_initial_ramp = SubResource("GradientTexture1D_3rj2p")
-
-[node name="GPUParticles2D" type="GPUParticles2D" unique_id=1064939831]
+[node name="GPUParticles2D" type="CPUParticles2D" unique_id=1334508096]
 emitting = false
 amount = 15
 texture = ExtResource("1_bwm2k")
 one_shot = true
 explosiveness = 1.0
-process_material = SubResource("ParticleProcessMaterial_1krf0")
+fixed_fps = 30
+draw_order = 1
+spread = 180.0
+gravity = Vector2(0, 98)
+initial_velocity_min = 60.0
+initial_velocity_max = 120.0
+color_ramp = SubResource("Gradient_xx037")
+color_initial_ramp = SubResource("Gradient_bwm2k")
 script = ExtResource("2_3rj2p")
 
 [connection signal="finished" from="." to="." method="_on_finished"]

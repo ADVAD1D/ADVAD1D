@@ -16,7 +16,7 @@ extends CharacterBody2D
 @onready var player_collider = $CollisionShape2D
 @onready var lsrsound: AudioStreamPlayer2D = $Lasersnd
 @onready var dash_sound: AudioStreamPlayer2D = $Dashsnd
-@onready var engine_trail: GPUParticles2D = $EngineTrail
+@onready var engine_trail: CPUParticles2D = $EngineTrail
 @onready var hitbox: Area2D = $Hitbox
 @onready var hitbox_collider: CollisionShape2D = $Hitbox/CollisionShape2D
 @onready var sprite: Sprite2D = $Sprite2D
@@ -46,6 +46,8 @@ func _ready() -> void:
 	sprite.texture = SkinManager.get_selected_ship_texture()
 	main_camera = get_viewport().get_camera_2d()
 	_log_message(player_score)
+	engine_trail.fixed_fps = 0
+	engine_trail.fract_delta = true
 
 	# Vars shown live in the debug menu (Tab). Velocity is already in the panel.
 	DebugMenu.watch(self, "is_dashing", "Dashing")

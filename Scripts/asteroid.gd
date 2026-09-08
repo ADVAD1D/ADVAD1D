@@ -29,13 +29,13 @@ func _on_area_entered(area: Area2D) -> void:
 	if area.is_in_group("lasers"):
 		if explosion_scene:
 			var asteroid_explosion = explosion_scene.instantiate()
-			add_sibling(asteroid_explosion)
-			asteroid_explosion.position = position
+			asteroid_explosion.global_position = global_position
+			get_parent().call_deferred("add_child", asteroid_explosion)
 		
 		if asteroid_explosion_sound:
 			var sound_instance = asteroid_explosion_sound.instantiate()
-			get_parent().add_child(sound_instance)
-			sound_instance.position = position
+			sound_instance.global_position = global_position
+			get_parent().call_deferred("add_child", sound_instance)
 		
 		GameManager.add_score(50)
 		queue_free() # Replace with function body.
@@ -43,49 +43,49 @@ func _on_area_entered(area: Area2D) -> void:
 	if area.is_in_group("enemy_laser"):
 		if explosion_scene:
 			var asteroid_explosion = explosion_scene.instantiate()
-			add_sibling(asteroid_explosion)
-			asteroid_explosion.position = position
+			asteroid_explosion.global_position = global_position
+			get_parent().call_deferred("add_child", asteroid_explosion)
 		
 		if asteroid_explosion_sound:
 			var sound_instance = asteroid_explosion_sound.instantiate()
-			get_parent().add_child(sound_instance)
-			sound_instance.position = position
+			sound_instance.global_position = global_position
+			get_parent().call_deferred("add_child", sound_instance)
 		EnemyLaserPool.release(area)
 		queue_free()
 		
 	if area.is_in_group("saws"):
 		if explosion_scene:
 			var asteroid_explosion = explosion_scene.instantiate()
-			add_sibling(asteroid_explosion)
-			asteroid_explosion.position = position
+			asteroid_explosion.global_position = global_position
+			get_parent().call_deferred("add_child", asteroid_explosion)
 		
 		if asteroid_explosion_sound:
 			var sound_instance = asteroid_explosion_sound.instantiate()
-			get_parent().add_child(sound_instance)
-			sound_instance.position = position
+			sound_instance.global_position = global_position
+			get_parent().call_deferred("add_child", sound_instance)
 		queue_free()
 		
 	if area.is_in_group("player_shield"):
 		if explosion_scene:
 			var asteroid_explosion = explosion_scene.instantiate()
-			add_sibling(asteroid_explosion)
-			asteroid_explosion.position = position
+			asteroid_explosion.global_position = global_position
+			get_parent().call_deferred("add_child", asteroid_explosion)
 		
 		if asteroid_explosion_sound:
 			var sound_instance = asteroid_explosion_sound.instantiate()
-			get_parent().add_child(sound_instance)
-			sound_instance.position = position
+			sound_instance.global_position = global_position
+			get_parent().call_deferred("add_child", sound_instance)
 		queue_free()
 			
 	if area.is_in_group("allies"):
 		if explosion_scene:
 			var asteroid_explosion = explosion_scene.instantiate()
-			add_sibling(asteroid_explosion)
-			asteroid_explosion.position = position
+			asteroid_explosion.global_position = global_position
+			get_parent().call_deferred("add_child", asteroid_explosion)
 		
 		if asteroid_explosion_sound:
 			var sound_instance = asteroid_explosion_sound.instantiate()
-			get_parent().add_child(sound_instance)
-			sound_instance.position = position
+			sound_instance.global_position = global_position
+			get_parent().call_deferred("add_child", sound_instance)
 			
 		queue_free()

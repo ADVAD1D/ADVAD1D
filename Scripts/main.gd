@@ -96,8 +96,8 @@ func _on_death_zone_area_entered(area: Area2D) -> void:
 	if area.is_in_group("asteroides"):
 		if arena_index == 1 and asteroids_explosion_particles:
 			var ast_exp_instance = asteroids_explosion_particles.instantiate()
-			add_child(ast_exp_instance)
 			ast_exp_instance.global_position = area.global_position
+			call_deferred("add_child", ast_exp_instance)
 			
 		area.queue_free()
 
@@ -105,16 +105,16 @@ func _on_laser_zone_area_entered(area: Area2D) -> void:
 	if area.is_in_group("lasers"):
 		if laser_explosion_particles:
 			var laser_exp_instance = laser_explosion_particles.instantiate()
-			add_child(laser_exp_instance)
 			laser_exp_instance.global_position = area.global_position
+			call_deferred("add_child", laser_exp_instance)
 		
 		area.queue_free()
 	
 	elif area.is_in_group("enemy_laser"):
 		if enemy_laser_explosion:
 			var enemy_laser_exp_instance = enemy_laser_explosion.instantiate()
-			add_child(enemy_laser_exp_instance)
 			enemy_laser_exp_instance.global_position = area.global_position
+			call_deferred("add_child", enemy_laser_exp_instance)
 
 		EnemyLaserPool.release(area)
 		

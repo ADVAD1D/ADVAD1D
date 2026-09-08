@@ -78,8 +78,8 @@ func _spawn_impact_particles(at: Vector2) -> void:
 	if not enemy_laser_particles:
 		return
 	var particles = enemy_laser_particles.instantiate()
-	get_parent().add_child(particles)
 	particles.global_position = at
+	get_parent().call_deferred("add_child", particles)
 
 func set_direction(new_direction: Vector2):
 	direction = new_direction
