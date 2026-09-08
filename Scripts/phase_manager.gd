@@ -190,6 +190,7 @@ func _process(delta: float) -> void:
 	if is_instance_valid(time_progress_bar):
 		time_progress_bar.value = phase_timer
 	
+	@warning_ignore("integer_division")
 	var minutes = int(phase_timer) / 60
 	var seconds = int(phase_timer) % 60
 	var new_time_string = "%02d:%02d" % [minutes, seconds]
