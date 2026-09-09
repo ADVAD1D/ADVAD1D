@@ -2,7 +2,14 @@ extends Area2D
 
 @export var speed = 2100
 @export var enemy_laser_particles: PackedScene
+@onready var laser_light: PointLight2D = $PointLight2D
 var direction = Vector2.ZERO
+
+func _ready() -> void:
+	if GameManager.mobile_mode_active or OS.has_feature("mobile") or OS.has_feature("web") or GameManager.force_web_mode:
+		if is_instance_valid(laser_light):
+			laser_light.shadow_enabled = false
+			laser_light.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
 # Called when the node enters the scene tree for the first time.
 func start(start_direction: Vector2):

@@ -21,6 +21,7 @@ extends CharacterBody2D
 @onready var hitbox_collider: CollisionShape2D = $Hitbox/CollisionShape2D
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var muzzle: Marker2D = $Muzzle
+@onready var vignette_light: PointLight2D = $PointLight2D
 
 @export var ship_explosion_particles: PackedScene
 
@@ -46,8 +47,10 @@ func _ready() -> void:
 	sprite.texture = SkinManager.get_selected_ship_texture()
 	main_camera = get_viewport().get_camera_2d()
 	_log_message(player_score)
+	engine_trail.amount = 6
 	engine_trail.fixed_fps = 0
 	engine_trail.fract_delta = true
+	vignette_light.shadow_enabled = false
 
 	# Vars shown live in the debug menu (Tab). Velocity is already in the panel.
 	DebugMenu.watch(self, "is_dashing", "Dashing")

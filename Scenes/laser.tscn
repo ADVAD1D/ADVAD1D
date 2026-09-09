@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://v5arx5syj7j2"]
+[gd_scene format=3 uid="uid://v5arx5syj7j2"]
 
 [ext_resource type="Script" uid="uid://ojvg56v1p8d4" path="res://Scripts/laser.gd" id="1_mou6w"]
 [ext_resource type="Texture2D" uid="uid://c4nc6xv4hc424" path="res://Assets/Sprites/shoot.png" id="2_3pc01"]
@@ -16,23 +16,23 @@ gradient = SubResource("Gradient_3pc01")
 fill = 1
 fill_from = Vector2(0.491453, 0.470085)
 
-[node name="laser" type="Area2D" groups=["lasers"]]
+[node name="laser" type="Area2D" unique_id=1889617968 groups=["lasers"]]
 script = ExtResource("1_mou6w")
 enemy_laser_particles = ExtResource("2_c8ure")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=38627264]
 rotation = -1.56813
 scale = Vector2(4.00399, 4.00399)
 texture = ExtResource("2_3pc01")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=424519679]
 z_index = 2
 position = Vector2(2.0000076, -2.93025)
 rotation = -1.5708
 scale = Vector2(1.03299, 2.01279)
 shape = SubResource("RectangleShape2D_mou6w")
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=186133631]
 position = Vector2(2, -0.500001)
 scale = Vector2(1.64555, 2.26263)
 energy = 2.5

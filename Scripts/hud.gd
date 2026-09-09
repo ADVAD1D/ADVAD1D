@@ -94,10 +94,12 @@ func _input(event: InputEvent) -> void:
 		if event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
 			if not GameManager.disable_auto_hide_mobile_controls:
 				GameManager.using_touch_controls = false
-				mobile_controls_layer.hide()
+				if mobile_controls_layer.visible:
+					mobile_controls_layer.hide()
 		elif event is InputEventScreenTouch or event is InputEventScreenDrag:
 			GameManager.using_touch_controls = true
-			mobile_controls_layer.show()
+			if not mobile_controls_layer.visible:
+				mobile_controls_layer.show()
 			
 		# Layout dragging logic during pause
 		if get_tree().paused and mobile_controls_layer.visible:

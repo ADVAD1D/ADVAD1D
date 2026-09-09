@@ -54,6 +54,12 @@ func _ready() -> void:
 	_ray_query = PhysicsRayQueryParameters2D.new()
 	_ray_query.collide_with_areas = false
 	_ray_query.collision_mask = 1
+	
+	if GameManager.mobile_mode_active or OS.has_feature("mobile") or OS.has_feature("web") or GameManager.force_web_mode:
+		var light = get_node_or_null("PointLight2D")
+		if light:
+			light.shadow_enabled = false
+			light.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
 ## Raycasts the current->next segment so fast bullets can't tunnel through the
 ## thin arena walls (StaticBody2D, which Area2D never physically stops against).
