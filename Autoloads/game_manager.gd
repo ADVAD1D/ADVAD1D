@@ -258,8 +258,9 @@ func _log_message(message):
 func play_glitch_effect(crt_material):
 	var tween = create_tween()
 	
-	if mobile_mode_active:
-		# EXTREME OPTIMIZATION: Keep low_quality enabled, just flick the aberration slightly
+	if mobile_mode_active or OS.has_feature("mobile") or OS.has_feature("web"):
+		# EXTREME OPTIMIZATION: Keep low_quality enabled, just flick the aberration smoothly.
+		# The shader has been optimized to only shift the screen, avoiding 3-pass RGB lookups.
 		tween.set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
 		tween.tween_property(crt_material, "shader_parameter/aberration", 0.5, 0.1)
 		tween.chain().tween_property(crt_material, "shader_parameter/aberration", -0.5, 0.1)

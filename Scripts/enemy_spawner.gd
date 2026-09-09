@@ -25,8 +25,13 @@ func spawn_initial_wave():
 	var current_attempts = 0
 
 	while current_enemy_count < max_enemies and current_attempts < max_initial_attempts:
+		var prev_count = current_enemy_count
 		spawn_enemy()
 		current_attempts += 1
+		
+		# Yield slightly if an enemy was successfully spawned to avoid lag spikes
+		if current_enemy_count > prev_count:
+			await get_tree().process_frame
 		
 func configure_for_phase(new_max_enemies: int, new_config: Dictionary):
 	max_enemies = new_max_enemies

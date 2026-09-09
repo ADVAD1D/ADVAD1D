@@ -137,12 +137,14 @@ void fragment() {
         text.b = texture(SCREEN_TEXTURE, text_uv + roll_uv).b;
     } else {
         if (low_quality) {
-            // EXTREME OPTIMIZATION: Sample texture only once on mobile (saves massive memory bandwidth)
-            // But if aberration spikes (player death glitch), temporarily enable the 3-pass effect
+            // MAX OPTIMIZATION: To get the RGB glitch effect on mobile without 3 heavy texture lookups,
+            // we do exactly 2 lookups (Red vs Cyan). This gives a perfect 3D glitch look 
+            // while cutting memory bandwidth by 33% compared to splitting RGB separately.
             if (abs(aberration) > 0.05) {
                 text.r = texture(SCREEN_TEXTURE, text_uv + vec2(aberration, 0.0) * 0.1).r;
-                text.g = texture(SCREEN_TEXTURE, text_uv - vec2(aberration, 0.0) * 0.1).g;
-                text.b = texture(SCREEN_TEXTURE, text_uv).b;
+                vec4 gb = texture(SCREEN_TEXTURE, text_uv - vec2(aberration, 0.0) * 0.1);
+                text.g = gb.g;
+                text.b = gb.b;
             } else {
                 text = texture(SCREEN_TEXTURE, text_uv);
             }
