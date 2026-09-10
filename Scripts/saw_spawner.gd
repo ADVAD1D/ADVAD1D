@@ -37,7 +37,9 @@ func spawn_initial_wave():
 			current_attempts = 0 # Reinicia los intentos si tiene éxito
 		current_attempts += 1
 		
-		# Yield slightly if an enemy was successfully spawned to avoid lag spikes
+		# OPTIMIZATION: Yield slightly if an enemy was successfully spawned.
+		# Staggering instantiation across multiple frames prevents massive CPU spikes
+		# and stuttering on mobile devices when loading a new phase.
 		if current_enemy_count > prev_count:
 			await get_tree().process_frame
 		

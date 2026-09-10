@@ -6,6 +6,8 @@ extends Area2D
 var direction = Vector2.ZERO
 
 func _ready() -> void:
+	# OPTIMIZATION: Disable PointLight2D shadows and force nearest filtering on mobile/web.
+	# Hundreds of lasers casting dynamic shadows causes massive GPU fill-rate lag.
 	if GameManager.mobile_mode_active or OS.has_feature("mobile") or OS.has_feature("web") or GameManager.force_web_mode:
 		if is_instance_valid(laser_light):
 			laser_light.shadow_enabled = false

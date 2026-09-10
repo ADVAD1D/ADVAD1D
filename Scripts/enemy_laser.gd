@@ -55,6 +55,8 @@ func _ready() -> void:
 	_ray_query.collide_with_areas = false
 	_ray_query.collision_mask = 1
 	
+	# OPTIMIZATION: Disable PointLight2D shadows and force nearest filtering on mobile/web.
+	# Prevents massive GPU fill-rate drops during bullet-hell phases.
 	if GameManager.mobile_mode_active or OS.has_feature("mobile") or OS.has_feature("web") or GameManager.force_web_mode:
 		var light = get_node_or_null("PointLight2D")
 		if light:

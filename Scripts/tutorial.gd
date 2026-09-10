@@ -134,6 +134,8 @@ func _input(event: InputEvent) -> void:
 					mobile_controls_layer.hide()
 		elif event is InputEventScreenTouch or event is InputEventScreenDrag:
 			GameManager.using_touch_controls = true
+			# OPTIMIZATION: Only call .show() if hidden. InputEventScreenDrag fires 60+ times
+			# per second. Redundant .show() calls force UI recalculation and cause severe lag.
 			if not mobile_controls_layer.visible:
 				mobile_controls_layer.show()
 		
