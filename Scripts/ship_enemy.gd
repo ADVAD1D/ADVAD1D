@@ -180,6 +180,10 @@ func die_silently():
 		return
 	is_dying = true
 	
+	# OPTIMIZATION: Stagger the explosions randomly over 0.2s so they don't all instantiate
+	# on the exact same frame when clearing the board, preventing massive lag spikes.
+	await get_tree().create_timer(randf_range(0.01, 0.25)).timeout
+	
 	set_physics_process(false)
 	
 	collision_shape.set_deferred("disabled", true)
