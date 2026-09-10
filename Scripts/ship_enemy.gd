@@ -180,20 +180,20 @@ func die_silently():
 		return
 	is_dying = true
 	
+	set_physics_process(false)
+	collision_shape.set_deferred("disabled", true)
+	shoot_marker.set_deferred("disabled", true)
+	
 	# OPTIMIZATION: Stagger the explosions randomly over 0.2s so they don't all instantiate
 	# on the exact same frame when clearing the board, preventing massive lag spikes.
 	await get_tree().create_timer(randf_range(0.01, 0.25)).timeout
 	
-	set_physics_process(false)
-	
-	collision_shape.set_deferred("disabled", true)
-	shoot_marker.set_deferred("disabled", true)
+	hide()
 	
 	var particles_instance = explosion_particles.instantiate()
 	particles_instance.global_position = global_position
 	get_parent().call_deferred("add_child", particles_instance)
 	
-	hide()
 	get_tree().current_scene.add_child(explosion_sound)
 	explosion_sound.play()
 	

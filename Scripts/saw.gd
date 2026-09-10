@@ -90,16 +90,17 @@ func die_silently():
 		return
 	is_dying = true
 	
+	collision_shape.set_deferred("disabled", true)
+	
 	# OPTIMIZATION: Stagger the explosions randomly over 0.2s to prevent lag spikes on mobile
 	await get_tree().create_timer(randf_range(0.01, 0.25)).timeout
 	
-	collision_shape.set_deferred("disabled", true)
+	hide()
 	
 	var saw_particles_instance = saw_particles.instantiate()
 	add_sibling(saw_particles_instance)
 	saw_particles_instance.position = position
 	
-	hide()
 	get_tree().current_scene.add_child(metal_sound)
 	metal_sound.play()
 	
