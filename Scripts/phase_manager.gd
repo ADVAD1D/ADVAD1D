@@ -1,3 +1,11 @@
+# ==========================================
+# PHASE MANAGER
+# ==========================================
+# This script handles the progression logic of the arenas.
+# It controls the timer, the score requirements, and orchestrates
+# the difficulty scaling for enemy spawners (Ships, Saws, Asteroids)
+# based on the current phase. It also manages visual transitions 
+# and UI updates between phases.
 extends Node
 
 signal phase_started(phase_number, score_requirement)
@@ -179,8 +187,9 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if is_instance_valid(background_sprite) and background_sprite.material != null:
-		DebugMenu.track("Arena Grayscale", "%.2f" % background_sprite.material.get_shader_parameter("grayscale_amount"))
+	if GameManager.show_debug_menu:
+		if is_instance_valid(background_sprite) and background_sprite.material != null:
+			DebugMenu.track("Arena Grayscale", "%.2f" % background_sprite.material.get_shader_parameter("grayscale_amount"))
 
 	if not is_phase_active:
 		return
@@ -201,6 +210,8 @@ func _process(delta: float) -> void:
 	if phase_timer <= 0:
 		_on_phase_failure()
 		
+## Initializes the next phase, updates networking/leaderboard stats, 
+## checks if the arena has been completed, and sets up the timer and requirements.
 func start_new_phase():
 	current_phase = current_phase + 1
 	if current_phase > 1:
@@ -284,6 +295,8 @@ func _on_score_updated(new_score: int):
 	if is_phase_active and new_score >= current_score_requirement:
 		_on_phase_success()
 		
+## Called when the player reaches the required score for the current phase.
+## Clears the enemies and triggers the next phase sequence.
 func _on_phase_success():
 	is_phase_active = false
 	_log_message(["fase", current_phase, "completada"])
@@ -292,6 +305,8 @@ func _on_phase_success():
 	GameManager.phase_to_start = current_phase + 1
 	start_new_phase()
 		
+## Called when the timer runs out before reaching the required score.
+## Kills the player, triggers a screen glitch, and restarts the current phase.
 func _on_phase_failure():
 	is_phase_active = false
 	_log_message("NO TIME LEFT. Restart Scene.")
@@ -308,6 +323,9 @@ func _on_phase_failure():
 	
 	get_tree().call_deferred("reload_current_scene")
 	
+## Immediately kills all active enemies on the screen.
+## Note: The enemies handle their own staggered explosions via die_silently() 
+## to prevent mobile performance drops.
 func clear_the_board():
 	_log_message("Limpiando el tablero")
 			
@@ -370,11 +388,13 @@ func apply_difficulty():
 	if is_instance_valid(saw_enemy_spawner):
 		saw_enemy_spawner.configure_for_phase(saw_max_enemies, saw_config)
 		
+## Smoothly fades out and deletes a target sprite (e.g., arena background elements).
 func start_fade_out_sprite(target_sprite: AnimatedSprite2D):
 	var tween = create_tween()
 	tween.tween_property(target_sprite, "modulate:a", 0.0, 1.0)
 	tween.tween_callback(target_sprite.queue_free)
 	
+## Changes the objective label to a victory message and fades it out smoothly.
 func fade_out_objective_label():
 	
 	#browsers can't show some characters, for this reason change win text in this version
@@ -391,6 +411,7 @@ func fade_out_objective_label():
 		tween.tween_property(objective_label, "modulate:a", 0.0, 1.0)
 		tween.tween_callback(objective_label.queue_free)
 		
+## Animates the background shader into grayscale when the player completes all phases.
 func gray_scale_transition():
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_SINE)
@@ -403,6 +424,7 @@ func gray_scale_transition():
 		2.0
 	)
 	
+## Smoothly fades out the HUD time bar when the arena is completed.
 func fade_out_time_bar():
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_SINE)
