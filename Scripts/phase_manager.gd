@@ -166,6 +166,7 @@ var phase_timer: float
 var current_score_requirement: int
 var is_phase_active: bool = false
 var last_time_string: String = ""
+var last_seconds_int: int = -1
 var restart_from_phase: bool = true
 
 func _ready() -> void:
@@ -199,13 +200,19 @@ func _process(delta: float) -> void:
 	if is_instance_valid(time_progress_bar):
 		time_progress_bar.value = phase_timer
 	
-	@warning_ignore("integer_division")
-	var minutes = int(phase_timer) / 60
-	var seconds = int(phase_timer) % 60
-	var new_time_string = "%02d:%02d" % [minutes, seconds]
-	if new_time_string != last_time_string:
-		last_time_string = new_time_string
-		timer_updated.emit(new_time_string)
+	# OPTIMIZATION: Solo generar el texto del timer visual si los segundos enteros cambiaron.
+	# Esto NO afecta a la precisión de la jugabilidad, ya que phase_timer se sigue
+	# calculando con precisión de milisegundos para determinar el cambio de fase.
+	var current_sec = int(phase_timer)
+	if current_sec != last_seconds_int:
+		last_seconds_int = current_sec
+		@warning_ignore("integer_division")
+		var minutes = current_sec / 60
+		var seconds = current_sec % 60
+		var new_time_string = "%02d:%02d" % [minutes, seconds]
+		if new_time_string != last_time_string:
+			last_time_string = new_time_string
+			timer_updated.emit(new_time_string)
 	
 	if phase_timer <= 0:
 		_on_phase_failure()
