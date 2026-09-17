@@ -25,6 +25,8 @@ var is_glitch_sound: bool = false
 var game_paused: bool = false
 var can_pause: bool = true
 var retro_shader_active: bool = true
+
+#this bool validate the shaders optimization in pc
 var pc_optimize_shaders: bool = false
 
 # mobile compatibility bool
@@ -212,6 +214,7 @@ func load_data():
 	
 	if data and "pc_optimize_shaders" in data:
 		pc_optimize_shaders = bool(data["pc_optimize_shaders"])
+		_log_message(["loaded pc optimize shaders in save data: ", pc_optimize_shaders])
 
 func save_mobile_layout(node_name: String, pos: Vector2):
 	mobile_layout[node_name] = {"x": pos.x, "y": pos.y}
