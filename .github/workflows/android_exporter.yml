@@ -43,12 +43,42 @@ jobs:
           mkdir -p ~/.local/share/godot/export_templates/${EXPORT_TEMPLATE_DIR}
           mv templates/* ~/.local/share/godot/export_templates/${EXPORT_TEMPLATE_DIR}/
 
+      - name: Generate Automatic Keystore for Signing
+        run: |
+          echo "Generando un keystore automático para firmar el APK..."
+          keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android -keystore auto_sign.keystore -storepass android -dname "CN=Android Debug,O=Android,C=US" -validity 9999 -deststoretype pkcs12
+
       - name: Inject Export Presets
         env:
           PRESETS_FILE: ${{ secrets.EXPORT_PRESETS_CFG }}
         run: |
           echo "Create and inject export_presets.cfg from secrets..."
           printf "%s\n" "$PRESETS_FILE" > export_presets.cfg
+          
+          # Inyectamos el keystore automático y desactivamos el splash screen
+          awk -v path="$(pwd)/auto_sign.keystore" '
+          /^name="Android"/ { in_android = 1 }
+          /^\[preset\.[0-9]+\.options\]$/ { 
+              if (in_android) { 
+                  print; 
+                  print "keystore/release=\"" path "\""; 
+                  print "keystore/release_user=\"androiddebugkey\""; 
+                  print "keystore/release_password=\"android\""; 
+                  print "splash_screen/disable_godot_boot_splash=true"; 
+                  in_android_options = 1; 
+                  next; 
+              } 
+          }
+          /^\[/ { in_android_options = 0; in_android = 0 }
+          { 
+              if (in_android_options) {
+                  if ($0 ~ /^keystore\/release=/ || $0 ~ /^keystore\/release_user=/ || $0 ~ /^keystore\/release_password=/ || $0 ~ /^splash_screen\/disable_godot_boot_splash=/) {
+                      next; # Eliminar las claves originales para evitar duplicados
+                  }
+              }
+              print 
+          }
+          ' export_presets.cfg > tmp_presets.cfg && mv tmp_presets.cfg export_presets.cfg
 
       - name: Inject Environment Variables (.env)
         env:
