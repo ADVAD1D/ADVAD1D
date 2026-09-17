@@ -18,4 +18,3 @@ func _init() -> void:
 	command_transport_value = "stdio"
 	command_legacy_keys = PackedStringArray(["url"])
 	command_user_fields = PackedStringArray(["env", "envFile"])
-	command_supports_url_fallback = true

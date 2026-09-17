@@ -6,7 +6,8 @@ Godot AI bridges Claude Code, Codex, Antigravity, DeepSeek Harness, and other MC
 
 ## Quick Start
 
-1. Copy `addons/godot_ai/` into your project's `addons/` folder
+1. For a fresh install, verify and extract the signed v4 exact-tree archive;
+   for v3 migration, follow `docs/v4-migration.md` in the repository
 2. Enable the plugin: **Project > Project Settings > Plugins > Godot AI**
 3. Pick your MCP client in the **Godot AI** dock and press **Configure**
 
@@ -14,7 +15,7 @@ The plugin auto-starts the MCP server and connects over WebSocket. No manual con
 
 ## Requirements
 
-- Godot 4.5+ (4.7+ recommended)
+- Godot 4.7+ within the 4.x line
 - [uv](https://docs.astral.sh/uv/) (used to install the Python server)
   <details>
   <summary>Install uv</summary>

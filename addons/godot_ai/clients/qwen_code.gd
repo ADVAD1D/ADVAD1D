@@ -23,4 +23,3 @@ func _init() -> void:
 		"discoveryTimeoutMs",
 	])
 	command_timeout_fields = PackedStringArray(["timeout", "discoveryTimeoutMs"])
-	command_supports_url_fallback = true

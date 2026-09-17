@@ -42,4 +42,3 @@ func _init() -> void:
 	command_timeout_fields = PackedStringArray(["toolCallTimeoutMs"])
 	## The bridge accepts `transport: streamable-http` with a `url`, so the
 	## manual instructions may offer the HTTP alternative.
-	command_supports_url_fallback = true

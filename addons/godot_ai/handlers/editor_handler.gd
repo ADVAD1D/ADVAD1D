@@ -1,13 +1,12 @@
 @tool
-extends RefCounted
+extends "res://addons/godot_ai/handlers/command_handler.gd"
 
 const ErrorCodes := preload("res://addons/godot_ai/utils/error_codes.gd")
 const Telemetry := preload("res://addons/godot_ai/telemetry.gd")
+const PluginReload := preload("res://addons/godot_ai/utils/plugin_reload.gd")
 const VisionRoutingScript := preload("res://addons/godot_ai/vision_routing.gd")
 
 ## Handles editor state, selection, log, screenshot, and performance commands.
-
-const UpdateMixedState := preload("res://addons/godot_ai/utils/update_mixed_state.gd")
 
 var _log_buffer: McpLogBuffer
 var _connection: McpConnection
@@ -49,14 +48,6 @@ func get_editor_state(_params: Dictionary) -> Dictionary:
 		"helper_live": bool(game_status.get("helper_live", false)),
 		"session_active": bool(game_status.get("session_active", false)),
 	}
-	## Half-installed addon tree from a failed self-update rollback. When
-	## non-empty, the agent / dock paint the operator-facing recovery copy
-	## from `update_mixed_state.gd::diagnose`. Field omitted when the
-	## addons tree is clean so editor_state's normal payload stays small.
-	## See issue #354 / audit-v2 #10.
-	var mixed_state := UpdateMixedState.diagnose()
-	if not mixed_state.is_empty():
-		data["mixed_state"] = mixed_state
 	return {"data": data}
 
 
@@ -223,8 +214,8 @@ func _format_editor_error_summary(entry: Dictionary) -> String:
 func _get_editor_logs(count: int, offset: int, include_details: bool, has_since_cursor: bool = false, since_cursor: int = 0) -> Dictionary:
 	## Editor-process script errors (parse errors, @tool runtime errors,
 	## EditorPlugin errors, push_error/push_warning). Captured by
-	## editor_logger.gd via OS.add_logger and gated on Godot 4.5+; on older
-	## engines the buffer can be null. Godot also sends GDScript reload
+	## editor_logger.gd via OS.add_logger on every v4-supported engine. During
+	## partial initialization the buffer can still be null. Godot also sends GDScript reload
 	## warnings/errors straight to the Debugger dock's Errors tab; those do
 	## not flow through OS.add_logger, so merge the visible tree rows here.
 	if has_since_cursor:
@@ -957,12 +948,15 @@ func _clear_debugger_error_trees() -> int:
 
 
 func reload_plugin(_params: Dictionary) -> Dictionary:
+	var work := PluginReload.reserve_reload()
+	if work == 0:
+		return ErrorCodes.make(ErrorCodes.EDITOR_NOT_READY, "A plugin reload is already pending.")
 	_log_buffer.log("reload_plugin requested, reloading next frame")
 	## Persist a pending plugin_reload telemetry event *before* the
 	## disable kills the live WebSocket. The re-enabled plugin's
 	## _enter_tree flushes via `_telemetry.flush_pending_plugin_reload()`.
 	Telemetry.record_pending_plugin_reload("mcp_tool")
-	_do_reload_plugin.call_deferred()
+	_do_reload_plugin.call_deferred(work)
 	return {"data": {"status": "reloading", "message": "Plugin reload initiated"}}
 
 
@@ -972,20 +966,12 @@ func reload_plugin(_params: Dictionary) -> Dictionary:
 ## fail with "Could not find type X" when new class_name scripts are on disk
 ## but not yet registered, leaving the plugin disabled with no recovery path
 ## short of killing the editor. See issue #83.
-# `static` is load-bearing: the deferred coroutine captures no `self`, so
-# it survives even if the EditorHandler RefCounted is freed mid-await —
-# which is exactly what reload does to this handler's owner. An instance
-# coroutine here resumes on a freed object under reload churn.
-static func _do_reload_plugin() -> void:
-	var fs := EditorInterface.get_resource_filesystem()
-	fs.scan()
-	var tree := Engine.get_main_loop() as SceneTree
-	# Cap the wait so a long scan (huge project) doesn't hang reload.
-	var deadline_ms := Time.get_ticks_msec() + 5000
-	while fs.is_scanning() and Time.get_ticks_msec() < deadline_ms:
-		await tree.process_frame
-	EditorInterface.set_plugin_enabled("res://addons/godot_ai/plugin.cfg", false)
-	EditorInterface.set_plugin_enabled("res://addons/godot_ai/plugin.cfg", true)
+# The deferred entry captures no handler. The helper owns the bounded native
+# signal handoff: is_scanning() can become false before resource reloads and
+# filesystem_changed run on the main thread. No suspended GDScript frame may
+# span a scan which can recompile that very frame's script.
+static func _do_reload_plugin(work: int = 0) -> void:
+	PluginReload.reload_after_scan(work)
 
 
 func quit_editor(_params: Dictionary) -> Dictionary:
@@ -1016,6 +1002,29 @@ func game_eval(params: Dictionary) -> Dictionary:
 			"Missing request_id — cannot correlate deferred response")
 
 	_debugger_plugin.request_game_eval(code, request_id, _connection)
+	return McpDispatcher.DEFERRED_RESPONSE
+
+
+func game_debug_control(params: Dictionary) -> Dictionary:
+	var action := str(params.get("action", ""))
+	if action not in ["suspend", "resume", "next_frame", "debug_status"]:
+		return ErrorCodes.make(
+			ErrorCodes.VALUE_OUT_OF_RANGE,
+			"Invalid game debug action '%s' — use suspend, resume, next_frame, or debug_status" % action,
+		)
+	if _debugger_plugin == null or _connection == null:
+		return ErrorCodes.make(ErrorCodes.INTERNAL_ERROR,
+			"Debugger bridge unavailable — plugin may not be fully initialised")
+	if not EditorInterface.is_playing_scene():
+		return ErrorCodes.make_not_ready(
+			ErrorCodes.SUB_EDITOR_GAME_NOT_RUNNING,
+			"Game is not running — start the project first", false,
+			"Start the game with project_run (or wait for the user to run it), then retry.")
+	var request_id := str(params.get("_request_id", ""))
+	if request_id.is_empty():
+		return ErrorCodes.make(ErrorCodes.INTERNAL_ERROR,
+			"Missing internal _request_id — cannot correlate deferred response")
+	_debugger_plugin.request_game_debug_control(action, request_id, _connection)
 	return McpDispatcher.DEFERRED_RESPONSE
 
 

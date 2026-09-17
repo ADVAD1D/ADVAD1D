@@ -61,9 +61,7 @@ func _init() -> void:
 	## status to `cli_scope_status_template` instead and this file is not read.
 	path_template = {"unix": "~/.claude.json", "windows": "~/.claude.json"}
 	server_key_path = PackedStringArray(["mcpServers"])
-	## URL-mode shape, used only for the manual-instruction fallback text —
-	## `claude mcp add --scope <scope> --transport http` writes {type: http, url},
-	## where <scope> is whatever `godot_ai/mcp_client_scope` resolves to.
+	## Legacy HTTP entries used this shape; command rendering repins it to stdio.
 	entry_extra_fields = {"type": "http"}
 	command_shape = McpClient.CommandShape.FLAT
 	command_transport_key = "type"
@@ -73,7 +71,6 @@ func _init() -> void:
 	## "stdio" by the transport key above.
 	command_legacy_keys = PackedStringArray(["url"])
 	command_user_fields = PackedStringArray(["env"])
-	command_supports_url_fallback = true
 	## Documented: $CLAUDE_CONFIG_DIR relocates Claude Code's config home,
 	## including .claude.json ($CLAUDE_CONFIG_DIR/.claude.json). The preferred
 	## CLI path needs no help — the spawned `claude` binary inherits the

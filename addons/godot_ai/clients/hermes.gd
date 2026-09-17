@@ -39,7 +39,6 @@ func _init() -> void:
 	command_shape = McpClient.CommandShape.FLAT
 	command_legacy_keys = PackedStringArray(["url", "headers"])
 	command_user_fields = PackedStringArray(["enabled", "tools", "env"])
-	command_supports_url_fallback = true
 
 	# Hermes is "installed" wherever the config.yaml lives; presence of the
 	# file is sufficient for the dock's installed badge.

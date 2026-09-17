@@ -31,5 +31,4 @@ func _init() -> void:
 		"env", "enabled", "startup_timeout_sec", "tool_timeout_sec",
 	])
 	command_timeout_fields = PackedStringArray(["startup_timeout_sec", "tool_timeout_sec"])
-	command_supports_url_fallback = true
 	detect_paths = PackedStringArray(path_template.values())

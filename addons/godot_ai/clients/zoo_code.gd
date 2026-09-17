@@ -33,4 +33,3 @@ func _init() -> void:
 		"env", "cwd",
 	])
 	command_timeout_fields = PackedStringArray(["timeout"])
-	command_supports_url_fallback = true

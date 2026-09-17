@@ -1,5 +1,5 @@
 @tool
-extends RefCounted
+extends "res://addons/godot_ai/handlers/command_handler.gd"
 
 ## Discovers and runs McpTestSuite scripts from res://tests/.
 ## Exposes run_tests and get_test_results as MCP commands.
@@ -13,6 +13,12 @@ extends RefCounted
 ## See docs/test-run-transport-starvation-plan.md.
 
 const ErrorCodes := preload("res://addons/godot_ai/utils/error_codes.gd")
+
+const CACHE_WARNING := (
+	"Preloaded GDScript dependencies may be stale after source edits. "
+	+ "Restart the editor before treating this run as validation of dependency changes. "
+	+ "ResourceLoader cache modes do not invalidate GDScript's preload cache."
+)
 
 ## Clamp bounds for the server-provided ``timeout_budget_sec`` param. The
 ## floor is purely defensive (a malformed or buggy server value must not
@@ -106,7 +112,7 @@ func run_tests(params: Dictionary) -> Dictionary:
 				discovery.errors.size(),
 				", ".join(discovery.errors),
 			]
-		var no_suites := {"error": msg, "total": 0, "load_errors": discovery.errors}
+		var no_suites := {"error": msg, "total": 0, "load_errors": discovery.errors, "cache_warning": CACHE_WARNING}
 		## Keep the edited_scene annotation on the no-suites error payload too,
 		## so the response contract is consistent across every return path.
 		_annotate_edited_scene(no_suites)
@@ -155,6 +161,7 @@ static func unknown_suite_error(suite_filter: String, suites: Array) -> Dictiona
 	err["error"]["data"] = {
 		"suite": suite_filter,
 		"suites_available": Array(names),
+		"cache_warning": CACHE_WARNING,
 	}
 	return err
 
@@ -170,6 +177,7 @@ func _map_outcome(
 	started_ms: int,
 	budget_sec: float,
 ) -> Dictionary:
+	results["cache_warning"] = CACHE_WARNING
 	var elapsed_ms := Time.get_ticks_msec() - started_ms
 	match outcome:
 		"completed":
@@ -238,6 +246,7 @@ func _abort_data(
 ) -> Dictionary:
 	var data := {
 		"phase": phase,
+		"cache_warning": CACHE_WARNING,
 		"elapsed_ms": elapsed_ms,
 		"budget_sec": budget_sec,
 		"passed": int(results.get("passed", 0)),
@@ -288,7 +297,9 @@ func _annotate_edited_scene(results: Dictionary) -> void:
 
 func get_test_results(params: Dictionary) -> Dictionary:
 	var verbose: bool = params.get("verbose", false)
-	return {"data": _runner.get_results(verbose)}
+	var results := _runner.get_results(verbose)
+	results["cache_warning"] = CACHE_WARNING
+	return {"data": results}
 
 
 ## Returns {"suites": Array, "errors": Array[String], "outcome": String}.
@@ -330,7 +341,20 @@ func _discover_suites(
 				else:
 					errors.append("%s (not a McpTestSuite subclass)" % file_name)
 			else:
-				errors.append("%s (cannot instantiate — abstract or broken)" % file_name)
+				## Name the cause: a fresh reload prints the parse or compile error
+				## the cached load swallowed and returns its code, so a CI log says
+				## more than "abstract or broken".
+				var reload_error: Error = script.reload(true)
+				var base: Variant = script.get_base_script()
+				errors.append(
+					"%s (cannot instantiate — abstract or broken; reload=%s, base=%s, valid=%s)"
+					% [
+						file_name,
+						error_string(reload_error),
+						str(base.resource_path) if base != null else "none",
+						str(script.can_instantiate()),
+					]
+				)
 		file_name = dir.get_next()
 
 	## Sort by suite name for deterministic order.

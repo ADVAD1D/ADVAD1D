@@ -2,9 +2,9 @@
 extends VBoxContainer
 
 ## Dock subpanel — renders the MCP request/response log buffer. Owns its own
-## UI subtree, the line-count cursor, and the display-visibility toggle. Emits
-## `logging_enabled_changed` so the dock can route the flag onto the
-## connection dispatcher without the panel knowing the routing exists.
+## UI subtree, the line-count cursor, and the display-visibility toggle. It
+## receives copied `{sequence, reset, lines}` values; neither this view nor its
+## parent Dock retains the root-owned log buffer.
 ##
 ## Extracted from mcp_dock.gd as part of audit-v2 #360 — see the comment at
 ## the top of mcp_dock.gd for the broader extraction story.
@@ -12,14 +12,8 @@ extends VBoxContainer
 signal logging_enabled_changed(enabled: bool)
 
 const Dock := preload("res://addons/godot_ai/mcp_dock.gd")
-## Preload (not the McpSettings class_name) for consistency with the parse
-## hazard note on `_log_buffer` below.
 const Settings := preload("res://addons/godot_ai/utils/settings.gd")
 
-## Untyped: a `: McpLogBuffer` annotation hits the class_name registry at
-## script-load and trips the self-update parse hazard (#398). The type fence
-## stays on the `setup(log_buffer: McpLogBuffer)` parameter.
-var _log_buffer
 var _log_display: RichTextLabel
 var _log_toggle: CheckButton
 ## Last `McpLogBuffer.total_logged()` value painted into the display. Tracking
@@ -36,8 +30,7 @@ var _last_log_seq := 0
 ##
 ## Idempotent: `_log_display == null` covers an unlikely double-`setup()` call
 ## without rebuilding (which would orphan the prior controls).
-func setup(log_buffer: McpLogBuffer) -> void:
-	_log_buffer = log_buffer
+func setup() -> void:
 	if _log_display == null:
 		_build_ui()
 
@@ -69,27 +62,20 @@ func _build_ui() -> void:
 	add_child(_log_display)
 
 
-## Called from McpDock._process when the panel is visible. Appends any new
-## log lines since the last tick.
-func tick() -> void:
-	if _log_buffer == null or _log_display == null:
+func sequence() -> int:
+	return _last_log_seq
+
+
+func present_snapshot(snapshot: Dictionary) -> void:
+	if _log_display == null:
 		return
-	var seq: int = _log_buffer.total_logged()
-	if seq == _last_log_seq:
-		return
-	if seq < _last_log_seq:
-		## Buffer cleared via `McpLogBuffer.clear()` (the `clear_logs` MCP
-		## tool / `logs_clear` handler). The buffer resets `_total_logged`
-		## to 0, flipping the sequence backward. Without this branch the
-		## display would keep showing pre-clear lines forever — the viewer
-		## drifts permanently out of sync with the buffer. Reset display +
-		## cursor so the next append paints over a clean slate.
+	var seq := int(snapshot.get("sequence", _last_log_seq))
+	if bool(snapshot.get("reset", false)) or seq < _last_log_seq:
 		_log_display.clear()
 		_last_log_seq = 0
-		if seq == 0:
-			return
-	var new_lines: Array[String] = _log_buffer.get_recent(seq - _last_log_seq)
-	for line in new_lines:
+	var lines: Array[String] = []
+	lines.assign(snapshot.get("lines", []))
+	for line in lines:
 		_log_display.add_text(line + "\n")
 	_last_log_seq = seq
 

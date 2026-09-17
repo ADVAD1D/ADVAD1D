@@ -31,4 +31,3 @@ func _init() -> void:
 		"disabledTools", "env", "cwd",
 	])
 	command_timeout_fields = PackedStringArray(["startupTimeoutMs", "toolTimeoutMs"])
-	command_supports_url_fallback = true

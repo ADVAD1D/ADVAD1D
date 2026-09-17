@@ -117,9 +117,10 @@ const _PLACEHOLDER_PNG := "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR
 var log_buffer: Object = null
 
 var _active := true
-var _route_done: Callable
+var _active_mutex := Mutex.new()
 var _pending: Dictionary = {}   # request_id -> {payload, data, connection, provider_id, provider, params}
 var _threads: Dictionary = {}   # request_id -> Thread ("_test" = ping thread)
+var _ping_context: Dictionary = {}
 var _ui_loading := false
 
 # UI references, kept in sync by _sync_ui_states().
@@ -135,15 +136,25 @@ var _tab_status: Label = null
 var _tab_test_button: Button = null
 
 
-func _init() -> void:
-	_route_done = Callable(self, "_on_route_complete")
+func _is_active() -> bool:
+	_active_mutex.lock()
+	var active := _active
+	_active_mutex.unlock()
+	return active
+
+
+func _set_active(active: bool) -> void:
+	_active_mutex.lock()
+	_active = active
+	_active_mutex.unlock()
 
 
 ## Plugin teardown: stop workers and join in-flight threads so Godot never
 ## destroys a Thread mid-execution during a plugin reload.
 func shutdown() -> void:
-	_active = false
-	## Workers poll _active between HTTP polls, so this returns within one
+	_set_active(false)
+	## Workers poll the synchronized active flag between HTTP polls, so this
+	## returns within one
 	## poll interval (~50ms) unless a request is mid-flight in the OS; worst
 	## case is a connect/request timeout.
 	for rid in _threads:
@@ -152,6 +163,7 @@ func shutdown() -> void:
 			thread.wait_to_finish()
 	_threads.clear()
 	_pending.clear()
+	_ping_context.clear()
 	_tab_provider = null
 	_tab_enable = null
 	_tab_key_label = null
@@ -162,6 +174,40 @@ func shutdown() -> void:
 	_tab_model_label = null
 	_tab_model_hint = null
 	_tab_model_edit = null
+
+
+## Drain completed Thread return values on the main thread. Workers never
+## enqueue old-script Callables: shutdown can set the stop flag, join every
+## worker, and discard its result with no deferred callback surviving into an
+## exact-tree update or plugin reload.
+func poll_completed() -> void:
+	if not _is_active():
+		return
+	for rid_value in _threads.keys():
+		var rid := str(rid_value)
+		var thread: Thread = _threads.get(rid)
+		if thread == null or not thread.is_started():
+			_threads.erase(rid)
+			continue
+		if thread.is_alive():
+			continue
+		var outcome: Variant = thread.wait_to_finish()
+		_threads.erase(rid)
+		if not _is_active():
+			return
+		if not outcome is Dictionary:
+			if rid == "_test":
+				_finish_ping_result({"ok": false, "error": "worker returned an invalid result"})
+			else:
+				_on_route_complete(rid, {"desc": "", "error": "worker returned an invalid result"})
+			continue
+		match str(outcome.get("kind", "")):
+			"route":
+				_on_route_complete(str(outcome.get("request_id", rid)), outcome.get("result"))
+			"ping":
+				_finish_ping_result(outcome.get("result", {}))
+			_:
+				_pending.erase(rid)
 
 
 # --- routing ------------------------------------------------------------------
@@ -216,6 +262,8 @@ func route_game_payload(connection: Object, rid: String, payload: Dictionary) ->
 ## Returns true when a worker owns the reply; false means the caller should
 ## pass the original payload through unchanged.
 func _start_route(rid: String, source: String, payload: Dictionary, data: Dictionary, connection: Object, params: Dictionary) -> bool:
+	if not _is_active():
+		return false
 	var provider_id := _active_provider_id()
 	var base_provider: Dictionary = PROVIDERS.get(provider_id, PROVIDERS["groq"])
 	## Worker-thread snapshot: the entered model id is resolved into the
@@ -247,8 +295,7 @@ func _start_route(rid: String, source: String, payload: Dictionary, data: Dictio
 
 
 func _on_route_complete(rid: String, result: Variant) -> void:
-	_join_thread(rid)
-	if not _active:
+	if not _is_active():
 		_pending.erase(rid)
 		return
 	var entry: Dictionary = _pending.get(rid, {})
@@ -329,9 +376,9 @@ func _build_prompt(params: Dictionary) -> String:
 
 # --- routing worker (thread) ---------------------------------------------------
 
-func _route_worker(provider: Dictionary, image_b64: String, prompt: String, api_key: String, rid: String) -> void:
+func _route_worker(provider: Dictionary, image_b64: String, prompt: String, api_key: String, rid: String) -> Dictionary:
 	var result := _describe_blocking(provider, image_b64, prompt, api_key)
-	_route_done.call_deferred(rid, result)
+	return {"kind": "route", "request_id": rid, "result": result}
 
 
 ## Returns {"desc": String, "error": String}; "desc" is empty on failure and
@@ -495,7 +542,7 @@ func _http_post_json(host: String, port: int, path: String, headers: PackedStrin
 	var connected := false
 	var last_status := -1
 	while Time.get_ticks_msec() < deadline:
-		if not _active:
+		if not _is_active():
 			http.close()
 			return {"code": 0, "error": "aborted (plugin teardown)"}
 		http.poll()
@@ -518,7 +565,7 @@ func _http_post_json(host: String, port: int, path: String, headers: PackedStrin
 	var timed_out := false
 	var status_at_timeout := -1
 	while http.get_status() == HTTPClient.STATUS_REQUESTING:
-		if not _active:
+		if not _is_active():
 			http.close()
 			return {"code": 0, "error": "aborted (plugin teardown)"}
 		http.poll()
@@ -538,7 +585,7 @@ func _http_post_json(host: String, port: int, path: String, headers: PackedStrin
 	var chunks := PackedByteArray()
 	var body_deadline := mini(Time.get_ticks_msec() + REQUEST_TIMEOUT_MS, budget_deadline)
 	while http.get_status() == HTTPClient.STATUS_BODY:
-		if not _active:
+		if not _is_active():
 			http.close()
 			return {"code": 0, "error": "aborted (plugin teardown)"}
 		chunks.append_array(http.read_response_body_chunk())
@@ -559,15 +606,6 @@ func _body_snippet(text: String) -> String:
 	if text.length() > 300:
 		return text.substr(0, 300) + "..."
 	return text
-
-
-func _join_thread(rid: String) -> void:
-	## Join the worker before dropping the Thread reference, otherwise Godot
-	## warns "Thread object destroyed without completion".
-	var thread: Thread = _threads.get(rid)
-	if thread != null and thread.is_started():
-		thread.wait_to_finish()
-	_threads.erase(rid)
 
 
 func _downscale_image_if_needed(image_b64: String) -> String:
@@ -596,13 +634,16 @@ func _downscale_image_if_needed(image_b64: String) -> String:
 	return Marshalls.raw_to_base64(out)
 
 
-func _ping_worker(provider: Dictionary, api_key: String, status_label: Label, key_source: String) -> void:
+func _ping_worker(provider: Dictionary, api_key: String) -> Dictionary:
 	var result := _ping_blocking(provider, api_key)
-	Callable(self, "_on_ping_done").call_deferred(result, provider, status_label, key_source)
+	return {"kind": "ping", "result": result}
 
 
-func _on_ping_done(result: Dictionary, provider: Dictionary, status_label: Label, key_source: String) -> void:
-	_join_thread("_test")
+func _finish_ping_result(result: Dictionary) -> void:
+	var provider: Dictionary = _ping_context.get("provider", {})
+	var status_label: Label = _ping_context.get("status_label")
+	var key_source := str(_ping_context.get("key_source", "stored key"))
+	_ping_context.clear()
 	if _tab_test_button != null and is_instance_valid(_tab_test_button):
 		_tab_test_button.disabled = false
 	if status_label != null and is_instance_valid(status_label):
@@ -1012,11 +1053,17 @@ func _on_test_connection() -> void:
 		key_source = "via %s" % env_name
 	var thread := Thread.new()
 	_threads["_test"] = thread
-	var start_err := thread.start(_ping_worker.bind(provider, api_key, _tab_status, key_source))
+	_ping_context = {
+		"provider": provider,
+		"status_label": _tab_status,
+		"key_source": key_source,
+	}
+	var start_err := thread.start(_ping_worker.bind(provider, api_key))
 	if start_err != OK:
 		## A failed thread start must not leave the button disabled and the
 		## status stuck on "Testing..." forever.
 		_threads.erase("_test")
+		_ping_context.clear()
 		_tab_status.text = previous_status
 		if _tab_test_button != null and is_instance_valid(_tab_test_button):
 			_tab_test_button.disabled = false

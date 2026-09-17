@@ -54,8 +54,6 @@ func _init() -> void:
 	command_user_fields = PackedStringArray(["env"])
 	# Pi's loader also accepts pure-URL entries (the example mcp.json in
 	# the pi-codemode-mcp repo ships stdio + URL entries side-by-side).
-	# Keep the manual-instruction URL fallback alive.
-	command_supports_url_fallback = true
 	# ~/.pi/agent/mcp.json is created by the first pi launch, so its
 	# presence is the strongest install signal. Mirror antigravity's
 	# `detect_paths = path_template.values()` pattern so the dock shows

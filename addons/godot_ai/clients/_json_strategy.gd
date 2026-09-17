@@ -138,7 +138,7 @@ static func check_status_details(
 		return {"status": McpClient.Status.ERROR, "error_msg": path_error}
 	if path.is_empty() or not FileAccess.file_exists(path):
 		return {"status": McpClient.Status.NOT_CONFIGURED, "error_msg": ""}
-	var read := _read_or_init(path)
+	var read := _read_or_init(path, _status_allows_comments(client))
 	if not read["ok"]:
 		return {"status": McpClient.Status.ERROR, "error_msg": String(read["error"])}
 	var config: Dictionary = read["data"]
@@ -156,7 +156,8 @@ static func _check_status_merged(
 	launch: Dictionary,
 	project_roots: PackedStringArray,
 ) -> Dictionary:
-	var loaded := _load_merge_tiers(client)
+	var allow_comments := _status_allows_comments(client)
+	var loaded := _load_merge_tiers(client, allow_comments)
 	if not loaded.get("ok", false):
 		return {"status": McpClient.Status.ERROR, "error_msg": str(loaded.get("error", "Cannot read merged config tiers"))}
 	var effective: Variant = null
@@ -165,7 +166,7 @@ static func _check_status_merged(
 		var holder := _walk_path(config, select_server_key_path(config, client))
 		if holder is Dictionary and holder.has(server_name):
 			effective = holder[server_name]
-	var project := _load_project_definitions(client, server_name, project_roots)
+	var project := _load_project_definitions(client, server_name, project_roots, allow_comments)
 	if not project.get("ok", false):
 		return {"status": McpClient.Status.ERROR, "error_msg": str(project.get("error", "Cannot inspect project config tiers"))}
 	var project_tiers: Array = project.get("tiers", [])
@@ -179,7 +180,12 @@ static func _check_status_merged(
 		var latest: Dictionary = project_tiers[project_tiers.size() - 1]
 		var details := _entry_status_details(client, latest["entry"], server_url, launch)
 		if details.get("status") != McpClient.Status.CONFIGURED:
-			return {"status": McpClient.Status.CONFIGURED_MISMATCH, "error_msg": _project_override_message([latest], "update or remove", client.display_name, server_name)}
+			## Keep `owned` from the effective entry: the post-update migration
+			## decides from it whether this mismatch is ours to repin.
+			var mismatch := details.duplicate()
+			mismatch["status"] = McpClient.Status.CONFIGURED_MISMATCH
+			mismatch["error_msg"] = _project_override_message([latest], "update or remove", client.display_name, server_name)
+			return mismatch
 		return {"status": McpClient.Status.CONFIGURED, "error_msg": ""}
 	if effective == null:
 		return {"status": McpClient.Status.NOT_CONFIGURED, "error_msg": ""}
@@ -199,7 +205,11 @@ static func _entry_status_details(
 		return {"status": McpClient.Status.ERROR, "error_msg": launch_error}
 	if verify_entry(client, entry, server_url, launch):
 		return {"status": McpClient.Status.CONFIGURED, "error_msg": ""}
-	return {"status": McpClient.Status.CONFIGURED_MISMATCH, "error_msg": ""}
+	return {
+		"status": McpClient.Status.CONFIGURED_MISMATCH,
+		"error_msg": "",
+		"owned": McpClient.launch_values_mention_godot_ai(McpClient.entry_launch_values(entry)),
+	}
 
 
 static func remove(
@@ -434,23 +444,44 @@ static func _arrays_equal(left: Variant, right: Variant) -> bool:
 ## away the user's other MCP entries on the next write. The `original_text`
 ## is the exact captured source so transactional rollback can restore
 ## byte-for-byte; the UTF-8 BOM is stripped only from the parsing copy.
-static func _read_file_text(path: String) -> Dictionary:
+## `allow_comments` also strips JSONC comments from the parsing copy; only
+## read-only callers pass it (see `_status_allows_comments`).
+static func _read_file_text(path: String, allow_comments: bool = false) -> Dictionary:
 	if not FileAccess.file_exists(path):
 		return {"exists": false, "ok": true, "data": {}, "original_text": ""}
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		var open_err := FileAccess.get_open_error()
 		return {"exists": true, "ok": false, "error": "could not open for reading (error %d)" % open_err, "original_text": ""}
-	var content := file.get_as_text()
+	# Read bytes, not `get_as_text()`. Godot's UTF-8 decoder (both `get_as_text`
+	# and `get_string_from_utf8`) silently consumes a leading EF BB BF, so a
+	# text-only read dropped the BOM from `original_text` and the next Remove
+	# wrote it back out of the user's file — a byte mutation outside the entry
+	# we were asked to touch. Detect the marker on the raw buffer and restore
+	# U+FEFF when the decoder ate it.
+	var buf := file.get_buffer(file.get_length())
 	file.close()
-	if content.strip_edges().is_empty():
+	var had_bom := buf.size() >= 3 and buf[0] == 0xEF and buf[1] == 0xBB and buf[2] == 0xBF
+	var content := buf.get_string_from_utf8()
+	if had_bom and not content.begins_with("﻿"):
+		content = "﻿" + content
+	# Everything downstream of the BOM parses and measures the body: JSON.parse
+	# rejects a leading U+FEFF outright, and a BOM-only file is empty, not
+	# broken. `original_text` keeps the marker so writes round-trip it.
+	var body := content.substr(1) if content.begins_with("﻿") else content
+	if body.strip_edges().is_empty():
 		return {"exists": true, "ok": true, "data": {}, "original_text": content}
-	var parse_copy := content
-	# Strip a UTF-8 BOM if present — some editors (notably on Windows) save
-	# JSON with a leading ﻿, which Godot's JSON.parse rejects outright.
-	# Previously this landed on the "unparseable → wipe" path.
-	if parse_copy.begins_with("﻿"):
-		parse_copy = parse_copy.substr(1)
+	var parse_copy := body
+	if allow_comments:
+		# Parse copy only — `original_text` stays byte-for-byte, and an
+		# unterminated block comment fails closed rather than letting the
+		# leftover source parse as valid JSON.
+		var stripped := _strip_jsonc(parse_copy)
+		if not stripped.get("ok", false):
+			var strip_msg := str(stripped.get("error", "invalid JSONC"))
+			push_warning("MCP | %s in %s" % [strip_msg, path])
+			return {"exists": true, "ok": false, "error": strip_msg, "original_text": content}
+		parse_copy = str(stripped.get("text", ""))
 	var json := JSON.new()
 	if json.parse(parse_copy) != OK:
 		var msg := "JSON parse error on line %d: %s" % [json.get_error_line(), json.get_error_message()]
@@ -461,13 +492,96 @@ static func _read_file_text(path: String) -> Dictionary:
 	return {"exists": true, "ok": true, "data": json.data, "original_text": content}
 
 
+## Read-only by construction: requiring both flags means no Configure/Remove
+## can parse a file it would then re-serialize without the discarded comments.
+## Re-enabling automatic edits restores the parse error instead of a lossy write.
+static func _status_allows_comments(client: McpClient) -> bool:
+	return client.config_allows_comments and not client.automatic_config_edits
+
+
+## Strip `//` and `/* */` comments, leaving sequences inside JSON strings
+## intact. Parse copies only.
+## Returns `{"ok": true, "text": String}` or `{"ok": false, "error": String}`.
+static func _strip_jsonc(text: String) -> Dictionary:
+	var parts := PackedStringArray()
+	var i := 0
+	var n := text.length()
+	var in_string := false
+	var escape := false
+	var run_start := 0
+	while i < n:
+		var c := text[i]
+		if in_string:
+			if escape:
+				escape = false
+			elif c == "\\":
+				escape = true
+			elif c == '"':
+				in_string = false
+			i += 1
+			continue
+		if c == '"':
+			in_string = true
+			i += 1
+			continue
+		var skipped := _skip_jsonc_comment_at(text, i)
+		if skipped < 0:
+			return {"ok": false, "error": "unterminated block comment"}
+		if skipped != i:
+			if i > run_start:
+				parts.append(text.substr(run_start, i - run_start))
+			# Re-emit newlines so JSON.parse error lines still match the source.
+			var emitted_nl := false
+			for j in range(i, skipped):
+				if text[j] == "\n":
+					parts.append("\n")
+					emitted_nl = true
+			# A comment must not glue its neighbours (`tru/* x */e` is not
+			# `true`). A newline already splits them; otherwise use a space.
+			if not emitted_nl:
+				parts.append(" ")
+			i = skipped
+			run_start = i
+			continue
+		i += 1
+	if in_string:
+		return {"ok": false, "error": "unterminated string"}
+	if n > run_start:
+		parts.append(text.substr(run_start, n - run_start))
+	return {"ok": true, "text": "".join(parts)}
+
+
+## Skip a JSONC comment starting at `i`. Returns `i` unchanged when `i` is not
+## a comment opener, the index after a consumed comment, or -1 when a block
+## comment runs to EOF without `*/`.
+static func _skip_jsonc_comment_at(text: String, i: int) -> int:
+	var n := text.length()
+	if i + 1 >= n or text[i] != "/":
+		return i
+	if text[i + 1] == "/":
+		i += 2
+		# `get_string_from_utf8()` keeps CR, so a CR-only file never presents a `\n` and
+		# a `\n`-only terminator would swallow the rest of the file.
+		while i < n and text[i] != "\n" and text[i] != "\r":
+			i += 1
+		return i
+	if text[i + 1] == "*":
+		i += 2
+		while i + 1 < n:
+			if text[i] == "*" and text[i + 1] == "/":
+				return i + 2
+			i += 1
+		return -1
+	return i
+
+
 ## Returns {"ok": true, "data": Dictionary} when the file is absent or parses
 ## cleanly, and {"ok": false, "error": String} when the file exists with
 ## non-empty content we cannot safely round-trip. Callers must NOT fall back
 ## to an empty dict on the error path — doing so blows away the user's other
 ## MCP entries on the next write.
-static func _read_or_init(path: String) -> Dictionary:
-	var read := _read_file_text(path)
+static func _read_or_init(path: String, allow_comments: bool = false) -> Dictionary:
+	var read := _read_file_text(path, allow_comments)
 	var result: Dictionary = {"ok": read.get("ok", false), "data": read.get("data", {})}
 	if not result.get("ok", false):
 		result["error"] = read.get("error", "")
@@ -563,11 +677,14 @@ static func _project_candidate_paths(
 
 
 static func _load_project_definitions(
-	client: McpClient, server_name: String, project_roots: PackedStringArray
+	client: McpClient,
+	server_name: String,
+	project_roots: PackedStringArray,
+	allow_comments: bool = false,
 ) -> Dictionary:
 	var tiers: Array[Dictionary] = []
 	for path in _project_candidate_paths(client, project_roots):
-		var read := _read_or_init(path)
+		var read := _read_or_init(path, allow_comments)
 		if not read.get("ok", false):
 			return {"ok": false, "error": "Cannot inspect project config %s: %s" % [path, read.get("error", "invalid JSON")]}
 		var config: Dictionary = read["data"]
@@ -592,7 +709,7 @@ static func _project_override_message(
 	return "%s project config overrides %s at %s. %s resolves project files from its own working directory, so the dock cannot safely choose one; %s the entry manually." % [client_name, server_name, ", ".join(paths), client_name, action]
 
 
-static func _load_merge_tiers(client: McpClient) -> Dictionary:
+static func _load_merge_tiers(client: McpClient, allow_comments: bool = false) -> Dictionary:
 	var tiers: Array[Dictionary] = []
 	for path in _merge_paths(client):
 		## These templates never pass through `resolved_config_path_details`,
@@ -607,7 +724,7 @@ static func _load_merge_tiers(client: McpClient) -> Dictionary:
 				"ok": false,
 				"error": McpClient.unresolved_config_path_error(client.display_name, path),
 			}
-		var read := _read_file_text(path)
+		var read := _read_file_text(path, allow_comments)
 		if not read.get("ok", false):
 			return {
 				"ok": false,
@@ -666,7 +783,8 @@ static func authoritative_tier_path(
 ) -> String:
 	if not _uses_merge_tiers(client):
 		return ""
-	var project := _load_project_definitions(client, server_name, project_roots)
+	var allow_comments := _status_allows_comments(client)
+	var project := _load_project_definitions(client, server_name, project_roots, allow_comments)
 	if not bool(project.get("ok", false)):
 		return ""
 	var project_tiers: Array = project.get("tiers", [])
@@ -676,7 +794,7 @@ static func authoritative_tier_path(
 		# latest, so the Open/Reveal buttons should send them there too.
 		var latest: Dictionary = project_tiers[project_tiers.size() - 1]
 		return str(latest.get("path", ""))
-	var loaded := _load_merge_tiers(client)
+	var loaded := _load_merge_tiers(client, allow_comments)
 	if not bool(loaded.get("ok", false)):
 		return ""
 	var tiers: Array = loaded.get("tiers", [])
@@ -700,8 +818,11 @@ static func manual_target_details(
 	fallback_path: String,
 	project_roots: PackedStringArray = PackedStringArray(),
 ) -> Dictionary:
+	# A read: the instructions a JSONC client is sent to must not carry
+	# "Target inspection failed" for the file its own client ships.
+	var allow_comments := _status_allows_comments(client)
 	if _uses_merge_tiers(client):
-		var project := _load_project_definitions(client, server_name, project_roots)
+		var project := _load_project_definitions(client, server_name, project_roots, allow_comments)
 		if not project.get("ok", false):
 			return {"ok": false, "error": project.get("error", "Cannot inspect project config tiers")}
 		var project_tiers: Array = project.get("tiers", [])
@@ -714,7 +835,7 @@ static func manual_target_details(
 				"path": selected_project["path"],
 				"key_path": selected_project["key_path"],
 			}
-		var loaded := _load_merge_tiers(client)
+		var loaded := _load_merge_tiers(client, allow_comments)
 		if not loaded.get("ok", false):
 			return {"ok": false, "error": loaded.get("error", "Cannot read merged config tiers")}
 		var tiers: Array = loaded.get("tiers", [])
@@ -731,7 +852,7 @@ static func manual_target_details(
 				"path": selected["path"],
 				"key_path": select_server_key_path(config, client),
 			}
-	var read := _read_or_init(fallback_path)
+	var read := _read_or_init(fallback_path, allow_comments)
 	if not read.get("ok", false):
 		return {"ok": false, "error": "Cannot inspect %s: %s" % [fallback_path, read.get("error", "invalid JSON")]}
 	return {
@@ -816,9 +937,13 @@ static func _text_remove_server_entry(text: String, key_path: PackedStringArray,
 	# itself stays in `text` so the byte-survival F5 contract still holds
 	# (codex round 3, F-3-6 — without it, files saved with a Windows BOM
 	# left the entry in place after Remove).
-	while cursor < text.length() and _is_json_ws(text[cursor]):
-		cursor += 1
+	# The BOM can only ever be byte 0, so it is skipped BEFORE the whitespace
+	# walk: a file saved as BOM + newline + `{` (common from Windows editors)
+	# otherwise leaves the cursor on the newline, the root `{` is never
+	# consumed, and the entry silently survives Remove.
 	if cursor < text.length() and text[cursor] == "﻿":
+		cursor += 1
+	while cursor < text.length() and _is_json_ws(text[cursor]):
 		cursor += 1
 	if cursor < text.length() and (text[cursor] == "{" or text[cursor] == "["):
 		cursor += 1

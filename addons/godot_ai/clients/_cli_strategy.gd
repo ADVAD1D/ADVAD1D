@@ -21,6 +21,7 @@ const SCOPE_TOKEN := "{scope}"
 const _CONFIGURE_TIMEOUT_MS := 10000
 const _REMOVE_TIMEOUT_MS := 10000
 const _STATUS_TIMEOUT_MS := 6000
+const MutationLock := preload("res://addons/godot_ai/utils/client_mutation_lock.gd")
 
 
 static func configure(
@@ -38,28 +39,46 @@ static func configure(
 	var cli := _resolve_cli(client)
 	if cli.is_empty():
 		return {"status": "error", "message": "%s not found" % client.display_name}
+	return _configure_claimed(client, server_name, server_url, launch, cli)
 
-	# Best-effort prior cleanup so re-configure is idempotent. Bounded to
-	# the same budget — a hung unregister shouldn't block the configure
-	# that follows.
+
+static func _configure_claimed(
+	client: McpClient,
+	server_name: String,
+	server_url: String,
+	launch: Dictionary,
+	cli: String,
+) -> Dictionary:
+
+	# Best-effort prior cleanup so re-configure is idempotent. Ordinary absent-
+	# entry/non-zero results remain ignorable; an unproven timeout is not,
+	# because its descendant could race the configure that follows.
 	if not client.cli_unregister_template.is_empty():
 		## #872: a `{scope}` descriptor sweeps EVERY scope, not just the
 		## selected one. Flipping the setting user -> project and pressing
 		## Configure would otherwise leave the old user-scope entry alive —
 		## exactly the "loaded in every unrelated workspace" problem the
-		## setting exists to fix. `mcp remove` on an absent entry is a no-op
-		## and the result is discarded either way, so the extra passes are
-		## safe; they cost one bounded subprocess per additional scope.
+		## setting exists to fix. `mcp remove` on an absent entry is a no-op,
+		## so ordinary results are discarded; ambiguous termination aborts the
+		## sequence. Each extra scope costs one bounded subprocess.
 		for pre_scope in _cleanup_scopes(client):
 			var pre_args := _format_args(
 				client.cli_unregister_template, server_name, server_url, {}, pre_scope
 			)
-			McpCliExec.run(cli, pre_args, _REMOVE_TIMEOUT_MS)
+			var cleaned := McpCliExec.run(cli, pre_args, _REMOVE_TIMEOUT_MS)
+			var cleanup_failure := _unproven_mutation_failure(
+				client, "Prior cleanup", cleaned
+			)
+			if not cleanup_failure.is_empty():
+				return cleanup_failure
 
 	if client.cli_register_template.is_empty():
 		return {"status": "error", "message": "%s descriptor missing cli_register_template" % client.display_name}
 	var args := _format_args(client.cli_register_template, server_name, server_url, launch)
 	var result := McpCliExec.run(cli, args, _CONFIGURE_TIMEOUT_MS)
+	var termination_failure := _unproven_mutation_failure(client, "Configure", result)
+	if not termination_failure.is_empty():
+		return termination_failure
 	if result.get("timed_out", false):
 		return {
 			"status": "error",
@@ -140,7 +159,9 @@ static func check_status_details(
 	## Server registered, but pointing somewhere else — drift after a
 	## port change. Surface as mismatch so the dock offers Reconfigure.
 	if text.find(expected_target) < 0:
-		return _status_details(McpClient.Status.CONFIGURED_MISMATCH)
+		return _status_details(
+			McpClient.Status.CONFIGURED_MISMATCH, "", _probe_output_launches_godot_ai(text)
+		)
 	return _status_details(McpClient.Status.CONFIGURED)
 
 
@@ -156,18 +177,27 @@ static func command_launch_error(client: McpClient, launch: Dictionary) -> Strin
 	return ""
 
 
-static func _status_details(status: McpClient.Status, error_msg: String = "") -> Dictionary:
-	return {"status": status, "error_msg": error_msg}
+static func _status_details(
+	status: McpClient.Status, error_msg: String = "", owned: bool = false
+) -> Dictionary:
+	return {"status": status, "error_msg": error_msg, "owned": owned}
 
 
 static func remove(client: McpClient, server_name: String) -> Dictionary:
 	var cli := _resolve_cli(client)
 	if cli.is_empty():
 		return {"status": "error", "message": "%s not found" % client.display_name}
+	return _remove_claimed(client, server_name, cli)
+
+
+static func _remove_claimed(client: McpClient, server_name: String, cli: String) -> Dictionary:
 	if client.cli_unregister_template.is_empty():
 		return {"status": "error", "message": "%s descriptor missing cli_unregister_template" % client.display_name}
 	var args := _format_args(client.cli_unregister_template, server_name, "")
 	var result := McpCliExec.run(cli, args, _REMOVE_TIMEOUT_MS)
+	var termination_failure := _unproven_mutation_failure(client, "Remove", result)
+	if not termination_failure.is_empty():
+		return termination_failure
 	if result.get("timed_out", false):
 		return {
 			"status": "error",
@@ -185,6 +215,25 @@ static func remove(client: McpClient, server_name: String) -> Dictionary:
 	var combined := str(result.get("output", "")).strip_edges()
 	var err := combined if not combined.is_empty() else "exit code %d" % int(result.get("exit_code", -1))
 	return {"status": "error", "message": "Failed to remove %s: %s" % [client.display_name, err]}
+
+
+## A POSIX exact-PID kill cannot prove that a CLI's descendants stopped. Never
+## issue the next write after that ambiguous boundary: the old process could
+## otherwise land a stale mutation after the new one. The durable global claim
+## remains until the user explicitly clears it after stopping those processes.
+static func _unproven_mutation_failure(
+	client: McpClient, operation: String, result: Dictionary
+) -> Dictionary:
+	if not bool(result.get("termination_failed", false)):
+		return {}
+	return {
+		"status": "error",
+		"message": (
+			"%s for %s could not be proven stopped. %s"
+			% [operation, client.display_name, MutationLock.recovery_message()]
+		),
+		"termination_failed": true,
+	}
 
 
 ## Substitute `{name}` and `{url}` tokens in every template entry.
@@ -255,12 +304,17 @@ static func check_scope_status_details(
 	if cli.is_empty() or client.cli_scope_status_template.is_empty():
 		return _status_details(McpClient.Status.NOT_CONFIGURED)
 	var expected_target := server_url
+	var expected_args: Array[String] = []
+	var expected_type := ""
 	if client.command_shape != McpClient.CommandShape.NONE:
 		## Same fail-closed contract as configure and the plain status probe.
 		var launch_error := command_launch_error(client, launch)
 		if not launch_error.is_empty():
 			return _status_details(McpClient.Status.ERROR, launch_error)
 		expected_target = str(launch.get("command", ""))
+		for launch_arg in launch.get("args", []):
+			expected_args.append(str(launch_arg))
+		expected_type = str(client.command_transport_value)
 	var args := _format_args(client.cli_scope_status_template, server_name, server_url)
 	var result := McpCliExec.run(cli, args, _STATUS_TIMEOUT_MS, false)
 	if result.get("timed_out", false):
@@ -272,6 +326,8 @@ static func check_scope_status_details(
 		str(result.get("stdout", "")),
 		expected_scope,
 		expected_target,
+		expected_args,
+		expected_type,
 	)
 
 
@@ -293,6 +349,26 @@ static func _scope_from_probe_output(text: String) -> String:
 	return ""
 
 
+## The probe output names our server; only its launch fields decide whether
+## the existing entry is ours to rewrite after an update.
+static func _probe_output_launches_godot_ai(text: String) -> bool:
+	return McpClient.launch_mentions_godot_ai(
+		_field_from_probe_output(text, "Command:")
+		+ " "
+		+ _field_from_probe_output(text, "Args:")
+		+ " "
+		+ _field_from_probe_output(text, "URL:")
+	)
+
+
+static func _field_from_probe_output(text: String, label: String) -> String:
+	for raw_line in text.split("\n"):
+		var line := String(raw_line).strip_edges()
+		if line.begins_with(label):
+			return line.substr(label.length()).strip_edges()
+	return ""
+
+
 ## Pure verdict for a scope probe. A non-zero exit is the CLI's "no such
 ## server" signal. An entry resolved from a scope other than the selected one
 ## is MISMATCH, not CONFIGURED: the dock offers Reconfigure, and Configure's
@@ -310,7 +386,12 @@ static func _scope_from_probe_output(text: String) -> String:
 ## failure. Today's claude (2.1.241) always prints the line, so this is a
 ## forward-compatibility hedge, not a live code path.
 static func _scope_probe_verdict(
-	exit_code: int, text: String, expected_scope: String, expected_target: String
+	exit_code: int,
+	text: String,
+	expected_scope: String,
+	expected_target: String,
+	expected_args: Array[String] = [],
+	expected_type: String = "",
 ) -> Dictionary:
 	if exit_code != 0:
 		return _status_details(McpClient.Status.NOT_CONFIGURED)
@@ -321,8 +402,20 @@ static func _scope_probe_verdict(
 	## check so both mismatch paths carry it: an entry whose launcher drifted
 	## sends the user to the wrong file just as readily as one whose scope did.
 	var resolved := _scope_from_probe_output(text)
-	if not expected_target.is_empty() and text.find(expected_target) < 0:
-		var drifted := _status_details(McpClient.Status.CONFIGURED_MISMATCH)
+	var command_matches := (
+		expected_target.is_empty()
+		or _field_from_probe_output(text, "Command:") == expected_target
+	)
+	var launch_details_match := true
+	if not expected_type.is_empty():
+		launch_details_match = (
+			_field_from_probe_output(text, "Type:") == expected_type
+			and _field_from_probe_output(text, "Args:") == " ".join(expected_args)
+		)
+	if not command_matches or not launch_details_match:
+		var drifted := _status_details(
+			McpClient.Status.CONFIGURED_MISMATCH, "", _probe_output_launches_godot_ai(text)
+		)
 		if not resolved.is_empty():
 			drifted["resolved_scope"] = resolved
 		return drifted
@@ -332,6 +425,7 @@ static func _scope_probe_verdict(
 		var details := _status_details(
 			McpClient.Status.CONFIGURED_MISMATCH,
 			"registered at %s scope, not %s" % [resolved, expected_scope],
+			_probe_output_launches_godot_ai(text),
 		)
 		details["resolved_scope"] = resolved
 		return details

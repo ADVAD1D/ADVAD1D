@@ -22,4 +22,3 @@ func _init() -> void:
 		"timeout", "trust", "includeTools", "excludeTools", "env", "cwd",
 	])
 	command_timeout_fields = PackedStringArray(["timeout"])
-	command_supports_url_fallback = true

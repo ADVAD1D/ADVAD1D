@@ -2,125 +2,63 @@
 class_name McpServerVersionCheck
 extends RefCounted
 
-## Standalone polling seam for the post-connection server-version
-## handshake gate. Extracted from `plugin.gd` so the lifecycle manager
-## stays focused on spawn/adopt/stop and the version-verify dance has
-## its own home.
-##
-## The seam itself does NOT transition `McpServerState` on arm/disarm —
-## the version check runs concurrently with whatever spawn-state the
-## caller had latched (typically FOREIGN_PORT during adoption
-## confirmation, or no-op directly to READY for a fresh spawn). Result
-## transitions land on the manager via `handle_server_version_verified`
-## (READY / INCOMPATIBLE) or `handle_server_version_unverified`
-## (INCOMPATIBLE on deadline expiry); arm() leaves the state alone so a
-## FOREIGN_PORT diagnosis isn't accidentally cleared before the
-## handshake actually arrives.
-##
-## Owns the deadline timer (`_deadline_ms`) and requires the manager to
-## feed it `tick(now_msec)` from the plugin's `_process` while
-## `is_active()` is true.
-##
-## Decoupled from the connection's signal surface: `tick()` polls
-## `_connection.is_connected` and `_connection.server_version` directly.
-## A same-release signal addition plus a new consumer is shape-coupled work
-## for old two-phase runners; they can parse the consumer while the
-## McpConnection Script object still reflects v(N). We still null-check
-## `_connection` because `disarm()` releases it.
+## Published v4 compatibility value. Lifecycle owns the authenticated
+## handshake and episode transition; this class intentionally owns no timer,
+## connection, or manager reference.
 
-## How long to wait after the WebSocket opens before declaring the
-## handshake_ack overdue. This is the sole owner of the 5s budget
-## — kept at this layer so the version-check seam is self-contained.
-const TIMEOUT_MS := 5 * 1000
-
-## Untyped on purpose for the same self-update field-storage reason
-## plugin.gd's fields are untyped. `_connection` is the live
-## `McpConnection`; `_manager` is `McpServerLifecycleManager`.
-## `_connection` is null between disarm() and the next arm() — the
-## seam can spend most of the plugin's life dormant and we don't want
-## to pin a Node that may be queue_freed in `_exit_tree`. `_manager` is
-## set once at construction and held for the seam's lifetime (the
-## manager owns this instance, so the cycle is short).
-var _connection
-var _manager
-var _active: bool = false
-var _deadline_ms: int = 0
-var _expected_version: String = ""
+## First release whose attached bridge follows servers of the same major.
+const FIRST_BRIDGE_TOLERANT_VERSION := "4.0.4"
 
 
-func _init(manager) -> void:
-	_manager = manager
-
-
-## Arm the version-check. Marks the seam active, (re)attaches the
-## connection it should poll, and starts watching for
-## `_connection.server_version`. Does NOT transition manager state —
-## the version check runs concurrently with whatever spawn-state was
-## latched (e.g. FOREIGN_PORT during adoption confirmation, READY for
-## a fresh spawn). Result transitions land on the manager via
-## `handle_server_version_verified` / `_unverified` once the handshake
-## (or its deadline) lands.
-##
-## The deadline starts the moment the connection actually opens, not at
-## arm-time, because uvx cold-starts can take ~30s to bind the
-## WebSocket and we don't want to count that against the handshake.
-func arm(connection, expected_version: String) -> void:
-	_active = true
-	_deadline_ms = 0
-	_expected_version = expected_version
-	_connection = connection
-
-
-## Disarm without firing a verdict. Used when the manager moves on
-## (e.g. recovery click → STOPPING). Releases the connection /
-## manager references so the seam doesn't pin them past the active
-## window — the plugin can spend most of its life with the version
-## check disarmed, and `_connection` is a Node that may be queue_free'd
-## by `_exit_tree`. Caller has already transitioned state, so we don't
-## touch the manager.
-func disarm() -> void:
-	_active = false
-	_deadline_ms = 0
-	_connection = null
-
-
-## True while the version-check needs `_process` ticks. Plugin uses
-## this to gate `set_process(true)`.
-func is_active() -> bool:
-	return _active
-
-
-## Per-frame tick from the plugin's `_process`. No-op when disarmed.
-## Returns true when the check finished this tick (verified or
-## unverified) so the plugin can re-evaluate `set_process` enable.
-func tick(now_msec: int) -> bool:
-	if not _active:
+## Whether clients attached at `from_version` can reconnect after updating
+## to `to_version` without restarting their bridge (#1024).
+static func attached_bridges_follow(from_version: String, to_version: String) -> bool:
+	var from_tuple := version_tuple(from_version)
+	var to_tuple := version_tuple(to_version)
+	if from_tuple.is_empty() or to_tuple.is_empty():
 		return false
-	if _connection == null:
+	if int(from_tuple[0]) != int(to_tuple[0]):
 		return false
-	if not bool(_connection.is_connected):
+	return compare(from_tuple, version_tuple(FIRST_BRIDGE_TOLERANT_VERSION)) >= 0
+
+
+## Leading numeric `major.minor.patch` of a version as `[major, minor, patch]`,
+## or `[]` when it does not start that way (a dev build, a malformed pin).
+## A suffix after the patch (`4.0.3+local.1`, `4.1.0-rc1`) is ignored; a
+## dangling separator (`4.0.3+`) is not a version.
+static func version_tuple(version: String) -> Array:
+	var regex := RegEx.create_from_string("^(\\d+)\\.(\\d+)\\.(\\d+)(?:$|[.+-][0-9A-Za-z][0-9A-Za-z.+-]*$)")
+	var found := regex.search(version.strip_edges())
+	if found == null:
+		return []
+	return [int(found.get_string(1)), int(found.get_string(2)), int(found.get_string(3))]
+
+
+static func compare(a: Array, b: Array) -> int:
+	for index in range(3):
+		if int(a[index]) != int(b[index]):
+			return -1 if int(a[index]) < int(b[index]) else 1
+	return 0
+
+
+## `candidate` is a parseable version older than `reference` within the same
+## major version. Unparseable, equal, newer, or another major all read false:
+## a caller may only replace what it can prove is older than itself.
+static func is_older_same_major(candidate: String, reference: String) -> bool:
+	var candidate_tuple := version_tuple(candidate)
+	var reference_tuple := version_tuple(reference)
+	if candidate_tuple.is_empty() or reference_tuple.is_empty():
 		return false
-	if _deadline_ms == 0:
-		_deadline_ms = now_msec + TIMEOUT_MS
-	var server_version := str(_connection.server_version)
-	if not server_version.is_empty():
-		_complete_with_version(server_version)
-		return true
-	if now_msec >= _deadline_ms:
-		_complete_unverified()
-		return true
-	return false
+	if int(candidate_tuple[0]) != int(reference_tuple[0]):
+		return false
+	return compare(candidate_tuple, reference_tuple) < 0
 
 
-func _complete_with_version(version: String) -> void:
-	_active = false
-	_deadline_ms = 0
-	if _manager != null:
-		_manager.handle_server_version_verified(_expected_version, version)
-
-
-func _complete_unverified() -> void:
-	_active = false
-	_deadline_ms = 0
-	if _manager != null:
-		_manager.handle_server_version_unverified(_expected_version)
+static func evaluate(actual_version: String, expected_version: String) -> Dictionary:
+	if actual_version.is_empty():
+		return {"compatible": false, "reason": "missing_version"}
+	var compatible := actual_version == expected_version
+	return {
+		"compatible": compatible,
+		"reason": "" if compatible else "version_mismatch",
+	}

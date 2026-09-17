@@ -51,6 +51,17 @@ static func configured_message(client: McpClient, server_url: String) -> String:
 var id: String = ""                              ## stable key, e.g. "cursor"
 var display_name: String = ""                    ## "Cursor"
 var config_type: String = ""                     ## "json" | "toml" | "yaml" | "cli" | "dsh"
+## False when the client's settings format cannot be round-tripped safely by
+## the matching strategy. Status checks remain read-only; Configure and Remove
+## return the existing manual instructions without touching the file.
+var automatic_config_edits: bool = true
+
+## True when the config file is JSONC (Zed ships a `//` header). Honored by the
+## JSON strategy's reads only — comments are stripped from a throwaway parse
+## copy, so the row shows a real status instead of a permanent parse error
+## (#914). Requires `automatic_config_edits = false`; the strategy ignores it
+## otherwise rather than let a re-serializing Configure drop the comments.
+var config_allows_comments: bool = false
 
 # JSON / TOML clients ------------------------------------------------------
 ## {"darwin": "~/...", "windows": "$APPDATA/...", "linux": "$XDG_CONFIG_HOME/..."}
@@ -154,12 +165,6 @@ var entry_initial_fields: Dictionary = {}
 ## reintroducing the descriptor Callable race from #229.
 enum CommandShape { NONE, FLAT, TYPED_FLAT, COMMAND_ARRAY, NESTED_COMMAND }
 var command_shape: CommandShape = CommandShape.NONE
-
-## Whether manual instructions may offer the client's native URL transport as
-## an alternative to its command shape. This is capability metadata, not a
-## consequence of `command_shape`: Codex supports a URL block, while Claude
-## Desktop's local `claude_desktop_config.json` entries are stdio-only.
-var command_supports_url_fallback: bool = false
 
 ## Optional discriminator required by a client's command transport shape
 ## (for example `type = "stdio"`). Empty means command+args are sufficient.
@@ -526,3 +531,48 @@ static func _packed_slice(packed: PackedStringArray, from: int, to: int) -> Pack
 	for i in range(from, to):
 		out.append(packed[i])
 	return out
+
+
+## Whether an existing entry's launch text launches Godot AI: an executable
+## named `godot-ai`, a `godot-ai==<version>` package pin, the bare `godot-ai`
+## console-script argument, or the `godot_ai` module. Tokens are matched
+## exactly, so a URL or path that merely contains the name (a docs link, a
+## project directory) does not count. The post-update major migration
+## rewrites only such entries; anything else is the user's own server.
+static func launch_mentions_godot_ai(text: String) -> bool:
+	## Free text (a CLI probe's output) is split on spaces; structured launch
+	## values should go through `launch_values_mention_godot_ai` unsplit.
+	return launch_values_mention_godot_ai(PackedStringArray(text.split(" ", false)))
+
+
+## Each value is one command, argument or URL. A URI never names an
+## executable, and Windows separators are normalized before the basename
+## check so `C:\Program Files\Godot AI\godot-ai.exe` is recognized whole.
+static func launch_values_mention_godot_ai(values: PackedStringArray) -> bool:
+	for raw_value in values:
+		var value := raw_value.strip_edges().lstrip("\"'[{(").rstrip("\"'])},")
+		if value.is_empty() or value.contains("://"):
+			continue
+		if value == "godot-ai" or value == "godot_ai" or value.begins_with("godot-ai=="):
+			return true
+		var base := value.replace("\\", "/").get_file()
+		if base == "godot-ai" or base == "godot-ai.exe":
+			return true
+	return false
+
+
+## The launch-bearing fields of an entry, one value each, for the check
+## above. The entry sits under our server name, so the name itself must not
+## count.
+static func entry_launch_values(entry: Dictionary) -> PackedStringArray:
+	var values := PackedStringArray()
+	for key in ["command", "args", "url"]:
+		if not entry.has(key):
+			continue
+		var value: Variant = entry[key]
+		if value is Array:
+			for item in value:
+				values.append(str(item))
+		else:
+			values.append(str(value))
+	return values

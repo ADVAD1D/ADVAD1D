@@ -20,4 +20,3 @@ func _init() -> void:
 	command_legacy_keys = PackedStringArray(["url"])
 	command_initial_fields = {"disabled": false}
 	command_user_fields = PackedStringArray(["disabled", "autoApprove", "disabledTools", "env"])
-	command_supports_url_fallback = true

@@ -8,8 +8,8 @@ extends RefCounted
 ## emits them as the bare tokens `inf`/`nan`, which are invalid JSON — the
 ## server drops the whole frame and the pending request times out (#688).
 ## Serialize them as null instead (the same choice web JSON.stringify makes),
-## applied uniformly across the supported 4.5+ floor — no version gate, so
-## wire output is identical on every supported engine.
+## applied uniformly across the v4 support floor — no version gate, so wire
+## output is identical on every supported engine.
 static func _safe_float(f: float) -> Variant:
 	return f if is_finite(f) else null
 

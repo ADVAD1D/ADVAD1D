@@ -1,5 +1,5 @@
 @tool
-extends RefCounted
+extends "res://addons/godot_ai/handlers/command_handler.gd"
 
 const ErrorCodes := preload("res://addons/godot_ai/utils/error_codes.gd")
 const DiagnosticsCapture := preload("res://addons/godot_ai/utils/diagnostics_capture.gd")
@@ -76,16 +76,16 @@ func create_script(params: Dictionary) -> Dictionary:
 			+ "when its window regains focus."
 		)
 
-	# Register just this file with the editor instead of a full recursive
-	# scan(). A scan() per write stacks `update_scripts_classes` /
-	# `update_script_paths_documentation` WorkerThreadPool tasks under concurrent
-	# script creation ("Task ... already exists" / "!tasks.has(p_task)"), which
-	# races the global-class registry and can SIGABRT in
-	# ScriptServer::remove_global_class_by_path (see dsarno/godot#6).
-	# update_file() is the single-file path the rest of the plugin already uses.
-	var efs := EditorInterface.get_resource_filesystem()
-	if efs != null:
-		efs.update_file(path)
+	# An overwrite can target a script that is already loaded (attached to a
+	# node, preloaded, open in the script editor). Registering the bytes with
+	# the editor leaves that live GDScript on the old source (#937), so the very
+	# next call would run stale code after a "successful" write. Refresh it
+	# BEFORE registering the file: a GUI editor loads the script inside
+	# update_file() (see _refresh_loaded_gdscript for the ordering contract).
+	if existed_before:
+		_refresh_loaded_gdscript(data, path, content)
+
+	_register_written_file(path)
 
 	# `.gd.uid` is the sidecar Godot generates on scan; list both so the caller
 	# can rm the full set in one go.
@@ -197,6 +197,75 @@ func _attach_gdscript_diagnostics(data: Dictionary, path: String, content: Strin
 	data["diagnostics_detail"] = diagnostics_detail
 	data["diagnostics_scope"] = "this_file"
 	data["diagnostics_status"] = diagnostics_status
+
+
+## Register just this file with the editor instead of a full recursive
+## scan(). A scan() per write stacks `update_scripts_classes` /
+## `update_script_paths_documentation` WorkerThreadPool tasks under concurrent
+## script creation ("Task ... already exists" / "!tasks.has(p_task)"), which
+## races the global-class registry and can SIGABRT in
+## ScriptServer::remove_global_class_by_path (see dsarno/godot#6).
+## update_file() is the single-file path the rest of the plugin already uses.
+##
+## Call it only after `_refresh_loaded_gdscript` has taken its decision (see
+## the ordering contract there). Instance (not static) so a test can stand in
+## for what a GUI editor does inside update_file() — load or reload the
+## script — and lock that ordering from a headless run.
+func _register_written_file(path: String) -> void:
+	var efs := EditorInterface.get_resource_filesystem()
+	if efs != null:
+		efs.update_file(path)
+
+
+## Bring an already-loaded GDScript back in step with the bytes just written.
+##
+## ResourceLoader caches GDScript by path, and registering the write with
+## EditorFileSystem does not refresh that cache in a headless editor — so after
+## a successful write, a script that a node, a preload(), or the script editor
+## already holds keeps executing the previous source (#937). When the path is
+## cached and the new source parsed, push the source into the live object and
+## reload it in place (keep_state so existing instances survive). Reports
+## `reloaded` plus a `reload_reason` when it did not, so a caller can tell
+## "the file changed" from "the code changed".
+##
+## Ordering contract: this runs BEFORE `_register_written_file`. A GUI editor
+## (not a headless one — EditorNode's cmdline mode skips the step) runs its
+## script-documentation pass synchronously inside update_file(), which
+## ResourceLoader.load()s the script, caching a never-loaded one, and
+## reload_from_file()s a cached one that is not open in the script editor.
+## Deciding after that call reports a false `already_current` for a script
+## nobody held (instead of `not_loaded`) and for one this helper should have
+## refreshed itself. The question is what was loaded before the write, so it
+## is answered first; the editor's own pass then meets the same bytes.
+##
+## Skipped when validation failed: the diagnostics capture above has already
+## reloaded the shared GDScriptCache entry with the broken source, so there is
+## no good code to push; `reload_reason: parse_error` tells the caller the
+## loaded code did NOT change to something runnable.
+static func _refresh_loaded_gdscript(data: Dictionary, path: String, content: String) -> void:
+	data["reloaded"] = false
+	if _script_has_error_diagnostics(data):
+		data["reload_reason"] = "parse_error"
+		return
+	if not ResourceLoader.has_cached(path):
+		data["reload_reason"] = "not_loaded"
+		return
+	var loaded := ResourceLoader.load(path)
+	if not (loaded is GDScript):
+		data["reload_reason"] = "not_gdscript"
+		return
+	var script := loaded as GDScript
+	if script.source_code == content:
+		data["reloaded"] = true
+		data["reload_reason"] = "already_current"
+		return
+	script.source_code = content
+	var err := script.reload(true)
+	if err != OK:
+		data["reload_reason"] = "reload_failed"
+		data["reload_error"] = err
+		return
+	data["reloaded"] = true
 
 
 static func _validate_gdscript_source(content: String) -> Dictionary:
@@ -318,10 +387,12 @@ func patch_script(params: Dictionary) -> Dictionary:
 	}
 	_attach_gdscript_diagnostics(data, path, new_content)
 
-	# Single-file register, not a full scan() — see create_script (dsarno/godot#6).
-	var efs := EditorInterface.get_resource_filesystem()
-	if efs != null:
-		efs.update_file(path)
+	# The file is fresh but any already-loaded GDScript for it is not (#937);
+	# make "patch succeeded" mean the loaded code changed, not just the bytes.
+	# Decide and refresh before registering the file with the editor — a GUI
+	# editor loads the script inside update_file() (see _refresh_loaded_gdscript).
+	_refresh_loaded_gdscript(data, path, new_content)
+	_register_written_file(path)
 
 	return {"data": data}
 

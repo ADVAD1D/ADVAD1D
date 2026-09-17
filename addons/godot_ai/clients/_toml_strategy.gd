@@ -51,7 +51,7 @@ static func configure(
 		if not output_fresh.is_empty() and not output_fresh[-1].strip_edges().is_empty():
 			output_fresh.append("")
 		output_fresh.append_array(new_lines)
-		if not McpAtomicWrite.write(path, "\n".join(output_fresh)):
+		if not McpAtomicWrite.write(path, _join_lines(output_fresh)):
 			return {"status": "error", "message": "Cannot write to %s" % path}
 		return {"status": "ok", "message": McpClient.configured_message(client, server_url)}
 
@@ -97,7 +97,7 @@ static func configure(
 	output.append_array(_slice(lines, int(section["end"]), lines.size()))
 	output = _rewrite_legacy_descendant_headers(output, client)
 
-	if not McpAtomicWrite.write(path, "\n".join(output)):
+	if not McpAtomicWrite.write(path, _join_lines(output)):
 		return {"status": "error", "message": "Cannot write to %s" % path}
 	return {"status": "ok", "message": McpClient.configured_message(client, server_url)}
 
@@ -138,6 +138,25 @@ static func check_status_details(
 		var key := str(item.get("key", ""))
 		if not key.is_empty() and not by_key.has(key):
 			by_key[key] = item
+	## Whether the existing entry launches Godot AI at all: a major migration
+	## may rewrite such an entry, never a foreign one (client_job_owner.gd).
+	## Only the launch values count; the section header carries our name.
+	var launch_tokens := PackedStringArray()
+	for launch_key in ["command", "url"]:
+		if by_key.has(launch_key):
+			var decoded := _decode_toml_string(_item_value(by_key[launch_key]))
+			if bool(decoded.get("ok", false)):
+				launch_tokens.append(str(decoded.get("value", "")))
+	if by_key.has("args"):
+		var decoded_args := _decode_toml_string_array(_item_value(by_key["args"]))
+		if bool(decoded_args.get("ok", false)):
+			for argument in decoded_args.get("value", []):
+				launch_tokens.append(str(argument))
+	var mismatch := {
+		"status": McpClient.Status.CONFIGURED_MISMATCH,
+		"error_msg": "",
+		"owned": McpClient.launch_values_mention_godot_ai(launch_tokens),
+	}
 
 	if client.command_shape != McpClient.CommandShape.NONE:
 		if not bool(launch.get("ok", false)):
@@ -147,31 +166,31 @@ static func check_status_details(
 			}
 		for legacy_key in client.command_legacy_keys:
 			if by_key.has(String(legacy_key)):
-				return {"status": McpClient.Status.CONFIGURED_MISMATCH, "error_msg": ""}
+				return mismatch
 		if not by_key.has("command") or not by_key.has("args"):
-			return {"status": McpClient.Status.CONFIGURED_MISMATCH, "error_msg": ""}
+			return mismatch
 		var command_value := _decode_toml_string(_item_value(by_key["command"]))
 		var args_value := _decode_toml_string_array(_item_value(by_key["args"]))
 		if not bool(command_value.get("ok", false)) or not bool(args_value.get("ok", false)):
-			return {"status": McpClient.Status.CONFIGURED_MISMATCH, "error_msg": ""}
+			return mismatch
 		if str(command_value.get("value", "")) != str(launch.get("command", "")):
-			return {"status": McpClient.Status.CONFIGURED_MISMATCH, "error_msg": ""}
+			return mismatch
 		if not _string_arrays_equal(args_value.get("value", []), launch.get("args", [])):
-			return {"status": McpClient.Status.CONFIGURED_MISMATCH, "error_msg": ""}
+			return mismatch
 		if not client.command_transport_key.is_empty():
 			var transport_key := client.command_transport_key
 			if not by_key.has(transport_key):
-				return {"status": McpClient.Status.CONFIGURED_MISMATCH, "error_msg": ""}
+				return mismatch
 			var decoded_transport := _decode_toml_scalar(_item_value(by_key[transport_key]))
 			if not bool(decoded_transport.get("ok", false)) or decoded_transport.get("value") != client.command_transport_value:
-				return {"status": McpClient.Status.CONFIGURED_MISMATCH, "error_msg": ""}
+				return mismatch
 		return {"status": McpClient.Status.CONFIGURED, "error_msg": ""}
 
 	if not by_key.has("url"):
-		return {"status": McpClient.Status.CONFIGURED_MISMATCH, "error_msg": ""}
+		return mismatch
 	var url_value := _decode_toml_string(_item_value(by_key["url"]))
 	if not bool(url_value.get("ok", false)) or str(url_value.get("value", "")) != server_url:
-		return {"status": McpClient.Status.CONFIGURED_MISMATCH, "error_msg": ""}
+		return mismatch
 	return {"status": McpClient.Status.CONFIGURED, "error_msg": ""}
 
 
@@ -201,7 +220,7 @@ static func remove(client: McpClient, _server_name: String) -> Dictionary:
 		output.append(lines[i])
 		i += 1
 
-	if not McpAtomicWrite.write(path, "\n".join(output)):
+	if not McpAtomicWrite.write(path, _join_lines(output)):
 		return {"status": "error", "message": "Cannot write to %s" % path}
 	return {"status": "ok", "message": "%s configuration removed" % client.display_name}
 
@@ -593,6 +612,11 @@ static func _read_or_init(path: String) -> Dictionary:
 	var text := f.get_as_text()
 	f.close()
 	return {"ok": true, "data": text}
+
+
+static func _join_lines(lines: Array[String]) -> String:
+	var joined := "\n".join(lines)
+	return joined if joined.is_empty() or joined.ends_with("\n") else joined + "\n"
 
 
 static func _split_lines(content: String) -> Array[String]:

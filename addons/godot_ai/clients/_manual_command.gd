@@ -23,6 +23,8 @@ static func build(
 	launch: Dictionary = {},
 	project_roots: PackedStringArray = PackedStringArray(),
 ) -> String:
+	if client.command_shape == McpClient.CommandShape.NONE:
+		return "%s has no authenticated v4 configuration path; do not persist the backend URL." % client.display_name
 	match client.config_type:
 		"cli":
 			return _build_cli(client, server_name, server_url, resolved_path, launch, project_roots)
@@ -207,12 +209,6 @@ static func _build_json(
 			lines.append("  \"%s\": %s" % [server_name, _format_entry_inline(command_entry)])
 		else:
 			lines.append("Attach launch command unavailable: %s" % launch_error)
-		if client.command_supports_url_fallback:
-			lines.append("")
-			lines.append("Advanced fallback — use this URL-mode entry instead; never configure both shapes together. URL mode depends on your client's own reconnect behavior. If the server is down when the client starts, restarting the client may be required.")
-			lines.append("Edit %s and add under \"%s\":" % [target_path, key])
-			var fallback_entry := McpJsonStrategy.build_url_entry(client, server_url)
-			lines.append("  \"%s\": %s" % [server_name, _format_entry_inline(fallback_entry)])
 		if not target_note.is_empty():
 			lines.append("")
 			lines.append(target_note)
@@ -242,12 +238,6 @@ static func _build_toml(
 				lines.append("  %s" % str(body_line))
 		else:
 			lines.append("Attach launch command unavailable: %s" % str(rendered.get("error", "no compatible launcher found")))
-		if client.command_supports_url_fallback:
-			lines.append("")
-			lines.append("Advanced fallback — replace the command/args block above with this URL-mode block; never configure both shapes together. URL mode depends on your client's own reconnect behavior. If the server is down when the client starts, restarting the client may be required.")
-			lines.append("Edit %s and add:" % resolved_path)
-			lines.append("  %s" % header)
-			lines.append("  url = %s" % McpTomlStrategy.encode_basic_string(server_url))
 		return "\n".join(lines)
 	var body := McpTomlStrategy.format_body(client.toml_body_template, server_url)
 	var lines: Array[String] = ["Edit %s and add:" % resolved_path, "  %s" % header]
@@ -274,13 +264,6 @@ static func _build_yaml(
 				lines.append(String(entry_line))
 		else:
 			lines.append("Attach launch command unavailable: %s" % launch_error)
-		if client.command_supports_url_fallback:
-			lines.append("")
-			lines.append("Advanced fallback — use this URL-mode entry instead; never configure both shapes together. URL mode depends on your client's own reconnect behavior. If the server is down when the client starts, restarting the client may be required.")
-			lines.append("Edit %s and add under '%s':" % [resolved_path, key])
-			var fallback_entry := {client.entry_url_field: server_url}
-			for entry_line in McpYamlStrategy.render_entry_lines(server_name, fallback_entry):
-				lines.append(String(entry_line))
 		return "\n".join(lines)
 	var entry := McpYamlStrategy.build_entry(client, server_url)
 	var lines: Array[String] = [
@@ -313,19 +296,6 @@ static func _build_dsh(
 				lines.append(String(row_line))
 		else:
 			lines.append("Attach launch command unavailable: %s" % launch_error)
-		if client.command_supports_url_fallback:
-			lines.append("")
-			## No command/args block was rendered on the launch-error path, so
-			## "replace the block above" would point at nothing.
-			var fallback_lead := (
-				"replace the command/args block above with this URL-mode entry"
-				if launch_error.is_empty()
-				else "use this URL-mode entry instead"
-			)
-			lines.append("Advanced fallback — %s; never configure both shapes together. URL mode depends on the harness' own reconnect behavior. If the server is down when the harness starts, restarting the harness may be required." % fallback_lead)
-			var fallback_entry := McpDshStrategy.build_url_entry(client, server_name, server_url)
-			for row_line in McpDshStrategy.render_insert_row(entry_id_value, fallback_entry):
-				lines.append(String(row_line))
 		return "\n".join(lines)
 	var url_entry := McpDshStrategy.build_url_entry(client, server_name, server_url)
 	for row_line in McpDshStrategy.render_insert_row(entry_id_value, url_entry):

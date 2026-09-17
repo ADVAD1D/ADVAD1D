@@ -26,9 +26,10 @@ const EDITOR_NOT_READY := "EDITOR_NOT_READY"
 const UNKNOWN_COMMAND := "UNKNOWN_COMMAND"
 const INTERNAL_ERROR := "INTERNAL_ERROR"
 const DEFERRED_TIMEOUT := "DEFERRED_TIMEOUT"
-## Python-originated attach bridge codes. GDScript has no emit path, but the
-## public registry intentionally mirrors protocol/errors.py.
+## Python-originated transport/attach bridge codes. GDScript has no emit path,
+## but the public registry intentionally mirrors protocol/errors.py.
 const TRANSPORT_OUTCOME_UNKNOWN := "TRANSPORT_OUTCOME_UNKNOWN"
+const TRANSPORT_OVERLOADED := "TRANSPORT_OVERLOADED"
 const NEW_CLIENT_SESSION_REQUIRED := "NEW_CLIENT_SESSION_REQUIRED"
 const ATTACH_LOCK_TIMEOUT := "ATTACH_LOCK_TIMEOUT"
 const ATTACH_LOCK_ERROR := "ATTACH_LOCK_ERROR"

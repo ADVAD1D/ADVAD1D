@@ -36,6 +36,12 @@ const _ALLOWED_EVENTS := [
 	"dev_server_toggle",
 ]
 
+## Runtime opt-out sent over the authenticated WebSocket (#913). Twinned
+## with `transport/websocket.py::TELEMETRY_OPT_OUT_EVENT`. Outside
+## `_ALLOWED_EVENTS` on purpose: that list gates events the server records,
+## and this one tells it to stop.
+const OPT_OUT_EVENT := "telemetry_opt_out"
+
 const _MAX_BUFFER := 32
 
 ## EditorSetting key used to defer a ``plugin_reload`` event across the
@@ -126,7 +132,27 @@ func record_event(name: String, data: Dictionary = {}) -> void:
 
 func _on_connection_state_changed(is_open: bool) -> void:
 	if is_open:
+		## Before the flush: a server we adopted must hear our preference
+		## before it records anything else on this session.
+		assert_opt_out()
 		_flush()
+
+
+## Tell the connected server to stop sending telemetry, if this editor is
+## opted out (#913). Spawn-time env injection only reaches a server the
+## plugin started; this reaches one it adopted, over the same authenticated
+## WebSocket every command uses. The server latches it — off until that
+## process is replaced, never back on.
+##
+## Reads the setting live rather than the `_disabled` snapshot so the dock
+## can call this the moment the user applies a change, before the plugin
+## reload swaps this instance out. Returns whether anything was sent.
+func assert_opt_out() -> bool:
+	if McpSettings.telemetry_enabled():
+		return false
+	if _connection == null or not _connection.is_connected:
+		return false
+	return bool(_connection.send_event(OPT_OUT_EVENT, {}))
 
 func _flush() -> void:
 	if _pending.is_empty():

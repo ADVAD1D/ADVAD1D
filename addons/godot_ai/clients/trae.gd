@@ -20,4 +20,3 @@ func _init() -> void:
 	command_shape = McpClient.CommandShape.FLAT
 	command_legacy_keys = PackedStringArray(["url", "headers"])
 	command_user_fields = PackedStringArray(["env"])
-	command_supports_url_fallback = true

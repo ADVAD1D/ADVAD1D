@@ -20,6 +20,22 @@ func _init() -> void:
 		"windows": "$HOME/.config/opencode/opencode.json",
 	}
 	config_file_env = "OPENCODE_CONFIG"
+	## OpenCode loads BOTH opencode.json and opencode.jsonc from its config
+	## directory and merges them, later file winning per key
+	## (anomalyco/opencode#32447). Writing only opencode.json therefore
+	## leaves a stale `godot-ai` entry in an existing opencode.jsonc in
+	## charge (#1011). Declaring the merge order makes Configure update the
+	## effective last definition, status verify it, and Remove clear both.
+	config_merge_path_templates = {
+		"unix": PackedStringArray([
+			"~/.config/opencode/opencode.json",
+			"~/.config/opencode/opencode.jsonc",
+		]),
+		"windows": PackedStringArray([
+			"$HOME/.config/opencode/opencode.json",
+			"$HOME/.config/opencode/opencode.jsonc",
+		]),
+	}
 	server_key_path = PackedStringArray(["mcp"])
 	entry_extra_fields = {"type": "remote"}
 	## `enabled` is user-state (they may have toggled the server off).
@@ -36,4 +52,3 @@ func _init() -> void:
 	command_initial_fields = {"enabled": true}
 	command_user_fields = PackedStringArray(["enabled", "timeout", "environment", "cwd"])
 	command_timeout_fields = PackedStringArray(["timeout"])
-	command_supports_url_fallback = true

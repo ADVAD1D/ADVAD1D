@@ -123,34 +123,6 @@ func skip_suite(reason: String) -> void:
 	_suite_skipped_reason = reason
 
 
-## Mark the current test as skipped when the running Godot is older than
-## `min_version` (a "major.minor" string like "4.6"). Use for tests that
-## exercise an engine API or behavior that only exists on newer Godot.
-## Returns true when the test was skipped, so callers can `return` from
-## the test body.
-##
-## Example:
-##     func test_uses_46_only_api() -> void:
-##         if skip_on_godot_lt("4.6", "example API requires Godot 4.6+"):
-##             return
-##         ...
-func skip_on_godot_lt(min_version: String, reason: String = "") -> bool:
-	var v := Engine.get_version_info()
-	var current_major := int(v.get("major", 0))
-	var current_minor := int(v.get("minor", 0))
-	var parts := min_version.split(".")
-	var want_major := int(parts[0]) if parts.size() > 0 else 0
-	var want_minor := int(parts[1]) if parts.size() > 1 else 0
-	if (
-		current_major < want_major
-		or (current_major == want_major and current_minor < want_minor)
-	):
-		var msg := reason if not reason.is_empty() else "requires Godot %s+" % min_version
-		skip(msg + " (running %d.%d)" % [current_major, current_minor])
-		return true
-	return false
-
-
 ## Allow one captured SCRIPT ERROR whose text contains `substring`.
 ## Use only for negative-path tests that intentionally compile or execute
 ## invalid GDScript and assert on the resulting diagnostics.

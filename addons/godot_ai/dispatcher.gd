@@ -19,6 +19,7 @@ var _lazy_handler_specs: Dictionary = {}  # handler_key -> {path: String, args: 
 var _lazy_handler_cache: Dictionary = {}  # handler_key -> handler instance
 var _lazy_commands: Dictionary = {}  # command_name -> {handler: String, method: StringName}
 var _pending_deferred: Dictionary = {}  # request_id -> {command, started_ms, timeout_ms}
+var _tick_active := false
 var _log_buffer
 var _surfaced_error_tracker
 ## The McpConnection whose pause_processing handlers flip around unsafe
@@ -43,10 +44,14 @@ const DEFERRED_TIMEOUT_MS_BY_COMMAND := {
 	"check_client_status": 30000,
 	"game_eval": 15000,
 	"game_command": 15000,
+	## The editor-side runtime-control timer owns 5s; keep the dispatcher
+	## outside it so the actionable control result wins before DEFERRED_TIMEOUT.
+	"game_debug_control": 6500,
 	"scan_filesystem": 30000,
 }
 const ErrorCodes := preload("res://addons/godot_ai/utils/error_codes.gd")
 const FuzzySuggestions := preload("res://addons/godot_ai/utils/fuzzy_suggestions.gd")
+const PluginReload := preload("res://addons/godot_ai/utils/plugin_reload.gd")
 
 
 func _init(log_buffer: McpLogBuffer, surfaced_error_tracker = null) -> void:
@@ -89,16 +94,54 @@ func unregister(command_name: String, handler_key: String) -> void:
 	_lazy_handler_cache.erase(handler_key)
 	_lazy_handler_specs.erase(handler_key)
 
+## Synchronously realize handler-owned work before any add-on script can be
+## replaced. A handler that cannot prove quiescence keeps the dispatcher live
+## and makes the caller fail closed.
+func quiesce_for_script_swap() -> Dictionary:
+	# Deferred timeouts are not proof that the underlying work has returned;
+	# the independent ledger also covers an old composition after a reload.
+	var work: Dictionary = preload("res://addons/godot_ai/utils/script_work.gd").quiescence()
+	if not bool(work.get("ok", false)):
+		return work
+	if not _pending_deferred.is_empty():
+		return {"ok": false, "error": "Wait for pending tool responses before updating."}
+	for handler_key in _lazy_handler_cache:
+		var instance: Variant = _lazy_handler_cache[handler_key]
+		if not is_instance_valid(instance) or not instance.has_method("quiesce_for_script_swap"):
+			return {
+				"ok": false,
+				"error": "Command handler '%s' cannot prove quiescence for script replacement." % handler_key,
+			}
+		var result: Variant = instance.call("quiesce_for_script_swap")
+		if not result is Dictionary or not bool(result.get("ok", false)):
+			return {
+				"ok": false,
+				"error": "Command handler '%s' could not quiesce for script replacement: %s" % [
+					handler_key, result,
+				],
+			}
+	return {"ok": true}
+
+
 ## Drop registered handlers, queued commands, and the log buffer ref so
 ## plugin.gd can release RefCounted handlers before Godot reloads their
-## class_name scripts (issue #46). After clear(), the dispatcher is inert.
-func clear() -> void:
-	## Stop lazy handlers before releasing the cache. Handler-owned polling
-	## coroutines retain any in-flight worker and deferred-response connection
-	## across frames, then join only after the worker is no longer alive.
-	for instance in _lazy_handler_cache.values():
-		if is_instance_valid(instance) and instance.has_method("prepare_for_teardown"):
-			instance.call("prepare_for_teardown")
+## class_name scripts (issue #46). After a successful clear(), the dispatcher
+## is inert. A failed quiesce leaves every reference intact.
+func clear() -> Dictionary:
+	var quiesced := quiesce_for_script_swap()
+	if not bool(quiesced.get("ok", false)):
+		return quiesced
+	release_after_teardown()
+	return {"ok": true}
+
+
+## Ordinary plugin teardown is not permission to replace scripts. The root
+## first stops transport and joins its client/vision workers, then drops this
+## graph even when a handler cannot certify hot script replacement. Requiring
+## that stronger certificate here leaks the dispatcher <-> handler cycles at
+## every editor exit. Hot-update callers must still use clear(), which refuses
+## to release anything until every materialized handler proves quiescence.
+func release_after_teardown() -> void:
 	_handlers.clear()
 	## Release lazily-constructed handler instances (and the ctor args that
 	## reference plugin-lifetime objects) at the same teardown point where
@@ -113,6 +156,8 @@ func clear() -> void:
 	_log_buffer = null
 	_surfaced_error_tracker = null
 	pause_target = null
+
+
 ## Drop queued-but-unexecuted commands. Called by the connection on
 ## disconnect (#712): commands queued by the previous connection must not
 ## execute under the next one — the requester is gone, its in-flight
@@ -204,6 +249,11 @@ const DEFERRED_RESPONSE := {"_deferred": true}
 ## Process queued commands within a frame budget (milliseconds).
 ## Returns an array of response dictionaries to send back.
 func tick(budget_ms: float = 4.0) -> Array[Dictionary]:
+	## Editor filesystem operations can pump another frame before the handler
+	## returns. That frame must not dispatch the still-queued command again.
+	if _tick_active or PluginReload.is_reload_pending():
+		return []
+	_tick_active = true
 	var responses: Array[Dictionary] = _collect_deferred_timeouts()
 	var start := Time.get_ticks_msec()
 	var idx := 0
@@ -214,10 +264,13 @@ func tick(budget_ms: float = 4.0) -> Array[Dictionary]:
 		if not response.get("_deferred", false):
 			responses.append(response)
 		idx += 1
+		if PluginReload.is_reload_pending():
+			break
 
 	if idx > 0:
 		_command_queue = _command_queue.slice(idx)
 
+	_tick_active = false
 	return responses
 
 

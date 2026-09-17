@@ -1,5 +1,5 @@
 @tool
-extends RefCounted
+extends "res://addons/godot_ai/handlers/command_handler.gd"
 
 const ErrorCodes := preload("res://addons/godot_ai/utils/error_codes.gd")
 
@@ -10,6 +10,8 @@ const ErrorCodes := preload("res://addons/godot_ai/utils/error_codes.gd")
 ## Commands that cannot run as batch sub-commands, each with the reason a batch
 ## can't host it.
 ## - batch_execute: would recurse.
+## - reload_plugin: schedules teardown; later batch operations could pump
+##   its callback while the batch handler is still executing.
 ## - run_tests: a batch executes synchronously inside one dispatcher tick with
 ##   NO transport servicing, so a full suite starves the WebSocket heartbeat
 ##   (the exact disconnect the serviced test_run path exists to prevent) and
@@ -21,6 +23,7 @@ const ErrorCodes := preload("res://addons/godot_ai/utils/error_codes.gd")
 ##   no completion channel and hang or lose its reply. input_sequence made this
 ##   concrete (#814); the whole game_command surface shares the deferred path.
 const FORBIDDEN_SUBCOMMANDS := {
+	"reload_plugin": "reload_plugin must be called directly so no batch continues during reload",
 	"batch_execute": "batch_execute cannot be nested inside another batch",
 	"run_tests":
 		"run_tests is not allowed as a sub-command — a batch runs synchronously "
@@ -28,6 +31,12 @@ const FORBIDDEN_SUBCOMMANDS := {
 	"game_command":
 		"game_command ops are deferred (their reply arrives out-of-band) and "
 		+ "have no completion channel inside a batch — run them as their own tool call",
+	"configure_client":
+		"configure_client is deferred and has no completion channel inside a batch — "
+		+ "run it as its own tool call",
+	"remove_client":
+		"remove_client is deferred and has no completion channel inside a batch — "
+		+ "run it as its own tool call",
 }
 
 ## The whole batch executes synchronously inside one dispatcher tick,
@@ -102,16 +111,35 @@ func batch_execute(params: Dictionary) -> Dictionary:
 	var succeeded := 0
 	var stopped_at = null
 	var all_undoable := true
-	# Captured after the first successful commit — get_history_undo_redo()
-	# errors if called before any action exists in the history_map.
-	var histories: Array = []
+	## One entry per action a sub-command actually committed, in commit order,
+	## naming the UndoRedo that received it. Rollback replays this in reverse.
+	##
+	## Measured rather than inferred. Counting *successes* over-undoes, because
+	## a sub-command can succeed without committing anything (`create_script`
+	## and `write_text_file` write straight to disk) — the extra undos then eat
+	## the user's own pre-batch edits. Trusting the response's `undoable` flag
+	## instead under-undoes, because `custom_tool:` sub-commands never carry one
+	## (`custom_tool_wrapper.gd` returns the addon handler's dict verbatim) even
+	## when their spec declares `undoable = true` and they did commit. Comparing
+	## `UndoRedo.get_version()` across the call is the only reading that can't
+	## disagree with what the editor actually recorded.
+	var committed: Array = []
 
 	for idx in range(commands.size()):
 		var item: Dictionary = commands[idx]
 		var cmd_name: String = item["command"]
 		var sub_params: Dictionary = item.get("params", {})
 
+		var tracked := _tracked_histories()
+		var before: Array = []
+		for ur in tracked:
+			before.append(ur.get_version())
+
 		var raw_result: Dictionary = _dispatcher.dispatch_direct(cmd_name, sub_params)
+		## Record before reading status. A handler can commit_action() and still
+		## return an error; those actions must be in `committed` so a later
+		## (or this) failure rolls them back.
+		_record_committed(tracked, before, committed)
 		var status: String = raw_result.get("status", "ok")
 
 		var result_entry: Dictionary = {"command": cmd_name, "status": status}
@@ -127,11 +155,10 @@ func batch_execute(params: Dictionary) -> Dictionary:
 				all_undoable = false
 			results.append(result_entry)
 			succeeded += 1
-			_capture_histories(histories)
 
 	var rolled_back := false
-	if stopped_at != null and undo and succeeded > 0:
-		rolled_back = _rollback(succeeded, histories)
+	if stopped_at != null and undo and not committed.is_empty():
+		rolled_back = _rollback(committed)
 
 	var response_data: Dictionary = {
 		"succeeded": succeeded,
@@ -146,19 +173,39 @@ func batch_execute(params: Dictionary) -> Dictionary:
 	return {"data": response_data}
 
 
-## Capture the scene's UndoRedo reference for batch rollback. Safe to call
-## multiple times; appends only the new reference. MCP write handlers all pin
-## their actions to the scene history, so the scene UndoRedo is the only one
-## rollback needs. Must be called only after at least one action has been
-## committed to the scene history.
-func _capture_histories(histories: Array) -> void:
+## The histories a batch sub-command can commit into.
+##
+## Most write handlers pin their action to the edited scene, but not all:
+## handlers that `create_action(label)` without a context object bind it to the
+## handler `RefCounted` instead, and it lands in `GLOBAL_HISTORY` (see
+## `animation_handler.gd`'s note on mismatched histories, and
+## `testing/test_suite.gd`, which watches both for the same reason). Watching
+## only the scene history would leave those actions un-rolled-back.
+func _tracked_histories() -> Array:
+	var out: Array = []
 	var scene_root := EditorInterface.get_edited_scene_root()
-	if scene_root == null:
-		return
-	var scene_id := _undo_redo.get_object_history_id(scene_root)
-	var scene_ur := _undo_redo.get_history_undo_redo(scene_id)
-	if scene_ur != null and not scene_ur in histories:
-		histories.append(scene_ur)
+	if scene_root != null:
+		var scene_ur := _undo_redo.get_history_undo_redo(
+			_undo_redo.get_object_history_id(scene_root)
+		)
+		if scene_ur != null:
+			out.append(scene_ur)
+	var global_ur := _undo_redo.get_history_undo_redo(EditorUndoRedoManager.GLOBAL_HISTORY)
+	if global_ur != null and not global_ur in out:
+		out.append(global_ur)
+	return out
+
+
+## Append one entry to `committed` per action the just-finished sub-command
+## pushed, by diffing each watched history's version against `before`.
+## `UndoRedo.get_version()` advances once per `commit_action`, so the delta is
+## the action count — a handler that commits twice is recorded twice, and one
+## that commits nothing is recorded not at all.
+func _record_committed(tracked: Array, before: Array, committed: Array) -> void:
+	for i in range(tracked.size()):
+		var delta: int = tracked[i].get_version() - int(before[i])
+		for _n in range(delta):
+			committed.append(tracked[i])
 
 
 ## Build the unknown-command error for a sub-command. Clarifies that
@@ -174,17 +221,17 @@ func _unknown_command_error(idx: int, cmd_name: String) -> Dictionary:
 	return err
 
 
-## Undo `count` actions by calling undo() on captured histories in LIFO order.
-## Returns true iff all undo calls succeeded.
-func _rollback(count: int, histories: Array) -> bool:
-	if histories.is_empty():
+## Undo every action the batch committed, newest first, against the history
+## that actually received it. Returns true iff every undo() reported success.
+##
+## Strict LIFO across histories matters: undoing a scene action before a global
+## one committed after it would replay them out of order. Walking `committed`
+## in reverse preserves commit order regardless of which history each landed in.
+func _rollback(committed: Array) -> bool:
+	if committed.is_empty():
 		return false
-	for _i in range(count):
-		var undone := false
-		for ur in histories:
-			if ur.undo():
-				undone = true
-				break
-		if not undone:
-			return false
-	return true
+	var ok := true
+	for i in range(committed.size() - 1, -1, -1):
+		if not committed[i].undo():
+			ok = false
+	return ok

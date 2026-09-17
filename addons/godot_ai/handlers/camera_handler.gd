@@ -1,5 +1,5 @@
 @tool
-extends RefCounted
+extends "res://addons/godot_ai/handlers/command_handler.gd"
 
 const ErrorCodes := preload("res://addons/godot_ai/utils/error_codes.gd")
 
@@ -254,15 +254,13 @@ func _resolve_current_with_logicals(cam: Node, logical_2d: Node, logical_3d: Nod
 #
 # Both DO and UNDO route through `_apply_make_current` / `_apply_clear_current`
 # on the handler itself rather than calling Camera.make_current() directly.
-# The helpers do the make_current (or clear_current) call plus bounded sync
-# settling when the viewport hasn't yet reflected the change — headless CI
-# occasionally reports `is_current() == false` immediately after a committed
-# make_current (observed CI run 24682342469) and symmetrically still reports
-# the displaced camera as current immediately after an undo (observed CI runs
-# 24682342469, 24692250322, 24696571517, 25079965242 — tracked in #140).
-# Later #278 runs broadened the same current-camera timing flake across more
-# platforms and assertions, so the settle budget is deliberately above one
-# fast local frame.
+# The helpers do the make_current (or clear_current) call and then verify the
+# viewport slot synchronously. CI used to report `is_current() == false`
+# immediately after a committed make_current (#140 / #278 / #301 / #316); that
+# was never engine lag — Camera2D's current state is a synchronous viewport
+# read — but `Camera2D.make_current()` being silently dropped by the engine's
+# group-call skip set. See `_broadcast_make_current_2d` for the mechanism and
+# the deterministic repair.
 #
 # Because those callables bind to `self` (a RefCounted handler, not a scene
 # node), every action that calls this helper must pin its history via
@@ -293,40 +291,62 @@ func _add_make_current_to_action(node: Node, type_str: String, scene_root: Node)
 		_undo_redo.add_undo_method(self, "_apply_clear_current", node)
 
 
-# Apply make_current on `cam` with bounded synchronous settling. Registered as the
-# do/undo callable by `_add_make_current_to_action`. See that function's
-# comment for why the undo path needs the retry inside the action itself.
-# Safe against a freed camera node — short-circuits if the node is gone
-# or not in the tree.
+# Apply make_current on `cam` and verify the viewport slot. Registered as the
+# do/undo callable by `_add_make_current_to_action`. Safe against a freed
+# camera node — short-circuits if the node is gone or not in the tree.
+#
+# Everything here is synchronous: `Camera2D.is_current()` is literally
+# `viewport->get_camera_2d() == this` and `Camera3D.is_current()` reads the
+# node's own flag while it is part of the edited scene, so there is no engine
+# state that a delay or a retry could wait for. The one way `make_current()`
+# fails is the group-call skip described on `_broadcast_make_current_2d`, and
+# that is repaired in place.
 func _apply_make_current(cam: Node) -> void:
 	if cam == null or not is_instance_valid(cam) or not cam.is_inside_tree():
 		return
 	_set_logical_current(cam)
 	var scene_root := EditorInterface.get_edited_scene_root()
 	var type_str := _camera_type_str(cam)
-	for attempt in range(_CURRENT_SETTLE_ATTEMPTS):
-		cam.make_current()
-		_force_camera_refresh(cam)
-		# Godot's make_current is supposed to atomically displace siblings,
-		# but on macOS headless the displaced camera occasionally still
-		# answers is_current() == true after this returns (#140 / #278 / #301).
-		# Sweep same-class siblings and clear any that lag.
-		_force_clear_other_currents(cam, type_str, scene_root)
-		if not _is_current_settled(cam):
-			_displace_stale_camera_2d(cam)
-			_force_clear_other_currents(cam, type_str, scene_root)
-		var waited_this_attempt := false
-		if _is_current_settled(cam):
-			if not (cam is Camera2D):
-				return
-			OS.delay_msec(_CURRENT_SETTLE_DELAY_MSEC)
-			waited_this_attempt = true
-			_force_camera_refresh(cam)
-			_force_clear_other_currents(cam, type_str, scene_root)
-			if _is_current_settled(cam):
-				return
-		if attempt < _CURRENT_SETTLE_ATTEMPTS - 1 and not waited_this_attempt:
-			OS.delay_msec(_CURRENT_SETTLE_DELAY_MSEC)
+	cam.make_current()
+	if cam is Camera2D and not _is_current_settled(cam):
+		_broadcast_make_current_2d(cam as Camera2D, scene_root)
+	_force_camera_refresh(cam)
+	# In the editor a displaced Camera3D keeps its own `current` flag (the
+	# viewport's LOST_CURRENT notification does not clear it), so it still
+	# answers is_current() == true. Sweep same-class siblings and clear them.
+	_force_clear_other_currents(cam, type_str, scene_root)
+
+
+# `Camera2D.make_current()` does not touch the viewport itself: it calls
+# `SceneTree.call_group("__cameras_<viewport>", "_make_current", self)` and
+# every camera in the group sets or releases `Viewport.camera_2d` in
+# `_make_current(which)`. `call_group` skips any node whose pointer is in
+# `SceneTree::nodes_removed_on_group_call` — a raw-pointer set of every node
+# removed from the tree since the current `_process()` pass (or the outermost
+# group call) began, cleared only when that pass unwinds. A camera allocated
+# into the address of a node removed and freed earlier in the same frame — a
+# `memdelete`d undo reference, a `free()`d node, an editor Control rebuild —
+# is therefore silently skipped: `make_current()` returns, the slot never
+# changes, and `is_current()` stays false while the handler's own bookkeeping
+# says current. Reproduced deterministically on 4.7.2 (49/50 iterations with
+# a same-frame `free()`); this is the "engine-state lag" behind #140 / #278 /
+# #301 / #316. Camera3D is not affected: it writes the viewport directly.
+#
+# Repair by replicating the broadcast with the same bound `_make_current`
+# method the engine's group call invokes: every other Camera2D in the scene
+# releases the slot, then the target claims it. `_make_current` is engine
+# API, not documented — guard on `has_method` so a future engine that drops
+# it degrades to the plain `make_current()` result instead of erroring.
+func _broadcast_make_current_2d(cam: Camera2D, scene_root: Node) -> void:
+	if not cam.has_method("_make_current"):
+		return
+	if scene_root != null:
+		for other in _list_cameras_in_scene(scene_root, "2d"):
+			if other == cam or not is_instance_valid(other) or not other.is_inside_tree():
+				continue
+			if other.has_method("_make_current"):
+				other.call("_make_current", cam)
+	cam.call("_make_current", cam)
 
 
 # Walk same-class siblings and force-clear any that still report is_current().
@@ -376,40 +396,6 @@ func _is_current_settled(cam: Node) -> bool:
 		if viewport != null and viewport.get_camera_2d() != cam:
 			return false
 	return true
-
-
-func _displace_stale_camera_2d(target: Node) -> void:
-	if not (target is Camera2D):
-		return
-	var viewport := target.get_viewport()
-	if viewport == null:
-		return
-	var stale := viewport.get_camera_2d()
-	if stale == null or stale == target or not is_instance_valid(stale):
-		_nudge_camera_2d_current(target)
-		return
-	var was_enabled := stale.enabled
-	if was_enabled:
-		stale.enabled = false
-	target.make_current()
-	_force_camera_refresh(target)
-	if was_enabled:
-		stale.enabled = true
-	target.make_current()
-	_force_camera_refresh(target)
-
-
-func _nudge_camera_2d_current(target: Node) -> void:
-	if not (target is Camera2D):
-		return
-	var cam := target as Camera2D
-	if not cam.enabled:
-		return
-	cam.enabled = false
-	_force_camera_refresh(cam)
-	cam.enabled = true
-	cam.make_current()
-	_force_camera_refresh(cam)
 
 
 # Symmetric counterpart to `_apply_make_current` for the "no previous

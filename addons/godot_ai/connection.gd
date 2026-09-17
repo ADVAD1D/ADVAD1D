@@ -20,22 +20,21 @@ const OUTBOUND_BUFFER_LIMIT_BYTES := 4 * 1024 * 1024
 ## next frame; the cumulative spill counter is logged so flood patterns
 ## are observable in `logs_read`. See audit-v2 finding #12 (issue #356).
 const PACKET_DRAIN_CAP_PER_TICK := 32
-## Mirror of the server's application close code for a handshake carrying a
-## wrong auth token (#690; `websocket.py::_CLOSE_CODE_AUTH_TOKEN_MISMATCH`).
-const CLOSE_CODE_AUTH_TOKEN_MISMATCH := 4003
-## After this many consecutive post-OPEN token-mismatch rejections, drop the
-## token and handshake token-less (see `_note_post_open_close`). Two, not
-## one: a transient stale-record race during a server swap gets one chance
-## to resolve before the token is given up.
-const AUTH_MISMATCH_FALLBACK_CLOSES := 2
+const MAX_QUEUED_PACKETS := 64
+const WS_PROTOCOL_VERSION := 2
+const HANDSHAKE_TIMEOUT_MSEC := 5000
+const MAX_HANDSHAKE_FRAME_BYTES := 8 * 1024
+const CLOSE_CODE_DUPLICATE_SESSION := 4001
+const CLOSE_CODE_PROTOCOL_MISMATCH := 4002
+const CLOSE_CODE_AUTH_FAILED := 4003
+const _SERVER_PROOF_DOMAIN := "godot-ai-ws-v2/server-proof"
+const _CLIENT_PROOF_DOMAIN := "godot-ai-ws-v2/client-proof"
 const ClientConfigurator := preload("res://addons/godot_ai/client_configurator.gd")
 const ErrorCodes := preload("res://addons/godot_ai/utils/error_codes.gd")
 
-## Emitted whenever the underlying WebSocket open/closed state flips.
+## Emitted whenever the authenticated v4 editor channel becomes usable/unusable.
 ## Subscribers (e.g. the plugin-side telemetry helper) use this to drain
-## events that were enqueued before the socket was ready. Emitted with
-## ``true`` on first OPEN per connect, ``false`` on transition to CLOSED
-## (including ``disconnect_from_server()``).
+## events that were enqueued before authentication completed.
 signal connection_state_changed(is_open: bool)
 
 var _peer := WebSocketPeer.new()
@@ -45,11 +44,10 @@ var _peer := WebSocketPeer.new()
 ## attempt recomputes the URL from the latest value, so reconnects keep
 ## dialing the port the Python server was asked to bind.
 var ws_port := ClientConfigurator.DEFAULT_WS_PORT
-## Per-launch handshake auth token (#690). Set by plugin.gd from the value
-## it generated for the server spawn (also persisted in the managed-server
-## editor-settings record so a reloaded plugin instance adopting the same
-## server keeps sending it). Empty means "don't send the field" — servers
-## we didn't spawn (dev servers, older servers) have no token to match.
+## Per-launch editor capability. Root supplies the copied value only after
+## lifecycle proof has read the child-published private capability record.
+## It never crosses the wire or enters EditorSettings; empty/malformed values
+## fail closed and require a fresh lifecycle episode.
 var auth_token := ""
 var _url := ""
 var _connected := false
@@ -66,15 +64,15 @@ var _transient_diagnostic: Dictionary = {}
 ## CLOSED state is polled every frame and would flood the editor log.
 var _preopen_failure_logged_for_peer := false
 var _session_id := ""
-## Consecutive post-OPEN closes with CLOSE_CODE_AUTH_TOKEN_MISMATCH. NOT
-## reset by `_clear_on_disconnect` — the streak is counted exactly at the
-## close events it exists to observe, across reconnect attempts. Reset on
-## any other close code and on a successful `handshake_ack`.
-var _auth_mismatch_closes := 0
+var _handshake_started_msec := 0
+var _client_nonce := ""
+var _server_nonce := ""
+var _challenged_server_version := ""
+var _server_verified := false
+var _auth_response_sent := false
+var _handshake_complete := false
 ## Godot-AI Python package version reported by the server in its `handshake_ack`
-## reply. Empty until the ack lands. Older servers (pre-handshake_ack) leave
-## this empty forever — callers that gate on it (the dock's mismatch banner)
-## must treat empty as "unknown, don't raise a false alarm".
+## reply. Empty until the authenticated v4 handshake completes.
 var server_version := ""
 
 var dispatcher
@@ -114,12 +112,10 @@ func _ready() -> void:
 	## Increase outbound buffer for large messages (e.g. screenshot base64).
 	## Default is 64 KB; screenshots can be several MB.
 	_peer.outbound_buffer_size = OUTBOUND_BUFFER_LIMIT_BYTES
-	## Symmetric inbound bump (#690): the server sends up to 4 MB
-	## (websocket.py max_size), but Godot's inbound default is 64 KB — a
-	## large script/text write or batch_execute payload used to overflow
-	## the peer buffer, drop the frame, and surface as an opaque 5s
-	## timeout + reconnect with no error naming the size.
-	_peer.inbound_buffer_size = OUTBOUND_BUFFER_LIMIT_BYTES
+	## Stay under the pre-auth byte ceiling until the server proof validates;
+	## only then may the peer allocate the normal 4 MiB command buffer.
+	_peer.inbound_buffer_size = MAX_HANDSHAKE_FRAME_BYTES
+	_peer.max_queued_packets = MAX_QUEUED_PACKETS
 	if connect_blocked:
 		_log_blocked_notice_once()
 		set_process(false)
@@ -143,18 +139,18 @@ func _process(delta: float) -> void:
 		WebSocketPeer.STATE_OPEN:
 			if not _connected:
 				_connected = true
-				_reconnect_attempt = 0
-				log_buffer.log("connected to server")
-				_send_handshake()
-				## Reset the edge detectors so the next _check_state_changes
-				## tick re-emits any non-default scene/play state — the
-				## handshake carries readiness only, so without this a
-				## (re)connected server never learns the current scene.
-				_last_scene_path = ""
-				_last_play_state = false
-				connection_state_changed.emit(true)
+				if log_buffer:
+					log_buffer.log("connected to server; authenticating")
+				_send_auth_hello()
 
 			_drain_inbound_packets(_peer)
+			if not _handshake_complete:
+				if (
+					_handshake_started_msec > 0
+					and Time.get_ticks_msec() - _handshake_started_msec >= HANDSHAKE_TIMEOUT_MSEC
+				):
+					_fail_handshake(CLOSE_CODE_AUTH_FAILED, "v4 editor handshake timed out")
+				return
 
 			_check_state_changes()
 
@@ -165,6 +161,8 @@ func _process(delta: float) -> void:
 		WebSocketPeer.STATE_CLOSED:
 			if _connected:
 				_connected = false
+				var was_authenticated := _handshake_complete
+				var server_was_verified := _server_verified
 				## This peer reached OPEN, so its one close diagnostic is the
 				## post-OPEN line below. Mark the peer consumed; otherwise a
 				## stale reconnect delay leaves it in CLOSED for another frame
@@ -173,8 +171,10 @@ func _process(delta: float) -> void:
 				_clear_on_disconnect()
 				var code := _peer.get_close_code()
 				var reason := _peer.get_close_reason()
+				if _should_regenerate_session_id(code, server_was_verified, was_authenticated):
+					_session_id = _make_session_id(ProjectSettings.globalize_path("res://"))
 				var open_elapsed_sec := float(transition.get("previous_elapsed_sec", 0.0))
-				var close_diagnostic := _note_post_open_close(code)
+				var close_diagnostic := _handshake_close_diagnostic(code, was_authenticated)
 				if close_diagnostic.is_empty():
 					close_diagnostic = {
 						"reason_code": "connection_lost",
@@ -187,12 +187,12 @@ func _process(delta: float) -> void:
 						code,
 						reason,
 						_url,
-						close_diagnostic,
 					),
 					maxi(1, _reconnect_attempt),
 					true,
 				)
-				connection_state_changed.emit(false)
+				if was_authenticated:
+					connection_state_changed.emit(false)
 			elif not _preopen_failure_logged_for_peer:
 				_preopen_failure_logged_for_peer = true
 				## A failed attempt never reached OPEN, so any post-OPEN reason
@@ -262,22 +262,54 @@ func _drain_inbound_packets(peer) -> Dictionary:
 
 
 var is_connected: bool:
-	get: return _connected
+	get: return _connected and _handshake_complete
 
 
-func disconnect_from_server() -> void:
-	if _connected:
-		_peer.close(1000, "Plugin unloading")
-		_connected = false
-		## This peer reached OPEN and is being closed deliberately, so neither
-		## the post-OPEN nor pre-OPEN close diagnostic applies. Consume its one
-		## diagnostic before the CLOSED tick observes the pre-cleared flag.
-		_preopen_failure_logged_for_peer = true
-		## Pre-clearing _connected makes the STATE_CLOSED branch skip its
-		## _clear_on_disconnect() — run it here so deliberate closes don't
-		## leak the old server's version/deferred state into the next one.
-		_clear_on_disconnect()
+func disconnect_from_server(reason := "Plugin unloading") -> void:
+	var was_authenticated := _handshake_complete
+	if _peer.get_ready_state() != WebSocketPeer.STATE_CLOSED:
+		_peer.close(1000, reason)
+	## Drop the peer reference immediately instead of depending on a future
+	## `_process()` poll to finish a closing handshake. Authority revocation
+	## disables processing, so retaining a CLOSING peer here would keep the
+	## underlying channel alive beyond the revocation boundary.
+	_peer = WebSocketPeer.new()
+	_observed_peer_state = WebSocketPeer.STATE_CLOSED
+	_peer_state_entered_msec = Time.get_ticks_msec()
+	_connected = false
+	## A deliberate close owns all cleanup synchronously. Waiting for a later
+	## CLOSED poll would leave authenticated commands dispatchable after root
+	## revoked the transport authority.
+	_preopen_failure_logged_for_peer = true
+	_clear_on_disconnect()
+	if was_authenticated:
 		connection_state_changed.emit(false)
+
+
+## Revoke a copied lifecycle authority immediately. This is stronger than
+## `connect_blocked`: it also terminates an existing channel and erases every
+## queued/deferred command before returning to the caller.
+func revoke_transport(reason: String) -> void:
+	auth_token = ""
+	connect_blocked = true
+	connect_block_reason = reason
+	set_process(false)
+	disconnect_from_server("Transport authority revoked")
+
+
+## Apply one proven lifecycle grant and dial immediately. Keeping the copied
+## authority transition here makes revoke/authorize symmetric and avoids
+## depending on a later CLOSED-peer frame after a plugin reload.
+func authorize_transport(p_ws_port: int, p_auth_token: String) -> void:
+	ws_port = p_ws_port
+	auth_token = p_auth_token
+	connect_blocked = false
+	connect_block_reason = ""
+	server_version = ""
+	_reconnect_timer = 0.0
+	set_process(true)
+	if is_inside_tree():
+		_attempt_reconnect()
 
 
 ## Reset per-connection state that was filled in by the previous server
@@ -287,6 +319,13 @@ func disconnect_from_server() -> void:
 ## Also fires on plain reconnect-loop drops — correct either way.
 func _clear_on_disconnect() -> void:
 	server_version = ""
+	_handshake_started_msec = 0
+	_client_nonce = ""
+	_server_nonce = ""
+	_challenged_server_version = ""
+	_server_verified = false
+	_auth_response_sent = false
+	_handshake_complete = false
 	## Reset the spillover counter so a flood pattern from the previous
 	## connection doesn't pollute the next one's `logs_read` baseline.
 	_packet_spillover_total = 0
@@ -337,8 +376,8 @@ func _attempt_reconnect() -> void:
 	_peer = WebSocketPeer.new()
 	_preopen_failure_logged_for_peer = false
 	_peer.outbound_buffer_size = OUTBOUND_BUFFER_LIMIT_BYTES
-	## Keep the reconnect peer symmetric with _ready()'s (#690).
-	_peer.inbound_buffer_size = OUTBOUND_BUFFER_LIMIT_BYTES
+	_peer.inbound_buffer_size = MAX_HANDSHAKE_FRAME_BYTES
+	_peer.max_queued_packets = MAX_QUEUED_PACKETS
 	_connect_to_server()
 
 
@@ -416,22 +455,12 @@ static func _postopen_close_diagnostic(
 	open_elapsed_sec: float,
 	code: int,
 	reason: String,
-	url: String,
-	diagnostic: Dictionary = {}
+	url: String
 ) -> String:
-	var message := (
+	return (
 		"connection lost after being open for %.1fs (code %d, reason %s, url %s); reconnecting"
 		% [maxf(0.0, open_elapsed_sec), code, _sanitized_close_reason(reason), url]
 	)
-	match str(diagnostic.get("recovery_action", "")):
-		"retry_authenticated":
-			message += " with the current auth token (rejection 1/%d)" % AUTH_MISMATCH_FALLBACK_CLOSES
-		"retry_tokenless":
-			message += " with a token-less handshake (rejection %d/%d)" % [
-				int(diagnostic.get("occurrence", AUTH_MISMATCH_FALLBACK_CLOSES)),
-				AUTH_MISMATCH_FALLBACK_CLOSES,
-			]
-	return message
 
 
 static func _sanitized_close_reason(reason: String) -> String:
@@ -445,39 +474,23 @@ static func _close_reason_text(code: int, reason: String) -> String:
 	return "Close code %d: %s" % [code, _sanitized_close_reason(reason)]
 
 
-## Token-mismatch fallback (#690 follow-up). The server's auth token is
-## fixed for its whole launch, so redialing with the same wrong token can
-## never succeed — without this the reconnect loop 4003s forever. The
-## reproduced multi-editor failure: a duplicate spawn overwrites the shared
-## managed-server record with its fresh token, dies unable to bind, and
-## this editor is left holding a token the surviving server never saw.
-## After AUTH_MISMATCH_FALLBACK_CLOSES consecutive rejections, drop to a
-## token-less handshake, which the server accepts by design (older plugins
-## and adopted servers have no token, and the field is attacker-omittable —
-## see websocket.py; omitting it gives up no security). Scope note: only
-## this connection's copy of the token is dropped — the plugin static and
-## the persisted record heal via the startup walk's adoption arms.
-func _note_post_open_close(code: int) -> Dictionary:
-	if code != CLOSE_CODE_AUTH_TOKEN_MISMATCH or auth_token.is_empty():
-		_auth_mismatch_closes = 0
-		return {}
-	_auth_mismatch_closes += 1
-	var occurrence := _auth_mismatch_closes
-	if _auth_mismatch_closes < AUTH_MISMATCH_FALLBACK_CLOSES:
+func _handshake_close_diagnostic(code: int, authenticated := false) -> Dictionary:
+	if code == CLOSE_CODE_PROTOCOL_MISMATCH:
 		return {
-			"reason_code": "auth_token_mismatch",
-			"reason": "Server rejected the editor auth token; retrying once in case of a server-swap race.",
-			"occurrence": occurrence,
-			"recovery_action": "retry_authenticated",
+			"reason_code": "ws_protocol_mismatch",
+			"reason": "The editor and server use different Godot AI major protocols; update/restart both sides.",
 		}
-	auth_token = ""
-	_auth_mismatch_closes = 0
-	return {
-		"reason_code": "auth_token_mismatch",
-		"reason": "Server rejected the editor auth token twice; the next handshake will omit it.",
-		"occurrence": occurrence,
-		"recovery_action": "retry_tokenless",
-	}
+	if code == CLOSE_CODE_AUTH_FAILED:
+		return {
+			"reason_code": "ws_auth_failed",
+			"reason": "The v4 editor capability was rejected; restart the managed server from this Godot editor.",
+		}
+	if not authenticated:
+		return {
+			"reason_code": "ws_handshake_failed",
+			"reason": "The v4 handshake closed before authentication; update/restart both editor and server.",
+		}
+	return {}
 
 
 ## Record one peer-state transition and return the duration of the state that
@@ -553,6 +566,9 @@ func get_transport_status() -> Dictionary:
 		snapshot["reason_code"] = "connection_blocked"
 		if not connect_block_reason.is_empty():
 			snapshot["reason"] = connect_block_reason
+	elif _connected and not _handshake_complete:
+		snapshot["phase"] = "authenticating"
+		snapshot.erase("retry_in_sec")
 	elif not _transient_diagnostic.is_empty():
 		for key in _transient_diagnostic:
 			snapshot[key] = _transient_diagnostic[key]
@@ -567,44 +583,140 @@ func _log_blocked_notice_once() -> void:
 		log_buffer.log(connect_block_reason)
 
 
-func _send_handshake() -> void:
-	_last_readiness = get_readiness()
-	_send_json(_build_handshake())
+func _send_auth_hello() -> void:
+	_handshake_started_msec = maxi(1, Time.get_ticks_msec())
+	if not _is_lower_hex_64(auth_token):
+		_fail_handshake(
+			CLOSE_CODE_AUTH_FAILED,
+			"missing v4 editor capability; restart the managed server from Godot",
+		)
+		return
+	var nonce_bytes := Crypto.new().generate_random_bytes(32)
+	if nonce_bytes.size() != 32:
+		_fail_handshake(CLOSE_CODE_AUTH_FAILED, "could not generate v4 client nonce")
+		return
+	_client_nonce = nonce_bytes.hex_encode()
+	if not _send_json(_build_auth_hello(_client_nonce), true):
+		_fail_handshake(CLOSE_CODE_AUTH_FAILED, "could not send v4 auth hello")
 
 
-## Split from _send_handshake so tests can assert the payload shape
-## without a live WebSocket peer.
-func _build_handshake() -> Dictionary:
-	var payload := {
-		"type": "handshake",
-		"session_id": _session_id,
-		"godot_version": Engine.get_version_info().get("string", "unknown"),
-		"project_path": ProjectSettings.globalize_path("res://"),
-		"plugin_version": ClientConfigurator.get_plugin_version(),
-		"protocol_version": 1,
-		"readiness": _last_readiness,
-		"editor_pid": OS.get_process_id(),
-		"server_launch_mode": ClientConfigurator.get_server_launch_mode(),
+static func _build_auth_hello(client_nonce: String) -> Dictionary:
+	return {
+		"type": "auth_hello",
+		"protocol_version": WS_PROTOCOL_VERSION,
+		"client_nonce": client_nonce,
 	}
-	## Omit rather than send "" — the server treats an ABSENT token as a
-	## compat-accepted older plugin, but a PRESENT wrong one as hostile.
-	if not auth_token.is_empty():
-		payload["auth_token"] = auth_token
-	return payload
+
+
+func _handle_auth_challenge(parsed: Dictionary) -> void:
+	if _server_verified or parsed.get("protocol_version") != WS_PROTOCOL_VERSION:
+		_fail_handshake(
+			CLOSE_CODE_PROTOCOL_MISMATCH,
+			"Godot AI v4 WebSocket protocol %d required" % WS_PROTOCOL_VERSION,
+		)
+		return
+	var expected_keys: Array[String] = [
+		"type",
+		"protocol_version",
+		"client_nonce",
+		"server_nonce",
+		"server_version",
+		"server_proof",
+	]
+	if (
+		not _has_exact_keys(parsed, expected_keys)
+		or parsed.get("type") != "auth_challenge"
+		or parsed.get("client_nonce") != _client_nonce
+		or not _is_lower_hex_64(parsed.get("server_nonce"))
+		or not _is_lower_hex_64(parsed.get("server_proof"))
+		or not _is_bounded_text(parsed.get("server_version"), 64)
+	):
+		_fail_handshake(CLOSE_CODE_AUTH_FAILED, "invalid v4 server challenge")
+		return
+	var expected_proof := _server_proof(
+		auth_token,
+		_client_nonce,
+		str(parsed["server_nonce"]),
+		str(parsed["server_version"]),
+	)
+	if not _constant_time_equal(str(parsed["server_proof"]), expected_proof):
+		_fail_handshake(CLOSE_CODE_AUTH_FAILED, "v4 server proof failed")
+		return
+
+	## Only this proven transition unlocks project/session metadata.
+	_server_nonce = str(parsed["server_nonce"])
+	_challenged_server_version = str(parsed["server_version"])
+	_server_verified = true
+	_peer.inbound_buffer_size = OUTBOUND_BUFFER_LIMIT_BYTES
+	_last_readiness = get_readiness()
+	var response := _build_auth_response()
+	if response.is_empty() or not _send_json(response, true):
+		_fail_handshake(CLOSE_CODE_AUTH_FAILED, "could not send v4 editor proof")
+		return
+	_auth_response_sent = true
+
+
+func _build_auth_response() -> Dictionary:
+	var godot_version := str(Engine.get_version_info().get("string", "unknown"))
+	var project_path := ProjectSettings.globalize_path("res://")
+	var plugin_version := ClientConfigurator.get_plugin_version()
+	var launch_mode := ClientConfigurator.get_server_launch_mode()
+	var editor_pid := OS.get_process_id()
+	if (
+		not _is_bounded_text(_session_id, 128)
+		or not _is_bounded_text(godot_version, 64)
+		or not _is_bounded_text(project_path, 4096)
+		or not _is_bounded_text(plugin_version, 64)
+		or not _is_bounded_text(launch_mode, 32)
+		or _last_readiness not in ["ready", "importing", "playing", "no_scene"]
+		or editor_pid < 0
+	):
+		return {}
+	var client_proof := _client_proof(
+		auth_token,
+		_client_nonce,
+		_server_nonce,
+		_challenged_server_version,
+		_session_id,
+		godot_version,
+		project_path,
+		plugin_version,
+		_last_readiness,
+		editor_pid,
+		launch_mode,
+	)
+	if not _is_lower_hex_64(client_proof):
+		return {}
+	return {
+		"type": "auth_response",
+		"protocol_version": WS_PROTOCOL_VERSION,
+		"client_nonce": _client_nonce,
+		"server_nonce": _server_nonce,
+		"client_proof": client_proof,
+		"session_id": _session_id,
+		"godot_version": godot_version,
+		"project_path": project_path,
+		"plugin_version": plugin_version,
+		"readiness": _last_readiness,
+		"editor_pid": editor_pid,
+		"server_launch_mode": launch_mode,
+	}
 
 
 ## Classify one raw inbound frame. Shared by the normal dispatch path
 ## (`_handle_message`, which enqueues commands) and the exclusive-run
 ## service path (`_service_handle_message`, which rejects them) — one
 ## parser, two sinks, so the paths can't drift. `kind` is one of:
-## "ack", "command", "malformed_command", "ignore".
+## "challenge", "ack", "command", "malformed_command", "ignore".
 func _classify_message(raw: String) -> Dictionary:
 	var parsed = JSON.parse_string(raw)
 	if parsed == null:
-		push_warning("MCP: failed to parse message: %s" % raw)
+		push_warning("MCP: failed to parse websocket JSON")
 		return {"kind": "ignore", "parsed": null}
 	if not (parsed is Dictionary):
 		return {"kind": "ignore", "parsed": null}
+	if parsed.get("type", "") == "auth_challenge":
+		return {"kind": "challenge", "parsed": parsed}
 	if parsed.get("type", "") == "handshake_ack":
 		return {"kind": "ack", "parsed": parsed}
 	if parsed.has("request_id") and parsed.has("command"):
@@ -619,10 +731,25 @@ func _classify_message(raw: String) -> Dictionary:
 
 
 func _handle_message(raw: String) -> void:
+	if not _handshake_complete and raw.to_utf8_buffer().size() > MAX_HANDSHAKE_FRAME_BYTES:
+		_fail_handshake(CLOSE_CODE_PROTOCOL_MISMATCH, "v4 handshake frame too large")
+		return
 	var classified := _classify_message(raw)
+	if not _handshake_complete:
+		match classified["kind"]:
+			"challenge":
+				_handle_auth_challenge(classified["parsed"])
+			"ack":
+				_handle_handshake_ack(classified["parsed"])
+			_:
+				_fail_handshake(
+					CLOSE_CODE_PROTOCOL_MISMATCH,
+					"Godot AI v4 expected auth_challenge or handshake_ack",
+				)
+		return
 	match classified["kind"]:
-		"ack":
-			_handle_handshake_ack(classified["parsed"])
+		"challenge", "ack":
+			_fail_handshake(CLOSE_CODE_PROTOCOL_MISMATCH, "unexpected v4 handshake frame")
 		"command":
 			if dispatcher:
 				dispatcher.enqueue(classified["parsed"])
@@ -631,11 +758,134 @@ func _handle_message(raw: String) -> void:
 
 
 func _handle_handshake_ack(parsed: Dictionary) -> void:
-	server_version = str(parsed.get("server_version", ""))
-	## The server accepted our handshake — any token-mismatch streak is
-	## over; a later unrelated 4003 starts a fresh one.
-	_auth_mismatch_closes = 0
+	var expected_keys: Array[String] = ["type", "protocol_version", "server_version"]
+	if (
+		_handshake_complete
+		or not _server_verified
+		or not _auth_response_sent
+		or not _has_exact_keys(parsed, expected_keys)
+		or parsed.get("type") != "handshake_ack"
+		or parsed.get("protocol_version") != WS_PROTOCOL_VERSION
+		or parsed.get("server_version") != _challenged_server_version
+	):
+		_fail_handshake(CLOSE_CODE_AUTH_FAILED, "invalid v4 handshake ACK")
+		return
+	server_version = _challenged_server_version
+	_handshake_complete = true
+	_reconnect_attempt = 0
+	## Re-emit non-default scene/play state only after the server has published
+	## this authenticated peer and normal frames are legal.
+	_last_scene_path = ""
+	_last_play_state = false
 	_transient_diagnostic.clear()
+	if log_buffer:
+		log_buffer.log("authenticated with server")
+	connection_state_changed.emit(true)
+
+
+func _fail_handshake(code: int, reason: String) -> void:
+	if log_buffer:
+		log_buffer.log("v4 websocket handshake failed: %s" % reason)
+	_peer.close(code, reason)
+
+
+static func _has_exact_keys(value: Dictionary, expected: Array[String]) -> bool:
+	if value.size() != expected.size():
+		return false
+	for key in expected:
+		if not value.has(key):
+			return false
+	return true
+
+
+static func _is_bounded_text(value: Variant, max_length: int) -> bool:
+	return value is String and not String(value).is_empty() and String(value).length() <= max_length
+
+
+static func _is_lower_hex_64(value: Variant) -> bool:
+	if not (value is String) or String(value).length() != 64:
+		return false
+	for character in String(value):
+		if not (character >= "0" and character <= "9") and not (
+			character >= "a" and character <= "f"
+		):
+			return false
+	return true
+
+
+static func _proof_message(domain: String, values: Array) -> PackedByteArray:
+	var message := domain.to_utf8_buffer()
+	for value in values:
+		var encoded := str(value).to_utf8_buffer()
+		message.append_array(("\n%d:" % encoded.size()).to_utf8_buffer())
+		message.append_array(encoded)
+	return message
+
+
+static func _hmac_proof(capability: String, domain: String, values: Array) -> String:
+	if not _is_lower_hex_64(capability):
+		return ""
+	var context := HMACContext.new()
+	if context.start(HashingContext.HASH_SHA256, capability.to_utf8_buffer()) != OK:
+		return ""
+	if context.update(_proof_message(domain, values)) != OK:
+		return ""
+	return context.finish().hex_encode()
+
+
+static func _server_proof(
+	capability: String,
+	client_nonce: String,
+	server_nonce: String,
+	server_version_value: String,
+) -> String:
+	return _hmac_proof(
+		capability,
+		_SERVER_PROOF_DOMAIN,
+		[WS_PROTOCOL_VERSION, client_nonce, server_nonce, server_version_value],
+	)
+
+
+static func _client_proof(
+	capability: String,
+	client_nonce: String,
+	server_nonce: String,
+	server_version_value: String,
+	session_id: String,
+	godot_version: String,
+	project_path: String,
+	plugin_version: String,
+	readiness: String,
+	editor_pid: int,
+	server_launch_mode: String,
+) -> String:
+	return _hmac_proof(
+		capability,
+		_CLIENT_PROOF_DOMAIN,
+		[
+			WS_PROTOCOL_VERSION,
+			client_nonce,
+			server_nonce,
+			server_version_value,
+			session_id,
+			godot_version,
+			project_path,
+			plugin_version,
+			readiness,
+			editor_pid,
+			server_launch_mode,
+		],
+	)
+
+
+static func _constant_time_equal(left: String, right: String) -> bool:
+	var difference := left.length() ^ right.length()
+	var length := maxi(left.length(), right.length())
+	for index in length:
+		var left_code := left.unicode_at(index) if index < left.length() else 0
+		var right_code := right.unicode_at(index) if index < right.length() else 0
+		difference |= left_code ^ right_code
+	return difference == 0
 
 
 ## Never enqueue a malformed command frame: the dispatcher's typed casts
@@ -709,8 +959,9 @@ const _SERVICE_REJECT_LOG_EVERY := 100
 ## Service the WebSocket transport from inside a long synchronous handler
 ## (an "exclusive run" — the test runner). The editor main thread is
 ## blocked, so `_process` cannot poll; without this the server keepalive
-## (20s ping interval / 20s timeout) closes the session mid-run. See
-## docs/test-run-transport-starvation-plan.md.
+## (`DEFAULT_KEEPALIVE_PING_INTERVAL_SECONDS` / `_PING_TIMEOUT_SECONDS` in
+## `transport/websocket.py` — 20s interval, 60s pong deadline since #958)
+## closes the session mid-run. See docs/test-run-transport-starvation-plan.md.
 ##
 ## Contract — do NOT extend this method to dispatch:
 ## - `WebSocketPeer.poll()` has no heartbeat-only mode; it also buffers
@@ -789,8 +1040,8 @@ static func _service_note_packet(run_state: Dictionary) -> bool:
 func _service_handle_message(raw: String, packets_serviced: int) -> void:
 	var classified := _classify_message(raw)
 	match classified["kind"]:
-		"ack":
-			_handle_handshake_ack(classified["parsed"])
+		"challenge", "ack":
+			_fail_handshake(CLOSE_CODE_PROTOCOL_MISMATCH, "unexpected v4 handshake frame")
 		"command":
 			_service_reject_command(classified["parsed"], packets_serviced)
 		"malformed_command":
@@ -914,10 +1165,12 @@ func _get_current_scene_path() -> String:
 	return scene_root.scene_file_path if scene_root else ""
 
 
-func _send_json(data: Dictionary) -> bool:
-	if not _connected:
+func _send_json(data: Dictionary, allow_pre_auth := false) -> bool:
+	if not _connected or (not _handshake_complete and not allow_pre_auth):
 		return false
 	var text := JSON.stringify(data)
+	if allow_pre_auth and text.to_utf8_buffer().size() > MAX_HANDSHAKE_FRAME_BYTES:
+		return false
 	var buffered_bytes := _peer.get_current_outbound_buffered_amount()
 	## `send_text` encodes the string to UTF-8 internally, so an exact
 	## `to_utf8_buffer().size()` here would encode every payload twice. Almost
@@ -1023,7 +1276,7 @@ func _stamp_error_watermark(response: Dictionary) -> void:
 	McpSurfacedErrorTracker.stamp_watermark(response, surfaced_error_tracker)
 
 
-## Build a human-readable session ID of form "<slug>@<4hex>" from the project path.
+## Build a human-readable session ID of form "<slug>@<16hex>" from the project path.
 ## The slug is derived from the project directory name so agents can recognize
 ## which editor they're targeting; the hex suffix disambiguates same-project twins.
 static func _make_session_id(project_path: String) -> String:
@@ -1033,7 +1286,10 @@ static func _make_session_id(project_path: String) -> String:
 	var slug := _slugify(base)
 	if slug == "":
 		slug = "project"
-	var suffix := _rand_hex(4)
+	var random_bytes := Crypto.new().generate_random_bytes(8)
+	if random_bytes.size() != 8:
+		return ""
+	var suffix := random_bytes.hex_encode()
 	return "%s@%s" % [slug, suffix]
 
 
@@ -1050,9 +1306,16 @@ static func _slugify(s: String) -> String:
 	return out.trim_suffix("-")
 
 
-static func _rand_hex(n: int) -> String:
-	var bytes := PackedByteArray()
-	var byte_count := int(ceil(float(n) / 2.0))
-	for i in byte_count:
-		bytes.append(randi() % 256)
-	return bytes.hex_encode().substr(0, n)
+static func _should_regenerate_session_id(
+	close_code: int,
+	server_verified: bool,
+	handshake_complete: bool,
+) -> bool:
+	## A duplicate rejection arrives after the server proved possession of the
+	## capability but before its final ACK. Ignore unauthenticated close codes so
+	## an unrelated listener cannot churn the editor identity.
+	return (
+		close_code == CLOSE_CODE_DUPLICATE_SESSION
+		and server_verified
+		and not handshake_complete
+	)
