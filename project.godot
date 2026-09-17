@@ -33,6 +33,7 @@ buses/default_bus_layout="uid://cn7ss37mcgp38"
 
 SkinManager="*res://Autoloads/skin_manager.gd"
 GameManager="*res://Autoloads/game_manager.gd"
+ShaderManager="*res://Autoloads/shader_manager.gd"
 MusicPlayer="*res://Autoloads/music_player.tscn"
 SfxManager="*res://Autoloads/sfx_manager.gd"
 DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"

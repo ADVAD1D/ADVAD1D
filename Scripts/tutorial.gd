@@ -81,9 +81,7 @@ func _ready() -> void:
 	
 func reset_shader_parameters():
 	if is_instance_valid(crt_material):
-		crt_material.set_shader_parameter("aberration", 0.02)
-		crt_material.set_shader_parameter("distort_intensity", 0.02)
-		crt_material.set_shader_parameter("static_noise_intensity", 0.01)
+		ShaderManager.update_crt_shader_quality(crt_material)
 
 func _process(_delta: float) -> void:
 	pass

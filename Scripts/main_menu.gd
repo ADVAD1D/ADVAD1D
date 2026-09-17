@@ -26,7 +26,13 @@ var original_positions = {}
 
 func _ready() -> void:
 	if has_node("UILayer/ColorRect"):
-		get_node("UILayer/ColorRect").visible = GameManager.retro_shader_active
+		var cr = get_node("UILayer/ColorRect")
+		if GameManager.mobile_mode_active:
+			cr.visible = GameManager.retro_shader_active
+		else:
+			cr.visible = true # On PC the ColorRect is always visible
+			if cr.material is ShaderMaterial:
+				ShaderManager.update_crt_shader_quality(cr.material)
 
 	GameManager.can_pause = false
 	GameManager.reset_speedrun()
@@ -160,7 +166,19 @@ func _setup_buttons() -> void:
 					get_node("UILayer/ColorRect").visible = toggled_on
 			)
 		else:
-			retro_btn.hide()
+			# On PC: The button acts as an "Optimize Shaders" toggle
+			retro_btn.set_pressed_no_signal(GameManager.pc_optimize_shaders)
+			retro_btn.pressed.connect(back_sound.play)
+			retro_btn.toggled.connect(func(toggled_on):
+				GameManager.pc_optimize_shaders = toggled_on
+				_log_message(["PC Shader Optimize", toggled_on])
+				GameManager.save_data()
+				
+				if has_node("UILayer/ColorRect"):
+					var color_rect = get_node("UILayer/ColorRect")
+					if color_rect.material is ShaderMaterial:
+						ShaderManager.update_crt_shader_quality(color_rect.material)
+			)
 
 func _connect_audio_to_buttons(node: Node) -> void:
 	if node is BaseButton:

@@ -10,11 +10,6 @@ func _ready():
 		GameManager.mobile_mode_active = true
 	
 	apply_performance_settings()
-	
-	# Apply CRT Shader low-quality mode automatically if on mobile
-	if GameManager.mobile_mode_active:
-		get_tree().node_added.connect(_on_node_added)
-		call_deferred("_apply_to_scene", get_tree().current_scene)
 
 ## Applies framerate and performance settings based on the current mobile mode
 func apply_performance_settings():
@@ -33,34 +28,3 @@ func apply_performance_settings():
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
 		# Allow desktop monitors to sleep normally
 		DisplayServer.screen_set_keep_on(false)
-
-func _on_node_added(node: Node) -> void:
-	# A new top-level scene was added under the root (i.e. change_scene_*)
-	if node.get_parent() == get_tree().root:
-		call_deferred("_apply_to_scene", node)
-
-func _apply_to_scene(scene: Node) -> void:
-	if not is_instance_valid(scene):
-		return
-	for node in scene.find_children("*", "CanvasItem", true, false):
-		var mat: Material = node.material
-		if mat is ShaderMaterial:
-			var shader: Shader = (mat as ShaderMaterial).shader
-			if shader != null and shader.resource_path.contains("CRT"):
-				(mat as ShaderMaterial).set_shader_parameter("low_quality", true)
-				# Flatten the curve and reduce black borders for mobile ultrawide screens
-				(mat as ShaderMaterial).set_shader_parameter("warp_amount", false)
-				(mat as ShaderMaterial).set_shader_parameter("vignette_intensity", 0.7)
-				(mat as ShaderMaterial).set_shader_parameter("vignette_opacity", 0.4)
-				
-				# Extreme Mobile Optimizations: Cut heavy GPU branches
-				(mat as ShaderMaterial).set_shader_parameter("roll", false) # Disables animated sine-wave screen rolling
-				(mat as ShaderMaterial).set_shader_parameter("discolor", false) # Disables expensive greyscale/pow color math
-				(mat as ShaderMaterial).set_shader_parameter("pixelate", false) # Disables UV rounding math
-				(mat as ShaderMaterial).set_shader_parameter("noise_opacity", 0.0) # Prevents useless roll_uv calculations
-				(mat as ShaderMaterial).set_shader_parameter("static_noise_intensity", 0.0) # Cuts per-pixel random/sin generation
-				
-				# If the user disabled the retro shader completely for performance, hide the node
-				if not GameManager.retro_shader_active:
-					if node is CanvasItem:
-						node.visible = false

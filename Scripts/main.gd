@@ -84,13 +84,7 @@ func reset_shader_parameters():
 				AudioServer.set_bus_effect_enabled(master_bus, i, false)
 			
 	if is_instance_valid(crt_material):
-		crt_material.set_shader_parameter("aberration", 0.02)
-		crt_material.set_shader_parameter("distort_intensity", 0.02)
-		crt_material.set_shader_parameter("static_noise_intensity", 0.01)
-		
-		if GameManager.mobile_mode_active or OS.has_feature("web") or GameManager.force_web_mode:
-			crt_material.set_shader_parameter("low_quality", true)
-			crt_material.set_shader_parameter("roll", false)
+		ShaderManager.update_crt_shader_quality(crt_material)
 
 func _on_death_zone_area_entered(area: Area2D) -> void:
 	if area.is_in_group("asteroides"):

@@ -195,9 +195,7 @@ void fragment() {
     }
 
     // Apply border and vignette
-    if (!low_quality) {
-        text.rgb *= border(uv);
-    }
+    text.rgb *= border(uv);
     text.rgb *= vignette(uv);
 
     // Handle clip warp

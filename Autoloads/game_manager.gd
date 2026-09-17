@@ -25,9 +25,10 @@ var is_glitch_sound: bool = false
 var game_paused: bool = false
 var can_pause: bool = true
 var retro_shader_active: bool = true
+var pc_optimize_shaders: bool = false
 
 # mobile compatibility bool
-var mobile_mode_active: bool = true
+var mobile_mode_active: bool = false
 var using_touch_controls: bool = true
 var disable_auto_hide_mobile_controls: bool = false # Set to true to test mobile UI on PC with keyboard
 var mobile_layout: Dictionary = {}
@@ -150,7 +151,8 @@ func save_data():
 			"scroll_bar_state": is_scroll_active,
 			"pilot_name": player_name,
 			"mobile_layout": mobile_layout,
-			"retro_shader_active": retro_shader_active
+			"retro_shader_active": retro_shader_active,
+			"pc_optimize_shaders": pc_optimize_shaders
 		}
 		_log_message(["saved game!, selected skin", SkinManager.selected_ship_index])
 		_log_message(["Relative controls: ", relative_control_active])
@@ -207,6 +209,9 @@ func load_data():
 	if data and "retro_shader_active" in data:
 		retro_shader_active = bool(data["retro_shader_active"])
 		_log_message(["loaded retro_shader_active user config: ", retro_shader_active])
+	
+	if data and "pc_optimize_shaders" in data:
+		pc_optimize_shaders = bool(data["pc_optimize_shaders"])
 
 func save_mobile_layout(node_name: String, pos: Vector2):
 	mobile_layout[node_name] = {"x": pos.x, "y": pos.y}
