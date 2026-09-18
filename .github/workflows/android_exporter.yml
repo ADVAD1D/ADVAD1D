@@ -45,7 +45,7 @@ jobs:
 
       - name: Generate Automatic Keystore for Signing
         run: |
-          echo "Generando un keystore automático para firmar el APK..."
+          echo "Generating an automatic keystore to sign the APK..."
           keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android -keystore auto_sign.keystore -storepass android -dname "CN=Android Debug,O=Android,C=US" -validity 9999 -deststoretype pkcs12
 
       - name: Inject Export Presets
@@ -55,7 +55,7 @@ jobs:
           echo "Create and inject export_presets.cfg from secrets..."
           printf "%s\n" "$PRESETS_FILE" > export_presets.cfg
           
-          # Inyectamos el keystore automático y desactivamos el splash screen
+          # Inject the automatic keystore and disable the splash screen
           awk -v path="$(pwd)/auto_sign.keystore" '
           /^name="Android"/ { in_android = 1 }
           /^\[preset\.[0-9]+\.options\]$/ { 
@@ -73,7 +73,7 @@ jobs:
           { 
               if (in_android_options) {
                   if ($0 ~ /^keystore\/release=/ || $0 ~ /^keystore\/release_user=/ || $0 ~ /^keystore\/release_password=/ || $0 ~ /^splash_screen\/disable_godot_boot_splash=/) {
-                      next; # Eliminar las claves originales para evitar duplicados
+                      next; # Remove original keys to prevent duplicates
                   }
               }
               print 
