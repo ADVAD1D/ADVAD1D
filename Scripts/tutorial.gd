@@ -1,6 +1,7 @@
 extends Node2D
 
 @export var transition_sound: AudioStream
+@onready var countdown_label: Label = $UILayer/countdownLabel
 
 @onready var ui_turorial_layer: Node2D = $UITutorialLayer
 
@@ -35,9 +36,10 @@ func _ready() -> void:
 				sprite.hide()
 				
 		if not GameManager.using_touch_controls:
-			for control in mobile_controls_layer.get_children():
-				if control.has_method("hide"):
-					control.hide()
+			if mobile_controls_layer:
+				for control in mobile_controls_layer.get_children():
+					if control.has_method("hide"):
+						control.hide()
 		else:
 			# Make all mobile controls semi-transparent so they don't block the player's view
 			for control in mobile_controls_layer.get_children():
@@ -84,7 +86,11 @@ func reset_shader_parameters():
 		ShaderManager.update_crt_shader_quality(crt_material)
 
 func _process(_delta: float) -> void:
-	pass
+	if is_instance_valid(countdown_label):
+		if not tutorial_timer.is_stopped():
+			countdown_label.text = "%0.1f" % tutorial_timer.time_left
+		else:
+			countdown_label.visible = false
 
 func _on_death_zone_area_entered(area: Area2D) -> void:
 	if area.is_in_group("asteroides"):

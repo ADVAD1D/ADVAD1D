@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://c3nt5r6awyif4" path="res://Assets/Sprites/Buttons/dash_button.png" id="17_lexqi"]
 [ext_resource type="Texture2D" uid="uid://bvsm651l64kcs" path="res://Assets/Sprites/Buttons/joystick-front.png" id="18_lexqi"]
 [ext_resource type="Texture2D" uid="uid://cbnksbra3vaqx" path="res://Assets/Sprites/Buttons/shoot_button_unpressed.png" id="19_pkgwa"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="19_radxo"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fevyy"]
 atlas = ExtResource("3_p8jf4")
@@ -276,6 +277,15 @@ texture = ExtResource("17_dxsep")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_73805"]
 texture = ExtResource("18_lexqi")
 
+[sub_resource type="LabelSettings" id="LabelSettings_lexqi"]
+font = ExtResource("19_radxo")
+font_size = 64
+font_color = Color(9.024516e-08, 0.1662992, 0.16629913, 1)
+outline_size = 4
+outline_color = Color(0, 1, 0.9843137, 1)
+shadow_size = 10
+shadow_color = Color(0, 0.16078432, 0.16078432, 0.7411765)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_bbpun"]
 shader = ExtResource("6_h2ono")
 shader_parameter/overlay = true
@@ -394,7 +404,7 @@ position = Vector2(-15, 9.99994)
 speed = 1000.0
 
 [node name="TutorialTimer" type="Timer" parent="." unique_id=559884385]
-wait_time = 5.0
+wait_time = 10.0
 one_shot = true
 
 [node name="LaserWallAnimation" type="AnimatedSprite2D" parent="." unique_id=1453689667]
@@ -796,6 +806,15 @@ texture_normal = ExtResource("17_lexqi")
 action = "dash"
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=686653617]
+
+[node name="countdownLabel" type="Label" parent="UILayer" unique_id=1186322852]
+offset_left = 249.0
+offset_top = 236.99998
+offset_right = 417.0
+offset_bottom = 285.0
+scale = Vector2(0.61350566, 0.61350566)
+text = "0.0"
+label_settings = SubResource("LabelSettings_lexqi")
 
 [node name="ColorRect" type="ColorRect" parent="UILayer" unique_id=11868472]
 material = SubResource("ShaderMaterial_bbpun")

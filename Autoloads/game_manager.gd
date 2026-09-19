@@ -15,6 +15,7 @@ var player_name_field_editable: bool = false
 var score: int = 0
 var can_add_score: bool = true
 var phase_to_start: int = 1
+var deaths_count: int = 0
 
 # Arenas Base Structure
 var current_arena_index: int = 0
@@ -154,7 +155,8 @@ func save_data():
 			"pilot_name": player_name,
 			"mobile_layout": mobile_layout,
 			"retro_shader_active": retro_shader_active,
-			"pc_optimize_shaders": pc_optimize_shaders
+			"pc_optimize_shaders": pc_optimize_shaders,
+			"deaths_count": deaths_count
 		}
 		_log_message(["saved game!, selected skin", SkinManager.selected_ship_index])
 		_log_message(["Relative controls: ", relative_control_active])
@@ -215,6 +217,10 @@ func load_data():
 	if data and "pc_optimize_shaders" in data:
 		pc_optimize_shaders = bool(data["pc_optimize_shaders"])
 		_log_message(["loaded pc optimize shaders in save data: ", pc_optimize_shaders])
+		
+	if data and "deaths_count" in data:
+		deaths_count = int(data["deaths_count"])
+		_log_message(["loaded deaths count: ", deaths_count])
 
 func save_mobile_layout(node_name: String, pos: Vector2):
 	mobile_layout[node_name] = {"x": pos.x, "y": pos.y}

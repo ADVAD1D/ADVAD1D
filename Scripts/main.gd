@@ -11,6 +11,8 @@ extends Node2D
 @onready var drone2_sprite: AnimatedSprite2D = get_node_or_null("DronePath2/PathFollow2D/DroneSprite")
 @onready var fade_rect: ColorRect = $UILayer/FadeRect
 @onready var main_light: PointLight2D = $MainLight2D
+@onready var skull_icon: Sprite2D = $PauseMenu/skullIcon
+@onready var skull_icon_label: Label = $PauseMenu/skullIcon/Label
 
 var base_zoom: Vector2
 @export var laser_explosion_particles: PackedScene
@@ -23,6 +25,10 @@ func _enter_tree() -> void:
 	GameManager.current_arena_index = arena_index
 
 func _ready() -> void:
+	# Update deaths counter label in pause menu
+	if is_instance_valid(skull_icon_label):
+		skull_icon_label.text = str(GameManager.deaths_count)
+		
 	#reset shader parameters after a glitch global animation
 	reset_shader_parameters()
 	
