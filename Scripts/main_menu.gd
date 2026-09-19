@@ -45,6 +45,9 @@ func _ready() -> void:
 	if GameManager.mobile_mode_active:
 		if has_node("ChatConsoleButton"):
 			get_node("ChatConsoleButton").hide()
+	else:
+		if has_node("ChatConsoleButton"):
+			get_node("ChatConsoleButton").hide()
 			
 		_save_original_positions()
 		get_tree().root.size_changed.connect(_on_window_resized)
