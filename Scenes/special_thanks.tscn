@@ -114,7 +114,7 @@ offset_bottom = 146.75531
 scale = Vector2(0.3317041, 0.3317041)
 text = "- ITSRODRIGO
 - NEXUS43
--MATU"
+- MATU"
 label_settings = SubResource("LabelSettings_542ni")
 
 [node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=1715317948]

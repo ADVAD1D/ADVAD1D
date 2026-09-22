@@ -223,10 +223,10 @@ size = Vector2(70.5, 4475.5)
 size = Vector2(80, 4558.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1w6v2"]
-size = Vector2(33.87668, 1790.073)
+size = Vector2(33.87668, 1838.5786)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ueoa1"]
-size = Vector2(20, 1815.4805)
+size = Vector2(20, 1846.2781)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6vcvc"]
 size = Vector2(3080, 66)
@@ -699,14 +699,14 @@ shape = SubResource("RectangleShape2D_ee4r6")
 debug_color = Color(0.918699, 6.77681e-05, 0.701187, 0.42)
 
 [node name="leftInside1" type="CollisionShape2D" parent="LaserZone" unique_id=130285137]
-position = Vector2(-1031.6886, 372.26712)
-scale = Vector2(0.99999964, 0.99999964)
+position = Vector2(-1031.6886, 396.51984)
+scale = Vector2(0.9999996, 0.9999996)
 shape = SubResource("RectangleShape2D_1w6v2")
 debug_color = Color(0.914546, 8.23998e-05, 0.715902, 0.42)
 
 [node name="rightInside1" type="CollisionShape2D" parent="LaserZone" unique_id=137420212]
-position = Vector2(1065.5834, 381.12128)
-scale = Vector2(0.99999946, 0.99999946)
+position = Vector2(1065.5834, 396.51996)
+scale = Vector2(0.9999994, 0.9999994)
 shape = SubResource("RectangleShape2D_ueoa1")
 debug_color = Color(0.911127, 0.00010146, 0.727674, 0.42)
 
@@ -722,13 +722,13 @@ shape = SubResource("RectangleShape2D_r33sp")
 debug_color = Color(0.950352, 0.0944094, 0.507302, 0.42)
 
 [node name="bottomInside" type="CollisionShape2D" parent="LaserZone" unique_id=2078697298]
-position = Vector2(-570.7592, 1305.0295)
+position = Vector2(-569.73456, 1331.2073)
 scale = Vector2(0.9999998, 0.9999998)
 shape = SubResource("RectangleShape2D_jwpg7")
 debug_color = Color(0.926013, 4.20663e-05, 0.674041, 0.42)
 
 [node name="bottomInside1" type="CollisionShape2D" parent="LaserZone" unique_id=1689356722]
-position = Vector2(637.2599, 1301.95)
+position = Vector2(637.5058, 1333.517)
 scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("RectangleShape2D_k2e45")
 debug_color = Color(0.965108, 0, 0.488705, 0.42)
@@ -748,7 +748,7 @@ shape = SubResource("RectangleShape2D_aa8k8")
 debug_color = Color(1, 0.0470588, 0, 0.419608)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2091898546 node_paths=PackedStringArray("player_target")]
-zoom = Vector2(0.17, 0.17)
+zoom = Vector2(0.2, 0.2)
 limit_left = -1915
 limit_top = -1420
 limit_right = 1870
