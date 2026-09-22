@@ -365,6 +365,8 @@ func _continue_enter_tree_after_update_barrier() -> void:
 	_dispatcher.register_lazy_handler("theme", HANDLERS_DIR + "theme_handler.gd", [undo, _connection])
 	_dispatcher.register_lazy_handler("animation", HANDLERS_DIR + "animation_handler.gd", [undo])
 	_dispatcher.register_lazy_handler("material", HANDLERS_DIR + "material_handler.gd", [undo, _connection])
+	_dispatcher.register_lazy_handler("shader", HANDLERS_DIR + "shader_handler.gd", [])
+	_dispatcher.register_lazy_handler("visual_shader", HANDLERS_DIR + "visual_shader_handler.gd", [])
 	_dispatcher.register_lazy_handler("particle", HANDLERS_DIR + "particle_handler.gd", [undo])
 	_dispatcher.register_lazy_handler("camera", HANDLERS_DIR + "camera_handler.gd", [undo])
 	_dispatcher.register_lazy_handler("audio", HANDLERS_DIR + "audio_handler.gd", [undo])
@@ -378,6 +380,7 @@ func _continue_enter_tree_after_update_barrier() -> void:
 	_dispatcher.register_lazy_handler("tilemap", HANDLERS_DIR + "tilemap_handler.gd", [undo])
 	_dispatcher.register_lazy_handler("tileset", HANDLERS_DIR + "tileset_handler.gd", [])
 	_dispatcher.register_lazy_handler("gridmap", HANDLERS_DIR + "gridmap_handler.gd", [undo])
+	_dispatcher.register_lazy_handler("navigation", HANDLERS_DIR + "navigation_handler.gd", [undo, _connection])
 	_dispatcher.register_lazy_handler("csg", HANDLERS_DIR + "csg_handler.gd", [undo])
 
 	_dispatcher.register_lazy("get_editor_state", "editor", &"get_editor_state")
@@ -428,6 +431,7 @@ func _continue_enter_tree_after_update_barrier() -> void:
 	_dispatcher.register_lazy("find_symbols", "script", &"find_symbols")
 	_dispatcher.register_lazy("search_resources", "resource", &"search_resources")
 	_dispatcher.register_lazy("load_resource", "resource", &"load_resource")
+	_dispatcher.register_lazy("inspect_resource", "resource", &"inspect_resource")
 	_dispatcher.register_lazy("assign_resource", "resource", &"assign_resource")
 	_dispatcher.register_lazy("create_resource", "resource", &"create_resource")
 	_dispatcher.register_lazy("get_resource_info", "resource", &"get_resource_info")
@@ -436,6 +440,9 @@ func _continue_enter_tree_after_update_barrier() -> void:
 	_dispatcher.register_lazy("write_file", "filesystem", &"write_file")
 	_dispatcher.register_lazy("reimport", "filesystem", &"reimport")
 	_dispatcher.register_lazy("scan_filesystem", "filesystem", &"scan_filesystem")
+	_dispatcher.register_lazy("move_file", "filesystem", &"move_file")
+	_dispatcher.register_lazy("rename_file", "filesystem", &"rename_file")
+	_dispatcher.register_lazy("remove_file", "filesystem", &"remove_file")
 	_dispatcher.register_lazy("list_signals", "signal", &"list_signals")
 	_dispatcher.register_lazy("connect_signal", "signal", &"connect_signal")
 	_dispatcher.register_lazy("disconnect_signal", "signal", &"disconnect_signal")
@@ -453,12 +460,17 @@ func _continue_enter_tree_after_update_barrier() -> void:
 	_dispatcher.register_lazy("batch_execute", "batch", &"batch_execute")
 	_dispatcher.register_lazy("set_anchor_preset", "ui", &"set_anchor_preset")
 	_dispatcher.register_lazy("set_text", "ui", &"set_text")
+	_dispatcher.register_lazy("set_richtext", "ui", &"set_richtext")
 	_dispatcher.register_lazy("build_layout", "ui", &"build_layout")
 	_dispatcher.register_lazy("create_theme", "theme", &"create_theme")
 	_dispatcher.register_lazy("theme_set_color", "theme", &"set_color")
 	_dispatcher.register_lazy("theme_set_constant", "theme", &"set_constant")
 	_dispatcher.register_lazy("theme_set_font_size", "theme", &"set_font_size")
 	_dispatcher.register_lazy("theme_set_stylebox_flat", "theme", &"set_stylebox_flat")
+	_dispatcher.register_lazy("theme_set_stylebox_texture", "theme", &"set_stylebox_texture")
+	_dispatcher.register_lazy("theme_set_font", "theme", &"set_font")
+	_dispatcher.register_lazy("theme_set_icon", "theme", &"set_icon")
+	_dispatcher.register_lazy("theme_stylebox_override", "theme", &"stylebox_override")
 	_dispatcher.register_lazy("apply_theme", "theme", &"apply_theme")
 	_dispatcher.register_lazy("animation_player_create", "animation", &"create_player")
 	_dispatcher.register_lazy("animation_create", "animation", &"create_animation")
@@ -477,6 +489,10 @@ func _continue_enter_tree_after_update_barrier() -> void:
 	_dispatcher.register_lazy("animation_preset_shake", "animation", &"preset_shake")
 	_dispatcher.register_lazy("animation_preset_pulse", "animation", &"preset_pulse")
 	_dispatcher.register_lazy("material_create", "material", &"create_material")
+	_dispatcher.register_lazy("visual_shader_create_graph", "visual_shader", &"create_graph")
+	_dispatcher.register_lazy("visual_shader_get", "visual_shader", &"get_graph")
+	_dispatcher.register_lazy("visual_shader_node_catalog", "visual_shader", &"node_catalog")
+	_dispatcher.register_lazy("visual_shader_edit", "visual_shader", &"edit_graph")
 	_dispatcher.register_lazy("material_set_param", "material", &"set_param")
 	_dispatcher.register_lazy("material_set_shader_param", "material", &"set_shader_param")
 	_dispatcher.register_lazy("material_get", "material", &"get_material")
@@ -484,6 +500,10 @@ func _continue_enter_tree_after_update_barrier() -> void:
 	_dispatcher.register_lazy("material_assign", "material", &"assign_material")
 	_dispatcher.register_lazy("material_apply_to_node", "material", &"apply_to_node")
 	_dispatcher.register_lazy("material_apply_preset", "material", &"apply_preset")
+	_dispatcher.register_lazy("shader_create", "shader", &"create_shader")
+	_dispatcher.register_lazy("shader_get", "shader", &"get_shader")
+	_dispatcher.register_lazy("shader_validate", "shader", &"validate_shader")
+	_dispatcher.register_lazy("shader_patch", "shader", &"patch_shader")
 	_dispatcher.register_lazy("particle_create", "particle", &"create_particle")
 	_dispatcher.register_lazy("particle_set_main", "particle", &"set_main")
 	_dispatcher.register_lazy("particle_set_process", "particle", &"set_process")
@@ -523,6 +543,8 @@ func _continue_enter_tree_after_update_barrier() -> void:
 	_dispatcher.register_lazy("gridmap_clear", "gridmap", &"clear_layer")
 	_dispatcher.register_lazy("gridmap_get_used_cells", "gridmap", &"get_used_cells")
 	_dispatcher.register_lazy("gridmap_list_library_items", "gridmap", &"list_library_items")
+	_dispatcher.register_lazy("navigation_bake", "navigation", &"bake")
+	_dispatcher.register_lazy("navigation_path_get", "navigation", &"path_get")
 	_dispatcher.register_lazy("csg_create", "csg", &"create")
 	_dispatcher.register_lazy("csg_set_operation", "csg", &"set_operation")
 
@@ -545,6 +567,7 @@ func _continue_enter_tree_after_update_barrier() -> void:
 	_dock.name = "Godot AI"
 	_dock.update_requested.connect(_on_dock_update_requested)
 	_dock.client_action_requested.connect(_on_dock_client_action_requested)
+	_dock.client_action_cancel_requested.connect(_on_dock_client_action_cancel_requested)
 	_dock.client_status_refresh_requested.connect(_on_dock_client_status_refresh_requested)
 	_dock.status_snapshot_requested.connect(_on_dock_status_snapshot_requested)
 	_dock.live_server_probe_requested.connect(_on_dock_live_server_probe_requested)
@@ -569,18 +592,24 @@ func _continue_enter_tree_after_update_barrier() -> void:
 ## client migration worker exists. An old bridge keeps its own ports.
 func _activate_startup_endpoints() -> void:
 	if str(_post_update_outcome.get("outcome", "")) == "success":
+		var prepare_started := _startup_trace_call_begin("prepare_upgrade_endpoints")
 		var prepared := ClientConfigurator.prepare_major_upgrade_endpoints(
 			str(_post_update_outcome.get("from_version", "")),
 			str(_post_update_outcome.get("to_version", "")),
 		)
+		_startup_trace_call_end("prepare_upgrade_endpoints", prepare_started)
 		if not bool(prepared.get("ok", false)):
 			_present_endpoint_setup_failure(str(prepared.get("error", "Endpoint selection failed.")))
 			return
+	var override_started := _startup_trace_call_begin("endpoint_override")
 	var override := ClientConfigurator.v4_endpoint_ports_status()
+	_startup_trace_call_end("endpoint_override", override_started)
 	if not bool(override.get("ok", false)):
 		_present_endpoint_setup_failure(str(override.get("error", "Invalid endpoint override.")))
 		return
+	var policy_started := _startup_trace_call_begin("endpoint_policy")
 	var resolved_policy := ClientConfigurator.capture_endpoint_policy()
+	_startup_trace_call_end("endpoint_policy", policy_started)
 	var http_port := int(resolved_policy.http_port)
 	var configured_ws := int(resolved_policy.ws_port)
 	if (
@@ -590,7 +619,9 @@ func _activate_startup_endpoints() -> void:
 	):
 		_present_endpoint_setup_failure("Choose distinct HTTP and WebSocket ports between %d and %d in Godot AI settings." % [ClientConfigurator.MIN_PORT, ClientConfigurator.MAX_PORT])
 		return
+	var ws_started := _startup_trace_call_begin("resolve_ws_port")
 	var resolved_ws := _resolve_ws_port(configured_ws)
+	_startup_trace_call_end("resolve_ws_port", ws_started)
 	if (
 		resolved_ws < ClientConfigurator.MIN_PORT or resolved_ws > ClientConfigurator.MAX_PORT
 		or resolved_ws == http_port
@@ -599,7 +630,9 @@ func _activate_startup_endpoints() -> void:
 		_present_endpoint_setup_failure("The configured WebSocket port is unavailable. Choose another endpoint pair in Godot AI settings, then retry.")
 		return
 	resolved_policy["ws_port"] = resolved_ws
+	var capability_started := _startup_trace_call_begin("capability_path")
 	resolved_policy["capability_path"] = TransportCapability.path_for_http_port(http_port)
+	_startup_trace_call_end("capability_path", capability_started)
 	_set_endpoint_policy(resolved_policy)
 	if _connection != null:
 		_connection.ws_port = resolved_ws
@@ -608,9 +641,16 @@ func _activate_startup_endpoints() -> void:
 		if _dock != null:
 			_dock.present_update_state({"post_update_action": "", "status_text": "", "label_text": "", "banner_visible": false})
 	## #691: publish every environment/setting value before the first worker.
+	var warm_started := _startup_trace_call_begin("warm_env_snapshot")
 	ClientConfigurator.warm_env_snapshot(_endpoint_policy)
-	_lifecycle.configure(_capture_lifecycle_plan())
+	_startup_trace_call_end("warm_env_snapshot", warm_started)
+	var plan := _capture_lifecycle_plan()
+	var configure_started := _startup_trace_call_begin("lifecycle_configure")
+	_lifecycle.configure(plan)
+	_startup_trace_call_end("lifecycle_configure", configure_started)
+	var release_started := _startup_trace_call_begin("startup_release")
 	_begin_startup_release()
+	_startup_trace_call_end("startup_release", release_started)
 
 
 func _present_endpoint_setup_failure(error: String) -> void:
@@ -638,6 +678,14 @@ func _on_dock_client_action_requested(client_id: String, action: String) -> void
 	if _client_jobs == null:
 		return
 	if not _client_jobs.request_action(client_id, action) and _dock != null:
+		_dock.present_client_work_snapshot(_client_jobs.snapshot())
+
+
+func _on_dock_client_action_cancel_requested(client_id: String) -> void:
+	if _client_jobs == null:
+		return
+	_client_jobs.cancel_pending_action(client_id)
+	if _dock != null:
 		_dock.present_client_work_snapshot(_client_jobs.snapshot())
 
 
@@ -1287,6 +1335,26 @@ func _startup_trace_phase(name: String) -> void:
 	_startup_trace_last_ms = now
 
 
+## Call timings leave the coarse phase clock unchanged. A begin without an end
+## identifies an unfinished synchronous call, not its underlying cause.
+func _startup_trace_call_begin(name: String) -> int:
+	if not _startup_trace_enabled:
+		return 0
+	var now := Time.get_ticks_msec()
+	print("MCP startup trace | call=%s begin total_ms=%d" % [name, now - _startup_trace_start_ms])
+	return now
+
+
+func _startup_trace_call_end(name: String, started_ms: int) -> void:
+	if not _startup_trace_enabled:
+		return
+	var now := Time.get_ticks_msec()
+	print(
+		"MCP startup trace | call=%s end elapsed_ms=%d total_ms=%d"
+		% [name, now - started_ms, now - _startup_trace_start_ms]
+	)
+
+
 func _startup_trace_finish(path: String) -> void:
 	if not _startup_trace_enabled:
 		return
@@ -1316,19 +1384,30 @@ func _capture_lifecycle_plan() -> Dictionary:
 	var policy := _endpoint_policy.duplicate(true)
 	var http_port := int(policy.get("http_port", ClientConfigurator.DEFAULT_HTTP_PORT))
 	var worktree_src := ""
+	var worktree_started := _startup_trace_call_begin("worktree_source")
 	if ClientConfigurator.is_dev_checkout():
 		worktree_src = ClientConfigurator.find_worktree_src_dir(
 			ProjectSettings.globalize_path("res://")
 		)
+	_startup_trace_call_end("worktree_source", worktree_started)
+	var expected_version := ClientConfigurator.get_plugin_version()
+	var command_started := _startup_trace_call_begin("server_command")
+	var server_command := ClientConfigurator.get_server_command()
+	_startup_trace_call_end("server_command", command_started)
+	var pid_file := ProjectSettings.globalize_path(PortResolver.SERVER_PID_FILE)
+	var startup_report := ProjectSettings.globalize_path(PortResolver.SERVER_STARTUP_REPORT)
+	var reservation_started := _startup_trace_call_begin("http_port_reservation")
+	var http_port_reserved := WindowsPortReservation.is_port_excluded(http_port)
+	_startup_trace_call_end("http_port_reservation", reservation_started)
 	return {
 		"http_port": http_port,
 		"capability_path": str(policy.get("capability_path", "")),
 		"ws_port": int(policy.get("ws_port", ClientConfigurator.DEFAULT_WS_PORT)),
-		"expected_version": ClientConfigurator.get_plugin_version(),
-		"server_command": ClientConfigurator.get_server_command(),
-		"pid_file": ProjectSettings.globalize_path(PortResolver.SERVER_PID_FILE),
-		"startup_report": ProjectSettings.globalize_path(PortResolver.SERVER_STARTUP_REPORT),
-		"http_port_reserved": WindowsPortReservation.is_port_excluded(http_port),
+		"expected_version": expected_version,
+		"server_command": server_command,
+		"pid_file": pid_file,
+		"startup_report": startup_report,
+		"http_port_reserved": http_port_reserved,
 		"excluded_domains": str(policy.get("excluded_domains", "")),
 		"allow_hosts": str(policy.get("allow_hosts", "")),
 		"keep_alive": bool(policy.get("keep_alive", false)),
@@ -1744,7 +1823,16 @@ func restart_or_start_managed_server() -> bool:
 		_lifecycle.force_restart_server()
 		return true
 	var port := ClientConfigurator.http_port()
-	if PortResolver.is_port_in_use(port):
+	var occupied: bool
+	if OS.get_name() == "Windows":
+		var occupancy := PortResolver.windows_port_occupancy(port)
+		if occupancy == PortResolver.PortOccupancy.UNKNOWN:
+			_lifecycle.start_server()
+			return true
+		occupied = occupancy == PortResolver.PortOccupancy.OCCUPIED
+	else:
+		occupied = PortResolver.is_port_in_use(port)
+	if occupied:
 		push_warning(
 			"MCP | refusing to restart the unowned server on port %d; stop it from its launcher"
 			% port

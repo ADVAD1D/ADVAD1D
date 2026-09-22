@@ -89,15 +89,54 @@ var path_template: Dictionary = {}
 ## `path_template` remains the fallback.
 var config_path_candidates: Dictionary = {}
 
-## Optional global JSON config files merged by the client from lowest to highest
-## precedence. Unlike `config_path_candidates`, every existing file participates;
-## Configure updates the effective last definition, status verifies it, and
-## Remove clears every global definition transactionally.
+## Optional global JSON config files merged by the client. Unlike
+## `config_path_candidates`, every existing file participates. By default the
+## client keeps the LAST definition: Configure updates the effective last
+## definition, status verifies it, and Remove clears every global definition
+## transactionally. Clients that keep the FIRST definition instead set
+## `config_merge_first_wins` and declare tiers in the client's read order;
+## the folds then target the first tier defining the server, so a write
+## updates the file that is already effective and a fresh entry lands on
+## tiers[0] — the client's own primary file.
 var config_merge_path_templates: Dictionary = {}
 ## Project-relative tiers that may override the global files. Their root is the
 ## external client's working directory, which the Godot process cannot know.
 ## The strategy checks plausible roots and fails closed instead of mutating them.
 var config_merge_project_paths: PackedStringArray = PackedStringArray()
+
+## True when the client keeps the FIRST definition of a duplicated server and
+## ignores later ones (omp-native: project `.omp/mcp.json` precedes
+## `.omp/.mcp.json`, then the user scope's `mcp.json` precedes `.mcp.json`).
+## Flips every merge-tier fold — Configure target, status verification, and
+## the manual/Open-Reveal target resolution — from last-definition-wins to
+## first. With tiers declared in read order, Configure updates the tier that
+## already owns the server instead of creating a higher-priority entry that
+## shadows a lower tier's user state (#1085).
+var config_merge_first_wins: bool = false
+
+## Directory-glob templates whose matches make the user-scope config
+## destination unknowable from the editor (omp: `~/.omp/profiles/*`). One `*`
+## per directory segment, expanded by `McpPathTemplate.expand_path_candidates`.
+## Any existing match means a named profile may own the user scope: the active
+## profile is chosen per client launch and never persisted where the editor can
+## read it, so Configure and Remove fail closed with the matched paths and
+## status reports the ambiguity instead of green-lighting the default file.
+var config_scope_globs: PackedStringArray = PackedStringArray()
+
+## Environment names that make the effective config destination unknown.
+## Configure, Remove and status refuse while any is set; values are not reported.
+var config_scope_envs: PackedStringArray = PackedStringArray()
+
+## Top-level server-name denylist in the first declared merge tier (the default
+## primary file), independent of which tier owns the entry. Configure and status
+## refuse a suppressed name; Remove preserves this user state. Empty disables it.
+var config_denylist_key: String = ""
+
+## Effective-entry enable toggle and primary force-enable list. Boolean false
+## and strings "false"/"0" suppress the entry unless the allowlist names it.
+## The denylist still wins. Empty keys disable these checks.
+var config_enabled_key: String = ""
+var config_allowlist_key: String = ""
 
 ## De-duplicate persistent path-ambiguity warnings across recurring status
 ## refreshes. The actionable message still returns on every resolution; only

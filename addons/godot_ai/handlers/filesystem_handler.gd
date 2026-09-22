@@ -318,3 +318,19 @@ static func _settle_scan(
 			"reason": "Filesystem scan is an editor operation",
 		}
 	})
+
+
+## Resource-group mutations use read-only deferred discovery before disk effects.
+const Mutation := preload("res://addons/godot_ai/handlers/filesystem_mutation.gd")
+
+
+func move_file(params: Dictionary) -> Dictionary:
+	return Mutation.start(_connection, params, "move")
+
+
+func rename_file(params: Dictionary) -> Dictionary:
+	return Mutation.start(_connection, params, "rename")
+
+
+func remove_file(params: Dictionary) -> Dictionary:
+	return Mutation.start(_connection, params, "remove")
