@@ -14,6 +14,19 @@ const SERVER_PID_FILE := "user://godot_ai_server.pid"
 ## spawn, so a report that exists afterwards belongs to that launch.
 const SERVER_STARTUP_REPORT := "user://godot_ai_server_startup.json"
 const WindowsPortReservation := preload("res://addons/godot_ai/utils/windows_port_reservation.gd")
+const LinuxProc := preload("res://addons/godot_ai/utils/linux_proc.gd")
+const SNAPSHOT_DIAGNOSTIC_STAGES := ["single", "pair", "first", "final"]
+const SNAPSHOT_DIAGNOSTIC_CATEGORIES := [
+	"invalid_pid", "shell_exit", "empty_output", "outer_size", "outer_json", "outer_shape",
+	"snapshot_size", "snapshot_json", "snapshot_shape", "collector_null", "row_shape",
+	"row_pid", "row_chain", "row_identity", "lineage_cycle",
+]
+## Public lifecycle evidence uses a smaller, stable vocabulary than the
+## internal collector diagnostics. Keep the detailed category internally so a
+## future fix can distinguish malformed JSON from an inaccessible ancestor.
+const SNAPSHOT_FAILURE_CATEGORIES := [
+	"process_query", "json_shape", "ancestor_capture", "identity_mismatch",
+]
 static var _process_spawn_mutex := Mutex.new()
 
 enum PortOccupancy { UNKNOWN, FREE, OCCUPIED }
@@ -30,10 +43,10 @@ static func unlock_process_spawn() -> void:
 	_process_spawn_mutex.unlock()
 
 
-## A managed Linux server needs a listener PID tool to prove ownership.
+## Linux can prove ownership through procfs inside minimal desktop sandboxes.
 ## Query each launch so installing the missing tool makes Retry work.
 static func listener_tools_problem() -> String:
-	if OS.get_name() != "Linux":
+	if OS.get_name() != "Linux" or LinuxProc.available():
 		return ""
 	var output: Array = []
 	var available := OS.execute("/bin/sh", ["-c",
@@ -41,7 +54,7 @@ static func listener_tools_problem() -> String:
 	], output, true)
 	if available == 0:
 		return ""
-	return "Cannot verify Linux listener ownership: neither lsof nor ss is available on the editor's PATH. Install lsof or iproute2 (which provides ss), then retry starting the server."
+	return "Cannot verify Linux listener ownership: /proc is unavailable and neither lsof nor ss is available on the editor's PATH. Make /proc accessible inside the editor environment, or install lsof or iproute2 there, then retry starting the server."
 
 
 static func can_bind_local_port(port: int) -> bool:
@@ -66,6 +79,13 @@ static func is_port_in_use(port: int) -> bool:
 ## a wrapping caller's startup trace sees a genuine PowerShell fallback
 ## as `powershell`, not as a silent extra second under `netstat`.
 static func is_port_in_use_via_scrape(port: int, trace: Callable = Callable()) -> bool:
+	if OS.get_name() == "Linux":
+		var linux := LinuxProc.listener_snapshot()
+		if linux.known:
+			return linux.listeners.has(port)
+		## A failed observation cannot prove that a port is free.
+		if not can_bind_local_port(port):
+			return true
 	var output: Array = []
 	if OS.get_name() == "Windows":
 		return windows_port_occupancy(port, windows_listener_snapshot(trace)) != PortOccupancy.FREE
@@ -189,6 +209,12 @@ static func find_all_pids_on_port(port: int, trace: Callable = Callable(), snaps
 		if snapshot.known:
 			pids.assign(snapshot.listeners.get(port, []))
 		return pids
+	if OS.get_name() == "Linux":
+		var linux := LinuxProc.listener_snapshot()
+		if linux.known:
+			var linux_pids := LinuxProc.listener_pids(port, linux)
+			if not linux_pids.is_empty() or not linux.listeners.has(port):
+				return linux_pids
 	var output: Array = []
 	_trace(trace, "lsof")
 	var exit_code := OS.execute("lsof", ["-ti:%d" % port, "-sTCP:LISTEN"], output, true)
@@ -350,6 +376,8 @@ static func pid_alive(pid: int, snapshot: Variant = null) -> bool:
 		return false
 	if snapshot != null:
 		return not _process_snapshot_row(snapshot, pid).is_empty()
+	if OS.get_name() == "Linux":
+		return LinuxProc.is_alive(LinuxProc.process_stat(pid))
 	if OS.get_name() == "Windows":
 		var output: Array = []
 		var exit_code := OS.execute("tasklist", ["/FI", "PID eq %d" % pid, "/NH", "/FO", "CSV"], output, true)
@@ -373,19 +401,26 @@ static func pid_alive(pid: int, snapshot: Variant = null) -> bool:
 ## One Windows query captures the target and at most fifteen ancestors. The
 ## dictionary belongs to one proof boundary, never a cache: callers must take
 ## a fresh snapshot when closing the capture window or authorizing a kill.
-## Non-Windows callers receive null and keep the existing live-query path.
+## Linux captures the same bounded ancestry using procfs; macOS keeps ps.
 ## The process enumeration stays inside PowerShell; only the bounded target
 ## ancestry crosses back into Godot, without logging command-line metadata.
-static func capture_process_snapshot(pid: int) -> Variant:
+static func capture_process_snapshot(pid: int, diagnostics: Variant = null) -> Variant:
+	if OS.get_name() == "Linux":
+		return LinuxProc.process_snapshot(pid)
 	if OS.get_name() != "Windows":
 		return null
 	if pid <= 1:
-		return {"capture_error": true}
+		return _snapshot_failure(diagnostics, "invalid_pid", "single")
 	var script := _windows_process_snapshot_script(pid)
 	var output: Array = []
-	if execute_windows_powershell(script, output) != 0 or output.is_empty():
-		return {"capture_error": true}
-	return parse_process_snapshot(str(output[0]), pid)
+	var began := Time.get_ticks_msec()
+	var code := execute_windows_powershell(script, output)
+	if code != 0 or output.is_empty():
+		return _snapshot_failure(
+			diagnostics, "shell_exit" if code != 0 else "empty_output",
+			"single", -1, Time.get_ticks_msec() - began
+		)
+	return parse_process_snapshot(str(output[0]), pid, diagnostics)
 
 
 static func _windows_process_snapshot_script(pid: int) -> String:
@@ -408,61 +443,132 @@ static func _windows_process_snapshot_script(pid: int) -> String:
 
 ## Independent CIM maps in separate scriptblock scopes are
 ## captured within one shell invocation. No snapshot crosses a grant call.
-static func _capture_windows_process_snapshot_pair(pid: int) -> Array:
+static func _capture_windows_process_snapshot_pair(pid: int, diagnostics: Variant = null) -> Array:
 	var query := _windows_process_snapshot_script(pid)
 	var script := (
 		"$first = & { %s }; $final = & { %s }; "
 		+ "ConvertTo-Json -InputObject @([string]$first,[string]$final) -Compress"
 	) % [query, query]
 	var output: Array = []
-	if execute_windows_powershell(script, output) != 0 or output.is_empty():
+	var began := Time.get_ticks_msec()
+	var code := execute_windows_powershell(script, output)
+	if code != 0 or output.is_empty():
+		_snapshot_failure(
+			diagnostics, "shell_exit" if code != 0 else "empty_output",
+			"pair", -1, Time.get_ticks_msec() - began
+		)
 		return [{"capture_error": true}, {"capture_error": true}]
-	return _parse_process_snapshot_pair(str(output[0]), pid)
+	return _parse_process_snapshot_pair(str(output[0]), pid, diagnostics)
 
 
-static func _parse_process_snapshot_pair(raw: String, pid: int) -> Array:
+static func _parse_process_snapshot_pair(
+	raw: String, pid: int, diagnostics: Variant = null
+) -> Array:
 	if raw.length() > 4 * 1024 * 1024 + 16:
+		_snapshot_failure(diagnostics, "outer_size", "pair")
 		return [{"capture_error": true}, {"capture_error": true}]
 	var json := JSON.new()
 	if json.parse(raw) != OK:
+		_snapshot_failure(diagnostics, "outer_json", "pair")
 		return [{"capture_error": true}, {"capture_error": true}]
 	var pair: Variant = json.data
 	if not (pair is Array) or pair.size() != 2 or not (pair[0] is String and pair[1] is String):
+		_snapshot_failure(diagnostics, "outer_shape", "pair")
 		return [{"capture_error": true}, {"capture_error": true}]
-	return [parse_process_snapshot(pair[0], pid), parse_process_snapshot(pair[1], pid)]
+	return [
+		parse_process_snapshot(pair[0], pid, diagnostics, "first"),
+		parse_process_snapshot(pair[1], pid, diagnostics, "final"),
+	]
 
 
-static func parse_process_snapshot(raw: String, expected_pid: int) -> Dictionary:
+static func parse_process_snapshot(
+	raw: String, expected_pid: int, diagnostics: Variant = null, stage := "single"
+) -> Dictionary:
 	if raw.length() > 1024 * 1024:
-		return {"capture_error": true}
+		return _snapshot_failure(diagnostics, "snapshot_size", stage, -1)
 	var json := JSON.new()
 	if json.parse(raw) != OK:
-		return {"capture_error": true}
+		return _snapshot_failure(diagnostics, "snapshot_json", stage, -1)
 	var rows: Variant = json.data
 	if not (rows is Array) or rows.size() > 16:
-		return {"capture_error": true}
+		return _snapshot_failure(diagnostics, "collector_null" if rows == null else "snapshot_shape", stage)
 	var snapshot := {}
 	var next_pid := expected_pid
 	for row in rows:
 		if not (row is Dictionary):
-			return {"capture_error": true}
+			return _snapshot_failure(diagnostics, "row_shape", stage, snapshot.size())
 		var value: Variant = row.get("pid")
 		if (
 			not (value is int or value is float) or not is_finite(float(value))
 			or float(value) <= 1.0 or float(value) > 4294967295.0
 			or float(value) != float(int(value))
 		):
-			return {"capture_error": true}
+			return _snapshot_failure(diagnostics, "row_pid", stage, snapshot.size())
 		var pid := int(value)
 		if pid <= 1 or pid != next_pid or snapshot.has(pid):
-			return {"capture_error": true}
+			return _snapshot_failure(diagnostics, "row_chain", stage, snapshot.size())
 		snapshot[pid] = row
 		if _process_snapshot_row(snapshot, pid).is_empty():
-			return {"capture_error": true}
+			return _snapshot_failure(diagnostics, "row_identity", stage, snapshot.size() - 1)
 		next_pid = int(row.parent_pid)
 		if snapshot.has(next_pid):
-			return {"capture_error": true}
+			return _snapshot_failure(diagnostics, "lineage_cycle", stage, snapshot.size() - 1)
 	return snapshot
+
+
+## Diagnostics never carry proof rows, command lines, or shell output. The
+## caller owns this sink: at most eight distinct failures, with bounded counts.
+## Snapshots and authority remain unchanged.
+static func _snapshot_failure(
+	diagnostics: Variant, category: String, stage: String, depth := -1, elapsed_ms := -1
+) -> Dictionary:
+	stage = stage if stage in SNAPSHOT_DIAGNOSTIC_STAGES else "unknown"
+	category = category if category in SNAPSHOT_DIAGNOSTIC_CATEGORIES else "unknown"
+	if diagnostics is Array:
+		for item in diagnostics:
+			if item.category == category and item.stage == stage and item.depth == depth:
+				item.count = mini(int(item.count) + 1, 10000)
+				return {"capture_error": true}
+		if diagnostics.size() < 8:
+			diagnostics.append({
+				"category": category, "stage": stage, "depth": clampi(depth, -1, 16),
+				"elapsed_ms": clampi(elapsed_ms, -1, 600000), "count": 1,
+			})
+	return {"capture_error": true}
+
+
+## Map one internal collector refusal to the bounded category retained in the
+## editor log. `row_identity` at depth zero is malformed target metadata;
+## the same refusal on an ancestor is an ancestor-capture failure. A refusal
+## this table does not know stays "unknown" instead of borrowing a category.
+static func snapshot_failure_category(detail: String, depth := -1) -> String:
+	match detail:
+		"shell_exit", "empty_output", "invalid_pid", "collector_null":
+			return "process_query"
+		"lineage_cycle":
+			return "ancestor_capture"
+		"row_identity":
+			return "ancestor_capture" if depth > 0 else "json_shape"
+		"outer_size", "outer_json", "outer_shape", "snapshot_size", "snapshot_json", \
+		"snapshot_shape", "row_shape", "row_pid", "row_chain":
+			return "json_shape"
+	return "unknown"
+
+
+## Return only the creation-time portion of a captured identity. Windows rows
+## append the command line after `|`; Linux rows use `linux:<start>|<command>`.
+## The command line is intentionally never copied into diagnostics.
+static func process_creation_identity(pid: int, snapshot: Variant = null) -> String:
+	if pid <= 1 or not (snapshot is Dictionary) or capture_failed(snapshot):
+		return ""
+	var identity := str(_process_snapshot_row(snapshot, pid).get("identity", "")).strip_edges()
+	if identity.is_empty():
+		return ""
+	var separator := identity.find("|")
+	if separator > 0:
+		identity = identity.substr(0, separator).strip_edges()
+	return identity.substr(0, 128)
+
 
 
 ## An unavailable capture is not evidence that its PID has exited.
@@ -511,6 +617,8 @@ static func process_commandline(pid: int, snapshot: Variant = null) -> String:
 		if execute_windows_powershell(script, output) != 0 or output.is_empty():
 			return ""
 		return str(output[0]).strip_edges()
+	if OS.get_name() == "Linux":
+		return LinuxProc.commandline(pid)
 	var proc_path := "/proc/%d/cmdline" % pid
 	if FileAccess.file_exists(proc_path):
 		var file := FileAccess.open(proc_path, FileAccess.READ)
@@ -539,6 +647,8 @@ static func process_parent(pid: int, snapshot: Variant = null) -> int:
 		return 0
 	if snapshot != null:
 		return int(_process_snapshot_row(snapshot, pid).get("parent_pid", 0))
+	if OS.get_name() == "Linux":
+		return int(LinuxProc.process_stat(pid).get("parent_pid", 0))
 	var output: Array = []
 	if OS.get_name() == "Windows":
 		var script := (
@@ -599,6 +709,8 @@ static func pid_cmdline_is_godot_ai(pid: int, snapshot: Variant = null) -> bool:
 
 
 static func process_fingerprint(pid: int, snapshot: Variant = null) -> String:
+	if snapshot == null and OS.get_name() == "Linux":
+		snapshot = capture_process_snapshot(pid)
 	if not pid_alive(pid, snapshot):
 		return ""
 	var output: Array = []
@@ -642,12 +754,12 @@ static func process_fingerprint(pid: int, snapshot: Variant = null) -> String:
 ## `diagnostics`, when given, receives one word naming the check that
 ## refused the grant. It costs no extra probe and never changes the result.
 static func capture_process_kill_grant(
-	pid: int, require_brand := false, diagnostics: Array = []
+	pid: int, require_brand := false, diagnostics: Array = [], snapshot_diagnostics: Variant = null
 ) -> Dictionary:
 	if pid <= 1 or pid == OS.get_process_id():
 		diagnostics.append("invalid_pid")
 		return {}
-	var pair: Array = _capture_windows_process_snapshot_pair(pid) if OS.get_name() == "Windows" else []
+	var pair: Array = _capture_windows_process_snapshot_pair(pid, snapshot_diagnostics) if OS.get_name() == "Windows" else []
 	var first: Variant = pair[0] if not pair.is_empty() else capture_process_snapshot(pid)
 	if capture_failed(first):
 		diagnostics.append("identity_unavailable")

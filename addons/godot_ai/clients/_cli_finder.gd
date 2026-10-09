@@ -25,13 +25,15 @@ static var _cache: Dictionary = {}  # exe_name -> resolved path (or "")
 static var _searched: Dictionary = {}
 
 const _LOOKUP_TIMEOUT_MS := 3000
+const _TRACE_PATH_LIMIT := 16
+const _TRACE_PATH_MAX_CHARS := 512
 
 
 ## Find any of the supplied exe names; returns the first hit.
 ## On Windows pass the .exe variant in `exe_names` if relevant.
-static func find(exe_names: Array[String]) -> String:
+static func find(exe_names: Array[String], trace: Callable = Callable()) -> String:
 	for name in exe_names:
-		var hit := _find_one(name)
+		var hit := _find_one(name, trace)
 		if not hit.is_empty():
 			return hit
 	return ""
@@ -49,19 +51,29 @@ static func invalidate(exe_name: String = "") -> void:
 	_mutex.unlock()
 
 
-static func _find_one(exe_name: String) -> String:
+static func _find_one(exe_name: String, trace: Callable = Callable()) -> String:
+	var started := Time.get_ticks_msec()
 	_mutex.lock()
 	var already_searched: bool = _searched.get(exe_name, false)
 	var cached: String = _cache.get(exe_name, "")
 	_mutex.unlock()
 	if already_searched:
+		_trace_lookup(
+			trace,
+			"cache",
+			"resolved" if not cached.is_empty() else "cached_miss",
+			started,
+			{},
+			true,
+			cached,
+		)
 		return cached
 	# `_resolve()` does FileAccess + bounded subprocess lookup (forks
 	# `bash -lc` / `which`), which can take 100ms-1s. Holding the mutex across that
 	# would let a concurrent `invalidate()` on the main thread freeze the
 	# editor for the duration of the subprocess — which defeats the whole
 	# point of running CLI lookup off the main thread.
-	var hit := _resolve(exe_name)
+	var hit := _resolve(exe_name, trace)
 	_mutex.lock()
 	_cache[exe_name] = hit
 	_searched[exe_name] = true
@@ -69,14 +81,19 @@ static func _find_one(exe_name: String) -> String:
 	return hit
 
 
-static func _resolve(exe_name: String) -> String:
+static func _resolve(exe_name: String, trace: Callable = Callable()) -> String:
+	var started := Time.get_ticks_msec()
 	var is_windows := OS.get_name() == "Windows"
 
 	# 1. Well-known locations
+	var well_known_paths := PackedStringArray()
 	for dir in _well_known_dirs():
 		var full := dir.path_join(exe_name)
+		well_known_paths.append(full)
 		if FileAccess.file_exists(full):
+			_trace_lookup(trace, "well_known", "resolved", started, {}, false, full, well_known_paths)
 			return full
+	_trace_lookup(trace, "well_known", "no_match", started, {}, false, "", well_known_paths)
 
 	# 2. Login shell lookup (Unix only)
 	if not is_windows:
@@ -87,22 +104,120 @@ static func _resolve(exe_name: String) -> String:
 		if shell.is_empty():
 			shell = "/bin/bash"
 		var stripped := exe_name.trim_suffix(".exe")
+		started = Time.get_ticks_msec()
 		var login_result := McpCliExec.run(shell, ["-lc", "command -v %s" % stripped], _LOOKUP_TIMEOUT_MS, false)
 		if int(login_result.get("exit_code", -1)) == 0:
 			var login_found: String = str(login_result.get("stdout", "")).strip_edges()
 			if not login_found.is_empty() and FileAccess.file_exists(login_found):
+				_trace_lookup(
+					trace,
+					"login_shell",
+					"resolved",
+					started,
+					login_result,
+					false,
+					login_found,
+					PackedStringArray([login_found]),
+				)
 				return login_found
+		_trace_lookup(trace, "login_shell", _lookup_failure(login_result, false), started, login_result)
 
 	# 3. which / where with inherited PATH
+	return _resolve_inherited_path(exe_name, is_windows, trace)
+
+
+## Resolve from the inherited PATH through a single lookup command. The
+## optional runner keeps the Windows/where failure modes deterministic in unit
+## tests without changing the production invocation.
+static func _resolve_inherited_path(
+	exe_name: String,
+	is_windows: bool,
+	trace: Callable = Callable(),
+	lookup_runner: Callable = Callable(),
+) -> String:
 	var lookup := "where" if is_windows else "which"
-	var result := McpCliExec.run(lookup, [exe_name], _LOOKUP_TIMEOUT_MS, false)
+	var started := Time.get_ticks_msec()
+	var result: Dictionary = {}
+	if lookup_runner.is_valid():
+		var injected: Variant = lookup_runner.call(lookup, exe_name)
+		if injected is Dictionary:
+			result = injected
+	else:
+		result = McpCliExec.run(lookup, [exe_name], _LOOKUP_TIMEOUT_MS, false)
+	var lines := PackedStringArray(str(result.get("stdout", "")).split("\n"))
 	if int(result.get("exit_code", -1)) == 0:
-		var output := str(result.get("stdout", ""))
-		var lines := PackedStringArray(output.split("\n"))
 		var found := _pick_best_path(lines) if is_windows else lines[0].strip_edges()
 		if not found.is_empty():
+			_trace_lookup(trace, "inherited_path", "resolved", started, result, false, found, lines)
 			return found
+	_trace_lookup(
+		trace, "inherited_path", _lookup_failure(result, true), started, result, false, "", lines
+	)
 	return ""
+
+
+static func _lookup_failure(result: Dictionary, absence_exit: bool) -> String:
+	for flag in ["termination_failed", "cancelled", "timed_out", "spawn_failed"]:
+		if bool(result.get(flag, false)):
+			return flag
+	var code := int(result.get("exit_code", -1))
+	if code == 0:
+		return "empty_output" if str(result.get("stdout", "")).strip_edges().is_empty() else "unusable_output"
+	return "not_found" if absence_exit and code == 1 else "nonzero_exit"
+
+
+static func _trace_lookup(
+	trace: Callable, tier: String, status: String, started: int,
+	result: Dictionary = {}, cache_hit := false, resolved_path := "",
+	candidate_paths: PackedStringArray = PackedStringArray(),
+) -> void:
+	if not trace.is_valid():
+		return
+	trace.call({
+		"tier": tier, "status": status,
+		"elapsed_ms": clampi(Time.get_ticks_msec() - started, 0, 2147483647),
+		"cache_hit": cache_hit,
+		"exit_code": clampi(int(result.get("exit_code", -1)), -2147483648, 2147483647),
+		"timed_out": bool(result.get("timed_out", false)),
+		"spawn_failed": bool(result.get("spawn_failed", false)),
+		"cancelled": bool(result.get("cancelled", false)),
+		"termination_failed": bool(result.get("termination_failed", false)),
+		"resolved_path": _bounded_trace_path(resolved_path),
+		"candidate_paths": _bounded_trace_paths(candidate_paths),
+	})
+
+
+## Keep lookup diagnostics useful without retaining arbitrary command output or
+## environment values. Only absolute executable paths cross this boundary.
+static func _bounded_trace_paths(paths: PackedStringArray) -> Array[String]:
+	var bounded: Array[String] = []
+	for raw in paths:
+		var path := _bounded_trace_path(raw)
+		if path.is_empty() or bounded.has(path):
+			continue
+		bounded.append(path)
+		if bounded.size() >= _TRACE_PATH_LIMIT:
+			break
+	return bounded
+
+
+static func _bounded_trace_path(raw: String) -> String:
+	var path := raw.strip_edges()
+	if not _is_traceable_path(path):
+		return ""
+	return path.left(_TRACE_PATH_MAX_CHARS)
+
+
+static func _is_traceable_path(path: String) -> bool:
+	if path.is_empty() or path.contains("\n") or path.contains("\r"):
+		return false
+	if path.begins_with("/") or path.begins_with("\\\\"):
+		return true
+	return (
+		path.length() >= 3
+		and path.substr(1, 1) == ":"
+		and (path.substr(2, 1) == "\\" or path.substr(2, 1) == "/")
+	)
 
 
 ## Executable extensions Windows' CreateProcessW can launch from a path
