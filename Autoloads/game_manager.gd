@@ -72,6 +72,8 @@ var speedrun_time: float = 0.0
 var fps: float = 0.0
 
 const save_path: String = "user://save_game.json"
+## Deaths counter lives in its own tiny file so a death only costs one small write
+const deaths_path: String = "user://deaths_count.txt"
 #windows: %APPDATA%\Godot\app_userdata\ProjectName
 #linux: ~/.local/share/godot/app_userdata/ProjectName/
 #android/ios: user://
@@ -185,8 +187,7 @@ func save_data():
 			"pilot_name": player_name,
 			"mobile_layout": mobile_layout,
 			"retro_shader_active": retro_shader_active,
-			"pc_optimize_shaders": pc_optimize_shaders,
-			"deaths_count": deaths_count
+			"pc_optimize_shaders": pc_optimize_shaders
 		}
 		_log_message(["saved game!, selected skin", SkinManager.selected_ship_index])
 		_log_message(["Relative controls: ", relative_control_active])
@@ -203,8 +204,24 @@ func save_data():
 	#convert the dict to json text
 	var json_string = JSON.stringify(data)
 	file.store_string(json_string)
-	
+
+## Persists only deaths_count to its own file (one write, no read or JSON parse).
+## Called on every player death.
+func save_deaths_count():
+	# web version only persists the pilot name
+	if browser_support == true:
+		return
+	var file = FileAccess.open(deaths_path, FileAccess.WRITE)
+	if file == null:
+		_log_message(["Error al guardar el contador de muertes", FileAccess.get_open_error()])
+		return
+	file.store_string(str(deaths_count))
+
 func load_data():
+	if FileAccess.file_exists(deaths_path):
+		deaths_count = int(FileAccess.get_file_as_string(deaths_path))
+		_log_message(["loaded deaths count: ", deaths_count])
+
 	if not FileAccess.file_exists(save_path):
 		_log_message("The save file not exists, using default values")
 		return
@@ -248,9 +265,10 @@ func load_data():
 		pc_optimize_shaders = bool(data["pc_optimize_shaders"])
 		_log_message(["loaded pc optimize shaders in save data: ", pc_optimize_shaders])
 		
-	if data and "deaths_count" in data:
+	# legacy: older saves kept deaths_count in the global json
+	if data and "deaths_count" in data and not FileAccess.file_exists(deaths_path):
 		deaths_count = int(data["deaths_count"])
-		_log_message(["loaded deaths count: ", deaths_count])
+		_log_message(["loaded legacy deaths count: ", deaths_count])
 
 func save_mobile_layout(node_name: String, pos: Vector2):
 	mobile_layout[node_name] = {"x": pos.x, "y": pos.y}

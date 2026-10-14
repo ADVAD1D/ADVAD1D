@@ -231,7 +231,7 @@ func die():
 		return
 	## The perform death effects func instanciates every time to death and animate the tween
 	GameManager.deaths_count = min(GameManager.deaths_count + 1, 999)
-	GameManager.save_data()
+	GameManager.save_deaths_count()
 	_perform_death_effects()
 	died.emit()
 
