@@ -42,16 +42,14 @@ func _ready() -> void:
 	
 	_setup_buttons()
 	
-	if GameManager.mobile_mode_active:
-		if has_node("ChatConsoleButton"):
-			get_node("ChatConsoleButton").hide()
-	else:
-		if has_node("ChatConsoleButton"):
-			get_node("ChatConsoleButton").hide()
-			
-		_save_original_positions()
-		get_tree().root.size_changed.connect(_on_window_resized)
-		_on_window_resized()
+	if has_node("ChatConsoleButton"):
+		get_node("ChatConsoleButton").hide()
+
+	# Re-center on every platform: mobile mode expands the viewport beyond 520px wide,
+	# so without this the menu stays glued to the left side of the screen
+	_save_original_positions()
+	get_tree().root.size_changed.connect(_on_window_resized)
+	_on_window_resized()
 
 func _save_original_positions() -> void:
 	for child in get_children():

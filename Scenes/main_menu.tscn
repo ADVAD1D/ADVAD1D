@@ -191,7 +191,7 @@ chat_console_scene = ExtResource("4_1xund")
 
 [node name="Background" type="AnimatedSprite2D" parent="." unique_id=1566181270]
 position = Vector2(262, 529)
-scale = Vector2(6.3616652, 6.3616652)
+scale = Vector2(7.296511, 7.296511)
 sprite_frames = SubResource("SpriteFrames_trj04")
 autoplay = "default"
 frame = 4

@@ -38,8 +38,11 @@ func _process(_delta: float) -> void:
 
 func start_sequence():
 	await get_tree().create_timer(display_duration).timeout
-	
-	#fades 
+
+	# Keep the logo on screen until the gameplay shaders are compiled (slow GPUs only)
+	await GameManager.wait_for_shader_warmup()
+
+	#fades
 	var sprite_tween = create_tween()
 	sprite_tween.tween_property(sprite_logo, "modulate:a", 0.0, fade_out_duration)
 	

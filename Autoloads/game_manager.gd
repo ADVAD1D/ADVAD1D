@@ -31,7 +31,7 @@ var retro_shader_active: bool = true
 var pc_optimize_shaders: bool = false
 
 # mobile compatibility bool
-var mobile_mode_active: bool = false
+var mobile_mode_active: bool = true
 var using_touch_controls: bool = true
 var disable_auto_hide_mobile_controls: bool = false # Set to true to test mobile UI on PC with keyboard
 var mobile_layout: Dictionary = {}
@@ -77,13 +77,18 @@ var preloaded_main: PackedScene
 var preloaded_tutorial: PackedScene
 var preloaded_arena2: PackedScene
 
+const SHADER_WARMUP_SCRIPT: GDScript = preload("res://Scripts/shader_warmup.gd")
+## True once the gameplay shaders were compiled ahead of time (see shader_warmup.gd).
+var shader_warmup_done: bool = false
+
 func _ready() -> void:
 	randomize()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	mute_master_channel()
-	
+
 	# Precarga de escenas masivas para evitar tirones en Web
 	_preload_heavy_scenes()
+	call_deferred("_start_shader_warmup")
 
 	# Disable Android's default behavior of instantly killing the app on Back button press
 	get_tree().quit_on_go_back = false
@@ -105,6 +110,28 @@ func _preload_heavy_scenes():
 	preloaded_main = load("res://Scenes/main.tscn")
 	preloaded_tutorial = load("res://Scenes/tutorial.tscn")
 	preloaded_arena2 = load("res://Scenes/arena2.tscn")
+
+## Compiles the shaders of the heavy scenes little by little while the splash is shown,
+## so the first frame of an arena doesn't freeze the game on low-end GPUs.
+func _start_shader_warmup() -> void:
+	var warmup = SHADER_WARMUP_SCRIPT.new()
+	add_child(warmup)
+	warmup.finished.connect(func(): shader_warmup_done = true)
+	warmup.run([
+		preloaded_tutorial,
+		preloaded_main,
+		preloaded_arena2,
+		# Spawned from scripts via preload(), so they are not reachable from the scenes above
+		load("res://Scenes/laser.tscn"),
+		load("res://Scenes/enemy_laser.tscn"),
+	])
+
+## Waits until the shader warm-up is done. The timeout is only a safety net so a
+## problem in the warm-up can never leave the game stuck in the splash screen.
+func wait_for_shader_warmup(timeout_sec: float = 30.0) -> void:
+	var deadline: int = Time.get_ticks_msec() + int(timeout_sec * 1000.0)
+	while not shader_warmup_done and Time.get_ticks_msec() < deadline:
+		await get_tree().process_frame
 
 func _process(delta: float) -> void:
 	fps = Engine.get_frames_per_second()
