@@ -16,6 +16,7 @@ extends Node2D
 @onready var admin_control: bool = GameManager.admin_control
 
 var base_zoom: Vector2
+var countdown_base_x: float
 @export var laser_explosion_particles: PackedScene
 @export var asteroids_explosion_particles: PackedScene
 # Called when the node enters the scene tree for the first time.
@@ -31,6 +32,11 @@ func _ready() -> void:
 			if control.has_method("hide"):
 				control.hide()
 	else: #if gamemanager.mobile_mode_active == true
+		# Keep the countdown centered when the viewport expands beyond 520px wide
+		countdown_base_x = countdown_label.position.x
+		get_tree().root.size_changed.connect(_on_window_resized)
+		_on_window_resized()
+
 		for sprite in ui_turorial_layer.get_children():
 			if sprite.has_method("hide"):
 				sprite.hide()
@@ -81,6 +87,12 @@ func _ready() -> void:
 		GameManager.play_glitch_sound(glitch_sound)
 		GameManager.is_glitch_sound = false
 	
+func _on_window_resized() -> void:
+	# The original layout is designed for 520x300 (Center = 260)
+	var offset_x = get_viewport().get_visible_rect().size.x / 2.0 - 260.0
+	if is_instance_valid(countdown_label):
+		countdown_label.position.x = countdown_base_x + offset_x
+
 func reset_shader_parameters():
 	if is_instance_valid(crt_material):
 		ShaderManager.update_crt_shader_quality(crt_material)

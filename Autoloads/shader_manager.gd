@@ -13,6 +13,10 @@ func update_crt_shader_quality(mat: ShaderMaterial) -> void:
 		# On Mobile, always apply the default optimization
 		mat.set_shader_parameter("low_quality", true)
 		mat.set_shader_parameter("roll", false)
+		if GameManager.mobile_mode_active:
+			# No rounded screen corners on mobile: with warp_amount at 0 the shader
+			# skips both the border mask and the curvature that goes with it
+			mat.set_shader_parameter("warp_amount", 0.0)
 	else:
 		# On PC
 		if GameManager.pc_optimize_shaders:
