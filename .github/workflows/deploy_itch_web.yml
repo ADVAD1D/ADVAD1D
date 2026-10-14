@@ -92,4 +92,14 @@ jobs:
           ITCH_GAME_ID: ${{ secrets.ITCH_GAME_ID }}
         run: |
           echo "Deploying build to Itch.io with Butler..."
-          butler push advad_web_build.zip "${ITCH_USERNAME}/${ITCH_GAME_ID}:html"
+          # Itch.io rejects a push while the channel's previous build is still processing,
+          # so retry for a while instead of failing the whole run
+          for attempt in 1 2 3 4 5 6; do
+            if butler push advad_web_build.zip "${ITCH_USERNAME}/${ITCH_GAME_ID}:html"; then
+              exit 0
+            fi
+            echo "Push failed (attempt ${attempt}/6), retrying in 60s..."
+            sleep 60
+          done
+          echo "Butler push kept failing after 6 attempts."
+          exit 1
