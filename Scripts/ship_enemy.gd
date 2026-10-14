@@ -86,7 +86,7 @@ func _log_message(args: Dictionary):
 	
 func _physics_process(delta: float) -> void:
 	if not is_instance_valid(player):
-		velocity = velocity.lerp(Vector2.ZERO, 0.1)
+		velocity = velocity.lerp(Vector2.ZERO, 1.0 - pow(0.9, delta * 60.0))
 		move_and_slide()
 		return
 		
@@ -94,7 +94,8 @@ func _physics_process(delta: float) -> void:
 	var distance_to_player = vector_to_player.length()
 
 	var target_rotation = vector_to_player.angle() + PI / 2
-	rotation = lerp_angle(rotation, target_rotation, 0.1)
+	# 0.1 per tick at 60 ticks/s, kept the same at any physics tick rate
+	rotation = lerp_angle(rotation, target_rotation, 1.0 - pow(0.9, delta * 60.0))
 
 	var target_velocity = Vector2.ZERO
 

@@ -110,7 +110,8 @@ func _physics_process(delta: float) -> void:
 			
 			if not is_dashing:
 				var target_rotation = direction.angle() + PI/2
-				rotation = lerp_angle(rotation, target_rotation, 0.22)
+				# 0.22 per tick at 60 ticks/s, kept the same at any physics tick rate
+				rotation = lerp_angle(rotation, target_rotation, 1.0 - pow(0.78, delta * 60.0))
 		else:
 			velocity = velocity.lerp(Vector2.ZERO, friction * delta)
 			

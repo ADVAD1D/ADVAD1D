@@ -21,6 +21,8 @@ func shake(strength: float, duration: float):
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if is_instance_valid(player_target):
-		global_position = global_position.lerp(player_target.global_position, smoothness)
+		# Framerate independent: `smoothness` is the amount covered per frame at 60 FPS
+		var weight: float = 1.0 - pow(1.0 - smoothness, delta * 60.0)
+		global_position = global_position.lerp(player_target.global_position, weight)

@@ -35,6 +35,9 @@ var mobile_mode_active: bool = true
 var using_touch_controls: bool = true
 var disable_auto_hide_mobile_controls: bool = false # Set to true to test mobile UI on PC with keyboard
 var mobile_layout: Dictionary = {}
+## In mobile mode, render at the 520x300 base resolution and let the screen upscale it,
+## instead of drawing at the phone's native resolution. Set to false to compare.
+var mobile_low_res_render: bool = false
 # --- Debug & Environment Flags ---
 var show_debug: bool = false
 var show_debug_menu: bool = false
