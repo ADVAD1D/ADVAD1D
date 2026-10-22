@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://deycby2u22urt" path="res://Assets/Sprites/Drones/drone2.png" id="3_d2w4k"]
 [ext_resource type="Texture2D" uid="uid://cndhxhynukyac" path="res://Assets/Sprites/Drones/drone3.png" id="4_et0pg"]
 [ext_resource type="Texture2D" uid="uid://w2fhcntxqvr5" path="res://Assets/Sprites/Drones/drone4.png" id="5_orv0y"]
+[ext_resource type="Texture2D" uid="uid://buyw0s488x1xk" path="res://Assets/Sprites/Drones/drone5.png" id="6_4rmg0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jjw61"]
 atlas = ExtResource("2_4rmg0")
@@ -23,7 +24,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ruxmn")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 10.0
 }]
@@ -45,7 +46,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_cfhin")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 10.0
 }]
@@ -74,7 +75,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_8ifki")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 10.0
 }]
@@ -96,14 +97,51 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_q1hf4")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 10.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_d2w4k"]
+atlas = ExtResource("6_4rmg0")
+region = Rect2(0, 0, 40, 30)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8w0r3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d2w4k")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_drone5_spin"]
+resource_name = "spin"
+length = 1.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.2831855]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_drone5"]
+_data = {
+&"spin": SubResource("Animation_drone5_spin")
+}
+
 [node name="Node2D" type="Node2D" unique_id=1217995551 node_paths=PackedStringArray("drones")]
 script = ExtResource("1_7h03e")
-drones = [NodePath("AnimatedSprite2D"), NodePath("AnimatedSprite2D2"), NodePath("AnimatedSprite2D3"), NodePath("AnimatedSprite2D4")]
+drones = [NodePath("AnimatedSprite2D"), NodePath("AnimatedSprite2D2"), NodePath("AnimatedSprite2D3"), NodePath("AnimatedSprite2D4"), NodePath("AnimatedSprite2D5")]
 traverse_time = 15.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1150103325]
@@ -117,8 +155,7 @@ position = Vector2(-0.39999998, 14.4)
 position = Vector2(119.00001, 0)
 scale = Vector2(2.7, 2.7)
 sprite_frames = SubResource("SpriteFrames_cn68v")
-frame = 1
-frame_progress = 0.9507437
+frame_progress = 0.35629734
 
 [node name="Marker2D" type="Marker2D" parent="AnimatedSprite2D2" unique_id=615861587]
 position = Vector2(-0.79999995, 6.3999996)
@@ -140,3 +177,17 @@ frame_progress = 0.054852214
 
 [node name="Marker2D" type="Marker2D" parent="AnimatedSprite2D4" unique_id=1906123184]
 position = Vector2(0.79999995, 15.199999)
+
+[node name="AnimatedSprite2D5" type="AnimatedSprite2D" parent="." unique_id=1075655225]
+position = Vector2(464, 9.000001)
+scale = Vector2(3.4833338, 3.4833338)
+sprite_frames = SubResource("SpriteFrames_8w0r3")
+
+[node name="Marker2D" type="Marker2D" parent="AnimatedSprite2D5" unique_id=1732349278]
+position = Vector2(1.4354043, 11.19617)
+
+[node name="SpinAnimation" type="AnimationPlayer" parent="AnimatedSprite2D5"]
+libraries = {
+&"": SubResource("AnimationLibrary_drone5")
+}
+autoplay = "spin"

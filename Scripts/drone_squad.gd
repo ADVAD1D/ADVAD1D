@@ -99,8 +99,13 @@ func _on_shoot_timer_timeout() -> void:
 				marker = child
 				break
 		
-		# If it has a Marker2D, use its global position; otherwise, use the drone's position
-		var spawn_pos = marker.global_position if marker else current_drone.global_position
+		# If it has a Marker2D, use its offset; otherwise, use the drone's position.
+		# The offset ignores the drone's own rotation, so spinning drones keep
+		# firing from the same point instead of the marker orbiting around them.
+		var spawn_pos = current_drone.global_position
+		if marker:
+			var local_pos: Vector2 = current_drone.position + marker.position * current_drone.scale
+			spawn_pos = current_drone.get_parent().global_transform * local_pos
 		_shoot_laser(spawn_pos)
 
 func _shoot_laser(spawn_pos: Vector2) -> void:

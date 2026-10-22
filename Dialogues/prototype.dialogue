@@ -1,0 +1,23 @@
+~ start
+if GameManager.player_name == ""
+	Comandante: Piloto, ¿me recibes?
+else
+	Comandante: Piloto {{GameManager.player_name}}, ¿me recibes?
+- Alto y claro.
+	Comandante: Perfecto. Escucha con atención.
+- ¿Quién eres?
+	Comandante: Tu enlace con la base. Es todo lo que necesitas saber.
+Comandante: Las oleadas se vuelven más agresivas en cada fase.
+if GameManager.deaths_count > 0
+	Comandante: Ya has caído {{GameManager.deaths_count}} veces. Esta vez, cuidado con las sierras.
+else
+	Comandante: Todavía no has caído ni una vez. Sigue así.
+Comandante: ¿Quieres repasar los controles?
+- Sí => controles
+- No, estoy listo => END
+
+~ controles
+Comandante: Muévete con WASD o las flechas y dispara con Espacio.
+Comandante: Pulsa E para hacer un dash y esquivar el fuego enemigo.
+Comandante: Buena suerte, piloto.
+=> END
