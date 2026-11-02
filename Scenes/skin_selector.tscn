@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://b3erfay7mn45e"]
 
-[ext_resource type="Texture2D" uid="uid://c1suoe5284u3a" path="res://Assets/Sprites/skinpanel2.png" id="1_0s6pj"]
 [ext_resource type="Script" uid="uid://dep7b8vk1sfv" path="res://Scripts/skin_selector.gd" id="1_43pbt"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_g6083"]
+[ext_resource type="Texture2D" uid="uid://cb2g0qyvdtse" path="res://Assets/Sprites/skinpanel3.png" id="2_qwen4"]
 [ext_resource type="Texture2D" uid="uid://cmpdvtbmkrfq2" path="res://Assets/Sprites/ship_icon.png" id="3_qwen4"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="3_sum1o"]
 [ext_resource type="Texture2D" uid="uid://dw1h7frdt4jf" path="res://Assets/Sprites/nextbutton1.png" id="4_mh730"]
@@ -100,7 +100,7 @@ offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.1162976, 1.1162976)
-texture = ExtResource("1_0s6pj")
+texture = ExtResource("2_qwen4")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=481073188]
 position = Vector2(345.00003, 67)
