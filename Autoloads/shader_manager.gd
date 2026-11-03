@@ -24,9 +24,16 @@ func update_crt_shader_quality(mat: ShaderMaterial) -> void:
 			mat.set_shader_parameter("low_quality", true)
 			mat.set_shader_parameter("roll", false)
 		else:
-			# Default / High Quality:
+			# Default / High Quality (the roll can be turned off in the menu settings):
 			mat.set_shader_parameter("low_quality", false)
-			mat.set_shader_parameter("roll", true)
+			mat.set_shader_parameter("roll", GameManager.crt_roll_enabled)
+
+## Whether the CRT roll can play at all: the lightweight paths (mobile, web, PC shader
+## optimization) always turn it off, whatever GameManager.crt_roll_enabled says.
+func is_roll_supported() -> bool:
+	if GameManager.mobile_mode_active or OS.has_feature("web") or GameManager.force_web_mode:
+		return false
+	return not GameManager.pc_optimize_shaders
 
 func _ready():
 	get_tree().node_added.connect(_on_node_added)

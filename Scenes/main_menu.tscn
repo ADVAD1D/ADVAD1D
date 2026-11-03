@@ -40,20 +40,26 @@
 [ext_resource type="Texture2D" uid="uid://cofvkwairia8d" path="res://Assets/Sprites/fps_button_hover.png" id="26_pddej"]
 [ext_resource type="Texture2D" uid="uid://deyomkrcmj2xp" path="res://Assets/Sprites/shaders_button_unpressed.png" id="27_ko05x"]
 [ext_resource type="Texture2D" uid="uid://bqgh0umjum2y8" path="res://Assets/Sprites/shaders_button_pressed.png" id="28_43km2"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/achievements_button.png" id="29_achbtn"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/achievements_button_hover.png" id="30_achbtnh"]
+[ext_resource type="Texture2D" uid="uid://b18vj48q8gtf6" path="res://Assets/Sprites/Achievements/achievements_button.png" id="29_achbtn"]
+[ext_resource type="Texture2D" uid="uid://dfxn02dppe7jq" path="res://Assets/Sprites/Achievements/achievements_button_hover.png" id="30_achbtnh"]
 [ext_resource type="PackedScene" path="res://Scenes/achievements.tscn" id="31_achscene"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/play_arrow.png" id="32_parrow"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/play_arrow_hover.png" id="33_parrowh"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/play_arrow_open.png" id="34_parrowo"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/mode_panel.png" id="35_mpanel"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/mode_normal.png" id="36_mnormal"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/mode_normal_hover.png" id="37_mnormalh"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/mode_arcade.png" id="38_marcade"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/mode_arcade_hover.png" id="39_marcadeh"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/shop_button.png" id="40_shopbtn"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/shop_button_hover.png" id="41_shopbtnh"]
+[ext_resource type="Texture2D" uid="uid://ckd0t086s4rrg" path="res://Assets/Sprites/Arcade/play_arrow.png" id="32_parrow"]
+[ext_resource type="Texture2D" uid="uid://b2k4olyweqc71" path="res://Assets/Sprites/Arcade/play_arrow_hover.png" id="33_parrowh"]
+[ext_resource type="Texture2D" uid="uid://cd014nwegucd3" path="res://Assets/Sprites/Arcade/play_arrow_open.png" id="34_parrowo"]
+[ext_resource type="Texture2D" uid="uid://cwajte3tbeilc" path="res://Assets/Sprites/Arcade/mode_panel.png" id="35_mpanel"]
+[ext_resource type="Texture2D" uid="uid://bdr0mxmccp5f0" path="res://Assets/Sprites/Arcade/mode_normal.png" id="36_mnormal"]
+[ext_resource type="Texture2D" uid="uid://b5tt68glgirp0" path="res://Assets/Sprites/Arcade/mode_normal_hover.png" id="37_mnormalh"]
+[ext_resource type="Texture2D" uid="uid://bf160mujsjikr" path="res://Assets/Sprites/Arcade/mode_arcade.png" id="38_marcade"]
+[ext_resource type="Texture2D" uid="uid://cim70fpgjytcp" path="res://Assets/Sprites/Arcade/mode_arcade_hover.png" id="39_marcadeh"]
+[ext_resource type="Texture2D" uid="uid://c7hw0cx8vq62g" path="res://Assets/Sprites/Shop/shop_button.png" id="40_shopbtn"]
+[ext_resource type="Texture2D" uid="uid://6qlkdopdsiho" path="res://Assets/Sprites/Shop/shop_button_hover.png" id="41_shopbtnh"]
 [ext_resource type="PackedScene" path="res://Scenes/shop.tscn" id="42_shopscene"]
+[ext_resource type="Texture2D" uid="uid://ca1ci560uhe23" path="res://Assets/Sprites/Settings/settings_button.png" id="43_setbtn"]
+[ext_resource type="Texture2D" uid="uid://ccudbe2inl76b" path="res://Assets/Sprites/Settings/settings_button_hover.png" id="44_setbtnh"]
+[ext_resource type="Texture2D" uid="uid://dsmardu8q10nk" path="res://Assets/Sprites/Settings/roll_button.png" id="45_roll"]
+[ext_resource type="Texture2D" uid="uid://bg1328eogbv3a" path="res://Assets/Sprites/Settings/roll_button_pressed.png" id="46_rollp"]
+[ext_resource type="Texture2D" uid="uid://cecdsaqjs6eik" path="res://Assets/Sprites/Settings/roll_button_disabled.png" id="47_rolld"]
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_48xlc"]
 atlas = ExtResource("1_28flt")
 region = Rect2(0, 0, 100, 200)
@@ -187,7 +193,7 @@ shader_parameter/vignette_intensity = 0.5
 shader_parameter/vignette_opacity = 0.50000002375
 shader_parameter/low_quality = false
 
-[node name="Control" type="Control" unique_id=743528205]
+[node name="Control2" type="Control" unique_id=743528205]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -254,24 +260,11 @@ texture_normal = ExtResource("7_mkpwh")
 texture_pressed = ExtResource("8_4nkqq")
 texture_hover = ExtResource("8_4nkqq")
 
-[node name="FullScreenButton" type="TextureButton" parent="." unique_id=1991512864]
-layout_mode = 0
-offset_left = 293.0
-offset_top = 162.0
-offset_right = 338.0
-offset_bottom = 207.0
-scale = Vector2(0.8175782, 0.8175782)
-focus_mode = 0
-toggle_mode = true
-texture_normal = ExtResource("9_jr6u5")
-texture_pressed = ExtResource("10_6m47u")
-texture_hover = ExtResource("11_84iac")
-
 [node name="SkinSelectorButton" type="TextureButton" parent="." unique_id=132487532]
 layout_mode = 0
-offset_left = 329.0
+offset_left = 302.0
 offset_top = 167.0
-offset_right = 359.0
+offset_right = 332.0
 offset_bottom = 197.0
 scale = Vector2(0.7554791, 0.7554791)
 texture_normal = ExtResource("12_84iac")
@@ -289,55 +282,29 @@ texture_normal = ExtResource("18_6vfk8")
 texture_pressed = ExtResource("19_1xund")
 texture_hover = ExtResource("19_1xund")
 
-[node name="SpeedrunButton" type="TextureButton" parent="." unique_id=1647756487]
+[node name="AchievementsButton" type="TextureButton" parent="." unique_id=400276937]
 layout_mode = 0
-offset_left = 355.0
+offset_left = 327.0
 offset_top = 167.0
-offset_right = 385.0
-offset_bottom = 197.0
-scale = Vector2(0.7886959, 0.7886959)
-focus_mode = 0
-toggle_mode = true
-texture_normal = ExtResource("21_aylim")
-texture_pressed = ExtResource("22_y82t1")
-texture_hover = ExtResource("22_y82t1")
-
-[node name="AchievementsButton" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = 382.0
-offset_top = 167.0
-offset_right = 412.0
+offset_right = 357.0
 offset_bottom = 197.0
 scale = Vector2(0.7554791, 0.7554791)
 texture_normal = ExtResource("29_achbtn")
 texture_pressed = ExtResource("30_achbtnh")
 texture_hover = ExtResource("30_achbtnh")
 
-[node name="ShopButton" type="TextureButton" parent="."]
+[node name="ShopButton" type="TextureButton" parent="." unique_id=1590010964]
 layout_mode = 0
-offset_left = 408.0
+offset_left = 352.0
 offset_top = 167.0
-offset_right = 438.0
+offset_right = 382.0
 offset_bottom = 197.0
 scale = Vector2(0.7554791, 0.7554791)
 texture_normal = ExtResource("40_shopbtn")
 texture_pressed = ExtResource("41_shopbtnh")
 texture_hover = ExtResource("41_shopbtnh")
 
-[node name="ControlsButton" type="TextureButton" parent="." unique_id=993854923]
-layout_mode = 0
-offset_left = 174.0
-offset_top = 158.0
-offset_right = 219.0
-offset_bottom = 203.0
-scale = Vector2(0.91145045, 0.91145045)
-focus_mode = 0
-toggle_mode = true
-texture_normal = ExtResource("17_hkdq0")
-texture_pressed = ExtResource("18_xcoo4")
-texture_hover = ExtResource("18_xcoo4")
-
-[node name="FPSButton" type="TextureButton" parent="." unique_id=1365186964]
+[node name="SettingsButton" type="TextureButton" parent="." unique_id=655464942]
 layout_mode = 0
 offset_left = 182.0
 offset_top = 191.0
@@ -346,22 +313,9 @@ offset_bottom = 221.0
 scale = Vector2(0.89481026, 0.89481026)
 focus_mode = 0
 toggle_mode = true
-texture_normal = ExtResource("25_bmhhk")
-texture_pressed = ExtResource("26_pddej")
-texture_hover = ExtResource("26_pddej")
-
-[node name="RetroShaderButton" type="TextureButton" parent="." unique_id=1849201947]
-layout_mode = 0
-offset_left = 182.0
-offset_top = 219.0
-offset_right = 212.0
-offset_bottom = 249.0
-scale = Vector2(0.89481026, 0.89481026)
-focus_mode = 0
-toggle_mode = true
-texture_normal = ExtResource("27_ko05x")
-texture_pressed = ExtResource("28_43km2")
-texture_hover = ExtResource("28_43km2")
+texture_normal = ExtResource("43_setbtn")
+texture_pressed = ExtResource("44_setbtnh")
+texture_hover = ExtResource("44_setbtnh")
 
 [node name="GithubLabel" type="Label" parent="." unique_id=1823666510]
 layout_mode = 0
@@ -460,7 +414,7 @@ texture_normal = ExtResource("7_yhxw7")
 texture_pressed = ExtResource("8_trj04")
 texture_hover = ExtResource("8_trj04")
 
-[node name="PlayModeArrow" type="TextureButton" parent="."]
+[node name="PlayModeArrow" type="TextureButton" parent="." unique_id=803568040]
 layout_mode = 0
 offset_left = 278.7
 offset_top = 170.1
@@ -472,7 +426,7 @@ texture_normal = ExtResource("32_parrow")
 texture_pressed = ExtResource("34_parrowo")
 texture_hover = ExtResource("33_parrowh")
 
-[node name="PlayModePanel" type="TextureRect" parent="."]
+[node name="PlayModePanel" type="TextureRect" parent="." unique_id=1625409006]
 visible = false
 layout_mode = 0
 offset_left = 216.5
@@ -482,7 +436,7 @@ offset_bottom = 230.0
 scale = Vector2(1.829739, 1.829739)
 texture = ExtResource("35_mpanel")
 
-[node name="NormalButton" type="TextureButton" parent="PlayModePanel"]
+[node name="NormalButton" type="TextureButton" parent="PlayModePanel" unique_id=1122231655]
 layout_mode = 0
 offset_left = 2.0
 offset_top = 2.0
@@ -492,7 +446,7 @@ texture_normal = ExtResource("36_mnormal")
 texture_pressed = ExtResource("37_mnormalh")
 texture_hover = ExtResource("37_mnormalh")
 
-[node name="ArcadeButton" type="TextureButton" parent="PlayModePanel"]
+[node name="ArcadeButton" type="TextureButton" parent="PlayModePanel" unique_id=49118208]
 layout_mode = 0
 offset_left = 2.0
 offset_top = 18.0
@@ -501,6 +455,98 @@ offset_bottom = 32.0
 texture_normal = ExtResource("38_marcade")
 texture_pressed = ExtResource("39_marcadeh")
 texture_hover = ExtResource("39_marcadeh")
+
+[node name="SettingsPanel" type="NinePatchRect" parent="." unique_id=296213172]
+visible = false
+layout_mode = 0
+offset_left = 79.0
+offset_top = 170.0
+offset_right = 178.0
+offset_bottom = 238.0
+texture = ExtResource("35_mpanel")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="ControlsButton" type="TextureButton" parent="SettingsPanel" unique_id=993854923]
+layout_mode = 0
+offset_left = -3.2
+offset_top = -2.3
+offset_right = 41.8
+offset_bottom = 42.7
+scale = Vector2(0.91145045, 0.91145045)
+focus_mode = 0
+toggle_mode = true
+texture_normal = ExtResource("17_hkdq0")
+texture_pressed = ExtResource("18_xcoo4")
+texture_hover = ExtResource("18_xcoo4")
+
+[node name="FPSButton" type="TextureButton" parent="SettingsPanel" unique_id=1365186964]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 5.0
+offset_right = 66.0
+offset_bottom = 35.0
+scale = Vector2(0.89481026, 0.89481026)
+focus_mode = 0
+toggle_mode = true
+texture_normal = ExtResource("25_bmhhk")
+texture_pressed = ExtResource("26_pddej")
+texture_hover = ExtResource("26_pddej")
+
+[node name="RetroShaderButton" type="TextureButton" parent="SettingsPanel" unique_id=1849201947]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 36.0
+offset_right = 35.0
+offset_bottom = 66.0
+scale = Vector2(0.89481026, 0.89481026)
+focus_mode = 0
+toggle_mode = true
+texture_normal = ExtResource("27_ko05x")
+texture_pressed = ExtResource("28_43km2")
+texture_hover = ExtResource("28_43km2")
+
+[node name="RollButton" type="TextureButton" parent="SettingsPanel" unique_id=1904100239]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 36.0
+offset_right = 66.0
+offset_bottom = 66.0
+scale = Vector2(0.89481026, 0.89481026)
+focus_mode = 0
+toggle_mode = true
+texture_normal = ExtResource("45_roll")
+texture_pressed = ExtResource("46_rollp")
+texture_hover = ExtResource("46_rollp")
+texture_disabled = ExtResource("47_rolld")
+
+[node name="FullScreenButton" type="TextureButton" parent="SettingsPanel" unique_id=1991512864]
+layout_mode = 0
+offset_left = 61.3
+offset_top = 2.15
+offset_right = 106.3
+offset_bottom = 47.15
+scale = Vector2(0.8175782, 0.8175782)
+focus_mode = 0
+toggle_mode = true
+texture_normal = ExtResource("9_jr6u5")
+texture_pressed = ExtResource("10_6m47u")
+texture_hover = ExtResource("11_84iac")
+
+[node name="SpeedrunButton" type="TextureButton" parent="SettingsPanel" unique_id=1647756487]
+layout_mode = 0
+offset_left = 68.65
+offset_top = 37.65
+offset_right = 98.65
+offset_bottom = 67.65
+scale = Vector2(0.7886959, 0.7886959)
+focus_mode = 0
+toggle_mode = true
+texture_normal = ExtResource("21_aylim")
+texture_pressed = ExtResource("22_y82t1")
+texture_hover = ExtResource("22_y82t1")
 
 [node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=155312952]
 stream = ExtResource("10_16hvj")

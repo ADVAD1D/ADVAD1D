@@ -44,6 +44,9 @@ var arcade_mode_active: bool = false
 
 #this bool validate the shaders optimization in pc
 var pc_optimize_shaders: bool = false
+## The CRT shader's roll (bands scrolling down the screen), in every scene. Toggled from
+## the main menu settings panel; ShaderManager applies it. Lightweight paths never roll.
+var crt_roll_enabled: bool = true
 
 # mobile compatibility bool
 var mobile_mode_active: bool = false
@@ -204,7 +207,8 @@ func save_data():
 			"pilot_name": player_name,
 			"mobile_layout": mobile_layout,
 			"retro_shader_active": retro_shader_active,
-			"pc_optimize_shaders": pc_optimize_shaders
+			"pc_optimize_shaders": pc_optimize_shaders,
+			"crt_roll_enabled": crt_roll_enabled
 		}
 		_log_message(["saved game!, selected skin", SkinManager.equipped_ship_index])
 		_log_message(["Relative controls: ", relative_control_active])
@@ -286,6 +290,9 @@ func load_data():
 	if data and "pc_optimize_shaders" in data:
 		pc_optimize_shaders = bool(data["pc_optimize_shaders"])
 		_log_message(["loaded pc optimize shaders in save data: ", pc_optimize_shaders])
+
+	if data and "crt_roll_enabled" in data:
+		crt_roll_enabled = bool(data["crt_roll_enabled"])
 		
 	# legacy: older saves kept deaths_count in the global json
 	if data and "deaths_count" in data and not FileAccess.file_exists(deaths_path):
