@@ -12,10 +12,13 @@ extends Node
 
 signal purchased(item: ShopItem, result: Dictionary)
 
-enum Result { OK, NOT_ENOUGH_DIAMONDS, MAXED, SOLD_OUT }
+enum Result { OK, NOT_ENOUGH_DIAMONDS, MAXED, SOLD_OUT, OWNED }
 
 const SHOP_DIR: String = "res://Resources/Shop/"
 const SAVE_PATH: String = "user://shop.json"
+## Colour cards go after the .tres items (their order is this + palette index).
+const COLOR_ITEMS_ORDER: int = 100
+const COLOR_PURCHASE_LINE: String = "NEW COLOR ADDED\nTO YOUR PALETTE."
 
 ## Ships kept for future achievements: the mystery ship never gives them.
 ## Ship numbers as in their names ("ship28" = 28), not array indexes.
@@ -27,6 +30,7 @@ var items: Array[ShopItem] = []
 var _by_id: Dictionary = {} # StringName -> ShopItem
 var _levels: Dictionary = {} # String id -> int
 var _owned_ships: Dictionary = {} # int ship index -> true
+var _owned_colors: Dictionary = {} # int palette index -> true
 
 
 func _ready() -> void:
@@ -50,7 +54,28 @@ func _load_items() -> void:
 			continue
 		items.append(item)
 		_by_id[item.id] = item
+	_add_color_items()
 	items.sort_custom(func(a: ShopItem, b: ShopItem): return a.order < b.order)
+
+
+## One card per paid colour of the palette (free colours are never sold).
+func _add_color_items() -> void:
+	var palette: ShipColorPalette = SkinManager.PALETTE
+	for index in palette.size():
+		if palette.is_free(index):
+			continue
+		var item: ShopItem = ShopItem.new()
+		item.id = StringName("color_%02d" % index)
+		item.title = palette.get_color_name(index)
+		item.description = "SHIP\nCOLOR"
+		item.kind = ShopItem.Kind.COLOR
+		item.color_index = index
+		var prices: Array[int] = [palette.get_price(index)]
+		item.prices = prices
+		item.purchase_line = COLOR_PURCHASE_LINE
+		item.order = COLOR_ITEMS_ORDER + index
+		items.append(item)
+		_by_id[item.id] = item
 
 
 func get_item(id: StringName) -> ShopItem:
@@ -63,10 +88,14 @@ func get_level(item: ShopItem) -> int:
 	return int(_levels.get(String(item.id), 0))
 
 
-## True when an upgrade is at max level or there are no mystery ships left.
+## True when an upgrade is at max level, there are no mystery ships left or the colour
+## is already owned.
 func is_maxed(item: ShopItem) -> bool:
-	if item.kind == ShopItem.Kind.MYSTERY_SHIP:
-		return get_mystery_pool().is_empty()
+	match item.kind:
+		ShopItem.Kind.MYSTERY_SHIP:
+			return get_mystery_pool().is_empty()
+		ShopItem.Kind.COLOR:
+			return SkinManager.PALETTE.is_free(item.color_index) or is_color_owned(item.color_index)
 	return get_level(item) >= item.max_level()
 
 
@@ -74,7 +103,7 @@ func is_maxed(item: ShopItem) -> bool:
 func get_price(item: ShopItem) -> int:
 	if is_maxed(item) or item.prices.is_empty():
 		return -1
-	if item.kind == ShopItem.Kind.MYSTERY_SHIP:
+	if item.kind != ShopItem.Kind.UPGRADE:
 		return item.prices[0]
 	return item.prices[get_level(item)]
 
@@ -98,6 +127,10 @@ func is_ship_owned(index: int) -> bool:
 	return _owned_ships.has(index)
 
 
+func is_color_owned(palette_index: int) -> bool:
+	return _owned_colors.has(palette_index)
+
+
 ## True for ships kept for future achievements (takes the ship_data index).
 func is_ship_reserved(index: int) -> bool:
 	return (index + 1) in reserved_ship_numbers
@@ -111,6 +144,8 @@ func buy(item: ShopItem) -> Dictionary:
 		var why: Result = Result.SOLD_OUT
 		if item.kind == ShopItem.Kind.UPGRADE:
 			why = Result.MAXED
+		elif item.kind == ShopItem.Kind.COLOR:
+			why = Result.OWNED
 		return {"result": why}
 	var price: int = get_price(item)
 	if not CurrencyManager.spend_diamonds(price):
@@ -123,6 +158,9 @@ func buy(item: ShopItem) -> Dictionary:
 			var ship_index: int = get_mystery_pool().pick_random()
 			_owned_ships[ship_index] = true
 			result["ship_index"] = ship_index
+		ShopItem.Kind.COLOR:
+			_owned_colors[item.color_index] = true
+			result["color_index"] = item.color_index
 	_log_message(["Shop purchase:", item.id, result])
 	save_progress()
 	purchased.emit(item, result)
@@ -153,7 +191,12 @@ func save_progress() -> void:
 	if file == null:
 		_log_message(["Error saving shop", FileAccess.get_open_error()])
 		return
-	file.store_string(JSON.stringify({"levels": _levels, "ships": _owned_ships.keys()}))
+	var data: Dictionary = {
+		"levels": _levels,
+		"ships": _owned_ships.keys(),
+		"colors": _owned_colors.keys(),
+	}
+	file.store_string(JSON.stringify(data))
 
 
 func _load_progress() -> void:
@@ -170,12 +213,17 @@ func _load_progress() -> void:
 	if typeof(ships) == TYPE_ARRAY:
 		for index in ships:
 			_owned_ships[int(index)] = true
+	var colors: Variant = data.get("colors", [])
+	if typeof(colors) == TYPE_ARRAY:
+		for index in colors:
+			_owned_colors[int(index)] = true
 
 
 ## Clears levels and bought ships (debug).
 func reset_progress() -> void:
 	_levels.clear()
 	_owned_ships.clear()
+	_owned_colors.clear()
 	save_progress()
 
 

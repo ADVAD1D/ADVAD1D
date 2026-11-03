@@ -56,8 +56,8 @@ shader_parameter/pixelate = false
 shader_parameter/discolor = false
 shader_parameter/warp_amount = 0.150000007125
 shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 1.0
-shader_parameter/vignette_opacity = 0.586000027835
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/vignette_opacity = 0.3
 shader_parameter/low_quality = false
 
 [sub_resource type="LabelSettings" id="LabelSettings_qwen4"]

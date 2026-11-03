@@ -8,6 +8,9 @@ enum Kind {
 	UPGRADE,
 	## Gives a random locked ship (not one that an achievement rewards).
 	MYSTERY_SHIP,
+	## Unlocks one ship colour. ShopManager creates these from the colour palette;
+	## no .tres needed.
+	COLOR,
 }
 
 @export var id: StringName
@@ -23,6 +26,8 @@ enum Kind {
 @export var upgrade_stat: StringName
 ## UPGRADE: extra spawn rate per level (0.1 = +10%).
 @export var spawn_rate_per_level: float = 0.1
+## COLOR: index in SkinManager.PALETTE.
+@export var color_index: int = -1
 ## What the shopkeeper says after the purchase (one line per row, two rows max).
 @export_multiline var purchase_line: String = ""
 @export var order: int = 0

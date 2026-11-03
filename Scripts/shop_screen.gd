@@ -21,6 +21,7 @@ const LINE_PRICE: String = "%s FOR %d DIAMONDS.\nPRESS BUY TO GET IT."
 const LINE_NOT_ENOUGH: String = "YOU NEED MORE DIAMONDS.\nTHEY ARE EARNED IN ARCADE MODE."
 const LINE_MAXED: String = "THIS UPGRADE IS FULLY INSTALLED."
 const LINE_SOLD_OUT: String = "NO SHIP DESIGNS LEFT."
+const LINE_OWNED: String = "THIS COLOR IS ALREADY\nIN YOUR PALETTE."
 
 const CARD_TEXTURE: Texture2D = preload("res://Assets/Sprites/Shop/shop_card.png")
 const CARD_SELECTED_TEXTURE: Texture2D = preload("res://Assets/Sprites/Shop/shop_card_sel.png")
@@ -104,6 +105,7 @@ func _ready() -> void:
 	_build_cursor()
 	_build_next_line_arrow()
 	player_ship.texture = SkinManager.get_equipped_ship_texture()
+	SkinManager.apply_ship_colors(player_ship, SkinManager.equipped_ship_index)
 	# Own copy: the balance flashes white on purchases without touching other labels
 	balance_label.label_settings = balance_label.label_settings.duplicate()
 	_shown_balance = CurrencyManager.diamonds
@@ -274,6 +276,10 @@ func _make_card(item: ShopItem, index: int) -> Control:
 	bg.name = "Bg"
 	var icon: TextureRect = _add_texture(card, item.icon, Vector2(17, 22), Vector2(50, 50))
 	icon.name = "Icon"
+	if item.kind == ShopItem.Kind.COLOR:
+		# The player's ship wearing that colour as colour 1
+		icon.texture = SkinManager.get_equipped_ship_texture()
+		SkinManager.apply_ship_colors(icon, SkinManager.equipped_ship_index, item.color_index)
 	var head: Label = _add_label(card, item.title, Vector2(0, 3), 11, DARK_FILL, CYAN_OUTLINE,
 			CARD_SIZE.x, HORIZONTAL_ALIGNMENT_CENTER)
 	head.name = "Head"
@@ -284,6 +290,11 @@ func _make_card(item: ShopItem, index: int) -> Control:
 
 	if item.kind == ShopItem.Kind.UPGRADE:
 		_add_level_pips(card, item)
+	elif item.kind == ShopItem.Kind.COLOR:
+		# Swatch where the level pips go
+		var swatch: Color = SkinManager.get_color(item.color_index)
+		_add_rect(card, Vector2(13, 93), Vector2(58, 6), swatch)
+		_add_rect(card, Vector2(13, 93), Vector2(58, 1), swatch.lightened(0.4))
 	else:
 		_add_label(card, "???", Vector2(0, 90), 8, TEXT_OFF, Color.TRANSPARENT, CARD_SIZE.x,
 				HORIZONTAL_ALIGNMENT_CENTER)
@@ -291,7 +302,11 @@ func _make_card(item: ShopItem, index: int) -> Control:
 	# Price row: gem + price, or why it can't be bought anymore
 	var price: int = ShopManager.get_price(item)
 	if price < 0:
-		var done: String = "MAX" if item.kind == ShopItem.Kind.UPGRADE else "SOLD OUT"
+		var done: String = "SOLD OUT"
+		if item.kind == ShopItem.Kind.UPGRADE:
+			done = "MAX"
+		elif item.kind == ShopItem.Kind.COLOR:
+			done = "OWNED"
 		_add_label(card, done, Vector2(0, 106), 13, DARK_FILL, CYAN_LIGHT, CARD_SIZE.x,
 				HORIZONTAL_ALIGNMENT_CENTER)
 	else:
@@ -347,7 +362,7 @@ func _activate(index: int) -> void:
 func _quote(index: int) -> void:
 	var item: ShopItem = ShopManager.items[index]
 	if ShopManager.is_maxed(item):
-		_say(LINE_MAXED if item.kind == ShopItem.Kind.UPGRADE else LINE_SOLD_OUT)
+		_say(_maxed_line(item))
 	else:
 		_say(LINE_PRICE % [item.title, ShopManager.get_price(item)])
 
@@ -364,7 +379,7 @@ func _can_buy(index: int) -> bool:
 		return false
 	var item: ShopItem = ShopManager.items[index]
 	if ShopManager.is_maxed(item):
-		_refuse(index, LINE_MAXED if item.kind == ShopItem.Kind.UPGRADE else LINE_SOLD_OUT)
+		_refuse(index, _maxed_line(item))
 		return false
 	if not CurrencyManager.can_afford(ShopManager.get_price(item)):
 		_refuse(index, LINE_NOT_ENOUGH)
@@ -408,6 +423,8 @@ func _on_purchased(item: ShopItem, index: int, result: Dictionary) -> void:
 		var ship_index: int = int(result["ship_index"])
 		if card:
 			_reveal_ship(card, ship_index)
+	elif item.kind == ShopItem.Kind.COLOR:
+		floating = "NEW COLOR"
 	_say(line)
 	if card:
 		_purchase_feedback(card, floating)
@@ -418,12 +435,26 @@ func _reveal_ship(card: Control, ship_index: int) -> void:
 	var icon: TextureRect = card.get_node("Icon")
 	var original: Texture2D = icon.texture
 	icon.texture = SkinManager.ship_data[ship_index]["texture"]
+	# Shown with the player's colours, like it will look in game
+	SkinManager.apply_ship_colors(icon, ship_index)
 	icon.pivot_offset = icon.size / 2.0
 	var tween: Tween = icon.create_tween()
 	tween.tween_property(icon, "scale", Vector2(1.4, 1.4), 0.08)
 	tween.tween_property(icon, "scale", Vector2.ONE, 0.12)
 	tween.tween_interval(2.2)
-	tween.tween_callback(func(): icon.texture = original)
+	tween.tween_callback(func():
+		icon.texture = original
+		icon.material = null
+	)
+
+
+func _maxed_line(item: ShopItem) -> String:
+	match item.kind:
+		ShopItem.Kind.UPGRADE:
+			return LINE_MAXED
+		ShopItem.Kind.COLOR:
+			return LINE_OWNED
+	return LINE_SOLD_OUT
 
 
 func _purchase_feedback(card: Control, floating: String) -> void:

@@ -45,6 +45,9 @@ var hitbox_disabled: bool = false
 func _ready() -> void:
 	var player_score = GameManager.score
 	sprite.texture = SkinManager.get_equipped_ship_texture()
+	# Paints the ship with the player's two colours (the material lives in player.tscn
+	# so the shader warm-up compiles it during the splash)
+	SkinManager.apply_ship_colors(sprite, SkinManager.equipped_ship_index)
 	main_camera = get_viewport().get_camera_2d()
 	_log_message(player_score)
 	engine_trail.amount = 4

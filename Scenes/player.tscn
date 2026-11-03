@@ -6,6 +6,11 @@
 [ext_resource type="PackedScene" uid="uid://qfrlx31ingdm" path="res://Scenes/Particles/dash_particles.tscn" id="2_x3wgy"]
 [ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="3_6t5aa"]
 [ext_resource type="AudioStream" uid="uid://cnhegchkuvlii" path="res://Assets/Audio/714258__qubodup__cloud-poof.wav" id="5_fkybt"]
+[ext_resource type="Shader" path="res://Shaders/ship_color.gdshader" id="6_shipcolor"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_shipcolor"]
+resource_local_to_scene = true
+shader = ExtResource("6_shipcolor")
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_v0iea"]
 radius = 6.0
@@ -49,6 +54,7 @@ ship_explosion_particles = ExtResource("2_vgqql")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=78192914]
+material = SubResource("ShaderMaterial_shipcolor")
 scale = Vector2(1.74855, 1.74855)
 texture = ExtResource("1_v0iea")
 

@@ -1,5 +1,15 @@
 extends Control
 
+# Colour picker layout (520x300); the picker sits under the ship name
+const COLOR_PANEL_POS: Vector2 = Vector2(182, 217)
+const SWATCH_SIZE: float = 11.0
+const SWATCH_STEP: float = 13.0
+const GRID_OFFSET_X: float = 52.0
+const PANEL_DARK: Color = Color(0.03, 0.08, 0.09)
+const PANEL_ACTIVE: Color = Color(0.02, 0.33, 0.38)
+const PANEL_CYAN: Color = Color(0.0157, 0.855, 1.0)
+const LOCK_COLOR: Color = Color(0.75, 0.85, 0.85)
+
 var back_scene: String = "res://Scenes/main_menu.tscn"
 
 @onready var back_button: TextureButton = $BackButton
@@ -21,6 +31,12 @@ var back_scene: String = "res://Scenes/main_menu.tscn"
 var message_tween: Tween
 var original_positions = {}
 
+# --- Colour picker (Geometry Dash style, see SkinManager ship colours) ---
+## Layer being edited: 1 = body, 2 = details.
+var _color_layer: int = 1
+var _color_tabs: Array[Control] = []
+var _swatches: Array[Control] = [] # index = palette index
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	GameManager.can_pause = false
@@ -30,6 +46,9 @@ func _ready() -> void:
 	right_button.pressed.connect(_on_right_button_pressed)
 	SkinManager.ship_selection_changed.connect(_on_ship_selection_changed)
 	_on_ship_selection_changed(SkinManager.get_selected_ship_data()) # Replace with function body.
+	# Built before _save_original_positions so mobile re-centring moves it too
+	_build_color_panel()
+	SkinManager.ship_colors_changed.connect(_on_ship_colors_changed)
 	
 	Network.name_check_completed.connect(_on_name_checked)
 	Network.identity_recovered.connect(_on_identity_recovered)
@@ -66,6 +85,7 @@ func _on_identity_recovered(recovered_name: String):
 func _on_ship_selection_changed(ship_data: Dictionary):
 	ship_preview.texture = ship_data["texture"]
 	var index: int = SkinManager.selected_ship_index
+	SkinManager.apply_ship_colors(ship_preview, index)
 	var locked: bool = SkinManager.is_ship_locked(index)
 	# Locked ships stay hidden behind the padlock
 	ship_preview.visible = not locked
@@ -85,6 +105,131 @@ func _on_ship_selection_changed(ship_data: Dictionary):
 		ship_name_label.text = ship_data["name"]
 		ship_author_label.text = "By: " + ship_data["author"]
 	
+# --- Colour picker ---------------------------------------------------------------
+
+func _build_color_panel() -> void:
+	var panel: Control = Control.new()
+	panel.name = "ColorPanel"
+	panel.position = COLOR_PANEL_POS
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(panel)
+
+	# COL 1 / COL 2 tabs, each with a chip of its current colour
+	for layer in [1, 2]:
+		var tab: Control = _make_box(panel, Vector2(0, (layer - 1) * 18), Vector2(46, 14))
+		_make_rect(tab, "Bg", Vector2.ZERO, tab.size, PANEL_DARK)
+		_make_rect(tab, "ChipBorder", Vector2(2, 2), Vector2(10, 10), Color.BLACK)
+		_make_rect(tab, "Chip", Vector2(3, 3), Vector2(8, 8), Color.WHITE)
+		var label: Label = Label.new()
+		label.text = "COL %d" % layer
+		label.label_settings = FontManager.pixel_label_settings(12)
+		label.position = Vector2(15, 0)
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tab.add_child(label)
+		tab.gui_input.connect(_on_color_tab_input.bind(layer))
+		tab.mouse_entered.connect(button_sound.play)
+		_color_tabs.append(tab)
+
+	# Palette grid
+	var palette: ShipColorPalette = SkinManager.PALETTE
+	var columns: int = maxi(palette.columns, 1)
+	for index in palette.size():
+		@warning_ignore("integer_division")
+		var cell: Vector2 = Vector2(index % columns, index / columns) * SWATCH_STEP
+		var swatch: Control = _make_box(panel, Vector2(GRID_OFFSET_X, 0) + cell,
+				Vector2(SWATCH_SIZE, SWATCH_SIZE))
+		_make_rect(swatch, "Border", Vector2.ZERO, swatch.size, PANEL_DARK)
+		_make_rect(swatch, "Fill", Vector2.ONE, swatch.size - Vector2(2, 2), Color.WHITE)
+		var lock: Control = Control.new()
+		lock.name = "Lock"
+		lock.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		swatch.add_child(lock)
+		# 5x5 pixel padlock in the middle of the swatch
+		_make_rect(lock, "", Vector2(4, 2), Vector2(3, 1), LOCK_COLOR)
+		_make_rect(lock, "", Vector2(3, 3), Vector2(1, 2), LOCK_COLOR)
+		_make_rect(lock, "", Vector2(7, 3), Vector2(1, 2), LOCK_COLOR)
+		_make_rect(lock, "", Vector2(3, 5), Vector2(5, 4), LOCK_COLOR)
+		swatch.gui_input.connect(_on_swatch_input.bind(index))
+		_swatches.append(swatch)
+	_refresh_color_panel()
+
+
+func _make_box(parent: Control, pos: Vector2, box_size: Vector2) -> Control:
+	var box: Control = Control.new()
+	box.position = pos
+	box.size = box_size
+	box.mouse_filter = Control.MOUSE_FILTER_STOP
+	parent.add_child(box)
+	return box
+
+
+func _make_rect(parent: Control, rect_name: String, pos: Vector2, rect_size: Vector2,
+		color: Color) -> ColorRect:
+	var rect: ColorRect = ColorRect.new()
+	if rect_name != "":
+		rect.name = rect_name
+	rect.position = pos
+	rect.size = rect_size
+	rect.color = color
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(rect)
+	return rect
+
+
+## Tabs show the active layer; swatch borders show the picked colours
+## (white = this layer, cyan = the other one); locked colours are dimmed with a padlock.
+func _refresh_color_panel() -> void:
+	for i in _color_tabs.size():
+		var layer: int = i + 1
+		var tab: Control = _color_tabs[i]
+		var tab_color: Color = PANEL_ACTIVE if layer == _color_layer else PANEL_DARK
+		(tab.get_node("Bg") as ColorRect).color = tab_color
+		var chip_color: Color = SkinManager.get_color(SkinManager.get_ship_color_index(layer))
+		(tab.get_node("Chip") as ColorRect).color = chip_color
+	var current: int = SkinManager.get_ship_color_index(_color_layer)
+	var other: int = SkinManager.get_ship_color_index(2 if _color_layer == 1 else 1)
+	for index in _swatches.size():
+		var swatch: Control = _swatches[index]
+		var unlocked: bool = SkinManager.is_color_unlocked(index)
+		var color: Color = SkinManager.get_color(index)
+		(swatch.get_node("Fill") as ColorRect).color = color if unlocked else color.darkened(0.65)
+		swatch.get_node("Lock").visible = not unlocked
+		var border: Color = PANEL_DARK
+		if index == current:
+			border = Color.WHITE
+		elif index == other:
+			border = PANEL_CYAN
+		(swatch.get_node("Border") as ColorRect).color = border
+
+
+func _on_color_tab_input(event: InputEvent, layer: int) -> void:
+	if _is_click(event) and layer != _color_layer:
+		_color_layer = layer
+		button_sound.play()
+		_refresh_color_panel()
+
+
+func _on_swatch_input(event: InputEvent, index: int) -> void:
+	if not _is_click(event):
+		return
+	if SkinManager.set_ship_color(_color_layer, index):
+		button_sound.play()
+		GameManager.save_data()
+	else:
+		# Locked: colours are sold in the shop
+		_show_animated_warning_message("GET IT IN THE SHOP!")
+
+
+func _on_ship_colors_changed() -> void:
+	SkinManager.apply_ship_colors(ship_preview, SkinManager.selected_ship_index)
+	_refresh_color_panel()
+
+
+func _is_click(event: InputEvent) -> bool:
+	return event is InputEventMouseButton and event.pressed \
+		and event.button_index == MOUSE_BUTTON_LEFT
+
+
 func _on_name_line_edit_text_submitted(new_text: String) -> void:
 	_register_pilot(new_text) # Replace with function body.
 

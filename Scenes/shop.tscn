@@ -21,15 +21,7 @@
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/buy_button.png" id="19_buy"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/buy_button_hover.png" id="20_buy_h"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/buy_button_disabled.png" id="21_buy_d"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_title"]
-font = ExtResource("15_font")
-font_size = 24
-font_color = Color(0, 0.11372549, 0.11372549, 1)
-outline_size = 2
-outline_color = Color(0.13725491, 1, 1, 1)
-shadow_size = 3
-shadow_color = Color(0, 0.11372549, 0.11372549, 1)
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/shop_sign.png" id="22_sign"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_balance"]
 font = ExtResource("15_font")
@@ -76,8 +68,8 @@ shader_parameter/pixelate = false
 shader_parameter/discolor = false
 shader_parameter/warp_amount = 0.150000007125
 shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 1.0
-shader_parameter/vignette_opacity = 0.586000027835
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/vignette_opacity = 0.3
 shader_parameter/low_quality = false
 
 [node name="Shop" type="Control"]
@@ -252,23 +244,13 @@ offset_right = 324.0
 offset_bottom = 80.0
 mouse_filter = 2
 
-[node name="TitleGem" type="TextureRect" parent="Board"]
+[node name="ShopSign" type="TextureRect" parent="Board"]
 layout_mode = 0
-offset_left = 36.0
-offset_top = 12.0
-offset_right = 49.0
-offset_bottom = 27.0
+offset_left = 33.0
+offset_right = 117.0
+offset_bottom = 35.0
 mouse_filter = 2
-texture = ExtResource("12_gem")
-
-[node name="TitleLabel" type="Label" parent="Board"]
-layout_mode = 0
-offset_left = 53.0
-offset_top = 7.0
-offset_right = 130.0
-offset_bottom = 31.0
-text = "SHOP"
-label_settings = SubResource("LabelSettings_title")
+texture = ExtResource("22_sign")
 
 [node name="BalanceGem" type="TextureRect" parent="Board"]
 layout_mode = 0

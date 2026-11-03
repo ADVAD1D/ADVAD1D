@@ -22,6 +22,9 @@ var deaths_count: int = 0
 # Arenas Base Structure
 var current_arena_index: int = 0
 var arena_names: Array[String] = ["Arena 1", "Arena 2", "Arena 3"]
+## UI colour of each arena (ArenaUiTint), as a hue rotation in degrees of the original
+## cyan/blue UI: arena 1 = 0 (blue), arena 2 = -60 (green), arena 3 = 180 (red).
+var arena_ui_hue_shifts: Array[float] = [0.0, -60.0, 180.0]
 # --- Feature Flags & Settings ---
 var is_shader_animation: bool = false
 var is_glitch_sound: bool = false
@@ -192,6 +195,8 @@ func save_data():
 	else:
 		data = {
 			"selected_ship": SkinManager.equipped_ship_index,
+			"ship_color1": SkinManager.color1_index,
+			"ship_color2": SkinManager.color2_index,
 			"controls_mode": relative_control_active,
 			"fps_mode": show_fps,
 			"speedrun_mode_state": speedrun_mode_active,
@@ -246,6 +251,10 @@ func load_data():
 		# Falls back to a default ship if the saved one is locked (see SkinManager.is_ship_unlocked)
 		SkinManager.load_equipped_ship(int(data["selected_ship"]))
 		_log_message(["Loaded data, selected ship", SkinManager.equipped_ship_index])
+
+	if data and "ship_color1" in data:
+		# Falls back to the default colours if a saved one is locked
+		SkinManager.load_ship_colors(int(data["ship_color1"]), int(data.get("ship_color2", -1)))
 		
 	if data and "controls_mode" in data:
 		relative_control_active = bool(data["controls_mode"])
@@ -356,9 +365,17 @@ func play_glitch_effect(crt_material):
 func play_glitch_sound(glitch_sound):
 	glitch_sound.play()
 	
+## Hue rotation for the current arena's UI (0 when the arena has none listed).
+func get_arena_ui_hue_shift() -> float:
+	if current_arena_index < 0 or current_arena_index >= arena_ui_hue_shifts.size():
+		return 0.0
+	return arena_ui_hue_shifts[current_arena_index]
+
 func reset_game_state():
 	_log_message("Game Manager: Restart Game State...")
 	phase_to_start = 1
+	# A new run starts from arena 1 (the tutorial doesn't set the index itself)
+	current_arena_index = 0
 	arcade_mode_active = false
 	reset_score()
 

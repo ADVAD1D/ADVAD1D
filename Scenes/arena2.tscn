@@ -748,7 +748,7 @@ shape = SubResource("RectangleShape2D_aa8k8")
 debug_color = Color(1, 0.0470588, 0, 0.419608)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2091898546 node_paths=PackedStringArray("player_target")]
-zoom = Vector2(0.2, 0.2)
+zoom = Vector2(0.25, 0.25)
 limit_left = -1915
 limit_top = -1420
 limit_right = 1870

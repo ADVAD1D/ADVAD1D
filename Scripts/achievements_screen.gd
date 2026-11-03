@@ -127,8 +127,13 @@ func _make_row(achievement: Achievement, index: int) -> Control:
 		_add_label(slide, status, Vector2(300, 9), 12, status_color, Color.TRANSPARENT, 92, right)
 		var name_outline: Color = accent if done else TEXT_REWARD
 		_add_label(slide, reward, Vector2(300, 22), 16, DARK_FILL, name_outline, 92, right)
-		var ship: Texture2D = SkinManager.ship_data[achievement.reward_ship_index]["texture"]
-		_add_texture(slide, ship if done else LOCK_TEXTURE, Vector2(398, 4), Vector2(46, 42))
+		var ship_index: int = achievement.reward_ship_index
+		var ship: Texture2D = SkinManager.ship_data[ship_index]["texture"]
+		var slot: TextureRect = _add_texture(slide, ship if done else LOCK_TEXTURE,
+				Vector2(398, 4), Vector2(46, 42))
+		if done:
+			# Ships are black and white sprites: show them with the player's colours
+			SkinManager.apply_ship_colors(slot, ship_index)
 
 	_slide_in(slide, index)
 	return row
@@ -145,7 +150,7 @@ func _slide_in(slide: Control, index: int) -> void:
 	tween.tween_method(step, 0.0, 1.0, 0.18)
 
 
-func _add_texture(parent: Control, texture: Texture2D, pos: Vector2, box: Vector2) -> void:
+func _add_texture(parent: Control, texture: Texture2D, pos: Vector2, box: Vector2) -> TextureRect:
 	var rect: TextureRect = TextureRect.new()
 	rect.texture = texture
 	rect.position = pos
@@ -154,6 +159,7 @@ func _add_texture(parent: Control, texture: Texture2D, pos: Vector2, box: Vector
 	rect.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(rect)
+	return rect
 
 
 func _add_rect(parent: Control, pos: Vector2, rect_size: Vector2, color: Color) -> void:
