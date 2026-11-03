@@ -300,8 +300,8 @@ func _ready() -> void:
 	_on_music_volume_changed(MusicPlayer.get_volume_percent())
 	GameManager.pause.connect(toggle_show)
 	
-	decrease_sfx_button.pressed.connect(SfxManager.decrease_sfx_volume)
-	increase_sfx_button.pressed.connect(SfxManager.increase_sfx_volume)
+	# The SFX buttons are handled in _process like the music ones (hold to repeat);
+	# also connecting pressed made every click count twice
 	quit_button.pressed.connect(_on_quit_button_pressed)
 	
 	SfxManager.sfx_volume_changed.connect(_on_sfx_volume_changed)

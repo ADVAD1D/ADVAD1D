@@ -59,6 +59,22 @@
 [ext_resource type="Texture2D" uid="uid://dsmardu8q10nk" path="res://Assets/Sprites/Settings/roll_button.png" id="45_roll"]
 [ext_resource type="Texture2D" uid="uid://bg1328eogbv3a" path="res://Assets/Sprites/Settings/roll_button_pressed.png" id="46_rollp"]
 [ext_resource type="Texture2D" uid="uid://cecdsaqjs6eik" path="res://Assets/Sprites/Settings/roll_button_disabled.png" id="47_rolld"]
+[ext_resource type="Script" path="res://Scripts/UI/volume_row.gd" id="48_volrow"]
+[ext_resource type="Texture2D" uid="uid://cp0lyic4v7nia" path="res://Assets/Sprites/music_icon.png" id="49_musicicon"]
+[ext_resource type="Texture2D" uid="uid://b21nbsy1pvanx" path="res://Assets/Sprites/sound_icon.png" id="50_soundicon"]
+[ext_resource type="Texture2D" uid="uid://wewd0rykgbgq" path="res://Assets/Sprites/dereasebutton.png" id="51_dec"]
+[ext_resource type="Texture2D" uid="uid://hqqqcwvlavvx" path="res://Assets/Sprites/dereasebutton_pressed.png" id="52_decp"]
+[ext_resource type="Texture2D" uid="uid://2f41284fn4kq" path="res://Assets/Sprites/dereasebutton_hover.png" id="53_dech"]
+[ext_resource type="Texture2D" uid="uid://cii3dm47h4k7y" path="res://Assets/Sprites/increasebutton.png" id="54_inc"]
+[ext_resource type="Texture2D" uid="uid://cmntejg0spyap" path="res://Assets/Sprites/increasebutton_pressed.png" id="55_incp"]
+[ext_resource type="Texture2D" uid="uid://bubqny5o8sh8w" path="res://Assets/Sprites/increasebutton_hover.png" id="56_inch"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_volume"]
+font = ExtResource("5_vr1f0")
+font_size = 16
+font_color = Color(0, 0.21920863, 0.21920872, 1)
+outline_size = 2
+outline_color = Color(0, 1, 0.75686276, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_48xlc"]
 atlas = ExtResource("1_28flt")
@@ -460,9 +476,9 @@ texture_hover = ExtResource("39_marcadeh")
 visible = false
 layout_mode = 0
 offset_left = 79.0
-offset_top = 170.0
+offset_top = 152.0
 offset_right = 178.0
-offset_bottom = 238.0
+offset_bottom = 257.0
 texture = ExtResource("35_mpanel")
 patch_margin_left = 2
 patch_margin_top = 2
@@ -547,6 +563,107 @@ toggle_mode = true
 texture_normal = ExtResource("21_aylim")
 texture_pressed = ExtResource("22_y82t1")
 texture_hover = ExtResource("22_y82t1")
+
+[node name="MusicVolume" type="Control" parent="SettingsPanel"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 69.0
+offset_right = 94.0
+offset_bottom = 85.0
+script = ExtResource("48_volrow")
+click_sound = ExtResource("10_16hvj")
+
+[node name="Icon" type="TextureRect" parent="SettingsPanel/MusicVolume"]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 30.0
+scale = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("49_musicicon")
+
+[node name="DecreaseButton" type="TextureButton" parent="SettingsPanel/MusicVolume"]
+layout_mode = 0
+offset_left = 16.0
+offset_right = 56.0
+offset_bottom = 40.0
+scale = Vector2(0.4, 0.4)
+focus_mode = 0
+texture_normal = ExtResource("51_dec")
+texture_pressed = ExtResource("52_decp")
+texture_hover = ExtResource("53_dech")
+
+[node name="Percentage" type="Label" parent="SettingsPanel/MusicVolume"]
+layout_mode = 0
+offset_left = 33.0
+offset_top = -3.0
+offset_right = 72.0
+offset_bottom = 17.0
+text = "100%"
+label_settings = SubResource("LabelSettings_volume")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IncreaseButton" type="TextureButton" parent="SettingsPanel/MusicVolume"]
+layout_mode = 0
+offset_left = 73.0
+offset_right = 113.0
+offset_bottom = 40.0
+scale = Vector2(0.4, 0.4)
+focus_mode = 0
+texture_normal = ExtResource("54_inc")
+texture_pressed = ExtResource("55_incp")
+texture_hover = ExtResource("56_inch")
+
+[node name="SfxVolume" type="Control" parent="SettingsPanel"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 86.0
+offset_right = 94.0
+offset_bottom = 102.0
+script = ExtResource("48_volrow")
+channel = 1
+click_sound = ExtResource("10_16hvj")
+
+[node name="Icon" type="TextureRect" parent="SettingsPanel/SfxVolume"]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 30.0
+scale = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("50_soundicon")
+
+[node name="DecreaseButton" type="TextureButton" parent="SettingsPanel/SfxVolume"]
+layout_mode = 0
+offset_left = 16.0
+offset_right = 56.0
+offset_bottom = 40.0
+scale = Vector2(0.4, 0.4)
+focus_mode = 0
+texture_normal = ExtResource("51_dec")
+texture_pressed = ExtResource("52_decp")
+texture_hover = ExtResource("53_dech")
+
+[node name="Percentage" type="Label" parent="SettingsPanel/SfxVolume"]
+layout_mode = 0
+offset_left = 33.0
+offset_top = -3.0
+offset_right = 72.0
+offset_bottom = 17.0
+text = "100%"
+label_settings = SubResource("LabelSettings_volume")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IncreaseButton" type="TextureButton" parent="SettingsPanel/SfxVolume"]
+layout_mode = 0
+offset_left = 73.0
+offset_right = 113.0
+offset_bottom = 40.0
+scale = Vector2(0.4, 0.4)
+focus_mode = 0
+texture_normal = ExtResource("54_inc")
+texture_pressed = ExtResource("55_incp")
+texture_hover = ExtResource("56_inch")
 
 [node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=155312952]
 stream = ExtResource("10_16hvj")

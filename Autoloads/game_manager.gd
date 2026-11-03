@@ -47,6 +47,11 @@ var pc_optimize_shaders: bool = false
 ## The CRT shader's roll (bands scrolling down the screen), in every scene. Toggled from
 ## the main menu settings panel; ShaderManager applies it. Lightweight paths never roll.
 var crt_roll_enabled: bool = true
+## Music and sound effects volume (0-100), saved. MusicPlayer / SfxManager read them on start
+## (they load after GameManager) and write them back, and save, on every change, whether
+## it comes from the pause menu or the main menu settings panel.
+var music_volume_percent: float = 100.0
+var sfx_volume_percent: float = 100.0
 
 # mobile compatibility bool
 var mobile_mode_active: bool = false
@@ -208,7 +213,9 @@ func save_data():
 			"mobile_layout": mobile_layout,
 			"retro_shader_active": retro_shader_active,
 			"pc_optimize_shaders": pc_optimize_shaders,
-			"crt_roll_enabled": crt_roll_enabled
+			"crt_roll_enabled": crt_roll_enabled,
+			"music_volume": music_volume_percent,
+			"sfx_volume": sfx_volume_percent
 		}
 		_log_message(["saved game!, selected skin", SkinManager.equipped_ship_index])
 		_log_message(["Relative controls: ", relative_control_active])
@@ -293,6 +300,11 @@ func load_data():
 
 	if data and "crt_roll_enabled" in data:
 		crt_roll_enabled = bool(data["crt_roll_enabled"])
+
+	if data and "music_volume" in data:
+		music_volume_percent = clampf(float(data["music_volume"]), 0.0, 100.0)
+	if data and "sfx_volume" in data:
+		sfx_volume_percent = clampf(float(data["sfx_volume"]), 0.0, 100.0)
 		
 	# legacy: older saves kept deaths_count in the global json
 	if data and "deaths_count" in data and not FileAccess.file_exists(deaths_path):

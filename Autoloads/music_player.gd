@@ -72,7 +72,10 @@ func _ready() -> void:
 	#fix lag shutering in change music signal, use call deferred
 	finished.connect(_on_music_finished)
 	get_tree().scene_changed.connect(_on_scene_changed) # Replace with function body.
-	
+
+	# Saved volume (GameManager loads before this autoload)
+	linear_volume = clamp(GameManager.music_volume_percent / 100.0 * max_linear_volume,
+			min_linear_volume, max_linear_volume)
 	volume_db = linear_to_db(linear_volume)
 	
 	_emit_volume_changed()
@@ -148,7 +151,8 @@ func fade_out_and_stop(duration: float):
 	await tween.finished
 	
 	stop()
-	volume_db = 0.0 
+	# Back to the player's volume (0 dB would be louder than the volume slider's 100%)
+	volume_db = linear_to_db(linear_volume)
 	is_fading = false
 	_log_message("Music Stopped.")
 	
@@ -156,11 +160,18 @@ func increase_volume():
 	linear_volume = clamp(linear_volume + (max_linear_volume * 0.05), min_linear_volume, max_linear_volume)
 	volume_db = linear_to_db(linear_volume)
 	_emit_volume_changed()
+	_save_volume()
 
 func decrease_volume():
 	linear_volume = clamp(linear_volume - (max_linear_volume * 0.05), min_linear_volume, max_linear_volume)
 	volume_db = linear_to_db(linear_volume)
 	_emit_volume_changed()
+	_save_volume()
+
+## Every volume change (pause menu or main menu settings) is saved right away.
+func _save_volume() -> void:
+	GameManager.music_volume_percent = get_volume_percent()
+	GameManager.save_data()
 
 func get_volume_percent() -> float:
 	return (linear_volume / max_linear_volume) * 100.0
