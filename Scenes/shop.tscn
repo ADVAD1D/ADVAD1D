@@ -1,0 +1,329 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/shop_screen.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/shop_bg.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/shopkeeper_idle.png" id="3_keeper"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/shop_counter.png" id="4_counter"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/dialog_box.png" id="5_box"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/arrow_left.png" id="6_left"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/arrow_left_hover.png" id="7_left_h"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/arrow_left_disabled.png" id="8_left_d"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/arrow_right.png" id="9_right"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/arrow_right_hover.png" id="10_right_h"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/arrow_right_disabled.png" id="11_right_d"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/diamond_big.png" id="12_gem"]
+[ext_resource type="Texture2D" uid="uid://bc241w2jom6bu" path="res://Assets/Sprites/exitbutton.png" id="13_exit"]
+[ext_resource type="Texture2D" uid="uid://cjf4fhtm0ta7m" path="res://Assets/Sprites/quitbuttonhover1.png" id="14_exit_hover"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="15_font"]
+[ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="16_crt"]
+[ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="17_blip"]
+[ext_resource type="AudioStream" uid="uid://4fccknlgqyae" path="res://Assets/Audio/171696__nenadsimic__picked-coin-echo.wav" id="18_coin"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/buy_button.png" id="19_buy"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/buy_button_hover.png" id="20_buy_h"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/buy_button_disabled.png" id="21_buy_d"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font = ExtResource("15_font")
+font_size = 24
+font_color = Color(0, 0.11372549, 0.11372549, 1)
+outline_size = 2
+outline_color = Color(0.13725491, 1, 1, 1)
+shadow_size = 3
+shadow_color = Color(0, 0.11372549, 0.11372549, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_balance"]
+font = ExtResource("15_font")
+font_size = 24
+font_color = Color(0, 0.11372549, 0.11372549, 1)
+outline_size = 2
+outline_color = Color(0.13725491, 1, 1, 1)
+shadow_size = 3
+shadow_color = Color(0, 0.11372549, 0.11372549, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_speaker"]
+font = ExtResource("15_font")
+font_size = 11
+font_color = Color(0, 0.10980392, 0.10980392, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_line"]
+font = ExtResource("15_font")
+font_size = 16
+font_color = Color(0.8156863, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_page"]
+font = ExtResource("15_font")
+font_size = 10
+font_color = Color(0.5529412, 0.7058824, 0.68235296, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("16_crt")
+shader_parameter/overlay = true
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/brightness = 2.5
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.03
+shader_parameter/grille_opacity = 0.2
+shader_parameter/roll = true
+shader_parameter/roll_speed = 3.0
+shader_parameter/roll_size = 10.000000475
+shader_parameter/roll_variation = 0.5
+shader_parameter/distort_intensity = 0.02
+shader_parameter/aberration = 0.01000004797499998
+shader_parameter/noise_opacity = 0.10000000475
+shader_parameter/noise_speed = 2.0
+shader_parameter/static_noise_intensity = 0.0
+shader_parameter/pixelate = false
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.150000007125
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 1.0
+shader_parameter/vignette_opacity = 0.586000027835
+shader_parameter/low_quality = false
+
+[node name="Shop" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+
+[node name="Board" type="Control" parent="."]
+layout_mode = 0
+offset_right = 520.0
+offset_bottom = 300.0
+mouse_filter = 2
+
+[node name="Keeper" type="TextureRect" parent="Board"]
+layout_mode = 0
+offset_right = 520.0
+offset_bottom = 300.0
+mouse_filter = 2
+texture = ExtResource("3_keeper")
+
+[node name="Counter" type="TextureRect" parent="Board"]
+layout_mode = 0
+offset_right = 520.0
+offset_bottom = 300.0
+mouse_filter = 2
+texture = ExtResource("4_counter")
+
+[node name="ShipShadow" type="ColorRect" parent="Board"]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 270.0
+offset_right = 136.0
+offset_bottom = 272.0
+mouse_filter = 2
+color = Color(0, 0.03137255, 0.039215688, 0.45)
+
+[node name="ShipShadowCore" type="ColorRect" parent="Board"]
+layout_mode = 0
+offset_left = 86.0
+offset_top = 269.0
+offset_right = 130.0
+offset_bottom = 273.0
+mouse_filter = 2
+color = Color(0, 0.03137255, 0.039215688, 0.45)
+
+[node name="PlayerShip" type="TextureRect" parent="Board"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 182.0
+offset_right = 108.0
+offset_bottom = 230.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 3
+
+[node name="Cards" type="Control" parent="Board"]
+layout_mode = 0
+mouse_filter = 2
+
+[node name="Cursor" type="Control" parent="Board"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 36.0
+offset_right = 56.0
+offset_bottom = 36.0
+mouse_filter = 2
+
+[node name="PrevButton" type="TextureButton" parent="Board"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 88.0
+offset_right = 16.0
+offset_bottom = 128.0
+texture_normal = ExtResource("6_left")
+texture_hover = ExtResource("7_left_h")
+texture_disabled = ExtResource("8_left_d")
+ignore_texture_size = true
+stretch_mode = 3
+
+[node name="NextButton" type="TextureButton" parent="Board"]
+layout_mode = 0
+offset_left = 277.0
+offset_top = 88.0
+offset_right = 290.0
+offset_bottom = 128.0
+texture_normal = ExtResource("9_right")
+texture_hover = ExtResource("10_right_h")
+texture_disabled = ExtResource("11_right_d")
+ignore_texture_size = true
+stretch_mode = 3
+
+[node name="PageLabel" type="Label" parent="Board"]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 172.0
+offset_right = 274.0
+offset_bottom = 182.0
+text = "1/1"
+label_settings = SubResource("LabelSettings_page")
+horizontal_alignment = 1
+
+[node name="BuyButton" type="TextureButton" parent="Board"]
+visible = false
+layout_mode = 0
+offset_left = 126.0
+offset_top = 173.0
+offset_right = 166.0
+offset_bottom = 187.0
+texture_normal = ExtResource("19_buy")
+texture_pressed = ExtResource("20_buy_h")
+texture_hover = ExtResource("20_buy_h")
+texture_disabled = ExtResource("21_buy_d")
+
+[node name="DialogBox" type="TextureRect" parent="Board"]
+layout_mode = 0
+offset_left = 168.0
+offset_top = 196.0
+offset_right = 512.0
+offset_bottom = 290.0
+mouse_filter = 2
+texture = ExtResource("5_box")
+
+[node name="SpeakerLabel" type="Label" parent="Board/DialogBox"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 1.0
+offset_right = 108.0
+offset_bottom = 13.0
+text = "SHOPKEEPER"
+label_settings = SubResource("LabelSettings_speaker")
+horizontal_alignment = 1
+
+[node name="Line1" type="Label" parent="Board/DialogBox"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 16.0
+offset_top = 28.0
+offset_right = 330.0
+offset_bottom = 44.0
+label_settings = SubResource("LabelSettings_line")
+
+[node name="Line2" type="Label" parent="Board/DialogBox"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 16.0
+offset_top = 49.0
+offset_right = 330.0
+offset_bottom = 65.0
+label_settings = SubResource("LabelSettings_line")
+
+[node name="NextLineArrow" type="Control" parent="Board/DialogBox"]
+layout_mode = 0
+offset_left = 324.0
+offset_top = 80.0
+offset_right = 324.0
+offset_bottom = 80.0
+mouse_filter = 2
+
+[node name="TitleGem" type="TextureRect" parent="Board"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 12.0
+offset_right = 49.0
+offset_bottom = 27.0
+mouse_filter = 2
+texture = ExtResource("12_gem")
+
+[node name="TitleLabel" type="Label" parent="Board"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 7.0
+offset_right = 130.0
+offset_bottom = 31.0
+text = "SHOP"
+label_settings = SubResource("LabelSettings_title")
+
+[node name="BalanceGem" type="TextureRect" parent="Board"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 12.0
+offset_right = 133.0
+offset_bottom = 27.0
+mouse_filter = 2
+texture = ExtResource("12_gem")
+
+[node name="BalanceLabel" type="Label" parent="Board"]
+layout_mode = 0
+offset_left = 137.0
+offset_top = 7.0
+offset_right = 217.0
+offset_bottom = 31.0
+text = "0"
+label_settings = SubResource("LabelSettings_balance")
+
+[node name="BackButton" type="TextureButton" parent="Board"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 4.0
+offset_right = 36.0
+offset_bottom = 34.0
+scale = Vector2(0.8, 0.8)
+texture_normal = ExtResource("13_exit")
+texture_hover = ExtResource("14_exit_hover")
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="UILayer"]
+material = SubResource("ShaderMaterial_crt")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1907.0
+offset_top = -1715.0
+offset_right = 1414.0
+offset_bottom = 3796.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ButtonSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("17_blip")
+pitch_scale = 0.5
+bus = &"SFX"
+
+[node name="ErrorSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("17_blip")
+pitch_scale = 0.25
+bus = &"SFX"
+
+[node name="BuySound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("18_coin")
+pitch_scale = 1.2
+bus = &"SFX"

@@ -35,7 +35,8 @@ func _ready() -> void:
 	GameManager.can_pause = true
 	# Arena clear timer for time achievements. A run only starts from phase 1 (no debug
 	# jumps, no reloads after the arena is won) and keeps running across death reloads.
-	if GameManager.phase_to_start <= 1:
+	# Arcade runs never clear the arena, so they don't count.
+	if GameManager.phase_to_start <= 1 and not GameManager.arcade_mode_active:
 		AchievementManager.begin_arena_run(arena_index)
 	base_zoom = cam.zoom
 	player.died.connect(_on_player_died) # Replace with function body.
@@ -56,7 +57,8 @@ func _ready() -> void:
 		GameManager.play_glitch_effect(crt_material)
 		GameManager.is_shader_animation = false
 		
-	if (GameManager.mobile_mode_active or OS.has_feature("web") or GameManager.force_web_mode) and GameManager.phase_to_start <= 10:
+	var web: bool = OS.has_feature("web") or GameManager.force_web_mode
+	if (GameManager.mobile_mode_active or web) and not _arena_won():
 		var ambient = get_node_or_null("AmbientParticles")
 		if ambient:
 			if OS.has_feature("web") or GameManager.force_web_mode:
@@ -77,10 +79,15 @@ func _ready() -> void:
 		
 	GameManager.unfreeze_frame()
 
+## True when the scene reloads after every phase was cleared (the arena stays grey).
+## Arcade mode has no last phase.
+func _arena_won() -> bool:
+	return GameManager.phase_to_start > 10 and not GameManager.arcade_mode_active
+
 func reset_shader_parameters():
 	Engine.time_scale = 1.0
 	var bg = get_node_or_null("Sprite2D")
-	if GameManager.phase_to_start <= 10:
+	if not _arena_won():
 		if bg and bg.material:
 			bg.material.set_shader_parameter("grayscale_amount", 0.0)
 		
@@ -124,10 +131,13 @@ func _on_laser_zone_area_entered(area: Area2D) -> void:
 		
 func _on_player_died() -> void:
 	Engine.time_scale = 1.0
-	
+	# Arcade: a death ends the run and the reload starts again from phase 1
+	if GameManager.arcade_mode_active:
+		ArcadeManager.end_run()
+
 	# Reset shader and audio pitch
 	var bg = get_node_or_null("Sprite2D")
-	if GameManager.phase_to_start <= 10:
+	if not _arena_won():
 		if bg and bg.material:
 			bg.material.set_shader_parameter("grayscale_amount", 0.0)
 		

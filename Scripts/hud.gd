@@ -40,7 +40,8 @@ func _ready() -> void:
 						control.global_position = saved_pos
 					elif "position" in control:
 						control.position = saved_pos
-	if not GameManager.speedrun_mode_active:
+	# Arcade runs don't use the speedrun timer
+	if not GameManager.speedrun_mode_active or GameManager.arcade_mode_active:
 		speedrun_label.hide()
 	else:
 		speedrun_label.show()
@@ -139,7 +140,7 @@ func _is_point_inside(node: Node, point: Vector2) -> bool:
 	return false
 
 func _process(_delta: float) -> void:
-	if GameManager.speedrun_mode_active:
+	if GameManager.speedrun_mode_active and not GameManager.arcade_mode_active:
 		speedrun_label.text = GameManager.get_formatted_speedrun_time()
 		
 func fps_toggled():

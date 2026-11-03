@@ -22,6 +22,17 @@ signal timer_updated(time_left_string)
 @export var wall_to_remove: StaticBody2D
 @export var sprite_to_remove: AnimatedSprite2D
 
+@export_group("Arcade")
+## Arcade mode only: past the last table phase, difficulty progress keeps growing this
+## much per phase (1.0 = the last table phase), so enemies get more numerous and faster.
+@export var arcade_overdrive_per_phase: float = 0.05
+## Cap for that growth (1.5 is reached at phase 20 with the default step).
+@export var arcade_max_progress: float = 1.5
+## From this phase on the number of enemy ships stops growing (more ships every phase
+## becomes unplayable). Speed and fire rate keep scaling.
+@export var arcade_ship_count_cap_phase: int = 8
+@export_group("")
+
 @onready var browser_support: bool = GameManager.browser_support
 @onready var relative_control_active: bool = GameManager.relative_control_active
 
@@ -173,7 +184,8 @@ func _ready() -> void:
 	GameManager.score_updated.connect(_on_score_updated)
 
 	# Phases shown in the debug menu are now handled directly by the debug menu script.
-	if GameManager.speedrun_mode_active:
+	# Arcade runs have no end, so they don't use the speedrun timer
+	if GameManager.speedrun_mode_active and not GameManager.arcade_mode_active:
 		GameManager.start_speedrun()
 	_log_message("Phase manager ready to execute")
 	_log_message("Speedrun timer started!")
@@ -221,16 +233,15 @@ func _process(delta: float) -> void:
 ## checks if the arena has been completed, and sets up the timer and requirements.
 func start_new_phase():
 	current_phase = current_phase + 1
-	if current_phase > 1:
+	# The leaderboard tracks the main mode only
+	if current_phase > 1 and not GameManager.arcade_mode_active:
 		var current_pilot_name = GameManager.player_name
 		if current_pilot_name.strip_edges().is_empty():
 			current_pilot_name = "Player"
 		Network.send_player_phase(current_pilot_name, current_phase)
-		
-	var reqs = arena_phase_requirements.get(GameManager.current_arena_index, arena_phase_requirements[0])
-		
+
 	#yes, i don't use elifs
-	if not reqs.has(current_phase):
+	if not _has_phase(current_phase):
 		_log_message("You win all phases!")
 		phase_label.text = "ARENA WIN"
 		gray_scale_transition()
@@ -284,16 +295,17 @@ func start_new_phase():
 	if is_instance_valid(phase_label):
 		phase_label.text = "PHASE: " + str(current_phase)
 	
-	var dur = arena_phase_durations.get(GameManager.current_arena_index, arena_phase_durations[0])
-	var current_phase_duration = dur.get(current_phase, 60.0)
-	
+	var current_phase_duration = _get_phase_duration(current_phase)
+
 	phase_timer = current_phase_duration
-	
+
 	if is_instance_valid(time_progress_bar):
 		time_progress_bar.max_value = current_phase_duration
 		time_progress_bar.value = current_phase_duration
-	
-	current_score_requirement = reqs[current_phase]
+
+	current_score_requirement = _get_phase_requirement(current_phase)
+	if GameManager.arcade_mode_active:
+		ArcadeManager.on_phase_started(current_phase)
 	phase_started.emit(current_phase, current_score_requirement)
 	apply_difficulty()
 	is_phase_active = true
@@ -309,6 +321,8 @@ func _on_phase_success():
 	is_phase_active = false
 	_log_message(["fase", current_phase, "completada"])
 	success_sound.play()
+	if GameManager.arcade_mode_active:
+		ArcadeManager.on_phase_cleared(current_phase)
 	await clear_the_board()
 	GameManager.phase_to_start = current_phase + 1
 	start_new_phase()
@@ -328,7 +342,10 @@ func _on_phase_failure():
 	GameManager.is_shader_animation = true
 	GameManager.is_glitch_sound = true
 	GameManager.phase_to_start = current_phase
-	
+	# Arcade: running out of time ends the run, the reload starts again from phase 1
+	if GameManager.arcade_mode_active:
+		ArcadeManager.end_run()
+
 	get_tree().call_deferred("reload_current_scene")
 	
 ## Immediately kills all active enemies on the screen.
@@ -340,10 +357,55 @@ func clear_the_board():
 	get_tree().call_group("saws", "die_silently")
 	get_tree().call_group("enemies", "die_silently")
 	
+## Phase table lookups. Past the last phase of the tables (only reachable in arcade
+## mode) the values are extrapolated from the end of the tables.
+func _get_requirements_table() -> Dictionary:
+	var arena: int = GameManager.current_arena_index
+	return arena_phase_requirements.get(arena, arena_phase_requirements[0])
+
+func _get_durations_table() -> Dictionary:
+	return arena_phase_durations.get(GameManager.current_arena_index, arena_phase_durations[0])
+
+func _last_table_phase() -> int:
+	return int(_get_requirements_table().keys().max())
+
+## In arcade mode every phase exists; in the main mode the table ends the arena.
+func _has_phase(phase: int) -> bool:
+	return _get_requirements_table().has(phase) or GameManager.arcade_mode_active
+
+## Score goal. Past the table it keeps the step between the last two phases
+## (arena 1: 5000, 5500, 6000...).
+func _get_phase_requirement(phase: int) -> int:
+	var reqs: Dictionary = _get_requirements_table()
+	if reqs.has(phase):
+		return int(reqs[phase])
+	var last: int = _last_table_phase()
+	var step: int = int(reqs[last]) - int(reqs.get(last - 1, 0))
+	return int(reqs[last]) + (phase - last) * step
+
+## Phase length. Past the table it keeps the points-per-second pace of the last phase,
+## so later phases last longer without getting easier (arena 1: 100s, 110s, 120s...).
+func _get_phase_duration(phase: int) -> float:
+	var dur: Dictionary = _get_durations_table()
+	if dur.has(phase):
+		return float(dur[phase])
+	if not GameManager.arcade_mode_active:
+		return 60.0
+	var last: int = _last_table_phase()
+	var pace: float = float(_get_phase_requirement(last)) / float(dur.get(last, 60.0))
+	return roundf(_get_phase_requirement(phase) / pace)
+
+## 0 at phase 1, 1 at the last table phase. In arcade mode it keeps growing past 1
+## (lerp extrapolates: more ships, faster, shooting more often) up to arcade_max_progress.
+func _get_difficulty_progress(phase: int) -> float:
+	var last: int = _last_table_phase()
+	if phase > last and GameManager.arcade_mode_active:
+		return minf(1.0 + (phase - last) * arcade_overdrive_per_phase, arcade_max_progress)
+	return float(phase - 1) / maxf(last - 1.0, 1.0)
+
 func apply_difficulty():
-	var reqs = arena_phase_requirements.get(GameManager.current_arena_index, arena_phase_requirements[0])
-	var progress = float(current_phase - 1) / (reqs.size() - 1.0)
-	
+	var progress = _get_difficulty_progress(current_phase)
+
 	var config = arena_enemy_configs.get(GameManager.current_arena_index, arena_enemy_configs[0])
 	var cur_min_shoot = config["min_shoot"]
 	var cur_max_shoot = config["max_shoot"]
@@ -370,7 +432,11 @@ func apply_difficulty():
 	
 	# Calculate the maximum number of enemy ships for the current phase using linear interpolation (lerp).
 	# This scales the number of enemies smoothly from 'cur_min_ship' (at phase 1) to 'cur_max_ship' (at the last phase).
-	var ship_max_enemies = int(lerp(cur_min_ship, cur_max_ship, progress))
+	# Arcade: past arcade_ship_count_cap_phase the count stays at that phase's value
+	var ship_count_progress = progress
+	if GameManager.arcade_mode_active and current_phase > arcade_ship_count_cap_phase:
+		ship_count_progress = _get_difficulty_progress(arcade_ship_count_cap_phase)
+	var ship_max_enemies = int(lerp(cur_min_ship, cur_max_ship, ship_count_progress))
 	
 	# Pack all the calculated properties into a dictionary. This acts as a configuration blueprint 
 	# that will be sent to the spawner. Using lerp() allows stats like speed and fire rate to 

@@ -5,6 +5,7 @@ extends Control
 @export var skin_selector_scene: PackedScene
 @export var chat_console_scene: PackedScene
 @export var achievements_scene: PackedScene
+@export var shop_scene: PackedScene
 
 @onready var browser_support: bool = GameManager.browser_support
 @onready var is_debug_text: bool = GameManager.is_debug_text
@@ -15,6 +16,9 @@ extends Control
 
 @onready var credits_panel: Control = $CreditsPanel
 @onready var special_thanks_panel: Control = $SpecialThanksPanel
+
+@onready var play_mode_arrow: TextureButton = get_node_or_null("PlayModeArrow")
+@onready var play_mode_panel: Control = get_node_or_null("PlayModePanel")
 
 @onready var relative_label: Label = $RelativeLabel
 @onready var global_label: Label = $GlobalLabel
@@ -39,7 +43,9 @@ func _ready() -> void:
 	GameManager.reset_speedrun()
 	# Leaving a run for the menu discards its arena clear time
 	AchievementManager.cancel_arena_run()
-	
+	# Same for an arcade run left from the pause menu (records and diamonds are saved)
+	ArcadeManager.leave_arcade()
+
 	global_label.visible = false
 	relative_label.visible = false
 	
@@ -82,12 +88,17 @@ func _setup_buttons() -> void:
 	_connect_audio_to_buttons(self)
 	
 	# Connect specific functionalities manually, eliminating the need for 20+ variables
+	# The big PLAY button always starts the main mode; its arrow opens the mode picker
 	if has_node("VBoxContainer/PlayButton"):
-		get_node("VBoxContainer/PlayButton").pressed.connect(func():
-			GameManager.reset_game_state()
-			get_tree().change_scene_to_packed(next_scene)
-		)
-	
+		get_node("VBoxContainer/PlayButton").pressed.connect(_start_normal_mode)
+
+	if is_instance_valid(play_mode_arrow) and is_instance_valid(play_mode_panel):
+		play_mode_arrow.visible = GameManager.arcade_enabled
+		play_mode_arrow.toggled.connect(_set_play_mode_panel_open)
+		play_mode_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+		play_mode_panel.get_node("NormalButton").pressed.connect(_start_normal_mode)
+		play_mode_panel.get_node("ArcadeButton").pressed.connect(_start_arcade_mode)
+
 	if has_node("VBoxContainer/QuitButton"):
 		get_node("VBoxContainer/QuitButton").pressed.connect(func():
 			if browser_support:
@@ -116,6 +127,11 @@ func _setup_buttons() -> void:
 		var achievements_btn = get_node("AchievementsButton")
 		achievements_btn.visible = GameManager.achievements_enabled
 		achievements_btn.pressed.connect(func(): get_tree().change_scene_to_packed(achievements_scene))
+
+	if has_node("ShopButton"):
+		var shop_btn = get_node("ShopButton")
+		shop_btn.visible = GameManager.shop_enabled
+		shop_btn.pressed.connect(func(): get_tree().change_scene_to_packed(shop_scene))
 
 	if has_node("SkinSelectorButton"):
 		get_node("SkinSelectorButton").pressed.connect(func(): get_tree().change_scene_to_packed(skin_selector_scene))
@@ -188,6 +204,28 @@ func _setup_buttons() -> void:
 						ShaderManager.update_crt_shader_quality(color_rect.material)
 			)
 
+func _start_normal_mode() -> void:
+	GameManager.reset_game_state()
+	get_tree().change_scene_to_packed(next_scene)
+
+## Arena 1, endless (see ArcadeManager). main.tscn links back to this menu, so it is
+## taken from GameManager's preload instead of an export (no circular scene reference).
+func _start_arcade_mode() -> void:
+	ArcadeManager.start_run()
+	get_tree().change_scene_to_packed(GameManager.preloaded_main)
+
+func _set_play_mode_panel_open(open: bool) -> void:
+	play_mode_panel.visible = open
+	play_mode_arrow.set_pressed_no_signal(open)
+	if open:
+		# Focus lets keyboard/gamepad pick a mode (its focus sound is the open feedback)
+		play_mode_panel.get_node("NormalButton").grab_focus()
+	else:
+		back_sound.play()
+
+func _is_play_mode_panel_open() -> bool:
+	return is_instance_valid(play_mode_panel) and play_mode_panel.visible
+
 func _connect_audio_to_buttons(node: Node) -> void:
 	if node is BaseButton:
 		if not node.mouse_entered.is_connected(button_sound.play):
@@ -202,7 +240,19 @@ func _process(delta: float) -> void:
 		animated_background.position.y -= scroll_speed * delta
 
 func _input(event: InputEvent) -> void:
+	# A click/touch outside the open mode picker only closes it
+	if _is_play_mode_panel_open() and _is_press(event):
+		var point: Vector2 = event.position
+		var on_panel: bool = play_mode_panel.get_global_rect().has_point(point)
+		if not on_panel and not play_mode_arrow.get_global_rect().has_point(point):
+			_set_play_mode_panel_open(false)
+			get_viewport().set_input_as_handled()
+			return
+
 	if event.is_action_pressed("pause"):
+		if _is_play_mode_panel_open():
+			_set_play_mode_panel_open(false)
+			return
 		back_sound.play()
 		if credits_panel.visible:
 			credits_panel.hide()
@@ -213,6 +263,12 @@ func _input(event: InputEvent) -> void:
 				get_tree().reload_current_scene()
 			else:
 				get_tree().quit()
+
+func _is_press(event: InputEvent) -> bool:
+	if event is InputEventMouseButton:
+		return event.pressed and event.button_index == MOUSE_BUTTON_LEFT
+	# Touch is also emulated as mouse on desktop; real touch only matters on mobile
+	return event is InputEventScreenTouch and event.pressed
 
 func show_feedback_label(is_relative: bool):
 	if feedback_tween:

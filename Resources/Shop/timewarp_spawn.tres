@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ShopItem" format=3]
+
+[ext_resource type="Script" path="res://Scripts/Shop/shop_item.gd" id="1_item"]
+[ext_resource type="Texture2D" uid="uid://bw3odgujjc0cv" path="res://Assets/Sprites/time_slow_pickup.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_item")
+id = &"timewarp_spawn"
+title = "TIMEWARP"
+description = "+10% SPAWN
+CHANCE"
+icon = ExtResource("2_icon")
+kind = 0
+prices = Array[int]([800, 800, 800, 800, 800])
+upgrade_stat = &"timewarp"
+spawn_rate_per_level = 0.1
+purchase_line = "TIMEWARP UPGRADE INSTALLED."
+order = 2

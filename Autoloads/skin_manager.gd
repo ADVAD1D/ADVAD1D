@@ -225,8 +225,8 @@ var equipped_ship_index: int = 0
 
 # --- Ship locks -------------------------------------------------------------
 # Every ship is locked by default. A ship is unlocked when it's listed below, when the
-# achievement that rewards it is unlocked (Achievement.reward_ship_index), or when
-# unlock_all_ships is on.
+# achievement that rewards it is unlocked (Achievement.reward_ship_index), when it was
+# bought in the shop (ShopManager mystery ship), or when unlock_all_ships is on.
 
 ## Debug/dev switch: unlocks every ship at once.
 var unlock_all_ships: bool = false
@@ -254,7 +254,7 @@ func select_previous_ship():
 func is_ship_unlocked(index: int) -> bool:
 	if unlock_all_ships or index in default_unlocked_ships:
 		return true
-	return AchievementManager.is_ship_reward_unlocked(index)
+	return AchievementManager.is_ship_reward_unlocked(index) or ShopManager.is_ship_owned(index)
 
 func is_ship_locked(index: int) -> bool:
 	return not is_ship_unlocked(index)

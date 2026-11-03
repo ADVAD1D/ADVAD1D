@@ -5,6 +5,8 @@ extends Node
 
 #signals
 signal score_updated(new_score)
+## Points of each add_score() call (ArcadeManager multiplies them into the run score).
+signal points_added(points)
 signal pause(is_paused)
 
 #global variables
@@ -29,6 +31,13 @@ var retro_shader_active: bool = true
 ## Shows the achievements button in the main menu and the "achievement unlocked" toast.
 ## Progress and ship rewards keep working either way (ship locks live in SkinManager).
 var achievements_enabled: bool = true
+## Shows the arcade mode button in the main menu.
+var arcade_enabled: bool = true
+## Shows the shop button in the main menu (see ShopManager).
+var shop_enabled: bool = true
+## True while an arcade run is being played (endless arena 1, see ArcadeManager).
+## Set by the arcade button; cleared by the Play button and when the main menu opens.
+var arcade_mode_active: bool = false
 
 #this bool validate the shaders optimization in pc
 var pc_optimize_shaders: bool = false
@@ -294,7 +303,8 @@ func toggle_pause() -> void:
 func add_score(points):
 	score += points
 	score_updated.emit(score)
-	
+	points_added.emit(points)
+
 func stop_scoring() -> void:
 	can_add_score = false
 
@@ -349,6 +359,7 @@ func play_glitch_sound(glitch_sound):
 func reset_game_state():
 	_log_message("Game Manager: Restart Game State...")
 	phase_to_start = 1
+	arcade_mode_active = false
 	reset_score()
 
 var _transition_layer: CanvasLayer

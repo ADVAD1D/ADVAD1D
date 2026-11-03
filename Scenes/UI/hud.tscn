@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://bvsm651l64kcs" path="res://Assets/Sprites/Buttons/joystick-front.png" id="12_yttkt"]
 [ext_resource type="Texture2D" uid="uid://cbnksbra3vaqx" path="res://Assets/Sprites/Buttons/shoot_button_unpressed.png" id="13_yttkt"]
 [ext_resource type="Texture2D" uid="uid://c3nt5r6awyif4" path="res://Assets/Sprites/Buttons/dash_button.png" id="14_mt778"]
+[ext_resource type="Script" path="res://Scripts/arcade_hud.gd" id="15_arcade"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_fqivn"]
 font = ExtResource("4_8glcj")
@@ -189,6 +190,16 @@ offset_bottom = 259.0
 scale = Vector2(0.88638556, 0.88638556)
 text = "00:00:00"
 label_settings = ExtResource("1_sprlj")
+
+[node name="ArcadeHud" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("15_arcade")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1245403165]
 

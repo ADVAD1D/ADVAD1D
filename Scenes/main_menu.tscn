@@ -43,7 +43,17 @@
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/achievements_button.png" id="29_achbtn"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/achievements_button_hover.png" id="30_achbtnh"]
 [ext_resource type="PackedScene" path="res://Scenes/achievements.tscn" id="31_achscene"]
-
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/play_arrow.png" id="32_parrow"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/play_arrow_hover.png" id="33_parrowh"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/play_arrow_open.png" id="34_parrowo"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/mode_panel.png" id="35_mpanel"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/mode_normal.png" id="36_mnormal"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/mode_normal_hover.png" id="37_mnormalh"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/mode_arcade.png" id="38_marcade"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Arcade/mode_arcade_hover.png" id="39_marcadeh"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/shop_button.png" id="40_shopbtn"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/shop_button_hover.png" id="41_shopbtnh"]
+[ext_resource type="PackedScene" path="res://Scenes/shop.tscn" id="42_shopscene"]
 [sub_resource type="AtlasTexture" id="AtlasTexture_48xlc"]
 atlas = ExtResource("1_28flt")
 region = Rect2(0, 0, 100, 200)
@@ -192,6 +202,7 @@ next_scene = ExtResource("2_trj04")
 skin_selector_scene = ExtResource("3_5n0dv")
 chat_console_scene = ExtResource("4_1xund")
 achievements_scene = ExtResource("31_achscene")
+shop_scene = ExtResource("42_shopscene")
 
 [node name="Background" type="AnimatedSprite2D" parent="." unique_id=1566181270]
 position = Vector2(262, 529)
@@ -301,6 +312,17 @@ scale = Vector2(0.7554791, 0.7554791)
 texture_normal = ExtResource("29_achbtn")
 texture_pressed = ExtResource("30_achbtnh")
 texture_hover = ExtResource("30_achbtnh")
+
+[node name="ShopButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 408.0
+offset_top = 167.0
+offset_right = 438.0
+offset_bottom = 197.0
+scale = Vector2(0.7554791, 0.7554791)
+texture_normal = ExtResource("40_shopbtn")
+texture_pressed = ExtResource("41_shopbtnh")
+texture_hover = ExtResource("41_shopbtnh")
 
 [node name="ControlsButton" type="TextureButton" parent="." unique_id=993854923]
 layout_mode = 0
@@ -437,6 +459,48 @@ layout_mode = 2
 texture_normal = ExtResource("7_yhxw7")
 texture_pressed = ExtResource("8_trj04")
 texture_hover = ExtResource("8_trj04")
+
+[node name="PlayModeArrow" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 278.7
+offset_top = 170.1
+offset_right = 285.7
+offset_bottom = 180.1
+scale = Vector2(1.829739, 1.829739)
+toggle_mode = true
+texture_normal = ExtResource("32_parrow")
+texture_pressed = ExtResource("34_parrowo")
+texture_hover = ExtResource("33_parrowh")
+
+[node name="PlayModePanel" type="TextureRect" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 216.5
+offset_top = 196.0
+offset_right = 260.5
+offset_bottom = 230.0
+scale = Vector2(1.829739, 1.829739)
+texture = ExtResource("35_mpanel")
+
+[node name="NormalButton" type="TextureButton" parent="PlayModePanel"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 42.0
+offset_bottom = 16.0
+texture_normal = ExtResource("36_mnormal")
+texture_pressed = ExtResource("37_mnormalh")
+texture_hover = ExtResource("37_mnormalh")
+
+[node name="ArcadeButton" type="TextureButton" parent="PlayModePanel"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 18.0
+offset_right = 42.0
+offset_bottom = 32.0
+texture_normal = ExtResource("38_marcade")
+texture_pressed = ExtResource("39_marcadeh")
+texture_hover = ExtResource("39_marcadeh")
 
 [node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=155312952]
 stream = ExtResource("10_16hvj")

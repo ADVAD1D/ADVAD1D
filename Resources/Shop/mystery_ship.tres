@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ShopItem" format=3]
+
+[ext_resource type="Script" path="res://Scripts/Shop/shop_item.gd" id="1_item"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/icon_mystery_ship.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_item")
+id = &"mystery_ship"
+title = "NEW SHIP"
+description = "MYSTERY
+SHIP"
+icon = ExtResource("2_icon")
+kind = 1
+prices = Array[int]([1500])
+purchase_line = "NEW SHIP DESIGN ADDED
+TO YOUR HANGAR."
+order = 0

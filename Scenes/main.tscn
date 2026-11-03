@@ -1187,6 +1187,7 @@ script = ExtResource("37_o1aky")
 pickup_scene = ExtResource("38_kwxat")
 reward_scene = ExtResource("40_aqgau")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+upgrade_stat = &"ally_saw"
 
 [node name="Timer" type="Timer" parent="PowerUp1Spawner" unique_id=213500583]
 wait_time = 10.0
@@ -1197,6 +1198,7 @@ script = ExtResource("37_o1aky")
 pickup_scene = ExtResource("42_jut3y")
 reward_scene = ExtResource("43_time_slow")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+upgrade_stat = &"timewarp"
 
 [node name="Timer" type="Timer" parent="TimeSlowSpawner" unique_id=459495674]
 wait_time = 20.0
@@ -1207,6 +1209,7 @@ script = ExtResource("40_kwxat")
 pickup_scene = ExtResource("41_kqrg6")
 reward_scene = ExtResource("42_nwwfm")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+upgrade_stat = &"shield"
 
 [node name="Timer" type="Timer" parent="LaserShieldSpawner" unique_id=1198465110]
 wait_time = 15.0

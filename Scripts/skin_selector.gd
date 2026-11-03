@@ -72,9 +72,15 @@ func _on_ship_selection_changed(ship_data: Dictionary):
 	lock_icon.visible = locked
 	if locked:
 		ship_name_label.text = "???"
-		# If an achievement unlocks it, say which one
+		# Achievement ships say which achievement; ships reserved for future achievements
+		# stay a mystery; the rest come from the shop
 		var achievement: Achievement = AchievementManager.get_achievement_for_ship(index)
-		ship_author_label.text = ("Get: " + achievement.title) if achievement else "By: ???"
+		if achievement:
+			ship_author_label.text = "Get: " + achievement.title
+		elif ShopManager.is_ship_reserved(index):
+			ship_author_label.text = "Get: ???"
+		else:
+			ship_author_label.text = "Get: SHOP"
 	else:
 		ship_name_label.text = ship_data["name"]
 		ship_author_label.text = "By: " + ship_data["author"]
