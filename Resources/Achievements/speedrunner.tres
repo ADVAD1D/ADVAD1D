@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Achievement" format=3]
+
+[ext_resource type="Script" path="res://Scripts/Achievements/achievement.gd" id="1_ach"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/icon_hourglass.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_ach")
+id = &"speedrunner"
+title = "SPEEDRUNNER"
+description = "CLEAR ARENA 01 IN UNDER 8:00"
+icon = ExtResource("2_icon")
+stat = &"arena_1_best_time"
+goal_type = 1
+goal = 480.0
+progress_format = 1
+reward_ship_index = 4
+order = 1

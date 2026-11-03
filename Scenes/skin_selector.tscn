@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://cjf4fhtm0ta7m" path="res://Assets/Sprites/quitbuttonhover1.png" id="5_0tot8"]
 [ext_resource type="Texture2D" uid="uid://cg4wnvam0pwwh" path="res://Assets/Sprites/nextbutton1hover.png" id="5_43pbt"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="10_qwen4"]
+[ext_resource type="Texture2D" uid="uid://x6wso5472seu" path="res://Assets/Sprites/Achievements/icon_lock.png" id="11_lock"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1cnro"]
 font = ExtResource("3_sum1o")
@@ -143,6 +144,18 @@ offset_top = 114.0
 offset_right = 261.0
 offset_bottom = 154.0
 scale = Vector2(1.507489, 1.507489)
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LockIcon" type="TextureRect" parent="." unique_id=2121016983]
+visible = false
+layout_mode = 0
+offset_left = 220.99998
+offset_top = 114.0
+offset_right = 261.0
+offset_bottom = 154.0
+scale = Vector2(1.507489, 1.507489)
+texture = ExtResource("11_lock")
 expand_mode = 1
 stretch_mode = 5
 

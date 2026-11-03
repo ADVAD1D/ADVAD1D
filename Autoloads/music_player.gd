@@ -20,6 +20,7 @@ var scene1_specific_playlist: Dictionary = {
 	"res://Scenes/ending.tscn": preload("res://Assets/Audio/Music/star-runner-411375.ogg"),
 	"res://Scenes/main_menu.tscn": preload("res://Assets/Audio/Music/in-time-all-hope-was-lost-411362.ogg"),
 	"res://Scenes/skin_selector.tscn": preload("res://Assets/Audio/Music/where-we-used-to-be-415885.ogg"),
+	"res://Scenes/achievements.tscn": preload("res://Assets/Audio/Music/psychronic-ascension-theory-520113.ogg"),
 	"res://Scenes/ai_console.tscn": preload("res://Assets/Audio/Music/psychronic-hypnotic-crystals-415889.ogg"),
 	"res://Scenes/UI/ai_console_subviewport.tscn": preload("res://Assets/Audio/Music/psychronic-hypnotic-crystals-415889.ogg")	
 }

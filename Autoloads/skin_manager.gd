@@ -218,7 +218,20 @@ var ship_data = [
 	}
 ]
 
+## Ship shown in the skin selector (it can be a locked one while browsing).
 var selected_ship_index: int = 0
+## Ship the player actually flies with and the one saved. Only unlocked ships get here.
+var equipped_ship_index: int = 0
+
+# --- Ship locks -------------------------------------------------------------
+# Every ship is locked by default. A ship is unlocked when it's listed below, when the
+# achievement that rewards it is unlocked (Achievement.reward_ship_index), or when
+# unlock_all_ships is on.
+
+## Debug/dev switch: unlocks every ship at once.
+var unlock_all_ships: bool = false
+## Indexes in ship_data available from the start.
+var default_unlocked_ships: Array[int] = [0]
 
 func select_next_ship():
 	selected_ship_index += 1
@@ -226,6 +239,7 @@ func select_next_ship():
 	if selected_ship_index >= ship_data.size():
 		selected_ship_index = 0
 
+	_equip_if_unlocked()
 	ship_selection_changed.emit(ship_data[selected_ship_index])
 
 func select_previous_ship():
@@ -234,10 +248,36 @@ func select_previous_ship():
 	if selected_ship_index < 0:
 		selected_ship_index = ship_data.size() - 1
 
+	_equip_if_unlocked()
 	ship_selection_changed.emit(ship_data[selected_ship_index])
+
+func is_ship_unlocked(index: int) -> bool:
+	if unlock_all_ships or index in default_unlocked_ships:
+		return true
+	return AchievementManager.is_ship_reward_unlocked(index)
+
+func is_ship_locked(index: int) -> bool:
+	return not is_ship_unlocked(index)
+
+func _equip_if_unlocked() -> void:
+	if not is_ship_locked(selected_ship_index):
+		equipped_ship_index = selected_ship_index
+
+## Called when leaving the skin selector, so a locked ship that was only being viewed
+## doesn't stay selected.
+func restore_equipped_ship() -> void:
+	selected_ship_index = equipped_ship_index
+
+## Sets the ship loaded from the save file, falling back to a default ship if it's locked.
+func load_equipped_ship(index: int) -> void:
+	if index < 0 or index >= ship_data.size() or is_ship_locked(index):
+		index = default_unlocked_ships[0] if not default_unlocked_ships.is_empty() else 0
+	equipped_ship_index = index
+	selected_ship_index = index
 
 func get_selected_ship_data() -> Dictionary:
 	return ship_data[selected_ship_index]
 
-func get_selected_ship_texture() -> Texture2D:
-	return ship_data[selected_ship_index]["texture"]
+## Texture of the equipped ship (the one used in gameplay).
+func get_equipped_ship_texture() -> Texture2D:
+	return ship_data[equipped_ship_index]["texture"]

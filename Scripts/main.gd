@@ -33,6 +33,10 @@ func _ready() -> void:
 	reset_shader_parameters()
 	
 	GameManager.can_pause = true
+	# Arena clear timer for time achievements. A run only starts from phase 1 (no debug
+	# jumps, no reloads after the arena is won) and keeps running across death reloads.
+	if GameManager.phase_to_start <= 1:
+		AchievementManager.begin_arena_run(arena_index)
 	base_zoom = cam.zoom
 	player.died.connect(_on_player_died) # Replace with function body.
 	player.connect("dash", Callable(self, "_on_player_dashed"))

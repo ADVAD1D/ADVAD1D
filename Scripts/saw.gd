@@ -65,6 +65,9 @@ func _on_area_entered(area: Area2D) -> void:
 		if area.is_in_group("lasers"):
 			area.queue_free()
 			GameManager.add_score(200)
+		# Only saws the player destroys count (the arena's death zone doesn't)
+		if not area.is_in_group("enemies_death"):
+			AchievementManager.add_stat(&"saws_destroyed")
 		die_and_respawn()
 
 func die_and_respawn():

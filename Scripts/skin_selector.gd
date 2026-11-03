@@ -5,6 +5,8 @@ var back_scene: String = "res://Scenes/main_menu.tscn"
 @onready var back_button: TextureButton = $BackButton
 @onready var right_button: TextureButton = $NextButton
 @onready var ship_preview: TextureRect = $ShipPreview
+## Padlock that covers locked ships (no spoilers of the sprite)
+@onready var lock_icon: TextureRect = $LockIcon
 @onready var left_button: TextureButton = $PreviousButton
 @onready var ship_name_label: Label = $ShipNameLabel
 @onready var ship_author_label: Label = $ShipAuthorLabel
@@ -63,8 +65,19 @@ func _on_identity_recovered(recovered_name: String):
 
 func _on_ship_selection_changed(ship_data: Dictionary):
 	ship_preview.texture = ship_data["texture"]
-	ship_name_label.text = ship_data["name"]
-	ship_author_label.text = "By: " + ship_data["author"]
+	var index: int = SkinManager.selected_ship_index
+	var locked: bool = SkinManager.is_ship_locked(index)
+	# Locked ships stay hidden behind the padlock
+	ship_preview.visible = not locked
+	lock_icon.visible = locked
+	if locked:
+		ship_name_label.text = "???"
+		# If an achievement unlocks it, say which one
+		var achievement: Achievement = AchievementManager.get_achievement_for_ship(index)
+		ship_author_label.text = ("Get: " + achievement.title) if achievement else "By: ???"
+	else:
+		ship_name_label.text = ship_data["name"]
+		ship_author_label.text = "By: " + ship_data["author"]
 	
 func _on_name_line_edit_text_submitted(new_text: String) -> void:
 	_register_pilot(new_text) # Replace with function body.
@@ -97,6 +110,7 @@ func _input(event: InputEvent) -> void:
 		_on_right_button_pressed()
 	
 func _on_back_button_pressed():
+	SkinManager.restore_equipped_ship()
 	get_tree().change_scene_to_file(back_scene)
 	
 func _on_left_button_pressed():

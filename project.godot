@@ -32,6 +32,7 @@ buses/default_bus_layout="uid://cn7ss37mcgp38"
 [autoload]
 
 SkinManager="*res://Autoloads/skin_manager.gd"
+AchievementManager="*res://Autoloads/achievement_manager.gd"
 GameManager="*res://Autoloads/game_manager.gd"
 MusicPlayer="*res://Autoloads/music_player.tscn"
 SfxManager="*res://Autoloads/sfx_manager.gd"

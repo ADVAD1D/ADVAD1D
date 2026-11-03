@@ -4,6 +4,7 @@ extends Control
 @export var next_scene: PackedScene
 @export var skin_selector_scene: PackedScene
 @export var chat_console_scene: PackedScene
+@export var achievements_scene: PackedScene
 
 @onready var browser_support: bool = GameManager.browser_support
 @onready var is_debug_text: bool = GameManager.is_debug_text
@@ -36,6 +37,8 @@ func _ready() -> void:
 
 	GameManager.can_pause = false
 	GameManager.reset_speedrun()
+	# Leaving a run for the menu discards its arena clear time
+	AchievementManager.cancel_arena_run()
 	
 	global_label.visible = false
 	relative_label.visible = false
@@ -74,7 +77,6 @@ func _on_window_resized() -> void:
 		
 	if is_instance_valid(special_thanks_panel) and special_thanks_panel.has_node("CreditsTexture"):
 		special_thanks_panel.get_node("CreditsTexture").position.x = 79.0 + offset_x
-
 func _setup_buttons() -> void:
 	# Autoconnect all audio hovers/focuses for any button inside this menu
 	_connect_audio_to_buttons(self)
@@ -110,6 +112,11 @@ func _setup_buttons() -> void:
 	if has_node("SpecialThanksButton"):
 		get_node("SpecialThanksButton").pressed.connect(special_thanks_panel.show)
 		
+	if has_node("AchievementsButton"):
+		var achievements_btn = get_node("AchievementsButton")
+		achievements_btn.visible = GameManager.achievements_enabled
+		achievements_btn.pressed.connect(func(): get_tree().change_scene_to_packed(achievements_scene))
+
 	if has_node("SkinSelectorButton"):
 		get_node("SkinSelectorButton").pressed.connect(func(): get_tree().change_scene_to_packed(skin_selector_scene))
 		

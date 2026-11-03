@@ -26,12 +26,15 @@ var is_glitch_sound: bool = false
 var game_paused: bool = false
 var can_pause: bool = true
 var retro_shader_active: bool = true
+## Shows the achievements button in the main menu and the "achievement unlocked" toast.
+## Progress and ship rewards keep working either way (ship locks live in SkinManager).
+var achievements_enabled: bool = true
 
 #this bool validate the shaders optimization in pc
 var pc_optimize_shaders: bool = false
 
 # mobile compatibility bool
-var mobile_mode_active: bool = true
+var mobile_mode_active: bool = false
 var using_touch_controls: bool = true
 var disable_auto_hide_mobile_controls: bool = false # Set to true to test mobile UI on PC with keyboard
 var mobile_layout: Dictionary = {}
@@ -179,7 +182,7 @@ func save_data():
 		_log_message(["Player name: ", player_name])
 	else:
 		data = {
-			"selected_ship": SkinManager.selected_ship_index,
+			"selected_ship": SkinManager.equipped_ship_index,
 			"controls_mode": relative_control_active,
 			"fps_mode": show_fps,
 			"speedrun_mode_state": speedrun_mode_active,
@@ -189,7 +192,7 @@ func save_data():
 			"retro_shader_active": retro_shader_active,
 			"pc_optimize_shaders": pc_optimize_shaders
 		}
-		_log_message(["saved game!, selected skin", SkinManager.selected_ship_index])
+		_log_message(["saved game!, selected skin", SkinManager.equipped_ship_index])
 		_log_message(["Relative controls: ", relative_control_active])
 		_log_message(["FPS mode: ", show_fps])
 		_log_message(["Speedrun mode state", speedrun_mode_active])
@@ -231,8 +234,9 @@ func load_data():
 	var data = JSON.parse_string(json_string)
 	
 	if data and "selected_ship" in data:
-		SkinManager.selected_ship_index = int(data["selected_ship"])
-		_log_message(["Loaded data, selected ship", SkinManager.selected_ship_index])
+		# Falls back to a default ship if the saved one is locked (see SkinManager.is_ship_unlocked)
+		SkinManager.load_equipped_ship(int(data["selected_ship"]))
+		_log_message(["Loaded data, selected ship", SkinManager.equipped_ship_index])
 		
 	if data and "controls_mode" in data:
 		relative_control_active = bool(data["controls_mode"])

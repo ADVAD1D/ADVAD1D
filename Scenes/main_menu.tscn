@@ -40,6 +40,9 @@
 [ext_resource type="Texture2D" uid="uid://cofvkwairia8d" path="res://Assets/Sprites/fps_button_hover.png" id="26_pddej"]
 [ext_resource type="Texture2D" uid="uid://deyomkrcmj2xp" path="res://Assets/Sprites/shaders_button_unpressed.png" id="27_ko05x"]
 [ext_resource type="Texture2D" uid="uid://bqgh0umjum2y8" path="res://Assets/Sprites/shaders_button_pressed.png" id="28_43km2"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/achievements_button.png" id="29_achbtn"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/achievements_button_hover.png" id="30_achbtnh"]
+[ext_resource type="PackedScene" path="res://Scenes/achievements.tscn" id="31_achscene"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_48xlc"]
 atlas = ExtResource("1_28flt")
@@ -188,6 +191,7 @@ script = ExtResource("1_ce3w2")
 next_scene = ExtResource("2_trj04")
 skin_selector_scene = ExtResource("3_5n0dv")
 chat_console_scene = ExtResource("4_1xund")
+achievements_scene = ExtResource("31_achscene")
 
 [node name="Background" type="AnimatedSprite2D" parent="." unique_id=1566181270]
 position = Vector2(262, 529)
@@ -286,6 +290,17 @@ toggle_mode = true
 texture_normal = ExtResource("21_aylim")
 texture_pressed = ExtResource("22_y82t1")
 texture_hover = ExtResource("22_y82t1")
+
+[node name="AchievementsButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 382.0
+offset_top = 167.0
+offset_right = 412.0
+offset_bottom = 197.0
+scale = Vector2(0.7554791, 0.7554791)
+texture_normal = ExtResource("29_achbtn")
+texture_pressed = ExtResource("30_achbtnh")
+texture_hover = ExtResource("30_achbtnh")
 
 [node name="ControlsButton" type="TextureButton" parent="." unique_id=993854923]
 layout_mode = 0
