@@ -22,6 +22,8 @@ const LINE_NOT_ENOUGH: String = "YOU NEED MORE DIAMONDS.\nTHEY ARE EARNED IN ARC
 const LINE_MAXED: String = "THIS UPGRADE IS FULLY INSTALLED."
 const LINE_SOLD_OUT: String = "NO SHIP DESIGNS LEFT."
 const LINE_OWNED: String = "THIS COLOR IS ALREADY\nIN YOUR PALETTE."
+## Tag on the upgrade cards: upgrades only apply in arcade mode.
+const ARCADE_TAG: String = "ONLY ARCADE"
 
 const CARD_TEXTURE: Texture2D = preload("res://Assets/Sprites/Shop/shop_card.png")
 const CARD_SELECTED_TEXTURE: Texture2D = preload("res://Assets/Sprites/Shop/shop_card_sel.png")
@@ -290,6 +292,7 @@ func _make_card(item: ShopItem, index: int) -> Control:
 
 	if item.kind == ShopItem.Kind.UPGRADE:
 		_add_level_pips(card, item)
+		_add_arcade_tag(card)
 	elif item.kind == ShopItem.Kind.COLOR:
 		# Swatch where the level pips go
 		var swatch: Color = SkinManager.get_color(item.color_index)
@@ -327,6 +330,19 @@ func _add_level_pips(card: Control, item: ShopItem) -> void:
 		_add_rect(card, pos, Vector2(10, 4), CYAN if on else PIP_OFF)
 		if on:
 			_add_rect(card, pos, Vector2(10, 1), CYAN_LIGHT)
+
+
+## Upgrades only work in arcade mode (ShopManager.get_powerup_interval), so their cards
+## get an orange strip over the bottom of the icon saying so.
+func _add_arcade_tag(card: Control) -> void:
+	var pos: Vector2 = Vector2(17, 63)
+	var tag_size: Vector2 = Vector2(50, 9)
+	_add_rect(card, pos, tag_size, DARK_FILL)
+	_add_rect(card, pos, Vector2(tag_size.x, 1), ORANGE)
+	_add_rect(card, pos + Vector2(0, tag_size.y - 1), Vector2(tag_size.x, 1), ORANGE)
+	var tag: Label = _add_label(card, ARCADE_TAG, Vector2(0, pos.y - 1), 9, ORANGE,
+			Color.TRANSPARENT, CARD_SIZE.x, HORIZONTAL_ALIGNMENT_CENTER)
+	tag.name = "ArcadeTag"
 
 
 func _on_card_input(event: InputEvent, index: int) -> void:

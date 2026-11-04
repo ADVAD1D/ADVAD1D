@@ -88,7 +88,7 @@ var arena_enemy_configs = {
 		"can_retreat": false,
 		"fire_range": 3500.0,
 		# Laser guns on the walls: {from phase: how many}
-		"laser_guns": {3: 1, 7: 2} },
+		"laser_guns": {3: 1, 5: 2, 7: 3, 10: 4} },
 		
 	2: { "min_shoot": 0.4, 
 		"max_shoot": 0.7, 
