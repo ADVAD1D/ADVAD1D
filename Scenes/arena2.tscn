@@ -142,19 +142,19 @@ size = Vector2(1808.5518, 27.717411)
 size = Vector2(1808.9366, 16.2203)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pdsj5"]
-size = Vector2(56, 2347.226)
+size = Vector2(56, 2343.185)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gt3je"]
-size = Vector2(50.5, 2344.5806)
+size = Vector2(50.5, 2339)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7k868"]
 size = Vector2(938.14685, 36.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hpc6h"]
-size = Vector2(876.72437, 43.447205)
+size = Vector2(876.72437, 36.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kqrg6"]
-size = Vector2(396.5109, 20)
+size = Vector2(396.5109, 36.5)
 
 [sub_resource type="Gradient" id="Gradient_3pmx8"]
 offsets = PackedFloat32Array(0.318182, 0.639394)
@@ -235,13 +235,13 @@ size = Vector2(3080, 66)
 size = Vector2(2101.8926, 28.2032)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jwpg7"]
-size = Vector2(949.05554, 30)
+size = Vector2(949.05554, 36.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k2e45"]
-size = Vector2(856.6466, 30)
+size = Vector2(856.6466, 36.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kwxat"]
-size = Vector2(290.26123, 45.4165)
+size = Vector2(290.26123, 36.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_aa8k8"]
 size = Vector2(370, 60)
@@ -541,7 +541,7 @@ debug_color = Color(0.295492, 0.629028, 0, 0.42)
 [node name="WallBridgeLeft" type="StaticBody2D" parent="Walls" unique_id=1065947362 groups=["colisiones"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallBridgeLeft" unique_id=1104536163]
-position = Vector2(-70.82402, 2485.572)
+position = Vector2(-70.82402, 2487.5925)
 scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("RectangleShape2D_pdsj5")
 debug_color = Color(1, 0.00486279, 0.0632315, 0.42)
@@ -549,7 +549,7 @@ debug_color = Color(1, 0.00486279, 0.0632315, 0.42)
 [node name="WallBridgeRight" type="StaticBody2D" parent="Walls" unique_id=220922988 groups=["colisiones"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallBridgeRight" unique_id=1608518162]
-position = Vector2(196.99997, 2482.7092)
+position = Vector2(196.99997, 2485.5)
 scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("RectangleShape2D_gt3je")
 debug_color = Color(0.951971, 0, 0.560989, 0.42)
@@ -565,7 +565,7 @@ debug_color = Color(0.107837, 0.647894, 0, 0.42)
 [node name="WallCorner6" type="StaticBody2D" parent="Walls" unique_id=2037643243]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallCorner6" unique_id=1455537419]
-position = Vector2(632.8863, 1338.1366)
+position = Vector2(632.8863, 1333.517)
 scale = Vector2(0.9999998, 0.9999998)
 shape = SubResource("RectangleShape2D_hpc6h")
 debug_color = Color(0, 0.64846, 0.180047, 0.42)
@@ -573,7 +573,7 @@ debug_color = Color(0, 0.64846, 0.180047, 0.42)
 [node name="WallStartBridge" type="StaticBody2D" parent="Walls" unique_id=1796726165]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallStartBridge" unique_id=1395985894]
-position = Vector2(59.293106, 1339.6765)
+position = Vector2(59.293106, 1333.517)
 scale = Vector2(0.9999994, 0.9999994)
 shape = SubResource("RectangleShape2D_kqrg6")
 debug_color = Color(0.043137256, 0.73333335, 0, 0.8980392)
@@ -722,7 +722,7 @@ shape = SubResource("RectangleShape2D_r33sp")
 debug_color = Color(0.950352, 0.0944094, 0.507302, 0.42)
 
 [node name="bottomInside" type="CollisionShape2D" parent="LaserZone" unique_id=2078697298]
-position = Vector2(-569.73456, 1331.2073)
+position = Vector2(-569.73456, 1333.517)
 scale = Vector2(0.9999998, 0.9999998)
 shape = SubResource("RectangleShape2D_jwpg7")
 debug_color = Color(0.926013, 4.20663e-05, 0.674041, 0.42)
@@ -748,7 +748,7 @@ shape = SubResource("RectangleShape2D_aa8k8")
 debug_color = Color(1, 0.0470588, 0, 0.419608)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2091898546 node_paths=PackedStringArray("player_target")]
-zoom = Vector2(0.25, 0.25)
+zoom = Vector2(0.23, 0.23)
 limit_left = -1915
 limit_top = -1420
 limit_right = 1870
@@ -992,13 +992,14 @@ lifetime = 1.6
 process_material = SubResource("ParticleProcessMaterial_d1ilt")
 script = ExtResource("12_6iyac")
 
-[node name="PhaseNode" type="Node2D" parent="." unique_id=173345045 node_paths=PackedStringArray("player_node", "ship_enemy_spawner", "saw_enemy_spawner", "wall_to_remove", "sprite_to_remove")]
+[node name="PhaseNode" type="Node2D" parent="." unique_id=173345045 node_paths=PackedStringArray("player_node", "ship_enemy_spawner", "saw_enemy_spawner", "wall_to_remove", "sprite_to_remove", "nodes_to_remove")]
 script = ExtResource("20_hibaj")
 player_node = NodePath("../PlayerInstance")
 ship_enemy_spawner = NodePath("../EnemySpawner")
 saw_enemy_spawner = NodePath("../SawSpawner")
 wall_to_remove = NodePath("../Walls/WallStartBridge")
 sprite_to_remove = NodePath("../LaserWallAnimation")
+nodes_to_remove = [NodePath("../LaserZone/StartBridge")]
 
 [node name="EnemySpawner" type="Node2D" parent="." unique_id=1050277523 node_paths=PackedStringArray("player_node", "spawn_locator_node") groups=["destructibles"]]
 script = ExtResource("14_wsu2k")

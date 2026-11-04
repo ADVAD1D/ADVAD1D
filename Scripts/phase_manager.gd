@@ -21,6 +21,9 @@ signal timer_updated(time_left_string)
 
 @export var wall_to_remove: StaticBody2D
 @export var sprite_to_remove: AnimatedSprite2D
+## Also freed when the last phase is won, with wall_to_remove (e.g. the LaserZone shape
+## that covers the same opening, so lasers fly through it once it is open).
+@export var nodes_to_remove: Array[Node] = []
 
 @export_group("Arcade")
 ## Arcade mode only: past the last table phase, difficulty progress keeps growing this
@@ -280,6 +283,9 @@ func start_new_phase():
 			
 		if is_instance_valid(wall_to_remove):
 			wall_to_remove.queue_free()
+		for node in nodes_to_remove:
+			if is_instance_valid(node):
+				node.queue_free()
 			
 		if is_instance_valid(sprite_to_remove):
 			start_fade_out_sprite(sprite_to_remove)
