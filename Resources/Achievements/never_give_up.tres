@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Achievement" format=3]
+
+[ext_resource type="Script" path="res://Scripts/Achievements/achievement.gd" id="1_ach"]
+[ext_resource type="Texture2D" uid="uid://dvdoqgmaf7twg" path="res://Assets/Sprites/skull_progress_bar.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_ach")
+id = &"never_give_up"
+title = "NEVER GIVE UP"
+description = "DIE 1000 TIMES"
+icon = ExtResource("2_icon")
+stat = &"deaths"
+goal_type = 0
+goal = 1000.0
+progress_format = 0
+reward_ship_index = 7
+order = 3

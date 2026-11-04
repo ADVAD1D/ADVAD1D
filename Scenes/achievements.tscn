@@ -8,6 +8,10 @@
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="6_font"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="7_crt"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="8_blip"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/scroll_track.png" id="9_track"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/scroll_grabber.png" id="10_grab"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/scroll_grabber_hover.png" id="11_grab_hover"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/scroll_grabber_pressed.png" id="12_grab_pressed"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_title"]
 font = ExtResource("6_font")
@@ -47,6 +51,45 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.4
 shader_parameter/vignette_opacity = 0.3
 shader_parameter/low_quality = false
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_track"]
+texture = ExtResource("9_track")
+texture_margin_left = 4.0
+texture_margin_top = 3.0
+texture_margin_right = 4.0
+texture_margin_bottom = 3.0
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_grab"]
+texture = ExtResource("10_grab")
+texture_margin_left = 4.0
+texture_margin_top = 3.0
+texture_margin_right = 4.0
+texture_margin_bottom = 3.0
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_grab_hover"]
+texture = ExtResource("11_grab_hover")
+texture_margin_left = 4.0
+texture_margin_top = 3.0
+texture_margin_right = 4.0
+texture_margin_bottom = 3.0
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_grab_pressed"]
+texture = ExtResource("12_grab_pressed")
+texture_margin_left = 4.0
+texture_margin_top = 3.0
+texture_margin_right = 4.0
+texture_margin_bottom = 3.0
+axis_stretch_vertical = 1
+
+[sub_resource type="Theme" id="Theme_scroll"]
+VScrollBar/styles/scroll = SubResource("StyleBoxTexture_track")
+VScrollBar/styles/scroll_focus = SubResource("StyleBoxTexture_track")
+VScrollBar/styles/grabber = SubResource("StyleBoxTexture_grab")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxTexture_grab_hover")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxTexture_grab_pressed")
 
 [node name="Achievements" type="Control"]
 layout_mode = 3
@@ -115,8 +158,9 @@ horizontal_alignment = 2
 layout_mode = 0
 offset_left = 36.0
 offset_top = 58.0
-offset_right = 488.0
+offset_right = 496.0
 offset_bottom = 284.0
+theme = SubResource("Theme_scroll")
 horizontal_scroll_mode = 0
 
 [node name="List" type="VBoxContainer" parent="Board/Scroll"]

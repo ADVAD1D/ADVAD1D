@@ -233,8 +233,10 @@ func die():
 	if player_died:
 		return
 	## The perform death effects func instanciates every time to death and animate the tween
-	GameManager.deaths_count = min(GameManager.deaths_count + 1, 999)
+	# Capped at 9999 (it's shown in the pause menu); the "die 1000 times" achievement needs >= 1000
+	GameManager.deaths_count = min(GameManager.deaths_count + 1, 9999)
 	GameManager.save_deaths_count()
+	AchievementManager.raise_stat(&"deaths", GameManager.deaths_count)
 	_perform_death_effects()
 	died.emit()
 

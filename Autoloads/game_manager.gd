@@ -126,6 +126,8 @@ func _ready() -> void:
 	if start_server == true:
 		Network.wake_up_server()
 	load_data()
+	# Deaths from before the "die 1000 times" achievement count too (no toast at boot)
+	AchievementManager.raise_stat(&"deaths", deaths_count, true)
 
 func _preload_heavy_scenes():
 	if browser_support or OS.has_feature("web"):

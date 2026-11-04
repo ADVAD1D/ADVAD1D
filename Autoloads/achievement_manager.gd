@@ -127,6 +127,24 @@ func add_stat(stat: StringName, amount: float = 1.0) -> void:
 	_on_stat_changed(stat)
 
 
+## Sets a counter stat that mirrors a count kept elsewhere (e.g. GameManager.deaths_count),
+## only ever raising it. `quiet` unlocks without the toast (syncing a loaded save).
+func raise_stat(stat: StringName, value: float, quiet: bool = false) -> void:
+	if value <= get_stat(stat):
+		return
+	_stats[String(stat)] = value
+	if not quiet:
+		_on_stat_changed(stat)
+		return
+	_dirty = true
+	for achievement in achievements:
+		if achievement.stat == stat and not is_unlocked(achievement.id) \
+				and achievement.is_met(value, true):
+			_unlocked[String(achievement.id)] = true
+	save_progress()
+	progress_changed.emit()
+
+
 ## Records a time, keeping only the best (lowest) one.
 func submit_best_time(stat: StringName, seconds: float) -> void:
 	if has_stat(stat) and seconds >= get_stat(stat):
