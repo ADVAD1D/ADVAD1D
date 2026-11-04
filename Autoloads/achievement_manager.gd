@@ -203,8 +203,10 @@ func begin_arena_run(arena_index: int) -> void:
 	_run_active = true
 
 
-## Called when every phase of the arena is cleared. Records arena_<n>_best_time.
+## Called when every phase of the arena is cleared. Counts arena_<n>_clears (every clear,
+## even one started from a later phase) and records arena_<n>_best_time for timed runs.
 func complete_arena_run(arena_index: int) -> void:
+	add_stat(StringName("arena_%d_clears" % (arena_index + 1)))
 	if not _run_active or _run_arena != arena_index:
 		return
 	_run_active = false
@@ -253,6 +255,12 @@ func _load_progress() -> void:
 	if typeof(saved_unlocked) == TYPE_ARRAY:
 		for id in saved_unlocked:
 			_unlocked[String(id)] = true
+	# Saves from before arena_<n>_clears existed: a recorded best time means a clear
+	for key in _stats.keys():
+		if key.begins_with("arena_") and key.ends_with("_best_time"):
+			var clears_key: String = key.trim_suffix("_best_time") + "_clears"
+			if not _stats.has(clears_key):
+				_stats[clears_key] = 1.0
 	# A goal lowered in a later version unlocks silently for saves that already meet it
 	for achievement in achievements:
 		if achievement.goal_type == Achievement.GoalType.MANUAL or is_unlocked(achievement.id):

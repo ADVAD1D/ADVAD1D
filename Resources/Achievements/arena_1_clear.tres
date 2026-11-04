@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Achievement" format=3]
+
+[ext_resource type="Script" path="res://Scripts/Achievements/achievement.gd" id="1_ach"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/icon_flag.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_ach")
+id = &"arena_1_clear"
+title = "ARENA CLEARED"
+description = "CLEAR ARENA 01"
+icon = ExtResource("2_icon")
+stat = &"arena_1_clears"
+goal_type = 0
+goal = 1.0
+progress_format = 0
+reward_ship_index = 1
+order = -1

@@ -6,11 +6,14 @@
 [ext_resource type="PackedScene" uid="uid://qfrlx31ingdm" path="res://Scenes/Particles/dash_particles.tscn" id="2_x3wgy"]
 [ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="3_6t5aa"]
 [ext_resource type="AudioStream" uid="uid://cnhegchkuvlii" path="res://Assets/Audio/714258__qubodup__cloud-poof.wav" id="5_fkybt"]
-[ext_resource type="Shader" path="res://Shaders/ship_color.gdshader" id="6_shipcolor"]
+[ext_resource type="Shader" uid="uid://dl6dnr1dv7p0j" path="res://Shaders/ship_color.gdshader" id="6_shipcolor"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_shipcolor"]
 resource_local_to_scene = true
 shader = ExtResource("6_shipcolor")
+shader_parameter/color1 = Color(0.55, 0.55, 0.55, 1)
+shader_parameter/color2 = Color(1, 1, 1, 1)
+shader_parameter/enabled = true
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_v0iea"]
 radius = 6.0
