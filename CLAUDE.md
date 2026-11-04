@@ -56,7 +56,7 @@ Global state and cross-scene services live in autoloads. Several are registered 
 
 ### Scene flow
 
-`spash_screen.tscn` (main scene; the filename typo is real) → `main_menu.tscn` → `Abduction.tscn` → `tutorial.tscn` → arenas → `trigger_scene.tscn` (an `Area2D` in the arena that fades to `ending.tscn`) → `main_menu.tscn`.
+`spash_screen.tscn` (main scene; the filename typo is real) → `main_menu.tscn` → `Abduction.tscn` → `tutorial.tscn` → `main.tscn` (arena 1) → `trigger_scene.tscn` (an `Area2D` in the arena that fades to `ending.tscn`) → `tutorial_arena2.tscn` → `arena2.tscn` → `ending.tscn` → `main_menu.tscn`. `ending.gd` picks its next scene by the arena just won (`next_scene_by_arena`, index = `current_arena_index`; arenas without an entry go to `next_scene`, the menu). Both tutorials use `Scripts/tutorial.gd` (10 s countdown, asteroids only, background in black and white): `next_scene_path` is the arena it loads in the background, and `start_from_first_phase` (on in arena 2's tutorial) resets `phase_to_start` to 1 and the score, since arena 1's win leaves `phase_to_start` past the last phase.
 
 Scene links are `@export var next_scene: PackedScene` set in the `.tscn`, not paths in code.
 

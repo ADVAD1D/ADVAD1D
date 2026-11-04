@@ -1,6 +1,12 @@
 extends Node2D
 
 @export var transition_sound: AudioStream
+## Arena the countdown leads to: loaded in the background, opened when it ends.
+## A path (not a PackedScene) so the scenes don't load each other in a loop.
+@export_file("*.tscn") var next_scene_path: String = "res://Scenes/main.tscn"
+## Starts the next arena from phase 1 with no score. Arena 2's tutorial needs it: it
+## comes after arena 1 is won, when phase_to_start is already past the last phase.
+@export var start_from_first_phase: bool = false
 @onready var countdown_label: Label = $UILayer/countdownLabel
 
 @onready var ui_turorial_layer: Node2D = $UITutorialLayer
@@ -60,7 +66,11 @@ func _ready() -> void:
 					elif "position" in control:
 						control.position = saved_pos
 				
-	ResourceLoader.load_threaded_request("res://Scenes/main.tscn")
+	if start_from_first_phase:
+		GameManager.phase_to_start = 1
+		GameManager.reset_score()
+
+	ResourceLoader.load_threaded_request(next_scene_path)
 	
 	fade_in_rect.visible = true
 	fade_in_rect.modulate.a = 1.0 
@@ -156,7 +166,7 @@ func _input(event: InputEvent) -> void:
 				mobile_controls_layer.show()
 		
 func change_to_next():
-	var next_scene = ResourceLoader.load_threaded_get("res://Scenes/main.tscn")
+	var next_scene = ResourceLoader.load_threaded_get(next_scene_path)
 	if next_scene:
 		get_tree().change_scene_to_packed(next_scene)
 		
