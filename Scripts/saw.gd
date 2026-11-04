@@ -63,7 +63,11 @@ func _on_area_entered(area: Area2D) -> void:
 		return
 	if (area.is_in_group("lasers") or area.is_in_group("enemies_death") or area.is_in_group("allies")):
 		if area.is_in_group("lasers"):
-			area.queue_free()
+			# Enemy lasers deflected by the shield belong to EnemyLaserPool
+			if area.has_method("deactivate"):
+				EnemyLaserPool.release(area)
+			else:
+				area.queue_free()
 			GameManager.add_score(200)
 		# Only saws the player destroys count (the arena's death zone doesn't)
 		if not area.is_in_group("enemies_death"):

@@ -264,7 +264,11 @@ func _on_area_entered(area: Area2D) -> void:
 	if _state == State.DYING:
 		return
 	if area.is_in_group("lasers"):
-		area.queue_free()
+		# Enemy lasers deflected by the shield belong to EnemyLaserPool
+		if area.has_method("deactivate"):
+			EnemyLaserPool.release(area)
+		else:
+			area.queue_free()
 		health -= 1
 		if health <= 0:
 			GameManager.add_score(score_value)

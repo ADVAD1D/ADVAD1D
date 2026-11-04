@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Achievement" format=3]
+
+[ext_resource type="Script" path="res://Scripts/Achievements/achievement.gd" id="1_ach"]
+[ext_resource type="Texture2D" uid="uid://c01tg88k47rc" path="res://Assets/Sprites/laser_shield_pickup.png" id="2_shield"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2_shield")
+region = Rect2(9, 9, 32, 32)
+
+[resource]
+script = ExtResource("1_ach")
+id = &"return_to_sender"
+title = "RETURN TO SENDER"
+description = "SHIELD A LASER BACK INTO ITS SHIP"
+icon = SubResource("AtlasTexture_icon")
+stat = &"own_laser_kills"
+goal_type = 0
+goal = 1.0
+progress_format = 0
+reward_ship_index = 16
+order = 5

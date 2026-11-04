@@ -131,7 +131,10 @@ func shoot() -> void:
 		#Indica la dirección del laser en su instancia
 		var fire_direction = Vector2.UP.rotated(rotation)
 		# ship center as origin: blocks the shot when flush against a wall
-		EnemyLaserPool.acquire(get_parent(), shoot_marker.global_position, fire_direction, global_position)
+		var laser = EnemyLaserPool.acquire(get_parent(), shoot_marker.global_position,
+				fire_direction, global_position)
+		if laser:
+			laser.shooter = self
 
 		shoot_timer.start()
 		laser_sound.play()
@@ -149,10 +152,21 @@ func _on_hit(area_collided: Area2D) -> void:
 		return
 	if area_collided.is_in_group("lasers"):
 		GameManager.add_score(100)
-		area_collided.queue_free()
+		# Its own laser, sent back by the player's shield (RETURN TO SENDER achievement)
+		if area_collided.get("shooter") == self:
+			AchievementManager.add_stat(&"own_laser_kills")
+		_dispose_laser(area_collided)
 		die_and_respawn()
 	elif area_collided.is_in_group("allies"):
 		die_and_respawn()
+
+## Removes a laser that hit the ship. Enemy lasers deflected by the shield belong to
+## EnemyLaserPool, so they go back to it (queue_free would take them out of the pool).
+func _dispose_laser(laser: Area2D) -> void:
+	if laser.has_method("deactivate"):
+		EnemyLaserPool.release(laser)
+	else:
+		laser.queue_free()
 
 func die_and_respawn():
 	if is_dying:

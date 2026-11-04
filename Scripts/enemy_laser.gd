@@ -8,10 +8,14 @@ extends Area2D
 @export var enemy_laser_particles: PackedScene
 var direction = Vector2.ZERO
 var is_active: bool = false
+## The enemy that fired it (set by ship_enemy after acquire; null for others). Lets a
+## ship hit by its own laser, deflected by the player's shield, count for an achievement.
+var shooter: Node = null
 
 ## Wakes up the laser from the pool. Resets its position, direction, and colors,
 ## and turns on its physics processing and collision monitoring.
 func activate(spawn_position: Vector2, start_direction: Vector2) -> void:
+	shooter = null
 	global_position = spawn_position
 	set_direction(start_direction)
 	modulate = Color.WHITE # Resetear el color general

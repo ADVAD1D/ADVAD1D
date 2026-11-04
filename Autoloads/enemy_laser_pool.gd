@@ -5,7 +5,7 @@ extends Node
 ## constantly calling `instantiate()` and `queue_free()` during heavy bullet-hell combat.
 
 const ENEMY_LASER_SCENE: PackedScene = preload("res://Scenes/enemy_laser.tscn")
-const PREWARM_COUNT: int = 40
+const PREWARM_COUNT: int = 50
 
 var _available: Array = []
 

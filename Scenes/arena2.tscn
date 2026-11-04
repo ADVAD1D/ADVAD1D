@@ -51,10 +51,15 @@
 [ext_resource type="PackedScene" path="res://Scenes/time_slow.tscn" id="43_46h6s"]
 [ext_resource type="Script" uid="uid://co70ivgmpkwgj" path="res://Scripts/Enemies/laser_gun_spawner.gd" id="44_gunspawner"]
 [ext_resource type="PackedScene" path="res://Scenes/laser_gun.tscn" id="45_laser_gun"]
+[ext_resource type="Shader" path="res://Shaders/background_waves.gdshader" id="46_waves"]
+[ext_resource type="Script" path="res://Scripts/background_waves.gd" id="47_waves_script"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_s8vy0"]
 shader = ExtResource("5_nwwfm")
 shader_parameter/grayscale_amount = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_waves"]
+shader = ExtResource("46_waves")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fevyy"]
 atlas = ExtResource("7_fevyy")
@@ -489,6 +494,11 @@ material = SubResource("ShaderMaterial_s8vy0")
 position = Vector2(-15, 1446)
 scale = Vector2(9.67856, 9.7983)
 texture = ExtResource("6_p2wjv")
+
+[node name="BackgroundWaves" type="Sprite2D" parent="Sprite2D"]
+material = SubResource("ShaderMaterial_waves")
+texture = ExtResource("6_p2wjv")
+script = ExtResource("47_waves_script")
 
 [node name="PlayerInstance" parent="." unique_id=1545542540 instance=ExtResource("2_8gbba")]
 position = Vector2(-15, 9.99994)
