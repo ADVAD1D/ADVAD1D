@@ -268,6 +268,8 @@ func _on_area_entered(area: Area2D) -> void:
 		health -= 1
 		if health <= 0:
 			GameManager.add_score(score_value)
+			# Only guns the player shoots down count (GUN BREAKER achievement)
+			AchievementManager.add_stat(&"laser_guns_destroyed")
 			die_and_respawn()
 		else:
 			_flash()

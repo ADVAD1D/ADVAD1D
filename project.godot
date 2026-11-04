@@ -50,6 +50,7 @@ FontManager="*res://Autoloads/font_manager.gd"
 DebugMenu="*res://Autoloads/debug_menu.gd"
 MobileOptimizer="*res://Autoloads/mobile_optimizer.gd"
 ShaderManager="*res://Autoloads/shader_manager.gd"
+CursorManager="*res://Autoloads/cursor_manager.gd"
 _mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
 
 [display]

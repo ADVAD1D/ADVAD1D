@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Achievement" format=3]
+
+[ext_resource type="Script" path="res://Scripts/Achievements/achievement.gd" id="1_ach"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Enemies/laser_gun_break.png" id="2_sheet"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2_sheet")
+region = Rect2(135, 16, 32, 32)
+
+[resource]
+script = ExtResource("1_ach")
+id = &"gun_breaker"
+title = "GUN BREAKER"
+description = "DESTROY A LASER GUN"
+icon = SubResource("AtlasTexture_icon")
+stat = &"laser_guns_destroyed"
+goal_type = 0
+goal = 1.0
+progress_format = 0
+reward_ship_index = 14
+order = 2
