@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ctpfllc068qt6"]
 
 [ext_resource type="Script" uid="uid://cv86xec1kggty" path="res://Scripts/special_thanks.gd" id="1_8n762"]
-[ext_resource type="Texture2D" uid="uid://dy6tdkwdkef2s" path="res://Assets/Sprites/creditslabel.png" id="2_nm5lx"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/special_thanks_panel.png" id="2_panel"]
 [ext_resource type="Texture2D" uid="uid://csi5oi07jgx80" path="res://Assets/Sprites/hearticon.png" id="3_4ijaf"]
 [ext_resource type="Texture2D" uid="uid://bc241w2jom6bu" path="res://Assets/Sprites/exitbutton.png" id="4_fwj24"]
 [ext_resource type="Texture2D" uid="uid://cjf4fhtm0ta7m" path="res://Assets/Sprites/quitbuttonhover1.png" id="5_argos"]
@@ -11,7 +11,7 @@
 
 [sub_resource type="LabelSettings" id="LabelSettings_josap"]
 font = ExtResource("6_wb8ex")
-font_size = 45
+font_size = 24
 font_color = Color(0, 0.24358124, 0.24366018, 1)
 outline_size = 2
 outline_color = Color(0.13725491, 1, 1, 1)
@@ -21,11 +21,10 @@ shadow_color = Color(0, 0.43529412, 0.53333336, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_542ni"]
 font = ExtResource("6_wb8ex")
 font_size = 20
+line_spacing = 7.0
 font_color = Color(2.8878452e-07, 0.19484252, 0.19484252, 1)
 outline_size = 2
 outline_color = Color(0, 1, 1, 1)
-shadow_size = 0
-shadow_color = Color(0, 0.21176471, 0.21176471, 0)
 
 [node name="Control" type="Control" unique_id=1417264907]
 layout_mode = 3
@@ -36,83 +35,91 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_8n762")
 
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0.03, 0.04, 0.55)
+
 [node name="CreditsTexture" type="TextureRect" parent="." unique_id=307512438]
 layout_mode = 0
-offset_left = 78.999985
-offset_top = -1.5258789e-05
-offset_right = 178.99998
-offset_bottom = 69.999985
-scale = Vector2(3.7600012, 3.7600012)
-texture = ExtResource("2_nm5lx")
+offset_left = 79.0
+offset_top = 30.0
+offset_right = 441.0
+offset_bottom = 270.0
+texture = ExtResource("2_panel")
 
 [node name="HeartSprite" type="Sprite2D" parent="CreditsTexture" unique_id=812132717]
 unique_name_in_owner = true
-position = Vector2(74.73402, 11.436171)
-scale = Vector2(0.46516076, 0.46516076)
+position = Vector2(108, 14)
 texture = ExtResource("3_4ijaf")
 
 [node name="CloseButton" type="TextureButton" parent="CreditsTexture" unique_id=1719513878]
 unique_name_in_owner = true
 layout_mode = 0
-offset_right = 29.999996
-offset_bottom = 30.0
-scale = Vector2(0.464379, 0.464379)
+offset_left = 13.0
+offset_top = 20.0
+offset_right = 43.0
+offset_bottom = 50.0
+scale = Vector2(0.8, 0.8)
 texture_normal = ExtResource("4_fwj24")
 texture_hover = ExtResource("5_argos")
 
 [node name="ThanksLabel" type="Label" parent="CreditsTexture" unique_id=307114215]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 21.27659
-offset_top = 6.6489377
-offset_right = 238.2766
-offset_bottom = 41.648937
-scale = Vector2(0.22245532, 0.22245532)
+offset_left = 120.0
+offset_top = 1.0
+offset_right = 268.0
+offset_bottom = 27.0
 text = "SPECIAL THANKS"
 label_settings = SubResource("LabelSettings_josap")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="PeopleLabel" type="Label" parent="CreditsTexture" unique_id=483507903]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 7.7127686
-offset_top = 16.755318
-offset_right = 99.71277
-offset_bottom = 146.75531
-scale = Vector2(0.3317041, 0.3317041)
+offset_left = 40.0
+offset_top = 64.0
+offset_right = 136.0
+offset_bottom = 204.0
 text = "- ODRUU
 - CRO128
 - PAULA
 - TIPITO
 - JUANHEZ
-- NESTORGMS
-- GHOKO"
+- NESTORGMS"
 label_settings = SubResource("LabelSettings_542ni")
 
 [node name="PeopleLabel2" type="Label" parent="CreditsTexture" unique_id=1527732006]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 41.223396
-offset_top = 17.021276
-offset_right = 133.22339
-offset_bottom = 147.02127
-scale = Vector2(0.3317041, 0.3317041)
-text = "- TSUNELA
+offset_left = 150.0
+offset_top = 64.0
+offset_right = 246.0
+offset_bottom = 204.0
+text = "- GHOKO
+- TSUNELA
 - TECTOR9
 - SUNTIME
 - MINDS
-- KOSHI
-- KODOMO
-- GOLTYIP"
+- KOSHI"
 label_settings = SubResource("LabelSettings_542ni")
 
 [node name="PeopleLabel3" type="Label" parent="CreditsTexture" unique_id=1829223709]
 layout_mode = 0
-offset_left = 65.69147
-offset_top = 16.755318
-offset_right = 157.69145
-offset_bottom = 146.75531
-scale = Vector2(0.3317041, 0.3317041)
-text = "- ITSRODRIGO
+offset_left = 260.0
+offset_top = 64.0
+offset_right = 352.0
+offset_bottom = 204.0
+text = "- KODOMO
+- GOLTYIP
+- ITSRODRIGO
 - NEXUS43
 - MATU"
 label_settings = SubResource("LabelSettings_542ni")

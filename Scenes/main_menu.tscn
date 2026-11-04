@@ -244,16 +244,6 @@ position = Vector2(449.00003, 275.00003)
 scale = Vector2(0.86131614, 0.86131614)
 texture = ExtResource("6_xcoo4")
 
-[node name="SpecialThanksButton" type="TextureButton" parent="." unique_id=100673770]
-layout_mode = 0
-offset_left = 298.0
-offset_top = 209.0
-offset_right = 328.0
-offset_bottom = 239.0
-texture_normal = ExtResource("5_m3bi6")
-texture_pressed = ExtResource("6_wyh8j")
-texture_hover = ExtResource("6_wyh8j")
-
 [node name="GithubButton" type="TextureButton" parent="." unique_id=306455585]
 layout_mode = 0
 offset_left = 48.000004
@@ -476,7 +466,7 @@ texture_hover = ExtResource("39_marcadeh")
 visible = false
 layout_mode = 0
 offset_left = 79.0
-offset_top = 152.0
+offset_top = 121.0
 offset_right = 178.0
 offset_bottom = 257.0
 texture = ExtResource("35_mpanel")
@@ -564,12 +554,22 @@ texture_normal = ExtResource("21_aylim")
 texture_pressed = ExtResource("22_y82t1")
 texture_hover = ExtResource("22_y82t1")
 
+[node name="SpecialThanksButton" type="TextureButton" parent="SettingsPanel" unique_id=100673770]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 66.0
+offset_right = 64.0
+offset_bottom = 96.0
+texture_normal = ExtResource("5_m3bi6")
+texture_pressed = ExtResource("6_wyh8j")
+texture_hover = ExtResource("6_wyh8j")
+
 [node name="MusicVolume" type="Control" parent="SettingsPanel"]
 layout_mode = 0
 offset_left = 5.0
-offset_top = 69.0
+offset_top = 100.0
 offset_right = 94.0
-offset_bottom = 85.0
+offset_bottom = 116.0
 script = ExtResource("48_volrow")
 click_sound = ExtResource("10_16hvj")
 
@@ -617,9 +617,9 @@ texture_hover = ExtResource("56_inch")
 [node name="SfxVolume" type="Control" parent="SettingsPanel"]
 layout_mode = 0
 offset_left = 5.0
-offset_top = 86.0
+offset_top = 117.0
 offset_right = 94.0
-offset_bottom = 102.0
+offset_bottom = 133.0
 script = ExtResource("48_volrow")
 channel = 1
 click_sound = ExtResource("10_16hvj")

@@ -128,8 +128,13 @@ func _setup_buttons() -> void:
 	if has_node("VBoxContainer/CreditsButton"):
 		get_node("VBoxContainer/CreditsButton").pressed.connect(credits_panel.show)
 		
-	if has_node("SpecialThanksButton"):
-		get_node("SpecialThanksButton").pressed.connect(special_thanks_panel.show)
+	var thanks_btn = _get_setting_button("SpecialThanksButton")
+	if thanks_btn:
+		# Close the settings panel first, or the click that follows would only close it
+		thanks_btn.pressed.connect(func():
+			_hide_settings_panel()
+			special_thanks_panel.show()
+		)
 		
 	if has_node("AchievementsButton"):
 		var achievements_btn = get_node("AchievementsButton")
