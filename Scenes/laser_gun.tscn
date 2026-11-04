@@ -1,0 +1,359 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/Enemies/laser_gun.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Enemies/laser_gun_sheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Enemies/laser_gun_break.png" id="3_break"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/laser_gun_charge.ogg" id="4_charge"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/laser_gun_fire.ogg" id="5_fire"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Enemies/laser_beam_impact.png" id="6_impact"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Enemies/laser_gun_spawn.png" id="7_spawn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f0"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 0, 56, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(56, 0, 56, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(112, 0, 56, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(168, 0, 56, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(224, 0, 56, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f5"]
+atlas = ExtResource("2_sheet")
+region = Rect2(280, 0, 56, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f6"]
+atlas = ExtResource("2_sheet")
+region = Rect2(336, 0, 56, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f7"]
+atlas = ExtResource("2_sheet")
+region = Rect2(392, 0, 56, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f8"]
+atlas = ExtResource("2_sheet")
+region = Rect2(448, 0, 56, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f9"]
+atlas = ExtResource("2_sheet")
+region = Rect2(504, 0, 56, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s0"]
+atlas = ExtResource("7_spawn")
+region = Rect2(0, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s1"]
+atlas = ExtResource("7_spawn")
+region = Rect2(96, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s2"]
+atlas = ExtResource("7_spawn")
+region = Rect2(192, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s3"]
+atlas = ExtResource("7_spawn")
+region = Rect2(288, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s4"]
+atlas = ExtResource("7_spawn")
+region = Rect2(384, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s5"]
+atlas = ExtResource("7_spawn")
+region = Rect2(480, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s6"]
+atlas = ExtResource("7_spawn")
+region = Rect2(576, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s7"]
+atlas = ExtResource("7_spawn")
+region = Rect2(672, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s8"]
+atlas = ExtResource("7_spawn")
+region = Rect2(768, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s9"]
+atlas = ExtResource("7_spawn")
+region = Rect2(864, 0, 96, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gun"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s9")
+}],
+"loop": false,
+"name": &"spawn",
+"speed": 16.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f2")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f7")
+}],
+"loop": false,
+"name": &"charge",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f9")
+}],
+"loop": true,
+"name": &"fire",
+"speed": 14.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b0"]
+atlas = ExtResource("3_break")
+region = Rect2(0, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b1"]
+atlas = ExtResource("3_break")
+region = Rect2(96, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b2"]
+atlas = ExtResource("3_break")
+region = Rect2(192, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b3"]
+atlas = ExtResource("3_break")
+region = Rect2(288, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b4"]
+atlas = ExtResource("3_break")
+region = Rect2(384, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b5"]
+atlas = ExtResource("3_break")
+region = Rect2(480, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b6"]
+atlas = ExtResource("3_break")
+region = Rect2(576, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b7"]
+atlas = ExtResource("3_break")
+region = Rect2(672, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b8"]
+atlas = ExtResource("3_break")
+region = Rect2(768, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i0"]
+atlas = ExtResource("6_impact")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i1"]
+atlas = ExtResource("6_impact")
+region = Rect2(24, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i2"]
+atlas = ExtResource("6_impact")
+region = Rect2(48, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i3"]
+atlas = ExtResource("6_impact")
+region = Rect2(72, 0, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_break"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b8")
+}],
+"loop": false,
+"name": &"break",
+"speed": 14.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_impact"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i3")
+}],
+"loop": true,
+"name": &"impact",
+"speed": 16.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gun"]
+size = Vector2(141, 75)
+
+[node name="LaserGun" type="Area2D" groups=["laser_guns"]]
+z_index = 2
+script = ExtResource("1_script")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_gun")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-12, 1.5)
+shape = SubResource("RectangleShape2D_gun")
+
+[node name="Muzzle" type="Marker2D" parent="."]
+position = Vector2(58.5, -13.5)
+
+[node name="RayCast2D" type="RayCast2D" parent="Muzzle"]
+enabled = false
+target_position = Vector2(4000, 0)
+
+[node name="AimLine" type="Line2D" parent="."]
+visible = false
+z_index = 1
+width = 4.0
+default_color = Color(0.22, 1, 0.42, 0.9)
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="BeamGlow" type="Line2D" parent="."]
+visible = false
+z_index = 1
+width = 48.0
+default_color = Color(0.22, 1, 0.42, 0.4)
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="BeamCore" type="Line2D" parent="."]
+visible = false
+z_index = 1
+width = 16.0
+default_color = Color(0.85, 1, 0.9, 1)
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="Impact" type="AnimatedSprite2D" parent="."]
+visible = false
+z_index = 1
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_impact")
+animation = &"impact"
+
+[node name="BreakSprite" type="AnimatedSprite2D" parent="."]
+visible = false
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_break")
+animation = &"break"
+
+[node name="ChargeSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_charge")
+bus = &"SFX"
+
+[node name="FireSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_fire")
+bus = &"SFX"

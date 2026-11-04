@@ -49,6 +49,8 @@
 [ext_resource type="PackedScene" uid="uid://mjsfrhy7mt7v" path="res://Scenes/time_slow_pickup.tscn" id="42_l5mff"]
 [ext_resource type="PackedScene" uid="uid://cv6iiauo728sf" path="res://Scenes/laser_shield.tscn" id="42_nwwfm"]
 [ext_resource type="PackedScene" path="res://Scenes/time_slow.tscn" id="43_46h6s"]
+[ext_resource type="Script" uid="uid://co70ivgmpkwgj" path="res://Scripts/Enemies/laser_gun_spawner.gd" id="44_gunspawner"]
+[ext_resource type="PackedScene" path="res://Scenes/laser_gun.tscn" id="45_laser_gun"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_s8vy0"]
 shader = ExtResource("5_nwwfm")
@@ -748,7 +750,7 @@ shape = SubResource("RectangleShape2D_aa8k8")
 debug_color = Color(1, 0.0470588, 0, 0.419608)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2091898546 node_paths=PackedStringArray("player_target")]
-zoom = Vector2(0.23, 0.23)
+zoom = Vector2(0.25, 0.25)
 limit_left = -1915
 limit_top = -1420
 limit_right = 1870
@@ -992,11 +994,12 @@ lifetime = 1.6
 process_material = SubResource("ParticleProcessMaterial_d1ilt")
 script = ExtResource("12_6iyac")
 
-[node name="PhaseNode" type="Node2D" parent="." unique_id=173345045 node_paths=PackedStringArray("player_node", "ship_enemy_spawner", "saw_enemy_spawner", "wall_to_remove", "sprite_to_remove", "nodes_to_remove")]
+[node name="PhaseNode" type="Node2D" parent="." unique_id=173345045 node_paths=PackedStringArray("player_node", "ship_enemy_spawner", "saw_enemy_spawner", "laser_gun_spawner", "wall_to_remove", "sprite_to_remove", "nodes_to_remove")]
 script = ExtResource("20_hibaj")
 player_node = NodePath("../PlayerInstance")
 ship_enemy_spawner = NodePath("../EnemySpawner")
 saw_enemy_spawner = NodePath("../SawSpawner")
+laser_gun_spawner = NodePath("../LaserGunSpawner")
 wall_to_remove = NodePath("../Walls/WallStartBridge")
 sprite_to_remove = NodePath("../LaserWallAnimation")
 nodes_to_remove = [NodePath("../LaserZone/StartBridge")]
@@ -1014,6 +1017,11 @@ saw_scene = ExtResource("17_h1bgf")
 portal_scene = ExtResource("36_s8vy0")
 player_node = NodePath("../PlayerInstance")
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+
+[node name="LaserGunSpawner" type="Node2D" parent="." unique_id=1586572115 node_paths=PackedStringArray("player_node")]
+script = ExtResource("44_gunspawner")
+gun_scene = ExtResource("45_laser_gun")
+player_node = NodePath("../PlayerInstance")
 
 [node name="PowerUp1Spawner" type="Node2D" parent="." unique_id=165087203 node_paths=PackedStringArray("spawn_locator")]
 script = ExtResource("37_o1aky")

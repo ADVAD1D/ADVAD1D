@@ -16,6 +16,8 @@ signal timer_updated(time_left_string)
 
 @export var ship_enemy_spawner: Node2D
 @export var saw_enemy_spawner: Node2D
+## Arena 2's wall guns (LaserGunSpawner); how many per phase comes from "laser_guns".
+@export var laser_gun_spawner: Node2D
 
 @export var phase_cooldown_timer: float = 1.0 # = 1.0
 
@@ -82,9 +84,11 @@ var arena_enemy_configs = {
 		"min_ship_spd": 400.0, 
 		"max_ship_spd": 500.0, 
 		"sep_radius": 300.0, 
-		"sep_strength": 300.0, 
-		"can_retreat": false, 
-		"fire_range": 3500.0 },
+		"sep_strength": 300.0,
+		"can_retreat": false,
+		"fire_range": 3500.0,
+		# Laser guns on the walls: {from phase: how many}
+		"laser_guns": {3: 1, 7: 2} },
 		
 	2: { "min_shoot": 0.4, 
 		"max_shoot": 0.7, 
@@ -278,7 +282,10 @@ func start_new_phase():
 			
 		if is_instance_valid(ship_enemy_spawner):
 			ship_enemy_spawner.stop()
-			
+
+		if is_instance_valid(laser_gun_spawner):
+			laser_gun_spawner.stop()
+
 		call_deferred("_stop_powerup_spawners")
 			
 		if is_instance_valid(wall_to_remove):
@@ -467,8 +474,24 @@ func apply_difficulty():
 	
 	if is_instance_valid(saw_enemy_spawner):
 		saw_enemy_spawner.configure_for_phase(saw_max_enemies, saw_config)
+
+	# Laser guns (arena 2): count from the "laser_guns" table, shooting more often later on
+	if is_instance_valid(laser_gun_spawner):
+		var gun_config = {"cooldown_scale": lerp(1.0, 0.7, minf(progress, 1.0))}
+		laser_gun_spawner.configure_for_phase(_get_laser_gun_count(config), gun_config)
 		
 ## Smoothly fades out and deletes a target sprite (e.g., arena background elements).
+## Laser guns for the current phase: the value of the highest "from phase" key reached.
+func _get_laser_gun_count(config: Dictionary) -> int:
+	var table: Dictionary = config.get("laser_guns", {})
+	var best_phase: int = 0
+	var count: int = 0
+	for from_phase in table:
+		if current_phase >= int(from_phase) and int(from_phase) > best_phase:
+			best_phase = int(from_phase)
+			count = int(table[from_phase])
+	return count
+
 func start_fade_out_sprite(target_sprite: AnimatedSprite2D):
 	var tween = create_tween()
 	tween.tween_property(target_sprite, "modulate:a", 0.0, 1.0)

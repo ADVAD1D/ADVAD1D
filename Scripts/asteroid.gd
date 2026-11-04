@@ -8,6 +8,8 @@ var speed_multiplier: float = 1.0
 @export var asteroid_explosion_sound: PackedScene
 
 var speed_asteroids: float
+## Set by explode(), so two hits in the same frame don't explode (or score) twice.
+var _exploded: bool = false
 
 func _ready() -> void:
 	speed = randf_range(500.0, 1000.0) * speed_multiplier
@@ -26,66 +28,33 @@ func _process(delta: float) -> void:
 
 
 func _on_area_entered(area: Area2D) -> void:
+	if _exploded:
+		return
 	if area.is_in_group("lasers"):
-		if explosion_scene:
-			var asteroid_explosion = explosion_scene.instantiate()
-			asteroid_explosion.global_position = global_position
-			get_parent().call_deferred("add_child", asteroid_explosion)
-		
-		if asteroid_explosion_sound:
-			var sound_instance = asteroid_explosion_sound.instantiate()
-			sound_instance.global_position = global_position
-			get_parent().call_deferred("add_child", sound_instance)
-		
+		# Only the player's lasers give score
 		GameManager.add_score(50)
-		queue_free() # Replace with function body.
-		
-	if area.is_in_group("enemy_laser"):
-		if explosion_scene:
-			var asteroid_explosion = explosion_scene.instantiate()
-			asteroid_explosion.global_position = global_position
-			get_parent().call_deferred("add_child", asteroid_explosion)
-		
-		if asteroid_explosion_sound:
-			var sound_instance = asteroid_explosion_sound.instantiate()
-			sound_instance.global_position = global_position
-			get_parent().call_deferred("add_child", sound_instance)
+		explode()
+	elif area.is_in_group("enemy_laser"):
 		EnemyLaserPool.release(area)
-		queue_free()
-		
-	if area.is_in_group("saws"):
-		if explosion_scene:
-			var asteroid_explosion = explosion_scene.instantiate()
-			asteroid_explosion.global_position = global_position
-			get_parent().call_deferred("add_child", asteroid_explosion)
-		
-		if asteroid_explosion_sound:
-			var sound_instance = asteroid_explosion_sound.instantiate()
-			sound_instance.global_position = global_position
-			get_parent().call_deferred("add_child", sound_instance)
-		queue_free()
-		
-	if area.is_in_group("player_shield"):
-		if explosion_scene:
-			var asteroid_explosion = explosion_scene.instantiate()
-			asteroid_explosion.global_position = global_position
-			get_parent().call_deferred("add_child", asteroid_explosion)
-		
-		if asteroid_explosion_sound:
-			var sound_instance = asteroid_explosion_sound.instantiate()
-			sound_instance.global_position = global_position
-			get_parent().call_deferred("add_child", sound_instance)
-		queue_free()
-			
-	if area.is_in_group("allies"):
-		if explosion_scene:
-			var asteroid_explosion = explosion_scene.instantiate()
-			asteroid_explosion.global_position = global_position
-			get_parent().call_deferred("add_child", asteroid_explosion)
-		
-		if asteroid_explosion_sound:
-			var sound_instance = asteroid_explosion_sound.instantiate()
-			sound_instance.global_position = global_position
-			get_parent().call_deferred("add_child", sound_instance)
-			
-		queue_free()
+		explode()
+	elif area.is_in_group("saws") or area.is_in_group("player_shield") \
+			or area.is_in_group("allies"):
+		explode()
+
+
+## Explosion effect + sound, then the asteroid is removed. Gives no score (the caller adds
+## it when the player did it). Also used by arena 2's laser guns (LaserGun beam).
+func explode() -> void:
+	if _exploded:
+		return
+	_exploded = true
+	if explosion_scene:
+		var asteroid_explosion = explosion_scene.instantiate()
+		asteroid_explosion.global_position = global_position
+		get_parent().call_deferred("add_child", asteroid_explosion)
+
+	if asteroid_explosion_sound:
+		var sound_instance = asteroid_explosion_sound.instantiate()
+		sound_instance.global_position = global_position
+		get_parent().call_deferred("add_child", sound_instance)
+	queue_free()
