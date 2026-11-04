@@ -38,6 +38,10 @@ func _ready() -> void:
 	# Arcade runs never clear the arena, so they don't count.
 	if GameManager.phase_to_start <= 1 and not GameManager.arcade_mode_active:
 		AchievementManager.begin_arena_run(arena_index)
+	# NEW GROUND: reaching arena 2 (normally after clearing arena 1). Opening the scene
+	# straight from the editor unlocks it too.
+	if arena_index == 1:
+		AchievementManager.unlock(&"arena_2_reached")
 	base_zoom = cam.zoom
 	player.died.connect(_on_player_died) # Replace with function body.
 	player.connect("dash", Callable(self, "_on_player_dashed"))

@@ -105,14 +105,17 @@ func _make_row(achievement: Achievement, index: int) -> Control:
 	var desc: String = achievement.description if revealed else "KEEP PLAYING TO REVEAL"
 	_add_label(slide, desc, Vector2(56, 21), 12, TEXT_DIM if revealed else TEXT_OFF)
 
-	# Progress bar inside the row sprite's track (x 57..287, y 37)
-	if revealed and achievement.progress_format != Achievement.ProgressFormat.NONE:
+	# Progress bar inside the row sprite's track (x 57..287, y 37). The bar is always drawn
+	# (full once unlocked, also for MANUAL achievements with no stat); the text only when
+	# the achievement has a progress format.
+	if revealed:
 		var width: float = roundf(230.0 * AchievementManager.progress_ratio(achievement))
 		if width > 0.0:
 			_add_rect(slide, Vector2(57, 37), Vector2(width, 4), accent)
 			_add_rect(slide, Vector2(57, 37), Vector2(width, 1), accent_light)
-		var progress: String = AchievementManager.progress_text(achievement)
-		_add_label(slide, progress, Vector2(292, 33), 12, accent_light)
+		if achievement.progress_format != Achievement.ProgressFormat.NONE:
+			var progress: String = AchievementManager.progress_text(achievement)
+			_add_label(slide, progress, Vector2(292, 33), 12, accent_light)
 
 	# Reward column and slot (x 398..444)
 	var reward: String = achievement.reward_text()

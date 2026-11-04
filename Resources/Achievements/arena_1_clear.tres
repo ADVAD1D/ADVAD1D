@@ -14,4 +14,4 @@ goal_type = 0
 goal = 1.0
 progress_format = 0
 reward_ship_index = 1
-order = -1
+order = -2
