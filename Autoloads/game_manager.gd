@@ -8,7 +8,7 @@ signal score_updated(new_score)
 ## Points of each add_score() call (ArcadeManager multiplies them into the run score).
 signal points_added(points)
 signal pause(is_paused)
-## Emitted by the settings panel after a toggle changes (the HUD shows/hides the FPS).
+## Emitted by apply_settings() after a settings panel toggle (the HUD shows/hides the FPS).
 signal settings_changed
 
 #global variables
@@ -194,8 +194,14 @@ func get_formatted_speedrun_time() -> String:
 	
 #save and load data functions
 
+## Saves the settings and emits settings_changed, so open scenes can react (the HUD shows
+## or hides the FPS). Called by the settings panel after every toggle.
+func apply_settings() -> void:
+	save_data()
+	settings_changed.emit()
+
 ## Serializes and saves game configuration to user://save_game.json.
-## On Web builds (browser_support = true), it only saves the player's name 
+## On Web builds (browser_support = true), it only saves the player's name
 ## as local file persistence is not fully supported or is constrained in browsers.
 func save_data():
 	var data: Dictionary

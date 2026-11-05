@@ -3,7 +3,8 @@ extends NinePatchRect
 ## The settings panel (Scenes/UI/settings_panel.tscn), shared by the main menu (gear
 ## button) and the pause menu: controls, FPS, full screen, retro shader / shader
 ## optimization, CRT roll and speedrun toggles, special thanks, music and SFX volume rows.
-## Every toggle writes GameManager, saves, and emits GameManager.settings_changed so open
+## Every toggle writes GameManager and calls GameManager.apply_settings() (saves and emits
+## settings_changed) so open
 ## scenes can react (the HUD's FPS label); CRT changes are applied to every CRT shader of
 ## the current scene through ShaderManager.refresh_current_scene().
 ## Opening and closing it is up to the scene that holds it.
@@ -116,8 +117,7 @@ func _update_roll_button() -> void:
 
 
 func _save() -> void:
-	GameManager.save_data()
-	GameManager.settings_changed.emit()
+	GameManager.apply_settings()
 
 
 func _play_toggle() -> void:
