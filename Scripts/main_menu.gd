@@ -137,6 +137,8 @@ func _setup_buttons() -> void:
 	if has_node("VBoxContainer/CreditsButton"):
 		get_node("VBoxContainer/CreditsButton").pressed.connect(credits_panel.show)
 
+	_setup_main_buttons()
+
 	# The settings panel (Scenes/UI/settings_panel.tscn) runs its own toggles; the menu
 	# only opens/closes it and reacts to what concerns the menu
 	if settings_panel is SettingsPanel:
@@ -324,6 +326,29 @@ func _arena_button_style(bg: Color) -> StyleBoxFlat:
 	style.set_border_width_all(1)
 	style.set_content_margin_all(0)
 	return style
+
+## PLAY, CREDITS and QUIT (Assets/Sprites/MainMenu/*.svg): hover and focus share the lit
+## sprite, and hovering one focuses it, so only one button is ever lit, with the mouse or
+## the keyboard. Not while a popup is open, so the hover doesn't pull focus out of it.
+func _setup_main_buttons() -> void:
+	for button_name in ["PlayButton", "CreditsButton", "QuitButton"]:
+		var button: TextureButton = get_node_or_null("VBoxContainer/" + button_name)
+		if button == null:
+			continue
+		button.mouse_entered.connect(func():
+			if not _is_play_mode_panel_open() and not _is_settings_panel_open():
+				button.grab_focus()
+		)
+	# The arcade arrow sits on PLAY's screen: it lights up with PLAY so the screen looks whole
+	var play_button: TextureButton = get_node_or_null("VBoxContainer/PlayButton")
+	if is_instance_valid(play_button) and is_instance_valid(play_mode_arrow):
+		var arrow_idle: Texture2D = play_mode_arrow.texture_normal
+		play_button.focus_entered.connect(func():
+			play_mode_arrow.texture_normal = play_mode_arrow.texture_hover
+		)
+		play_button.focus_exited.connect(func():
+			play_mode_arrow.texture_normal = arrow_idle
+		)
 
 func _set_arena_picker_open(open: bool) -> void:
 	if not is_instance_valid(arena_picker):

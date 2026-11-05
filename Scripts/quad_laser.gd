@@ -87,12 +87,29 @@ func _physics_process(delta: float) -> void:
 			if _timer <= 0.0:
 				_start_charge()
 		State.CHARGE:
+			if _timer <= 0.0:
+				_start_fire()
+		State.FIRE:
+			for i in _pivots.size():
+				_destroy_targets(_muzzle(i), _cast(i))
+			if _timer <= 0.0:
+				_end_volley()
+		State.GAP:
+			if _timer <= 0.0:
+				_start_charge()
+
+
+## The beams are drawn every rendered frame from a fresh cast, once the ship has moved and
+## turned. The lines live in the cannons' local space, so drawing a cast made earlier (in
+## the physics tick, before a fast turn or a dash, which snaps the rotation) turned the
+## whole beam with the ship and swung its far end through the walls.
+func _process(_delta: float) -> void:
+	match _state:
+		State.CHARGE:
 			var blink: float = absf(sin(_beam_time * 30.0))
 			for i in _pivots.size():
 				_set_line(i, _aims[i], _cast(i))
 				_aims[i].modulate.a = 0.3 + 0.5 * blink
-			if _timer <= 0.0:
-				_start_fire()
 		State.FIRE:
 			var flicker: float = 1.0 + 0.15 * sin(_beam_time * 60.0)
 			for i in _pivots.size():
@@ -101,12 +118,6 @@ func _physics_process(delta: float) -> void:
 				_set_line(i, _cores[i], end)
 				_glows[i].width = glow_width * flicker
 				_cores[i].width = core_width * flicker
-				_destroy_targets(_rays[i].global_position, end)
-			if _timer <= 0.0:
-				_end_volley()
-		State.GAP:
-			if _timer <= 0.0:
-				_start_charge()
 
 
 # --- States -------------------------------------------------------------------
@@ -158,9 +169,26 @@ func _hide_lines() -> void:
 
 # --- Beams --------------------------------------------------------------------
 
-## Casts beam i from its muzzle and returns where it ends (global): the first wall
-## (StaticBody2D). Every other body is skipped, like the laser guns' beam.
+## Casts beam i and returns where it ends (global): the first wall (StaticBody2D). Every
+## other body is skipped, like the laser guns' beam. The ray starts at the ship's centre,
+## not at the muzzle: pressed against a wall, the muzzle is already inside or past it, and
+## a ray that starts inside a wall doesn't see it (the beam went through). If the wall is
+## closer than the muzzle, the beam ends at the muzzle (blocked, no length).
 func _cast(i: int) -> Vector2:
+	var end: Vector2 = _cast_from_centre(i)
+	var origin: Vector2 = _rays[i].global_position
+	var muzzle: Vector2 = _muzzle(i)
+	if origin.distance_squared_to(end) <= origin.distance_squared_to(muzzle):
+		return muzzle
+	return end
+
+
+## Global position of cannon i's muzzle, where the beam is drawn from.
+func _muzzle(i: int) -> Vector2:
+	return _pivots[i].to_global(Vector2(0, -muzzle_distance))
+
+
+func _cast_from_centre(i: int) -> Vector2:
 	var ray: RayCast2D = _rays[i]
 	ray.clear_exceptions()
 	if get_parent() is CollisionObject2D:
@@ -233,9 +261,11 @@ func _build_cannon(angle: float) -> void:
 	_add_rect(pivot, Rect2(-2.0, -muzzle_distance, 4.0, muzzle_distance - barrel_start), CANNON_FILL)
 	_add_rect(pivot, Rect2(-2.0, -muzzle_distance, 4.0, 2.0), CANNON_TIP)
 
+	# From the ship's centre (see _cast); hit_from_inside so a wall overlapping the origin
+	# still stops it
 	var ray: RayCast2D = RayCast2D.new()
 	ray.enabled = false
-	ray.position = Vector2(0, -muzzle_distance)
+	ray.hit_from_inside = true
 	ray.target_position = Vector2(0, -beam_range)
 	pivot.add_child(ray)
 	_rays.append(ray)

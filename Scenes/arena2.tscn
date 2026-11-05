@@ -146,10 +146,10 @@ _data = {
 size = Vector2(2119.6006, 10)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kry3j"]
-size = Vector2(1808.5518, 27.717411)
+size = Vector2(1880.77, 27.717411)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_21xkr"]
-size = Vector2(1808.9366, 16.2203)
+size = Vector2(1880.77, 16.2203)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pdsj5"]
 size = Vector2(56, 2343.185)
@@ -375,7 +375,7 @@ debug_color = Color(0.21949, 0.639052, 0, 0.42)
 [node name="WallTop1" type="StaticBody2D" parent="Walls" unique_id=419674501 groups=["colisiones"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallTop1" unique_id=550357507]
-position = Vector2(-1032.4585, 386.89587)
+position = Vector2(-1032.4585, 411.385)
 rotation = -1.5707964
 scale = Vector2(0.9999994, 0.9999994)
 shape = SubResource("RectangleShape2D_kry3j")
@@ -384,7 +384,7 @@ debug_color = Color(0.403922, 0.607843, 0, 0.627451)
 [node name="WallTop2" type="StaticBody2D" parent="Walls" unique_id=158168835 groups=["colisiones"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallTop2" unique_id=1054813891]
-position = Vector2(1065.5834, 378.61905)
+position = Vector2(1065.5834, 411.385)
 rotation = 1.5707964
 scale = Vector2(0.9999994, 0.9999994)
 shape = SubResource("RectangleShape2D_21xkr")

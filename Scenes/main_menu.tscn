@@ -7,22 +7,22 @@
 [ext_resource type="PackedScene" uid="uid://cwrkymd0iykky" path="res://Scenes/Abduction.tscn" id="2_trj04"]
 [ext_resource type="PackedScene" uid="uid://b3erfay7mn45e" path="res://Scenes/skin_selector.tscn" id="3_5n0dv"]
 [ext_resource type="Texture2D" uid="uid://3m1orbh60ase" path="res://Assets/Sprites/specialthanksbutton.png" id="5_m3bi6"]
-[ext_resource type="Texture2D" uid="uid://bp74cmhcbg21i" path="res://Assets/Sprites/playbutton.png" id="5_opfnp"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/play_button.svg" id="5_opfnp"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="5_vr1f0"]
-[ext_resource type="Texture2D" uid="uid://d27ed1pl0byje" path="res://Assets/Sprites/playbuttonhover.png" id="6_cp0ys"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/play_button_hover.svg" id="6_cp0ys"]
 [ext_resource type="Texture2D" uid="uid://ddpugxe2tluy5" path="res://Assets/Sprites/specialthanksbuttonhover.png" id="6_wyh8j"]
 [ext_resource type="Texture2D" uid="uid://2x8p7yh4hu8" path="res://Assets/Sprites/godotlogo.png" id="6_xcoo4"]
 [ext_resource type="Texture2D" uid="uid://cvt1ilue7b0ys" path="res://Assets/Sprites/discordpixelicon.png" id="7_mkpwh"]
-[ext_resource type="Texture2D" uid="uid://duc8rjasfhdl3" path="res://Assets/Sprites/quitbutton.png" id="7_yhxw7"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/quit_button.svg" id="7_yhxw7"]
 [ext_resource type="Texture2D" uid="uid://c80ak2c0el2pn" path="res://Assets/Sprites/discordpixeliconhover.png" id="8_4nkqq"]
-[ext_resource type="Texture2D" uid="uid://3t8pj8h4rows" path="res://Assets/Sprites/quitbuttonhover.png" id="8_trj04"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/quit_button_hover.svg" id="8_trj04"]
 [ext_resource type="Texture2D" uid="uid://bu36jnatqthqb" path="res://Assets/Sprites/github_button.png" id="8_tt8ml"]
-[ext_resource type="Texture2D" uid="uid://c0b8fbs27w4o4" path="res://Assets/Sprites/creditsbutton.png" id="9_5egv6"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/credits_button.svg" id="9_5egv6"]
 [ext_resource type="Texture2D" uid="uid://caevxyadicjag" path="res://Assets/Sprites/github_button_hover.png" id="9_fmarx"]
 [ext_resource type="Texture2D" uid="uid://bkdv1633hq14x" path="res://Assets/Sprites/fullscreenbutton.png" id="9_jr6u5"]
 [ext_resource type="Texture2D" uid="uid://lnq6a0woe0n8" path="res://Assets/Sprites/fullscreenbuttonhover.png" id="10_6m47u"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="10_16hvj"]
-[ext_resource type="Texture2D" uid="uid://c1let3csoxgfl" path="res://Assets/Sprites/creditsbuttonhover.png" id="10_vtepg"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/credits_button_hover.svg" id="10_vtepg"]
 [ext_resource type="Texture2D" uid="uid://bkumdi5oetady" path="res://Assets/Sprites/fullscreenbuttonhover1.png" id="11_84iac"]
 [ext_resource type="Texture2D" uid="uid://b5cdor227lduo" path="res://Assets/Sprites/ship_button.png" id="12_84iac"]
 [ext_resource type="Texture2D" uid="uid://dkfi27m653fqi" path="res://Assets/Sprites/ship_button_hover.png" id="13_5n0dv"]
@@ -386,18 +386,21 @@ layout_mode = 2
 texture_normal = ExtResource("5_opfnp")
 texture_pressed = ExtResource("6_cp0ys")
 texture_hover = ExtResource("6_cp0ys")
+texture_focused = ExtResource("6_cp0ys")
 
 [node name="CreditsButton" type="TextureButton" parent="VBoxContainer" unique_id=2114862343]
 layout_mode = 2
 texture_normal = ExtResource("9_5egv6")
 texture_pressed = ExtResource("10_vtepg")
 texture_hover = ExtResource("10_vtepg")
+texture_focused = ExtResource("10_vtepg")
 
 [node name="QuitButton" type="TextureButton" parent="VBoxContainer" unique_id=111436286]
 layout_mode = 2
 texture_normal = ExtResource("7_yhxw7")
 texture_pressed = ExtResource("8_trj04")
 texture_hover = ExtResource("8_trj04")
+texture_focused = ExtResource("8_trj04")
 
 [node name="PlayModeArrow" type="TextureButton" parent="." unique_id=803568040]
 layout_mode = 0
