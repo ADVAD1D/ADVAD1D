@@ -6,7 +6,6 @@
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_48xlc"]
 [ext_resource type="PackedScene" uid="uid://cwrkymd0iykky" path="res://Scenes/Abduction.tscn" id="2_trj04"]
 [ext_resource type="PackedScene" uid="uid://b3erfay7mn45e" path="res://Scenes/skin_selector.tscn" id="3_5n0dv"]
-[ext_resource type="PackedScene" uid="uid://de50n3nlygj51" path="res://Scenes/UI/ai_console_subviewport.tscn" id="4_1xund"]
 [ext_resource type="Texture2D" uid="uid://3m1orbh60ase" path="res://Assets/Sprites/specialthanksbutton.png" id="5_m3bi6"]
 [ext_resource type="Texture2D" uid="uid://bp74cmhcbg21i" path="res://Assets/Sprites/playbutton.png" id="5_opfnp"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="5_vr1f0"]
@@ -31,9 +30,7 @@
 [ext_resource type="Texture2D" uid="uid://d3k3im72hadw5" path="res://Assets/Sprites/controlsbutton.png" id="17_hkdq0"]
 [ext_resource type="PackedScene" uid="uid://ctpfllc068qt6" path="res://Scenes/special_thanks.tscn" id="17_wyh8j"]
 [ext_resource type="AudioStream" uid="uid://e74mglwo351x" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="18_4nkqq"]
-[ext_resource type="Texture2D" uid="uid://bjv5mqc5om1an" path="res://Assets/Sprites/chat_button.png" id="18_6vfk8"]
 [ext_resource type="Texture2D" uid="uid://dw0q6hjbb3chm" path="res://Assets/Sprites/controlsbuttonhover.png" id="18_xcoo4"]
-[ext_resource type="Texture2D" uid="uid://d230384jabs3q" path="res://Assets/Sprites/chat_button_hover.png" id="19_1xund"]
 [ext_resource type="Texture2D" uid="uid://7rtdjn2nxt5n" path="res://Assets/Sprites/cronometer_button.png" id="21_aylim"]
 [ext_resource type="Texture2D" uid="uid://bads1tb0f3f4w" path="res://Assets/Sprites/cronometer_button_hover.png" id="22_y82t1"]
 [ext_resource type="Texture2D" uid="uid://3kekm84e6s7l" path="res://Assets/Sprites/fps_button.png" id="25_bmhhk"]
@@ -222,7 +219,6 @@ focus_next = NodePath("VBoxContainer/PlayButton")
 script = ExtResource("1_ce3w2")
 next_scene = ExtResource("2_trj04")
 skin_selector_scene = ExtResource("3_5n0dv")
-chat_console_scene = ExtResource("4_1xund")
 achievements_scene = ExtResource("31_achscene")
 shop_scene = ExtResource("42_shopscene")
 
@@ -276,17 +272,6 @@ scale = Vector2(0.7554791, 0.7554791)
 texture_normal = ExtResource("12_84iac")
 texture_pressed = ExtResource("13_5n0dv")
 texture_hover = ExtResource("13_5n0dv")
-
-[node name="ChatConsoleButton" type="TextureButton" parent="." unique_id=1393632435]
-layout_mode = 0
-offset_left = 382.0
-offset_top = 167.0
-offset_right = 412.0
-offset_bottom = 197.0
-scale = Vector2(0.7928984, 0.7928984)
-texture_normal = ExtResource("18_6vfk8")
-texture_pressed = ExtResource("19_1xund")
-texture_hover = ExtResource("19_1xund")
 
 [node name="AchievementsButton" type="TextureButton" parent="." unique_id=400276937]
 layout_mode = 0

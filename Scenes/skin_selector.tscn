@@ -11,6 +11,9 @@
 [ext_resource type="Texture2D" uid="uid://cg4wnvam0pwwh" path="res://Assets/Sprites/nextbutton1hover.png" id="5_43pbt"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="10_qwen4"]
 [ext_resource type="Texture2D" uid="uid://x6wso5472seu" path="res://Assets/Sprites/Achievements/icon_lock.png" id="11_lock"]
+[ext_resource type="Texture2D" uid="uid://bjv5mqc5om1an" path="res://Assets/Sprites/chat_button.png" id="12_chatbtn"]
+[ext_resource type="Texture2D" uid="uid://d230384jabs3q" path="res://Assets/Sprites/chat_button_hover.png" id="13_chatbtnh"]
+[ext_resource type="PackedScene" uid="uid://de50n3nlygj51" path="res://Scenes/UI/ai_console_subviewport.tscn" id="14_chatscene"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1cnro"]
 font = ExtResource("3_sum1o")
@@ -88,6 +91,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_43pbt")
+chat_console_scene = ExtResource("14_chatscene")
 
 [node name="SkinPanel" type="TextureRect" parent="." unique_id=1965574484]
 layout_mode = 1
@@ -262,6 +266,19 @@ offset_top = 102.0
 offset_right = 411.0
 offset_bottom = 120.0
 label_settings = SubResource("LabelSettings_0tot8")
+
+[node name="ChatConsoleButton" type="TextureButton" parent="." unique_id=1393632435]
+modulate = Color(1, 1, 1, 0.3)
+layout_mode = 0
+offset_left = 424.0
+offset_top = 252.0
+offset_right = 454.0
+offset_bottom = 282.0
+scale = Vector2(0.5, 0.5)
+focus_mode = 0
+texture_normal = ExtResource("12_chatbtn")
+texture_pressed = ExtResource("13_chatbtnh")
+texture_hover = ExtResource("13_chatbtnh")
 
 [connection signal="mouse_entered" from="BackButton" to="." method="_on_back_button_mouse_entered"]
 [connection signal="pressed" from="SubmitButton" to="." method="_on_submit_button_pressed"]

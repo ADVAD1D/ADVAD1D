@@ -11,6 +11,10 @@ const PANEL_CYAN: Color = Color(0.0157, 0.855, 1.0)
 const LOCK_COLOR: Color = Color(0.75, 0.85, 0.85)
 
 var back_scene: String = "res://Scenes/main_menu.tscn"
+## Easter-egg chat (predefined replies). Its button hides in a corner of the panel.
+@export var chat_console_scene: PackedScene
+## Opacity of the chat button while the mouse isn't over it (barely visible on purpose).
+const CHAT_BUTTON_IDLE_ALPHA: float = 0.3
 
 @onready var back_button: TextureButton = $BackButton
 @onready var right_button: TextureButton = $NextButton
@@ -27,6 +31,7 @@ var back_scene: String = "res://Scenes/main_menu.tscn"
 @onready var submit_button: Button = $SubmitButton
 
 @onready var system_warning_label: Label = $SystemMessage
+@onready var chat_button: TextureButton = get_node_or_null("ChatConsoleButton")
 
 var message_tween: Tween
 var original_positions = {}
@@ -49,7 +54,8 @@ func _ready() -> void:
 	# Built before _save_original_positions so mobile re-centring moves it too
 	_build_color_panel()
 	SkinManager.ship_colors_changed.connect(_on_ship_colors_changed)
-	
+	_setup_chat_button()
+
 	Network.name_check_completed.connect(_on_name_checked)
 	Network.identity_recovered.connect(_on_identity_recovered)
 	Network.check_my_identity()
@@ -264,6 +270,29 @@ func _on_back_button_pressed():
 	SkinManager.restore_equipped_ship()
 	get_tree().change_scene_to_file(back_scene)
 	
+## Half-hidden easter-egg button: faint until the mouse finds it (no keyboard focus).
+func _setup_chat_button() -> void:
+	if not is_instance_valid(chat_button):
+		return
+	chat_button.modulate.a = CHAT_BUTTON_IDLE_ALPHA
+	chat_button.mouse_entered.connect(func():
+		button_sound.play()
+		_fade_chat_button(1.0)
+	)
+	chat_button.mouse_exited.connect(_fade_chat_button.bind(CHAT_BUTTON_IDLE_ALPHA))
+	chat_button.pressed.connect(_on_chat_button_pressed)
+
+func _fade_chat_button(alpha: float) -> void:
+	var tween: Tween = chat_button.create_tween()
+	tween.tween_property(chat_button, "modulate:a", alpha, 0.2).set_trans(Tween.TRANS_SINE)
+
+func _on_chat_button_pressed() -> void:
+	if chat_console_scene == null:
+		return
+	# Leaving the selector puts back the equipped ship, like the back button
+	SkinManager.restore_equipped_ship()
+	get_tree().change_scene_to_packed(chat_console_scene)
+
 func _on_left_button_pressed():
 	SkinManager.select_previous_ship()
 	button_sound.play()

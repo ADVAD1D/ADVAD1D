@@ -10,8 +10,6 @@ signal points_added(points)
 signal pause(is_paused)
 
 #global variables
-const MAX_MESSAGES: int = 5
-var messages_sent: int = 0
 var player_name: String
 var player_name_field_editable: bool = false
 var score: int = 0
@@ -75,8 +73,6 @@ var show_fps: bool = false
 var force_web_mode: bool = false
 #IMPORTANT: this bool change the value to _log_message function in some scripts!
 var is_debug_text : bool = false
-var debug_response_text_active: bool = false
-var ai_last_response: String = ""
 var is_scroll_active: bool = false
 var start_server: bool = true
 var production_server_active = true

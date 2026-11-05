@@ -4,8 +4,6 @@ extends Node
 ## while checking the leaderboard) without blocking the thread or throwing errors.
 ## Requires a valid APP_TOKEN injected via EnvParser for authentication.
 signal server_status_checked(is_online: bool)
-signal ai_response_received(text: String)
-signal request_failed(error_msg: String)
 
 #leaderboard signals
 signal phase_recorded_successfully()
@@ -15,7 +13,6 @@ signal name_check_completed(is_available: bool, message: String)
 signal identity_recovered(pilot_name: String)
 
 var production_server_active = GameManager.production_server_active
-var debug_response_text_active = GameManager.debug_response_text_active
 var BASE_URL: String
 
 var server_online: bool = false
@@ -31,7 +28,6 @@ var last_network_log: String = "Waiting for init..."
 var headers = []
 
 var _ping_http: HTTPRequest
-var _ai_http: HTTPRequest
 var _leaderboard_http: HTTPRequest
 var _name_check_http: HTTPRequest
 var _whoami_http: HTTPRequest
@@ -58,11 +54,7 @@ func _ready() -> void:
 	_ping_http = HTTPRequest.new() # Replace with function body.
 	add_child(_ping_http)
 	_ping_http.request_completed.connect(_on_ping_completed)
-		
-	_ai_http = HTTPRequest.new()
-	add_child(_ai_http)
-	_ai_http.request_completed.connect(_on_ai_completed)
-	
+
 	_leaderboard_http = HTTPRequest.new()
 	add_child(_leaderboard_http)
 	_leaderboard_http.request_completed.connect(_on_leaderboard_completed)
@@ -80,7 +72,7 @@ func _ready() -> void:
 		wake_up_server()
 		
 	else:
-		request_failed.emit("API SERVICE, MANUAL INIT, THE SERVER STATUS IS FALSE.")
+		_log_message("API SERVICE, MANUAL INIT, THE SERVER STATUS IS FALSE.")
 		
 #this function show log messages (response codes and messages) for devs, for security reasons
 func _log_dev(message: String, respose_code: int) -> void:
@@ -109,33 +101,7 @@ func check_my_identity():
 	_log_message("API SERVICE: Scanning digital DNA for auto-login...")
 	
 	_whoami_http.request(url, headers, HTTPClient.METHOD_GET)
-		
-## Sends a prompt to the AI integration endpoint.
-## Rejects the request if another AI query is currently in progress to prevent spam.
-func ask_godot_ai(prompt: String):
-	if BASE_URL.strip_edges().is_empty():
-		_log_message("API SERVICE: ERROR. URL IS EMPTY")
-		request_failed.emit("API SERVICE: ERROR. URL IS EMPTY")
-		return
-		
-	if not _ai_http:
-		request_failed.emit("CRITIC ERROR: HTTP SERVICE NOT INIT")
-		return
-		
-	if _ai_http.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
-		_log_message("API SERVICE: Missed request, there is already one in progress")
-		return
-		
-	var body = JSON.stringify({"prompt": prompt})
-	var url = BASE_URL + "/askai"
-	
-	_log_message("API SERVICE: SEND PROMPT")
-	
-	var response = _ai_http.request(url, headers, HTTPClient.METHOD_POST, body)
-	
-	if response != OK:
-		request_failed.emit("ERROR, CANNOT SEND THE REQUEST")
-		
+
 ## Checks if a pilot name is available (not taken by another player).
 ## Emits `name_check_completed` with a boolean indicating availability.
 func check_pilot_name(pilot_name: String):
@@ -201,50 +167,7 @@ func _on_ping_completed(result, response_code, _headers, _body):
 		_log_dev("THE SERVER RESPONSE WITH AN ERROR", response_code)
 		server_online = false
 		server_status_checked.emit(false)
-		
-func _on_ai_completed(result, response_code, _headers, body):
-	if result != HTTPRequest.RESULT_SUCCESS:
-		match result:
-			HTTPRequest.RESULT_CANT_CONNECT:
-				request_failed.emit("THERE IS NOT INTERNET CONNECTION OR THE SERVER DOES NOT EXIST")
-			HTTPRequest.RESULT_CANT_RESOLVE:
-				request_failed.emit("DNS ERROR: DOMAIN NOT FOUND")
-			HTTPRequest.RESULT_TLS_HANDSHAKE_ERROR:
-				request_failed.emit("SSL/HTTPS ERROR")
-			_:
-				request_failed.emit("UNKNOWN CONNECTION ERROR")
-		return
-		
-	if response_code == 0:
-		request_failed.emit("THE SERVER NOT RESPONSE, TIMEOUT OR CRASH")
-		return
-		
-	var json = JSON.new()
-	var json_parse_result = json.parse(body.get_string_from_utf8())
-	if json_parse_result == OK:
-		var data = json.data
-		if typeof(data) != TYPE_DICTIONARY:
-			request_failed.emit("ERROR, DATA FORMAT, NO JSON")
-			return
-			
-		if response_code == 200:
-			if "response" in data and debug_response_text_active == true:
-				_log_message(["TEXTO CRUDO: ", data["response"]])
-			if "response" in data:
-				ai_response_received.emit(data["response"])
-			else:
-				request_failed.emit("The server responded 200 but the 'response' key is missing.")
-		else:
-			if "error" in data:
-				request_failed.emit("SERVER ERROR")
-				_log_dev("SERVER ERROR: ", response_code)
-			else:
-				request_failed.emit("UNKNOWN ERROR")
-				_log_dev("UNKNOWN ERROR", response_code)
-	else:
-		request_failed.emit("CRITIC ERROR, THE RESPONSE IS NOT A VALID JSON ")
-		_log_dev("CRITIC ERROR, THE RESPONSE IS NOT A VALID JSON ", response_code)
-		
+
 func _on_name_check_completed(result, response_code, _headers, body):
 	if result != HTTPRequest.RESULT_SUCCESS:
 		_log_message("NAME CHECH ERROR, CONNECTION FAILED")

@@ -75,15 +75,15 @@ The project is organized into the following main folders:
 
 **API Service (Autoload [Autoloads/api_service.gd](Autoloads/api_service.gd))**
 
-- **Purpose:** Global HTTP client used to communicate with the AI server and centralize API requests/responses.
-- **Signals:** `server_status_checked(is_online: bool)`, `ai_response_received(text: String)`, `request_failed(error_msg: String)`.
+- **Purpose:** Global HTTP client for the backend: server wake-up ping, pilot identity / name checks and the leaderboard. It no longer talks to any AI model (the chat console only uses predefined replies, see `Scripts/ai_console.gd`).
+- **Signals:** `server_status_checked(is_online: bool)`, `phase_recorded_successfully()`, `phase_record_failed(error_msg: String)`, `name_check_completed(is_available: bool, message: String)`, `identity_recovered(pilot_name: String)`.
 - **Configuration:** Uses `GameManager.production_server_active` to select `BASE_URL` (production: `https://advad-ai-server.onrender.com`, local: `http://127.0.0.1:10000`). The `X-App-Token` header is loaded with `EnvParser.parse("APP_TOKEN")`.
 - **Important variables:** `start_server` (from `GameManager.start_server`, used to auto-start the server) and `headers` (contains `Content-Type` and `X-App-Token`).
-- **Public methods:** `wake_up_server()` —pings the server— and `ask_godot_ai(prompt: String)` —sends prompts and emits `ai_response_received` or `request_failed` depending on the result.
+- **Public methods:** `wake_up_server()` —pings the server—, `check_my_identity()`, `check_pilot_name(pilot_name)` and `send_player_phase(player_name, last_phase)` —leaderboard.
 - **Notes for contributors:**
   - Connect signals to receive responses and errors, for example:
-	- `get_node("/root/api_service").connect("ai_response_received", Callable(self, "_on_ai_response"))`
-	- `get_node("/root/api_service").connect("request_failed", Callable(self, "_on_api_error"))`
+	- `Network.phase_recorded_successfully.connect(_on_phase_recorded)`
+	- `Network.phase_record_failed.connect(_on_phase_record_failed)`
   - In debug builds the service logs extra information via `_log_dev()`; those logs are suppressed in release builds.
   - Make sure `APP_TOKEN` is available via `EnvParser` and configure `GameManager` flags (`production_server_active`, `start_server`) before testing.
 
@@ -127,7 +127,7 @@ The original PC game UI was hardcoded via absolute coordinates for a 520x300 asp
 1. **Aspect Expansion:** `mobile_optimizer.gd` dynamically changes the window stretch mode to `CONTENT_SCALE_ASPECT_EXPAND` at runtime. This removes the engine's black bars and allows the camera to natively render the expanded ultrawide dimensions on mobile devices.
 2. **Mathematical Re-anchoring:** Rather than manually overriding Godot anchors, individual UI scripts (`hud.gd`, `main_menu.gd`, `skin_selector.gd`, and the pause menu) connect to the `size_changed` signal. When the ultrawide expansion happens, a script algorithm calculates the new absolute center (`size / 2.0`) and perfectly shifts all floating elements (Text labels, Resume buttons, Main Menu groupings) using their original relative offsets.
 3. **Smart Exclusions:** Certain background elements (like the `SkinPanel` in the skin selector) are excluded from the re-centering algorithm so they naturally stretch across the entire viewport, covering the extra horizontal space without leaving black voids.
-4. **Platform Pruning:** Elements irrelevant to mobile devices (like the `ChatConsoleButton` in the main menu) are dynamically hidden (`hide()`) via code during `_ready` if `mobile_mode_active` is true.
+4. **Platform Pruning:** Elements irrelevant to mobile devices are dynamically hidden (`hide()`) via code during `_ready` if `mobile_mode_active` is true.
 
 ## Memory Management & Object Pooling
 

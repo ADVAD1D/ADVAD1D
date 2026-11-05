@@ -1,6 +1,20 @@
 extends Control
+## Chat console with predefined replies only (no server, no AI): for easter eggs.
+## Whatever the player types is matched against `replies` (see _normalize: case, extra
+## spaces and edges don't matter); anything else gets `unknown_reply`.
+## Replies are BBCode and also accept **bold**.
 
-var back_scene: String = "res://Scenes/main_menu.tscn"
+## Opened from the hidden button in the skin selector, so it goes back there.
+var back_scene: String = "res://Scenes/skin_selector.tscn"
+
+## Command -> reply. Keys are written in lowercase.
+@export var replies: Dictionary = {
+	"hello": "Hello, pilot.",
+}
+@export var unknown_reply: String = "UNKNOWN COMMAND."
+## Name shown before each reply.
+@export var reply_sender: String = "System"
+
 #references to child nodes
 
 @onready var is_scroll_active: bool = GameManager.is_scroll_active
@@ -36,18 +50,8 @@ func _ready() -> void:
 	back_button.modulate.a = 0.0
 	scroll_button.modulate.a = 0.0
 	
-	if Network:
-		Network.ai_response_received.connect(_on_ai_response)
-		Network.request_failed.connect(_on_error)
-	
-	if GameManager.messages_sent >= GameManager.MAX_MESSAGES:
-		input_field.editable = false
-		send_button.disabled = true
-		chat_display.visible_characters = -1
-		add_message("System", "CHANNEL PREVIOUSLY CLOSED. LIMIT REACHED.", "red")
-	else:
-		add_message("Start System", "Server Status = ON. Type your request...", "gray")
-	
+	add_message("Start System", "Channel open. Type your message...", "gray")
+
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
 		_on_back_button_pressed()
@@ -59,47 +63,35 @@ func _on_text_submitted(_new_text):
 	send_message()
 	
 func send_message():
-	if GameManager.messages_sent >= GameManager.MAX_MESSAGES:
-		return
 	var text = input_field.text.strip_edges()
 	if text.is_empty():
 		return
-		
-	GameManager.messages_sent += 1
-	
+
 	input_field.clear()
 	input_field.editable = false
 	send_button.disabled = true
-		
+
 	await add_message("You ", text, "#40a4f4")
-	await add_message("System ", "Waiting response...", "gray")
-	
-	Network.ask_godot_ai(text)
-	
-func _on_ai_response(response_text):
-	var clean_text = format_ai_text(response_text)
-	await add_message("AI ", clean_text, "#ffffff", true)
-	
-	if GameManager.messages_sent < GameManager.MAX_MESSAGES:
-		input_field.editable = true
-		send_button.disabled = false
-		input_field.grab_focus()
-	else:
-		await add_message("System ", "TRANSMISSION LIMIT REACHED. CHANNEL CLOSED.", "red")
-		input_field.editable = false
-		send_button.disabled = true
-	
-func _on_error(error_msg):
-	await add_message("Error ", error_msg, "red")
-	if GameManager.messages_sent < GameManager.MAX_MESSAGES:
-		input_field.editable = true
-		send_button.disabled = false
-	else:
-		await add_message("System ", "TRANSMISSION LIMIT REACHED. CHANNEL CLOSED.", "red")
-		input_field.editable = false
-		send_button.disabled = true
-	
-func format_ai_text(text: String) -> String:
+	await add_message(reply_sender + " ", format_reply_text(get_reply(text)), "#ffffff", true)
+
+	input_field.editable = true
+	send_button.disabled = false
+	input_field.grab_focus()
+
+## Predefined reply for what the player typed, or unknown_reply.
+func get_reply(text: String) -> String:
+	var command: String = _normalize(text)
+	for key in replies:
+		if _normalize(str(key)) == command:
+			return str(replies[key])
+	return unknown_reply
+
+## Lowercase, trimmed, single spaces: "  Hello   THERE " -> "hello there".
+func _normalize(text: String) -> String:
+	var words: PackedStringArray = text.to_lower().strip_edges().split(" ", false)
+	return " ".join(words)
+
+func format_reply_text(text: String) -> String:
 	var regex = RegEx.new()
 	regex.compile("\\*\\*(.*?)\\*\\*")
 	var result = regex.sub(text, "[b]$1[/b]", true)

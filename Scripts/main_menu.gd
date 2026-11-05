@@ -3,7 +3,6 @@ extends Control
 @export var scroll_speed: float = 20.0
 @export var next_scene: PackedScene
 @export var skin_selector_scene: PackedScene
-@export var chat_console_scene: PackedScene
 @export var achievements_scene: PackedScene
 @export var shop_scene: PackedScene
 
@@ -76,9 +75,6 @@ func _ready() -> void:
 	relative_label.visible = false
 	
 	_setup_buttons()
-	
-	if has_node("ChatConsoleButton"):
-		get_node("ChatConsoleButton").hide()
 
 	# Re-center on every platform: mobile mode expands the viewport beyond 520px wide,
 	# so without this the menu stays glued to the left side of the screen
@@ -171,9 +167,6 @@ func _setup_buttons() -> void:
 
 	if has_node("SkinSelectorButton"):
 		get_node("SkinSelectorButton").pressed.connect(func(): get_tree().change_scene_to_packed(skin_selector_scene))
-		
-	if has_node("ChatConsoleButton"):
-		get_node("ChatConsoleButton").pressed.connect(func(): get_tree().change_scene_to_packed(chat_console_scene))
 		
 	if has_node("GithubButton"):
 		get_node("GithubButton").pressed.connect(func(): OS.shell_open("https://github.com/ADVAD1D/ADVAD1D"))
