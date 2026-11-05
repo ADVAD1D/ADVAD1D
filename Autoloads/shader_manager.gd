@@ -35,6 +35,11 @@ func is_roll_supported() -> bool:
 		return false
 	return not GameManager.pc_optimize_shaders
 
+## Re-applies the CRT settings to every CRT shader of the open scene (the settings panel
+## calls it after a change, so the arena or menu updates without reloading).
+func refresh_current_scene() -> void:
+	_apply_to_scene(get_tree().current_scene)
+
 func _ready():
 	get_tree().node_added.connect(_on_node_added)
 	call_deferred("_apply_to_scene", get_tree().current_scene)

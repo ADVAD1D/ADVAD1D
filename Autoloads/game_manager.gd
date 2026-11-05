@@ -8,6 +8,8 @@ signal score_updated(new_score)
 ## Points of each add_score() call (ArcadeManager multiplies them into the run score).
 signal points_added(points)
 signal pause(is_paused)
+## Emitted by the settings panel after a toggle changes (the HUD shows/hides the FPS).
+signal settings_changed
 
 #global variables
 var player_name: String

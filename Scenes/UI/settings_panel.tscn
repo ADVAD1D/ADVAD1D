@@ -1,0 +1,242 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/settings_panel.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cwajte3tbeilc" path="res://Assets/Sprites/Arcade/mode_panel.png" id="35_mpanel"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="5_vr1f0"]
+[ext_resource type="Texture2D" uid="uid://3m1orbh60ase" path="res://Assets/Sprites/specialthanksbutton.png" id="5_m3bi6"]
+[ext_resource type="Texture2D" uid="uid://ddpugxe2tluy5" path="res://Assets/Sprites/specialthanksbuttonhover.png" id="6_wyh8j"]
+[ext_resource type="Texture2D" uid="uid://bkdv1633hq14x" path="res://Assets/Sprites/fullscreenbutton.png" id="9_jr6u5"]
+[ext_resource type="Texture2D" uid="uid://lnq6a0woe0n8" path="res://Assets/Sprites/fullscreenbuttonhover.png" id="10_6m47u"]
+[ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="10_16hvj"]
+[ext_resource type="Texture2D" uid="uid://bkumdi5oetady" path="res://Assets/Sprites/fullscreenbuttonhover1.png" id="11_84iac"]
+[ext_resource type="Texture2D" uid="uid://d3k3im72hadw5" path="res://Assets/Sprites/controlsbutton.png" id="17_hkdq0"]
+[ext_resource type="AudioStream" uid="uid://e74mglwo351x" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="18_4nkqq"]
+[ext_resource type="Texture2D" uid="uid://dw0q6hjbb3chm" path="res://Assets/Sprites/controlsbuttonhover.png" id="18_xcoo4"]
+[ext_resource type="Texture2D" uid="uid://7rtdjn2nxt5n" path="res://Assets/Sprites/cronometer_button.png" id="21_aylim"]
+[ext_resource type="Texture2D" uid="uid://bads1tb0f3f4w" path="res://Assets/Sprites/cronometer_button_hover.png" id="22_y82t1"]
+[ext_resource type="Texture2D" uid="uid://3kekm84e6s7l" path="res://Assets/Sprites/fps_button.png" id="25_bmhhk"]
+[ext_resource type="Texture2D" uid="uid://cofvkwairia8d" path="res://Assets/Sprites/fps_button_hover.png" id="26_pddej"]
+[ext_resource type="Texture2D" uid="uid://deyomkrcmj2xp" path="res://Assets/Sprites/shaders_button_unpressed.png" id="27_ko05x"]
+[ext_resource type="Texture2D" uid="uid://bqgh0umjum2y8" path="res://Assets/Sprites/shaders_button_pressed.png" id="28_43km2"]
+[ext_resource type="Texture2D" uid="uid://dsmardu8q10nk" path="res://Assets/Sprites/Settings/roll_button.png" id="45_roll"]
+[ext_resource type="Texture2D" uid="uid://bg1328eogbv3a" path="res://Assets/Sprites/Settings/roll_button_pressed.png" id="46_rollp"]
+[ext_resource type="Texture2D" uid="uid://cecdsaqjs6eik" path="res://Assets/Sprites/Settings/roll_button_disabled.png" id="47_rolld"]
+[ext_resource type="Script" path="res://Scripts/UI/volume_row.gd" id="48_volrow"]
+[ext_resource type="Texture2D" uid="uid://cp0lyic4v7nia" path="res://Assets/Sprites/music_icon.png" id="49_musicicon"]
+[ext_resource type="Texture2D" uid="uid://b21nbsy1pvanx" path="res://Assets/Sprites/sound_icon.png" id="50_soundicon"]
+[ext_resource type="Texture2D" uid="uid://wewd0rykgbgq" path="res://Assets/Sprites/dereasebutton.png" id="51_dec"]
+[ext_resource type="Texture2D" uid="uid://hqqqcwvlavvx" path="res://Assets/Sprites/dereasebutton_pressed.png" id="52_decp"]
+[ext_resource type="Texture2D" uid="uid://2f41284fn4kq" path="res://Assets/Sprites/dereasebutton_hover.png" id="53_dech"]
+[ext_resource type="Texture2D" uid="uid://cii3dm47h4k7y" path="res://Assets/Sprites/increasebutton.png" id="54_inc"]
+[ext_resource type="Texture2D" uid="uid://cmntejg0spyap" path="res://Assets/Sprites/increasebutton_pressed.png" id="55_incp"]
+[ext_resource type="Texture2D" uid="uid://bubqny5o8sh8w" path="res://Assets/Sprites/increasebutton_hover.png" id="56_inch"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_volume"]
+font = ExtResource("5_vr1f0")
+font_size = 16
+font_color = Color(0, 0.21920863, 0.21920872, 1)
+outline_size = 2
+outline_color = Color(0, 1, 0.75686276, 1)
+
+[node name="SettingsPanel" type="NinePatchRect"]
+custom_minimum_size = Vector2(99, 136)
+offset_right = 99.0
+offset_bottom = 136.0
+texture = ExtResource("35_mpanel")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+script = ExtResource("1_script")
+hover_sound = ExtResource("10_16hvj")
+toggle_sound = ExtResource("18_4nkqq")
+
+[node name="ControlsButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = -3.2
+offset_top = -2.3
+offset_right = 41.8
+offset_bottom = 42.7
+scale = Vector2(0.91145045, 0.91145045)
+focus_mode = 0
+toggle_mode = true
+texture_normal = ExtResource("17_hkdq0")
+texture_pressed = ExtResource("18_xcoo4")
+texture_hover = ExtResource("18_xcoo4")
+
+[node name="FPSButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 5.0
+offset_right = 66.0
+offset_bottom = 35.0
+scale = Vector2(0.89481026, 0.89481026)
+focus_mode = 0
+toggle_mode = true
+texture_normal = ExtResource("25_bmhhk")
+texture_pressed = ExtResource("26_pddej")
+texture_hover = ExtResource("26_pddej")
+
+[node name="RetroShaderButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 36.0
+offset_right = 35.0
+offset_bottom = 66.0
+scale = Vector2(0.89481026, 0.89481026)
+focus_mode = 0
+toggle_mode = true
+texture_normal = ExtResource("27_ko05x")
+texture_pressed = ExtResource("28_43km2")
+texture_hover = ExtResource("28_43km2")
+
+[node name="RollButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 36.0
+offset_right = 66.0
+offset_bottom = 66.0
+scale = Vector2(0.89481026, 0.89481026)
+focus_mode = 0
+toggle_mode = true
+texture_normal = ExtResource("45_roll")
+texture_pressed = ExtResource("46_rollp")
+texture_hover = ExtResource("46_rollp")
+texture_disabled = ExtResource("47_rolld")
+
+[node name="FullScreenButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 61.3
+offset_top = 2.15
+offset_right = 106.3
+offset_bottom = 47.15
+scale = Vector2(0.8175782, 0.8175782)
+focus_mode = 0
+toggle_mode = true
+texture_normal = ExtResource("9_jr6u5")
+texture_pressed = ExtResource("10_6m47u")
+texture_hover = ExtResource("11_84iac")
+
+[node name="SpeedrunButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 68.65
+offset_top = 37.65
+offset_right = 98.65
+offset_bottom = 67.65
+scale = Vector2(0.7886959, 0.7886959)
+focus_mode = 0
+toggle_mode = true
+texture_normal = ExtResource("21_aylim")
+texture_pressed = ExtResource("22_y82t1")
+texture_hover = ExtResource("22_y82t1")
+
+[node name="SpecialThanksButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 66.0
+offset_right = 64.0
+offset_bottom = 96.0
+texture_normal = ExtResource("5_m3bi6")
+texture_pressed = ExtResource("6_wyh8j")
+texture_hover = ExtResource("6_wyh8j")
+
+[node name="MusicVolume" type="Control" parent="."]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 100.0
+offset_right = 94.0
+offset_bottom = 116.0
+script = ExtResource("48_volrow")
+click_sound = ExtResource("10_16hvj")
+
+[node name="Icon" type="TextureRect" parent="MusicVolume"]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 30.0
+scale = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("49_musicicon")
+
+[node name="DecreaseButton" type="TextureButton" parent="MusicVolume"]
+layout_mode = 0
+offset_left = 16.0
+offset_right = 56.0
+offset_bottom = 40.0
+scale = Vector2(0.4, 0.4)
+focus_mode = 0
+texture_normal = ExtResource("51_dec")
+texture_pressed = ExtResource("52_decp")
+texture_hover = ExtResource("53_dech")
+
+[node name="Percentage" type="Label" parent="MusicVolume"]
+layout_mode = 0
+offset_left = 33.0
+offset_top = -3.0
+offset_right = 72.0
+offset_bottom = 17.0
+text = "100%"
+label_settings = SubResource("LabelSettings_volume")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IncreaseButton" type="TextureButton" parent="MusicVolume"]
+layout_mode = 0
+offset_left = 73.0
+offset_right = 113.0
+offset_bottom = 40.0
+scale = Vector2(0.4, 0.4)
+focus_mode = 0
+texture_normal = ExtResource("54_inc")
+texture_pressed = ExtResource("55_incp")
+texture_hover = ExtResource("56_inch")
+
+[node name="SfxVolume" type="Control" parent="."]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 117.0
+offset_right = 94.0
+offset_bottom = 133.0
+script = ExtResource("48_volrow")
+channel = 1
+click_sound = ExtResource("10_16hvj")
+
+[node name="Icon" type="TextureRect" parent="SfxVolume"]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 30.0
+scale = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("50_soundicon")
+
+[node name="DecreaseButton" type="TextureButton" parent="SfxVolume"]
+layout_mode = 0
+offset_left = 16.0
+offset_right = 56.0
+offset_bottom = 40.0
+scale = Vector2(0.4, 0.4)
+focus_mode = 0
+texture_normal = ExtResource("51_dec")
+texture_pressed = ExtResource("52_decp")
+texture_hover = ExtResource("53_dech")
+
+[node name="Percentage" type="Label" parent="SfxVolume"]
+layout_mode = 0
+offset_left = 33.0
+offset_top = -3.0
+offset_right = 72.0
+offset_bottom = 17.0
+text = "100%"
+label_settings = SubResource("LabelSettings_volume")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IncreaseButton" type="TextureButton" parent="SfxVolume"]
+layout_mode = 0
+offset_left = 73.0
+offset_right = 113.0
+offset_bottom = 40.0
+scale = Vector2(0.4, 0.4)
+focus_mode = 0
+texture_normal = ExtResource("54_inc")
+texture_pressed = ExtResource("55_incp")
+texture_hover = ExtResource("56_inch")

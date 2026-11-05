@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://df6xnaa1jeq8y"]
 
 [ext_resource type="Script" uid="uid://b2txl04jujrjv" path="res://Scripts/tutorial.gd" id="1_tut"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/pause_menu.tscn" id="70_pausemenu"]
 [ext_resource type="PackedScene" uid="uid://dohhwkxxtna34" path="res://Scenes/Particles/laser_particles.tscn" id="2_laserp"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="3_player"]
 [ext_resource type="PackedScene" uid="uid://df8hpgwrn52l8" path="res://Scenes/Particles/particles.tscn" id="4_astp"]
@@ -272,19 +273,6 @@ shader_parameter/vignette_intensity = 0.3
 shader_parameter/vignette_opacity = 0.800000038
 shader_parameter/low_quality = false
 
-[sub_resource type="GDScript" id="GDScript_jb51l"]
-script/source = "extends CanvasLayer
-
-@onready var unpause_button: Button = %unPauseButton
-
-func _ready() -> void:
-	unpause_button.pressed.connect(GameManager.toggle_pause)
-	GameManager.pause.connect(toggle_show)
-
-func toggle_show(is_paused : bool) -> void :
-	if is_paused : show()
-	else : hide()
-"
 
 [sub_resource type="Gradient" id="Gradient_d1ilt"]
 offsets = PackedFloat32Array(0, 0.482517, 1)
@@ -682,43 +670,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="PauseMenu" type="CanvasLayer" parent="." unique_id=252613422]
-process_mode = 3
-visible = false
-script = SubResource("GDScript_jb51l")
-
-[node name="Control" type="Control" parent="PauseMenu" unique_id=239341823]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ColorRect" type="ColorRect" parent="PauseMenu/Control" unique_id=689982069]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0.07866589, 0.09273138, 0.58431375)
-
-[node name="unPauseButton" type="Button" parent="PauseMenu/Control/ColorRect" unique_id=180731161]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -325.0
-offset_top = -162.0
-offset_right = -194.0
-offset_bottom = -131.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "Resume"
+[node name="PauseMenu" parent="." unique_id=252613422 instance=ExtResource("70_pausemenu")]
+palette = 1
 
 [node name="GlitchSound" type="AudioStreamPlayer2D" parent="." unique_id=2111547954]
 stream = ExtResource("13_glitch")

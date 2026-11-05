@@ -16,6 +16,8 @@ func _ready() -> void:
 		
 	var phase_manager = get_tree().root.get_node("Main/PhaseNode") # Replace with function body.
 	fps_toggled()
+	# The pause menu's settings panel can change it mid-run
+	GameManager.settings_changed.connect(fps_toggled)
 	
 	if not GameManager.mobile_mode_active:
 		# Hide all virtual buttons and joysticks modularly
@@ -144,7 +146,5 @@ func _process(_delta: float) -> void:
 		speedrun_label.text = GameManager.get_formatted_speedrun_time()
 		
 func fps_toggled():
-	if show_fps == false:
-		fps_label.hide()
-	else:
-		return
+	show_fps = GameManager.show_fps
+	fps_label.visible = show_fps

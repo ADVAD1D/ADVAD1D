@@ -134,27 +134,19 @@ func _setup_buttons() -> void:
 				get_tree().quit()
 		)
 		
-	var fs_btn = _get_setting_button("FullScreenButton")
-	if fs_btn:
-		fs_btn.button_pressed = (DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN)
-		fs_btn.toggled.connect(func(is_checked):
-			if is_checked:
-				DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-			else:
-				DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
-		)
-		
 	if has_node("VBoxContainer/CreditsButton"):
 		get_node("VBoxContainer/CreditsButton").pressed.connect(credits_panel.show)
-		
-	var thanks_btn = _get_setting_button("SpecialThanksButton")
-	if thanks_btn:
+
+	# The settings panel (Scenes/UI/settings_panel.tscn) runs its own toggles; the menu
+	# only opens/closes it and reacts to what concerns the menu
+	if settings_panel is SettingsPanel:
+		settings_panel.controls_changed.connect(show_feedback_label)
 		# Close the settings panel first, or the click that follows would only close it
-		thanks_btn.pressed.connect(func():
+		settings_panel.special_thanks_requested.connect(func():
 			_hide_settings_panel()
 			special_thanks_panel.show()
 		)
-		
+
 	if has_node("AchievementsButton"):
 		var achievements_btn = get_node("AchievementsButton")
 		achievements_btn.visible = GameManager.achievements_enabled
@@ -174,94 +166,6 @@ func _setup_buttons() -> void:
 	if has_node("DiscordButton"):
 		get_node("DiscordButton").pressed.connect(func(): OS.shell_open("https://discord.com/invite/ne3U8RS8bA"))
 		
-	# Toggles (inside the settings panel)
-	var fps_btn = _get_setting_button("FPSButton")
-	if fps_btn:
-		fps_btn.set_pressed_no_signal(GameManager.show_fps)
-		fps_btn.pressed.connect(back_sound.play)
-		fps_btn.toggled.connect(func(toggled_on):
-			GameManager.show_fps = toggled_on
-			_log_message(["FPS Mode", toggled_on])
-			GameManager.save_data()
-		)
-		
-	var controls_btn = _get_setting_button("ControlsButton")
-	if controls_btn:
-		controls_btn.set_pressed_no_signal(GameManager.relative_control_active)
-		controls_btn.pressed.connect(back_sound.play)
-		controls_btn.toggled.connect(func(toggled_on):
-			GameManager.relative_control_active = toggled_on
-			_log_message(["Relative Controls", toggled_on])
-			GameManager.save_data()
-			show_feedback_label(toggled_on)
-		)
-		
-	var speedrun_btn = _get_setting_button("SpeedrunButton")
-	if speedrun_btn:
-		speedrun_btn.set_pressed_no_signal(GameManager.speedrun_mode_active)
-		speedrun_btn.toggled.connect(func(toggled_on):
-			GameManager.speedrun_mode_active = toggled_on
-			back_sound.play()
-			GameManager.save_data()
-		)
-		
-	var retro_btn = _get_setting_button("RetroShaderButton")
-	if retro_btn:
-		if GameManager.mobile_mode_active:
-			retro_btn.set_pressed_no_signal(GameManager.retro_shader_active)
-			retro_btn.pressed.connect(back_sound.play)
-			retro_btn.toggled.connect(func(toggled_on):
-				GameManager.retro_shader_active = toggled_on
-				_log_message(["Retro Shader", toggled_on])
-				GameManager.save_data()
-				# We can apply the shader logic here immediately for visual feedback
-				if has_node("UILayer/ColorRect"):
-					get_node("UILayer/ColorRect").visible = toggled_on
-			)
-		else:
-			# On PC: The button acts as an "Optimize Shaders" toggle
-			retro_btn.set_pressed_no_signal(GameManager.pc_optimize_shaders)
-			retro_btn.pressed.connect(back_sound.play)
-			retro_btn.toggled.connect(func(toggled_on):
-				GameManager.pc_optimize_shaders = toggled_on
-				_log_message(["PC Shader Optimize", toggled_on])
-				GameManager.save_data()
-				_refresh_menu_crt()
-				# The optimized shader never rolls, so the roll toggle greys out
-				_update_roll_button()
-			)
-
-	# Pressed = roll off (like the shader button: pressed = lighter effects)
-	var roll_btn = _get_setting_button("RollButton")
-	if roll_btn:
-		roll_btn.set_pressed_no_signal(not GameManager.crt_roll_enabled)
-		roll_btn.pressed.connect(back_sound.play)
-		roll_btn.toggled.connect(func(toggled_on):
-			GameManager.crt_roll_enabled = not toggled_on
-			_log_message(["CRT roll", GameManager.crt_roll_enabled])
-			GameManager.save_data()
-			_refresh_menu_crt()
-		)
-		_update_roll_button()
-
-func _get_setting_button(button_name: String) -> TextureButton:
-	if not is_instance_valid(settings_panel):
-		return null
-	return settings_panel.get_node_or_null(button_name) as TextureButton
-
-## Disabled (dimmed) where the CRT never rolls anyway: mobile, web and optimized shaders.
-func _update_roll_button() -> void:
-	var roll_btn = _get_setting_button("RollButton")
-	if roll_btn:
-		roll_btn.disabled = not ShaderManager.is_roll_supported()
-
-## Re-applies the CRT settings to this menu's shader (other scenes get them when they load).
-func _refresh_menu_crt() -> void:
-	if has_node("UILayer/ColorRect"):
-		var color_rect = get_node("UILayer/ColorRect")
-		if color_rect.material is ShaderMaterial:
-			ShaderManager.update_crt_shader_quality(color_rect.material)
-
 func _start_normal_mode() -> void:
 	GameManager.reset_game_state()
 	get_tree().change_scene_to_packed(next_scene)
@@ -448,6 +352,8 @@ func _is_play_mode_panel_open() -> bool:
 	return is_instance_valid(play_mode_panel) and play_mode_panel.visible
 
 func _set_settings_panel_open(open: bool) -> void:
+	if open and settings_panel is SettingsPanel:
+		settings_panel.sync_with_settings()
 	settings_panel.visible = open
 	settings_button.set_pressed_no_signal(open)
 	back_sound.play()
@@ -470,6 +376,9 @@ func _is_on_popup(point: Vector2, popup: Control, opener: Control) -> bool:
 	return popup.get_global_rect().has_point(point) or opener.get_global_rect().has_point(point)
 
 func _connect_audio_to_buttons(node: Node) -> void:
+	# The settings panel plays its own hover sound
+	if node is SettingsPanel:
+		return
 	if node is BaseButton:
 		if not node.mouse_entered.is_connected(button_sound.play):
 			node.mouse_entered.connect(button_sound.play)

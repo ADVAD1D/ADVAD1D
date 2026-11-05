@@ -1,0 +1,239 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/pause_menu.gd" id="1_script"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="2_font"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/settings_panel.tscn" id="3_settings"]
+[ext_resource type="Texture2D" uid="uid://mxxth36bpaa3" path="res://Assets/Sprites/skull_icon.png" id="4_skull"]
+[ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="5_crt"]
+[ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="6_blip"]
+[ext_resource type="AudioStream" uid="uid://e74mglwo351x" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="7_select"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_header"]
+font = ExtResource("2_font")
+font_size = 16
+font_color = Color(0.25, 0.643, 0.957, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_arrow"]
+font = ExtResource("2_font")
+font_size = 28
+font_color = Color(0.635, 1, 1, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_item"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_plate"]
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0.015, 0.02, 0.6)
+shadow_color = Color(0, 0.015, 0.02, 0.6)
+shadow_size = 14
+
+[sub_resource type="LabelSettings" id="LabelSettings_skull"]
+font = ExtResource("2_font")
+font_size = 25
+font_color = Color(2.1057204e-08, 0.14154029, 0.14154547, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("5_crt")
+shader_parameter/overlay = true
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/brightness = 3.5
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.03
+shader_parameter/grille_opacity = 0.2
+shader_parameter/roll = true
+shader_parameter/roll_speed = 0.0
+shader_parameter/roll_size = 0.0
+shader_parameter/roll_variation = 0.5
+shader_parameter/distort_intensity = 0.02
+shader_parameter/aberration = 0.01000004797499998
+shader_parameter/noise_opacity = 0.311
+shader_parameter/noise_speed = 2.0
+shader_parameter/static_noise_intensity = 0.0
+shader_parameter/pixelate = false
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.150000007125
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.3
+shader_parameter/vignette_opacity = 0.800000038
+shader_parameter/low_quality = false
+
+[node name="PauseMenu" type="CanvasLayer"]
+process_mode = 3
+layer = 5
+visible = false
+script = ExtResource("1_script")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0.06, 0.075, 0.68)
+
+[node name="Center" type="CenterContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Layout" type="HBoxContainer" parent="Root/Center"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="MenuPlate" type="PanelContainer" parent="Root/Center/Layout"]
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_plate")
+
+[node name="Menu" type="VBoxContainer" parent="Root/Center/Layout/MenuPlate"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="Label" parent="Root/Center/Layout/MenuPlate/Menu"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "adnex@sim:~$ pause"
+label_settings = SubResource("LabelSettings_header")
+
+[node name="ResumeRow" type="HBoxContainer" parent="Root/Center/Layout/MenuPlate/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Arrow" type="Label" parent="Root/Center/Layout/MenuPlate/Menu/ResumeRow"]
+layout_mode = 2
+text = ">"
+label_settings = SubResource("LabelSettings_arrow")
+
+[node name="ResumeButton" type="Button" parent="Root/Center/Layout/MenuPlate/Menu/ResumeRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.31, 0.56, 0.58, 1)
+theme_override_colors/font_hover_color = Color(0.635, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(0.635, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.635, 1, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.635, 1, 1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxEmpty_item")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_item")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_item")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_item")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_item")
+text = "resume"
+alignment = 0
+
+[node name="SettingsRow" type="HBoxContainer" parent="Root/Center/Layout/MenuPlate/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Arrow" type="Label" parent="Root/Center/Layout/MenuPlate/Menu/SettingsRow"]
+layout_mode = 2
+text = ">"
+label_settings = SubResource("LabelSettings_arrow")
+
+[node name="SettingsButton" type="Button" parent="Root/Center/Layout/MenuPlate/Menu/SettingsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.31, 0.56, 0.58, 1)
+theme_override_colors/font_hover_color = Color(0.635, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(0.635, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.635, 1, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.635, 1, 1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxEmpty_item")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_item")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_item")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_item")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_item")
+text = "settings"
+alignment = 0
+
+[node name="QuitRow" type="HBoxContainer" parent="Root/Center/Layout/MenuPlate/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Arrow" type="Label" parent="Root/Center/Layout/MenuPlate/Menu/QuitRow"]
+layout_mode = 2
+text = ">"
+label_settings = SubResource("LabelSettings_arrow")
+
+[node name="QuitButton" type="Button" parent="Root/Center/Layout/MenuPlate/Menu/QuitRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.31, 0.56, 0.58, 1)
+theme_override_colors/font_hover_color = Color(0.635, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(0.635, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.635, 1, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.635, 1, 1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxEmpty_item")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_item")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_item")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_item")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_item")
+text = "quit"
+alignment = 0
+
+[node name="SettingsPanel" parent="Root/Center/Layout" instance=ExtResource("3_settings")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+show_special_thanks = false
+allow_speedrun_toggle = false
+
+[node name="skullIcon" type="Sprite2D" parent="."]
+position = Vector2(44.000004, 223.00002)
+scale = Vector2(2.2729185, 2.2729185)
+texture = ExtResource("4_skull")
+
+[node name="Label" type="Label" parent="skullIcon"]
+offset_left = 7.919334
+offset_top = -4.3996305
+offset_right = 47.919334
+offset_bottom = 18.600368
+scale = Vector2(0.45356488, 0.45356488)
+text = "0"
+label_settings = SubResource("LabelSettings_skull")
+
+[node name="CRT" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_crt")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1907.0
+offset_top = -1715.0
+offset_right = 1414.0
+offset_bottom = 3796.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HoverSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_blip")
+pitch_scale = 0.5
+bus = &"SFX"
+
+[node name="SelectSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_select")
+bus = &"SFX"
