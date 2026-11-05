@@ -325,6 +325,11 @@ func start_new_phase():
 	
 func _on_score_updated(new_score: int):
 	_log_message(["Score Update: ", new_score])
+	# Arcade: a dead player can't clear the phase, the death already ended the run (restart
+	# from phase 1). The main mode lets a laser still flying after the death clear it.
+	if GameManager.arcade_mode_active and is_instance_valid(player_node) \
+			and player_node.get("player_died"):
+		return
 	if is_phase_active and new_score >= current_score_requirement:
 		_on_phase_success()
 		

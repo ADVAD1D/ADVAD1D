@@ -359,7 +359,13 @@ func toggle_pause() -> void:
 	get_tree().paused = !get_tree().paused
 	pause.emit(get_tree().paused)
 	
+## Arcade: ignored after stop_scoring() (player death, phase timeout) until reset_score(),
+## so a laser still flying after the death can't reach the phase goal and skip the restart
+## from phase 1 (the death ends the run). The main mode keeps counting it on purpose: a
+## last laser that clears the phase after the death gives the player that chance.
 func add_score(points):
+	if arcade_mode_active and not can_add_score:
+		return
 	score += points
 	score_updated.emit(score)
 	points_added.emit(points)
