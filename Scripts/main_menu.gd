@@ -339,7 +339,7 @@ func _build_arena_picker() -> void:
 	for arena in arenas:
 		var button: Button = _make_arena_button(GameManager.arena_names[arena].to_upper())
 		button.pressed.connect(_start_arcade_mode.bind(arena))
-		button.mouse_entered.connect(_show_arena_preview.bind(arena))
+		# The mouse moves the focus too (see _make_arena_button), so focus drives the preview
 		button.focus_entered.connect(_show_arena_preview.bind(arena))
 		list.add_child(button)
 		arena_buttons[arena] = button
@@ -393,6 +393,8 @@ func _make_preview_texture(source: Texture2D) -> Texture2D:
 	return ImageTexture.create_from_image(image)
 
 ## Fills its share of the list height; clip_text keeps long names from widening it.
+## Only focus highlights a button, and the mouse moves the focus, so exactly one button
+## (the one keyboard, gamepad or mouse is on) is ever highlighted.
 func _make_arena_button(text: String) -> Button:
 	var button: Button = Button.new()
 	button.text = text
@@ -401,21 +403,22 @@ func _make_arena_button(text: String) -> Button:
 	button.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	button.add_theme_font_override("font", FontManager.PIXEL_FONT)
 	button.add_theme_font_size_override("font_size", ARENA_BUTTON_FONT_SIZE)
-	button.add_theme_color_override("font_color", ARENA_BUTTON_TEXT)
-	for state in ["font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
-		button.add_theme_color_override(state, ARENA_BUTTON_TEXT_HOVER)
-	var normal: StyleBoxFlat = _arena_button_style(ARENA_BUTTON_BG)
-	var hover: StyleBoxFlat = _arena_button_style(ARENA_BUTTON_BG_HOVER)
-	button.add_theme_stylebox_override("normal", normal)
-	button.add_theme_stylebox_override("hover", hover)
-	button.add_theme_stylebox_override("pressed", hover)
-	button.add_theme_stylebox_override("hover_pressed", hover)
-	# Focus is only a brighter border, drawn over the normal box without hiding the text
-	var focus: StyleBoxFlat = _arena_button_style(Color.TRANSPARENT)
-	focus.draw_center = false
-	focus.border_color = ARENA_BUTTON_TEXT_HOVER
-	button.add_theme_stylebox_override("focus", focus)
+	button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	_set_arena_button_highlight(button, false)
+	button.mouse_entered.connect(button.grab_focus)
+	button.focus_entered.connect(_set_arena_button_highlight.bind(button, true))
+	button.focus_exited.connect(_set_arena_button_highlight.bind(button, false))
 	return button
+
+## Same look in every button state (normal, hover, pressed), so a hover left behind by the
+## mouse can't light up a second button: the look only follows focus.
+func _set_arena_button_highlight(button: Button, on: bool) -> void:
+	var style: StyleBoxFlat = _arena_button_style(ARENA_BUTTON_BG_HOVER if on else ARENA_BUTTON_BG)
+	for state in ["normal", "hover", "pressed", "hover_pressed"]:
+		button.add_theme_stylebox_override(state, style)
+	var text_color: Color = ARENA_BUTTON_TEXT_HOVER if on else ARENA_BUTTON_TEXT
+	for state in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
+		button.add_theme_color_override(state, text_color)
 
 func _arena_button_style(bg: Color) -> StyleBoxFlat:
 	var style: StyleBoxFlat = StyleBoxFlat.new()
