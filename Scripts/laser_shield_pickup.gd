@@ -1,6 +1,10 @@
 extends Area2D
+## Pickup that puts `reward_scene` on the player (laser shield, quad laser...). It isn't
+## collected while the player already has a child in `active_group` (that reward running).
 
 @export var reward_scene: PackedScene
+## Group of the reward while it's on the player.
+@export var active_group: StringName = &"player_shield"
 @export var bob_amplitude: float = 8.0 
 @export var bob_speed: float = 3.0
 
@@ -24,7 +28,7 @@ func _physics_process(_delta: float) -> void:
 		if body.is_in_group("player"):
 			var has_shield = false
 			for child in body.get_children():
-				if child.is_in_group("player_shield"):
+				if child.is_in_group(active_group):
 					has_shield = true
 					break
 			if not has_shield:

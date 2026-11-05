@@ -49,6 +49,8 @@
 [ext_resource type="PackedScene" uid="uid://mjsfrhy7mt7v" path="res://Scenes/time_slow_pickup.tscn" id="42_l5mff"]
 [ext_resource type="PackedScene" uid="uid://cv6iiauo728sf" path="res://Scenes/laser_shield.tscn" id="42_nwwfm"]
 [ext_resource type="PackedScene" path="res://Scenes/time_slow.tscn" id="43_46h6s"]
+[ext_resource type="PackedScene" path="res://Scenes/quad_laser_pickup.tscn" id="60_quadpickup"]
+[ext_resource type="PackedScene" path="res://Scenes/quad_laser.tscn" id="61_quadlaser"]
 [ext_resource type="Script" uid="uid://co70ivgmpkwgj" path="res://Scripts/Enemies/laser_gun_spawner.gd" id="44_gunspawner"]
 [ext_resource type="PackedScene" path="res://Scenes/laser_gun.tscn" id="45_laser_gun"]
 [ext_resource type="Shader" path="res://Shaders/background_waves.gdshader" id="46_waves"]
@@ -1064,6 +1066,17 @@ upgrade_stat = &"shield"
 
 [node name="Timer" type="Timer" parent="LaserShieldSpawner" unique_id=1198465110]
 wait_time = 15.0
+autostart = true
+
+[node name="QuadLaserSpawner" type="Node2D" parent="." node_paths=PackedStringArray("spawn_locator")]
+script = ExtResource("40_kwxat")
+pickup_scene = ExtResource("60_quadpickup")
+reward_scene = ExtResource("61_quadlaser")
+spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+upgrade_stat = &"quad_laser"
+
+[node name="Timer" type="Timer" parent="QuadLaserSpawner"]
+wait_time = 18.0
 autostart = true
 
 [node name="DroneSquad" parent="." unique_id=1217995551 instance=ExtResource("12_muh8k")]

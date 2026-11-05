@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 25 25" shape-rendering="crispEdges">
+  <!-- Quad laser pickup / shop icon: 25x25 pixel art drawn at 2x (like the other pickups).
+       Frame like laser_shield_pickup.png, a 4-point star and its diagonal beams. -->
+  <!-- Frame -->
+  <rect x="2" y="1" width="21" height="23" fill="#8aa0a4"/>
+  <rect x="1" y="2" width="23" height="21" fill="#8aa0a4"/>
+  <rect x="2" y="2" width="21" height="21" fill="#1b2629"/>
+  <rect x="3" y="3" width="19" height="19" fill="#050c0e"/>
+  <!-- Diagonal beams -->
+  <rect x="4" y="4" width="2" height="2" fill="#40a4f4"/>
+  <rect x="6" y="6" width="1" height="1" fill="#a2ffff"/>
+  <rect x="19" y="4" width="2" height="2" fill="#40a4f4"/>
+  <rect x="18" y="6" width="1" height="1" fill="#a2ffff"/>
+  <rect x="4" y="19" width="2" height="2" fill="#40a4f4"/>
+  <rect x="6" y="18" width="1" height="1" fill="#a2ffff"/>
+  <rect x="19" y="19" width="2" height="2" fill="#40a4f4"/>
+  <rect x="18" y="18" width="1" height="1" fill="#a2ffff"/>
+  <!-- Star body -->
+  <rect x="12" y="4" width="1" height="17" fill="#0fb8d6"/>
+  <rect x="4" y="12" width="17" height="1" fill="#0fb8d6"/>
+  <rect x="11" y="8" width="3" height="9" fill="#0fb8d6"/>
+  <rect x="8" y="11" width="9" height="3" fill="#0fb8d6"/>
+  <rect x="10" y="10" width="5" height="5" fill="#0fb8d6"/>
+  <!-- Shine -->
+  <rect x="12" y="6" width="1" height="13" fill="#a2ffff"/>
+  <rect x="6" y="12" width="13" height="1" fill="#a2ffff"/>
+  <!-- Core -->
+  <rect x="11" y="12" width="3" height="1" fill="#ffffff"/>
+  <rect x="12" y="11" width="1" height="3" fill="#ffffff"/>
+</svg>

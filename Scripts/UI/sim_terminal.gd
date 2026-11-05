@@ -139,13 +139,14 @@ func run(args: PackedStringArray) -> Array:
 	return []
 
 
-## Short path for the input prompt: "~", "~/missions", "/sim/arenas".
+## Linux-style prompt with a short path: "adnex@sim:~$", "adnex@sim:~/missions$",
+## "adnex@sim:/sim/arenas$".
 func get_prompt() -> String:
 	var path: String = "/" + "/".join(cwd)
 	var home: String = "/" + "/".join(PackedStringArray(HOME_PATH))
 	if path.begins_with(home):
 		path = "~" + path.substr(home.length())
-	return path + ">"
+	return "%s@sim:%s$" % [USER, path]
 
 
 # --- Commands -----------------------------------------------------------------

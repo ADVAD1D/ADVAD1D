@@ -6,18 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://c82v2u11001rd" path="res://Assets/Sprites/credits_panel.png" id="3_panel"]
 [ext_resource type="Texture2D" uid="uid://cb2g0qyvdtse" path="res://Assets/Sprites/skinpanel3.png" id="3_bg"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="3_font"]
-[ext_resource type="Texture2D" uid="uid://d2tb0imyr1ebe" path="res://Assets/Sprites/lineeditbar.png" id="3_42n04"]
 [ext_resource type="Texture2D" uid="uid://r5kd276mo4px" path="res://Assets/Sprites/generalad.png" id="3_vch6u"]
-[ext_resource type="Texture2D" uid="uid://dmi1rtravlk8m" path="res://Assets/Sprites/lineeditfocus.png" id="4_fbo3q"]
-[ext_resource type="Texture2D" uid="uid://ccfh771cly6wp" path="res://Assets/Sprites/send_button.png" id="5_mj1bx"]
 [ext_resource type="Texture2D" uid="uid://bc241w2jom6bu" path="res://Assets/Sprites/exitbutton.png" id="6_4r3im"]
-[ext_resource type="Texture2D" uid="uid://d25ei4d0ab75v" path="res://Assets/Sprites/send_button_hover.png" id="6_f6vue"]
-[ext_resource type="Texture2D" uid="uid://yviej45lff4b" path="res://Assets/Sprites/send_button_disabled.png" id="7_bptec"]
 [ext_resource type="Texture2D" uid="uid://cjf4fhtm0ta7m" path="res://Assets/Sprites/quitbuttonhover1.png" id="7_n1sxu"]
-[ext_resource type="Texture2D" uid="uid://c68vlx8lgmyj2" path="res://Assets/Sprites/send_button_pressed.png" id="7_qv27n"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="8_n1sxu"]
 [ext_resource type="AudioStream" uid="uid://bao1cdmr6axml" path="res://Assets/Audio/163466__erh__machinery-ph-sny-1b14-4.wav" id="12_wfrhd"]
-[ext_resource type="AudioStream" uid="uid://e74mglwo351x" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="13_wmfkg"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_title"]
 font = ExtResource("3_font")
@@ -30,32 +23,12 @@ shadow_color = Color(0, 0.43529412, 0.53333336, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_prompt"]
 font = ExtResource("3_font")
-font_size = 20
-font_color = Color(0, 0.19607843, 0.19607843, 1)
-outline_size = 2
-outline_color = Color(0, 1, 1, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fbo3q"]
-content_margin_left = 7.0
-texture = ExtResource("3_42n04")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ux7q8"]
-content_margin_left = 7.0
-texture = ExtResource("4_fbo3q")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f6vue"]
-texture = ExtResource("5_mj1bx")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1ktc6"]
-texture = ExtResource("7_qv27n")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bptec"]
-texture = ExtResource("6_f6vue")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wfrhd"]
-texture = ExtResource("7_bptec")
+font_size = 16
+font_color = Color(0.25, 0.643, 0.957, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_log"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_input"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i8r7y"]
 shader = ExtResource("2_imyuk")
@@ -191,11 +164,11 @@ offset_left = 14.0
 offset_top = 231.0
 offset_right = 348.0
 offset_bottom = 261.0
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
 [node name="PromptLabel" type="Label" parent="ChatTexture/InputRow"]
 layout_mode = 2
-text = ">"
+text = "adnex@sim:~$"
 label_settings = SubResource("LabelSettings_prompt")
 vertical_alignment = 1
 
@@ -204,20 +177,15 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.498, 0.847, 0.847, 1)
+theme_override_colors/caret_color = Color(0.498, 0.847, 0.847, 1)
 theme_override_font_sizes/font_size = 16
-theme_override_styles/normal = SubResource("StyleBoxTexture_fbo3q")
-theme_override_styles/focus = SubResource("StyleBoxTexture_ux7q8")
-placeholder_text = "Type a message..."
+theme_override_styles/normal = SubResource("StyleBoxEmpty_input")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_input")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_input")
 max_length = 60
-
-[node name="SendButton" type="Button" parent="ChatTexture/InputRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxTexture_f6vue")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_1ktc6")
-theme_override_styles/hover = SubResource("StyleBoxTexture_bptec")
-theme_override_styles/disabled = SubResource("StyleBoxTexture_wfrhd")
+keep_editing_on_text_submit = true
+caret_blink = true
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=624943954]
 visible = false
@@ -242,8 +210,4 @@ bus = &"SFX"
 
 [node name="TypingSound" type="AudioStreamPlayer" parent="." unique_id=107174035]
 stream = ExtResource("12_wfrhd")
-bus = &"SFX"
-
-[node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=1629121733]
-stream = ExtResource("13_wmfkg")
 bus = &"SFX"

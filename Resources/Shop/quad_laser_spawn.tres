@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ShopItem" format=3]
+
+[ext_resource type="Script" path="res://Scripts/Shop/shop_item.gd" id="1_item"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/quad_laser_pickup.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_item")
+id = &"quad_laser_spawn"
+title = "QUAD LASER"
+description = "+10% SPAWN
+IN ARENA 2"
+icon = ExtResource("2_icon")
+kind = 0
+prices = Array[int]([1000, 1000, 1000, 1000, 1000])
+upgrade_stat = &"quad_laser"
+spawn_rate_per_level = 0.1
+purchase_line = "QUAD LASER UPGRADE INSTALLED."
+order = 4

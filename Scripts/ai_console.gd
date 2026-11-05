@@ -50,16 +50,19 @@ const LINE_DELAY: float = 0.04
 
 ## Fake shell (filesystem, current directory) for the terminal commands.
 var terminal: SimTerminal = SimTerminal.new()
+## True while a command's output is printing: Enter is ignored until it ends. The field
+## stays editable so the phone keyboard doesn't close between commands.
+var _busy: bool = false
 
 @onready var close_button: TextureButton = %CloseButton
 @onready var chat_display: RichTextLabel = %ChatLog
+## Plain terminal input line: no box, no send button, Enter runs the command (the
+## virtual keyboard's Enter too; keep_editing_on_text_submit keeps it open).
 @onready var input_field: LineEdit = %InputField
-@onready var send_button: Button = %SendButton
-## Shows the shell's current directory ("~>", "~/missions>").
+## Shell prompt with the current directory ("adnex@sim:~$").
 @onready var prompt_label: Label = $ChatTexture/InputRow/PromptLabel
 
 @onready var back_sound: AudioStreamPlayer = $BackSound
-@onready var button_sound: AudioStreamPlayer = $ButtonSound
 @onready var typing_sound: AudioStreamPlayer = $TypingSound
 
 
@@ -67,12 +70,10 @@ func _ready() -> void:
 	GameManager.can_pause = false
 
 	close_button.pressed.connect(_on_back_button_pressed)
-	send_button.pressed.connect(send_message)
 	input_field.text_submitted.connect(func(_text: String): send_message())
-	# Hover / focus blip on every button (like the credits close button)
-	for button in [close_button, send_button]:
-		button.mouse_entered.connect(back_sound.play)
-		button.focus_entered.connect(back_sound.play)
+	# Hover / focus blip (like the credits close button)
+	close_button.mouse_entered.connect(back_sound.play)
+	close_button.focus_entered.connect(back_sound.play)
 
 	input_field.context_menu_enabled = true
 	# The log scrolls with the wheel; its bar stays hidden inside the frame
@@ -93,20 +94,19 @@ func _input(event: InputEvent) -> void:
 
 
 func send_message() -> void:
+	# Typed while a command still runs: kept in the field for the next Enter
+	if _busy:
+		return
 	var text: String = input_field.text.strip_edges()
-	if text.is_empty() or not input_field.editable:
+	input_field.clear()
+	if text.is_empty():
 		return
 
-	input_field.clear()
-	input_field.editable = false
-	send_button.disabled = true
-
+	_busy = true
 	# What the player types is shown as plain text (no BBCode)
 	await add_message("You", SimTerminal.esc(text), COLOR_PLAYER)
 	await _respond(text)
-
-	input_field.editable = true
-	send_button.disabled = false
+	_busy = false
 	input_field.grab_focus()
 
 
