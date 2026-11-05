@@ -20,6 +20,28 @@ extends Control
 @onready var play_mode_arrow: TextureButton = get_node_or_null("PlayModeArrow")
 @onready var play_mode_panel: Control = get_node_or_null("PlayModePanel")
 
+# Arcade arena picker: built in code beside the play-mode panel, only when more than one
+# arena can be played in arcade mode (arenas the player has reached, see ArcadeManager).
+# It lives inside the (scaled) panel, so these are panel units. Its height is always the
+# mode panel's: the arena buttons share it, and the preview fills it.
+const ARENA_PICKER_MARGIN: int = 2
+const ARENA_PICKER_SEPARATION: int = 2
+const ARENA_BUTTON_WIDTH: float = 40.0
+const ARENA_BUTTON_FONT_SIZE: int = 10
+## Pixels of the preview image per panel unit (the panel is drawn at ~1.83x).
+const ARENA_PREVIEW_PIXEL_SCALE: int = 2
+const ARENA_BUTTON_BG: Color = Color(0.0, 0.12, 0.13)
+const ARENA_BUTTON_BG_HOVER: Color = Color(0.0, 0.3, 0.3)
+const ARENA_BUTTON_BORDER: Color = Color(0.0, 0.85, 0.85)
+const ARENA_BUTTON_TEXT: Color = Color(0.0, 1.0, 1.0)
+const ARENA_BUTTON_TEXT_HOVER: Color = Color(0.85, 1.0, 1.0)
+var arena_picker: Control
+var arena_buttons: Dictionary = {}
+var arena_preview: TextureRect
+var arena_preview_pixels: Vector2i
+## Downscaled preview textures by arena, made on first use.
+var arena_preview_textures: Dictionary = {}
+
 # Settings panel (gear button): the controls/FPS/shader/roll toggles live inside it
 @onready var settings_button: TextureButton = get_node_or_null("SettingsButton")
 @onready var settings_panel: Control = get_node_or_null("SettingsPanel")
@@ -101,7 +123,8 @@ func _setup_buttons() -> void:
 		play_mode_arrow.toggled.connect(_set_play_mode_panel_open)
 		play_mode_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 		play_mode_panel.get_node("NormalButton").pressed.connect(_start_normal_mode)
-		play_mode_panel.get_node("ArcadeButton").pressed.connect(_start_arcade_mode)
+		play_mode_panel.get_node("ArcadeButton").pressed.connect(_on_arcade_button_pressed)
+		_build_arena_picker()
 
 	if is_instance_valid(settings_button) and is_instance_valid(settings_panel):
 		settings_button.toggled.connect(_set_settings_panel_open)
@@ -250,15 +273,174 @@ func _start_normal_mode() -> void:
 	GameManager.reset_game_state()
 	get_tree().change_scene_to_packed(next_scene)
 
-## Arena 1, endless (see ArcadeManager). main.tscn links back to this menu, so it is
-## taken from GameManager's preload instead of an export (no circular scene reference).
-func _start_arcade_mode() -> void:
-	ArcadeManager.start_run()
-	get_tree().change_scene_to_packed(GameManager.preloaded_main)
+## An endless arena (see ArcadeManager). The arena scenes link back to this menu, so they
+## come from GameManager's preloads instead of exports (no circular scene reference).
+func _start_arcade_mode(arena: int = 0) -> void:
+	ArcadeManager.start_run(arena)
+	get_tree().change_scene_to_packed(ArcadeManager.get_arena_scene(ArcadeManager.arena_index))
+
+## With a single playable arena ARCADE starts it right away; otherwise it opens the picker.
+func _on_arcade_button_pressed() -> void:
+	if not is_instance_valid(arena_picker):
+		_start_arcade_mode(0)
+		return
+	_set_arena_picker_open(not arena_picker.visible)
+
+## Arena list + preview of the arena under the cursor/focus, one button per arena the
+## player has reached (no picker when only arena 1 is available).
+##   ArenaPicker (NinePatchRect, mode panel sprite, fixed size)
+##   └ MarginContainer → HBoxContainer
+##       ├ VBoxContainer: arena buttons, sharing the height evenly
+##       └ PanelContainer (frame) → TextureRect (preview)
+func _build_arena_picker() -> void:
+	var arenas: Array[int] = ArcadeManager.get_available_arenas()
+	if arenas.size() <= 1:
+		return
+	# Base height = the mode panel's, so both read as one block; the width follows the
+	# preview, which keeps the aspect of the arena room
+	var height: float = play_mode_panel.size.y
+	var inner_height: float = height - ARENA_PICKER_MARGIN * 2.0
+	var region: Vector2 = Vector2(ArcadeManager.PREVIEW_REGION.size)
+	var preview_size: Vector2 = Vector2(roundf(inner_height * region.x / region.y), inner_height)
+	var width: float = ARENA_PICKER_MARGIN * 2.0 + ARENA_BUTTON_WIDTH + ARENA_PICKER_SEPARATION + preview_size.x
+
+	var picker: NinePatchRect = NinePatchRect.new()
+	picker.name = "ArenaPicker"
+	picker.texture = (play_mode_panel as TextureRect).texture
+	picker.patch_margin_left = 2
+	picker.patch_margin_top = 2
+	picker.patch_margin_right = 2
+	picker.patch_margin_bottom = 2
+	picker.mouse_filter = Control.MOUSE_FILTER_STOP
+	picker.visible = false
+	# Right of the mode panel, top-aligned
+	picker.position = Vector2(play_mode_panel.size.x + 2.0, 0.0)
+	picker.size = Vector2(width, height)
+	play_mode_panel.add_child(picker)
+	arena_picker = picker
+
+	var margin: MarginContainer = MarginContainer.new()
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for side in ["margin_left", "margin_top", "margin_right", "margin_bottom"]:
+		margin.add_theme_constant_override(side, ARENA_PICKER_MARGIN)
+	picker.add_child(margin)
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+	var row: HBoxContainer = HBoxContainer.new()
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_theme_constant_override("separation", ARENA_PICKER_SEPARATION)
+	margin.add_child(row)
+
+	var list: VBoxContainer = VBoxContainer.new()
+	list.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	list.custom_minimum_size.x = ARENA_BUTTON_WIDTH
+	list.add_theme_constant_override("separation", ARENA_PICKER_SEPARATION)
+	row.add_child(list)
+	for arena in arenas:
+		var button: Button = _make_arena_button(GameManager.arena_names[arena].to_upper())
+		button.pressed.connect(_start_arcade_mode.bind(arena))
+		button.mouse_entered.connect(_show_arena_preview.bind(arena))
+		button.focus_entered.connect(_show_arena_preview.bind(arena))
+		list.add_child(button)
+		arena_buttons[arena] = button
+
+	row.add_child(_make_arena_preview_frame(preview_size))
+	_connect_audio_to_buttons(picker)
+	_show_arena_preview(ArcadeManager.arena_index if arena_buttons.has(ArcadeManager.arena_index) else arenas[0])
+
+## Framed preview (1-unit border like the buttons). The image is made at
+## ARENA_PREVIEW_PIXEL_SCALE so the downscaled room stays sharp.
+func _make_arena_preview_frame(frame_size: Vector2) -> PanelContainer:
+	var frame: PanelContainer = PanelContainer.new()
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.custom_minimum_size = frame_size
+	var style: StyleBoxFlat = _arena_button_style(ARENA_BUTTON_BG)
+	style.set_content_margin_all(1)
+	frame.add_theme_stylebox_override("panel", style)
+
+	arena_preview = TextureRect.new()
+	arena_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arena_preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	arena_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	arena_preview.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	frame.add_child(arena_preview)
+	arena_preview_pixels = Vector2i((frame_size - Vector2(2, 2)) * ARENA_PREVIEW_PIXEL_SCALE)
+	return frame
+
+func _show_arena_preview(arena: int) -> void:
+	if not is_instance_valid(arena_preview):
+		return
+	if not arena_preview_textures.has(arena):
+		arena_preview_textures[arena] = _make_preview_texture(ArcadeManager.get_arena_preview(arena))
+	arena_preview.texture = arena_preview_textures[arena]
+
+## The arena background cropped to its room and downscaled once on the CPU (smooth, no
+## shimmering). If the image can't be read back, the GPU scales an AtlasTexture instead.
+func _make_preview_texture(source: Texture2D) -> Texture2D:
+	if source == null:
+		return null
+	var region: Rect2i = ArcadeManager.PREVIEW_REGION.intersection(Rect2i(Vector2i.ZERO, Vector2i(source.get_size())))
+	var image: Image = source.get_image()
+	if image == null or image.is_empty():
+		var atlas: AtlasTexture = AtlasTexture.new()
+		atlas.atlas = source
+		atlas.region = Rect2(region)
+		return atlas
+	if image.is_compressed():
+		image.decompress()
+	image = image.get_region(region)
+	image.resize(arena_preview_pixels.x, arena_preview_pixels.y, Image.INTERPOLATE_LANCZOS)
+	return ImageTexture.create_from_image(image)
+
+## Fills its share of the list height; clip_text keeps long names from widening it.
+func _make_arena_button(text: String) -> Button:
+	var button: Button = Button.new()
+	button.text = text
+	button.clip_text = true
+	button.custom_minimum_size = Vector2(ARENA_BUTTON_WIDTH, 0)
+	button.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	button.add_theme_font_override("font", FontManager.PIXEL_FONT)
+	button.add_theme_font_size_override("font_size", ARENA_BUTTON_FONT_SIZE)
+	button.add_theme_color_override("font_color", ARENA_BUTTON_TEXT)
+	for state in ["font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
+		button.add_theme_color_override(state, ARENA_BUTTON_TEXT_HOVER)
+	var normal: StyleBoxFlat = _arena_button_style(ARENA_BUTTON_BG)
+	var hover: StyleBoxFlat = _arena_button_style(ARENA_BUTTON_BG_HOVER)
+	button.add_theme_stylebox_override("normal", normal)
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", hover)
+	button.add_theme_stylebox_override("hover_pressed", hover)
+	# Focus is only a brighter border, drawn over the normal box without hiding the text
+	var focus: StyleBoxFlat = _arena_button_style(Color.TRANSPARENT)
+	focus.draw_center = false
+	focus.border_color = ARENA_BUTTON_TEXT_HOVER
+	button.add_theme_stylebox_override("focus", focus)
+	return button
+
+func _arena_button_style(bg: Color) -> StyleBoxFlat:
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = bg
+	style.border_color = ARENA_BUTTON_BORDER
+	style.set_border_width_all(1)
+	style.set_content_margin_all(0)
+	return style
+
+func _set_arena_picker_open(open: bool) -> void:
+	if not is_instance_valid(arena_picker):
+		return
+	arena_picker.visible = open
+	if open:
+		# Focus the arena of the last arcade run (keyboard/gamepad can pick right away)
+		var focus: Button = arena_buttons.get(ArcadeManager.arena_index, arena_buttons.values()[0])
+		focus.grab_focus()
+
+func _is_arena_picker_open() -> bool:
+	return is_instance_valid(arena_picker) and arena_picker.visible
 
 func _set_play_mode_panel_open(open: bool) -> void:
 	play_mode_panel.visible = open
 	play_mode_arrow.set_pressed_no_signal(open)
+	_set_arena_picker_open(false)
 	if open:
 		_hide_settings_panel()
 		# Focus lets keyboard/gamepad pick a mode (its focus sound is the open feedback)
@@ -308,7 +490,9 @@ func _input(event: InputEvent) -> void:
 	# A click/touch outside an open popup (mode picker, settings) only closes it
 	if _is_press(event):
 		var point: Vector2 = event.position
-		if _is_play_mode_panel_open() and not _is_on_popup(point, play_mode_panel, play_mode_arrow):
+		var on_arena_picker: bool = _is_arena_picker_open() and arena_picker.get_global_rect().has_point(point)
+		if _is_play_mode_panel_open() and not on_arena_picker \
+				and not _is_on_popup(point, play_mode_panel, play_mode_arrow):
 			_set_play_mode_panel_open(false)
 			get_viewport().set_input_as_handled()
 			return
@@ -318,6 +502,12 @@ func _input(event: InputEvent) -> void:
 			return
 
 	if event.is_action_pressed("pause"):
+		# Esc steps back one level: arena picker first, then the mode panel
+		if _is_arena_picker_open():
+			_set_arena_picker_open(false)
+			back_sound.play()
+			play_mode_panel.get_node("ArcadeButton").grab_focus()
+			return
 		if _is_play_mode_panel_open():
 			_set_play_mode_panel_open(false)
 			return

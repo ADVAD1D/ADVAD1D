@@ -38,6 +38,8 @@ func _ready() -> void:
 	# Arcade runs never clear the arena, so they don't count.
 	if GameManager.phase_to_start <= 1 and not GameManager.arcade_mode_active:
 		AchievementManager.begin_arena_run(arena_index)
+	# Arena tracker: reaching an arena unlocks it in arcade mode (see ArcadeManager)
+	GameManager.mark_arena_visited(arena_index)
 	# NEW GROUND: reaching arena 2 (normally after clearing arena 1). Opening the scene
 	# straight from the editor unlocks it too.
 	if arena_index == 1:

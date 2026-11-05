@@ -1,6 +1,10 @@
 extends Node
-## Arcade mode: arena 1 with no phase limit. A run lasts until the player dies or runs
+## Arcade mode: an arena with no phase limit. A run lasts until the player dies or runs
 ## out of time, and then starts over from phase 1.
+##
+## Arena 1 is always playable; any other arena with a scene in get_arena_scene() is
+## offered once the player has reached it in the main mode (GameManager.visited_arenas).
+## Records (best score / best phase) are kept per arena.
 ##
 ## Phase length, score goal and difficulty past the last table phase are extrapolated by
 ## PhaseManager (see _get_phase_requirement / _get_phase_duration / apply_difficulty).
@@ -20,8 +24,15 @@ signal run_started
 signal run_ended(results: Dictionary)
 
 const SAVE_PATH: String = "user://arcade.json"
-## Arena index played in arcade mode (main.tscn).
-const ARENA_INDEX: int = 0
+## Arena indices that have an arcade scene (see get_arena_scene), in menu order.
+const ARCADE_ARENAS: Array[int] = [0, 1]
+## Main menu preview of each arcade arena: its background texture...
+const ARENA_PREVIEWS: Dictionary = {
+	0: preload("res://Assets/Sprites/gauntletdefinitivo5.png"),
+	1: preload("res://Assets/Sprites/arena2.png"),
+}
+## ...cropped to the room at the top of the texture (both backgrounds are 400x600).
+const PREVIEW_REGION: Rect2i = Rect2i(0, 0, 400, 280)
 
 # --- Tuning ---------------------------------------------------------------------
 ## Seconds a kill keeps the combo alive.
@@ -35,6 +46,8 @@ var phase_clear_bonus: int = 250
 var points_per_diamond: int = 1000
 
 # --- Current run ------------------------------------------------------------------
+## Arena of the current (or last) run. Also the one the menu's arena picker focuses first.
+var arena_index: int = 0
 var run_score: int = 0
 var multiplier: int = 1
 var chain: int = 0
@@ -43,8 +56,8 @@ var current_phase: int = 0
 var run_diamonds: int = 0
 
 # --- Records ----------------------------------------------------------------------
-var best_score: int = 0
-var best_phase: int = 0
+## Per arena: {arena_index: {"best_score": int, "best_phase": int}}.
+var records: Dictionary = {}
 
 ## Results of the run that just ended. The HUD shows them once after the reload.
 var last_results: Dictionary = {}
@@ -70,13 +83,61 @@ func _process(delta: float) -> void:
 
 # --- Run lifecycle ------------------------------------------------------------------
 
-## Called by the main menu's arcade button, right before loading the arena.
-func start_run() -> void:
+## Called by the main menu, right before loading get_arena_scene(arena). An arena the
+## player can't play yet falls back to arena 1.
+func start_run(arena: int = 0) -> void:
 	GameManager.reset_game_state()
+	if not is_arena_available(arena):
+		arena = 0
+	arena_index = arena
+	GameManager.current_arena_index = arena
 	GameManager.arcade_mode_active = true
 	last_results = {}
 	_summary_shown = false
 	_begin_run()
+	save_records()
+
+
+## Arenas the player can pick: those with an arcade scene that were reached at least once.
+func get_available_arenas() -> Array[int]:
+	var out: Array[int] = []
+	for arena in ARCADE_ARENAS:
+		if is_arena_available(arena):
+			out.append(arena)
+	return out
+
+
+func is_arena_available(arena: int) -> bool:
+	if not ARCADE_ARENAS.has(arena):
+		return false
+	return arena == 0 or GameManager.has_visited_arena(arena)
+
+
+## The arena scenes link back to the main menu, so they come from GameManager's
+## preloads instead of exports (no circular scene references).
+func get_arena_scene(arena: int) -> PackedScene:
+	match arena:
+		1:
+			return GameManager.preloaded_arena2
+		_:
+			return GameManager.preloaded_main
+
+
+## Background texture for the menu preview (null if the arena has none).
+func get_arena_preview(arena: int) -> Texture2D:
+	return ARENA_PREVIEWS.get(arena, null)
+
+
+func get_best_score(arena: int) -> int:
+	return int(_get_record(arena).get("best_score", 0))
+
+
+func get_best_phase(arena: int) -> int:
+	return int(_get_record(arena).get("best_phase", 0))
+
+
+func _get_record(arena: int) -> Dictionary:
+	return records.get(arena, {})
 
 
 ## Called by PhaseManager when a phase begins. The first phase after a death starts a new run.
@@ -100,10 +161,15 @@ func end_run() -> void:
 	if not _run_active:
 		return
 	_run_active = false
+	var best_score: int = get_best_score(arena_index)
 	var new_best: bool = run_score > best_score
 	best_score = maxi(best_score, run_score)
-	best_phase = maxi(best_phase, current_phase)
+	records[arena_index] = {
+		"best_score": best_score,
+		"best_phase": maxi(get_best_phase(arena_index), current_phase),
+	}
 	last_results = {
+		"arena": arena_index,
 		"score": run_score,
 		"phase": current_phase,
 		"diamonds": run_diamonds,
@@ -205,7 +271,11 @@ func save_records() -> void:
 	if file == null:
 		_log_message(["Error saving arcade records", FileAccess.get_open_error()])
 		return
-	file.store_string(JSON.stringify({"best_score": best_score, "best_phase": best_phase}))
+	# JSON keys must be strings
+	var arenas: Dictionary = {}
+	for arena in records:
+		arenas[str(arena)] = records[arena]
+	file.store_string(JSON.stringify({"last_arena": arena_index, "arenas": arenas}))
 
 
 func _load_records() -> void:
@@ -214,14 +284,28 @@ func _load_records() -> void:
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
 	if typeof(data) != TYPE_DICTIONARY:
 		return
-	best_score = maxi(int(data.get("best_score", 0)), 0)
-	best_phase = maxi(int(data.get("best_phase", 0)), 0)
+	arena_index = maxi(int(data.get("last_arena", 0)), 0)
+	var arenas: Variant = data.get("arenas", {})
+	if typeof(arenas) == TYPE_DICTIONARY:
+		for key in arenas:
+			var record: Variant = arenas[key]
+			if typeof(record) == TYPE_DICTIONARY:
+				_set_record(int(key), record.get("best_score", 0), record.get("best_phase", 0))
+	# Old format (arena 1 only): best_score / best_phase at the top level
+	if data.has("best_score"):
+		_set_record(0, data.get("best_score", 0), data.get("best_phase", 0))
+
+
+func _set_record(arena: int, score: Variant, phase: Variant) -> void:
+	records[arena] = {
+		"best_score": maxi(int(score), 0),
+		"best_phase": maxi(int(phase), 0),
+	}
 
 
 ## Clears the records (debug).
 func reset_records() -> void:
-	best_score = 0
-	best_phase = 0
+	records.clear()
 	save_records()
 
 

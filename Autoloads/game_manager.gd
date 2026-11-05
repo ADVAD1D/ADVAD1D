@@ -25,6 +25,10 @@ var arena_names: Array[String] = ["Arena 1", "Arena 2", "Arena 3"]
 ## UI colour of each arena (ArenaUiTint), as a hue rotation in degrees of the original
 ## cyan/blue UI: arena 1 = 0 (blue), arena 2 = -60 (green), arena 3 = 180 (red).
 var arena_ui_hue_shifts: Array[float] = [0.0, -60.0, 180.0]
+## Arena indices the player has reached in any mode, sorted and saved (`visited_arenas` in
+## save_game.json). Arena 1 (index 0) is always there. main.gd adds its arena on load;
+## ArcadeManager only offers arenas listed here.
+var visited_arenas: Array[int] = [0]
 # --- Feature Flags & Settings ---
 var is_shader_animation: bool = false
 var is_glitch_sound: bool = false
@@ -38,7 +42,7 @@ var achievements_enabled: bool = true
 var arcade_enabled: bool = true
 ## Shows the shop button in the main menu (see ShopManager).
 var shop_enabled: bool = true
-## True while an arcade run is being played (endless arena 1, see ArcadeManager).
+## True while an arcade run is being played (an endless arena, see ArcadeManager).
 ## Set by the arcade button; cleared by the Play button and when the main menu opens.
 var arcade_mode_active: bool = false
 
@@ -126,6 +130,9 @@ func _ready() -> void:
 	if start_server == true:
 		Network.wake_up_server()
 	load_data()
+	# Saves from before the arena tracker: NEW GROUND means arena 2 was already reached
+	if AchievementManager.is_unlocked(&"arena_2_reached") and not has_visited_arena(1):
+		mark_arena_visited(1)
 	# Deaths from before the "die 1000 times" achievement count too (no toast at boot)
 	AchievementManager.raise_stat(&"deaths", deaths_count, true)
 
@@ -217,7 +224,8 @@ func save_data():
 			"pc_optimize_shaders": pc_optimize_shaders,
 			"crt_roll_enabled": crt_roll_enabled,
 			"music_volume": music_volume_percent,
-			"sfx_volume": sfx_volume_percent
+			"sfx_volume": sfx_volume_percent,
+			"visited_arenas": visited_arenas
 		}
 		_log_message(["saved game!, selected skin", SkinManager.equipped_ship_index])
 		_log_message(["Relative controls: ", relative_control_active])
@@ -307,11 +315,34 @@ func load_data():
 		music_volume_percent = clampf(float(data["music_volume"]), 0.0, 100.0)
 	if data and "sfx_volume" in data:
 		sfx_volume_percent = clampf(float(data["sfx_volume"]), 0.0, 100.0)
-		
+
+	if data and "visited_arenas" in data and typeof(data["visited_arenas"]) == TYPE_ARRAY:
+		for index in data["visited_arenas"]:
+			_add_visited_arena(int(index))
+		_log_message(["loaded visited arenas: ", visited_arenas])
+
 	# legacy: older saves kept deaths_count in the global json
 	if data and "deaths_count" in data and not FileAccess.file_exists(deaths_path):
 		deaths_count = int(data["deaths_count"])
 		_log_message(["loaded legacy deaths count: ", deaths_count])
+
+## Records that the player reached this arena (called by main.gd when an arena loads).
+## Saves only when the arena is new.
+func mark_arena_visited(index: int) -> void:
+	if _add_visited_arena(index):
+		_log_message(["New arena reached: ", index, visited_arenas])
+		save_data()
+
+func has_visited_arena(index: int) -> bool:
+	return visited_arenas.has(index)
+
+## Adds the index (kept sorted). Returns true if it was new.
+func _add_visited_arena(index: int) -> bool:
+	if index < 0 or visited_arenas.has(index):
+		return false
+	visited_arenas.append(index)
+	visited_arenas.sort()
+	return true
 
 func save_mobile_layout(node_name: String, pos: Vector2):
 	mobile_layout[node_name] = {"x": pos.x, "y": pos.y}
