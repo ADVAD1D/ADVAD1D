@@ -50,6 +50,7 @@ var arena_playlists = {
 		preload("res://Assets/Audio/Music/psychronic-breach-vector-521613.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-the-architectx27s-gaze-521611.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-carrier-signal-468740.ogg"),
+		preload("res://Assets/Audio/Music/psychronic-hyperspace-hustle-448682.ogg"),
 	],
 	2: [
 		preload("res://Assets/Audio/Music/neon-rising-336846.ogg"),
