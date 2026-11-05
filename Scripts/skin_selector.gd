@@ -101,7 +101,10 @@ func _on_ship_selection_changed(ship_data: Dictionary):
 		# Achievement ships say which achievement; ships reserved for future achievements
 		# stay a mystery; the rest come from the shop
 		var achievement: Achievement = AchievementManager.get_achievement_for_ship(index)
-		if achievement:
+		if achievement and achievement.hidden:
+			# Secret achievements don't spoil their name
+			ship_author_label.text = "Get: ???"
+		elif achievement:
 			ship_author_label.text = "Get: " + achievement.title
 		elif ShopManager.is_ship_reserved(index):
 			ship_author_label.text = "Get: ???"

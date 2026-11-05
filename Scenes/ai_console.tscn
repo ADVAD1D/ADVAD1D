@@ -3,6 +3,9 @@
 [ext_resource type="Theme" uid="uid://kovmblbm60fu" path="res://Resources/font_pixel.tres" id="1_00ofu"]
 [ext_resource type="Script" uid="uid://dw6cbe0t2sfem" path="res://Scripts/ai_console.gd" id="2_i8r7y"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_imyuk"]
+[ext_resource type="Texture2D" uid="uid://c82v2u11001rd" path="res://Assets/Sprites/credits_panel.png" id="3_panel"]
+[ext_resource type="Texture2D" uid="uid://cb2g0qyvdtse" path="res://Assets/Sprites/skinpanel3.png" id="3_bg"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="3_font"]
 [ext_resource type="Texture2D" uid="uid://d2tb0imyr1ebe" path="res://Assets/Sprites/lineeditbar.png" id="3_42n04"]
 [ext_resource type="Texture2D" uid="uid://r5kd276mo4px" path="res://Assets/Sprites/generalad.png" id="3_vch6u"]
 [ext_resource type="Texture2D" uid="uid://dmi1rtravlk8m" path="res://Assets/Sprites/lineeditfocus.png" id="4_fbo3q"]
@@ -14,15 +17,30 @@
 [ext_resource type="Texture2D" uid="uid://c68vlx8lgmyj2" path="res://Assets/Sprites/send_button_pressed.png" id="7_qv27n"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="8_n1sxu"]
 [ext_resource type="AudioStream" uid="uid://bao1cdmr6axml" path="res://Assets/Audio/163466__erh__machinery-ph-sny-1b14-4.wav" id="12_wfrhd"]
-[ext_resource type="Texture2D" uid="uid://cbn76egjgsvuw" path="res://Assets/Sprites/scroll_bar_button.png" id="13_7w1m1"]
 [ext_resource type="AudioStream" uid="uid://e74mglwo351x" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="13_wmfkg"]
-[ext_resource type="Texture2D" uid="uid://ceppf7jomdmiu" path="res://Assets/Sprites/scroll_bar_button_hover.png" id="14_wmfkg"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font = ExtResource("3_font")
+font_size = 24
+font_color = Color(0, 0.24358124, 0.24366018, 1)
+outline_size = 2
+outline_color = Color(0.13725491, 1, 1, 1)
+shadow_size = 3
+shadow_color = Color(0, 0.43529412, 0.53333336, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_prompt"]
+font = ExtResource("3_font")
+font_size = 20
+font_color = Color(0, 0.19607843, 0.19607843, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fbo3q"]
 content_margin_left = 7.0
 texture = ExtResource("3_42n04")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ux7q8"]
+content_margin_left = 7.0
 texture = ExtResource("4_fbo3q")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f6vue"]
@@ -36,6 +54,8 @@ texture = ExtResource("6_f6vue")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wfrhd"]
 texture = ExtResource("7_bptec")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_log"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i8r7y"]
 shader = ExtResource("2_imyuk")
@@ -58,8 +78,8 @@ shader_parameter/pixelate = false
 shader_parameter/discolor = true
 shader_parameter/warp_amount = 0.150000007125
 shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 0.5
-shader_parameter/vignette_opacity = 1.0
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/vignette_opacity = 0.3
 
 [node name="Control" type="Control" unique_id=116682182]
 layout_mode = 3
@@ -71,52 +91,129 @@ grow_vertical = 2
 theme = ExtResource("1_00ofu")
 script = ExtResource("2_i8r7y")
 
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=860161744]
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -33.0
+offset_top = -16.0
+offset_right = -33.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.1162976, 1.1162976)
+mouse_filter = 2
+texture = ExtResource("3_bg")
+
+[node name="Backdrop" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0.03, 0.04, 0.55)
 
-[node name="GeneralAISprite" type="Sprite2D" parent="PanelContainer" unique_id=61090595]
-modulate = Color(1, 1, 1, 0.40784314)
-self_modulate = Color(1, 1, 1, 0.24705882)
-position = Vector2(263, 137)
-scale = Vector2(4.778921, 4.778921)
+[node name="ChatTexture" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 79.0
+offset_top = 13.0
+offset_right = 441.0
+offset_bottom = 287.0
+texture = ExtResource("3_panel")
+
+[node name="Emblem" type="TextureRect" parent="ChatTexture"]
+modulate = Color(1, 1, 1, 0.08)
+layout_mode = 0
+offset_left = 115.0
+offset_top = 70.0
+offset_right = 247.0
+offset_bottom = 202.0
+mouse_filter = 2
 texture = ExtResource("3_vch6u")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=510324711]
-layout_mode = 2
-theme_override_constants/margin_left = 25
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 25
-theme_override_constants/margin_bottom = 20
+[node name="TitleLabel" type="Label" parent="ChatTexture"]
+layout_mode = 0
+offset_left = 121.0
+offset_top = 1.0
+offset_right = 241.0
+offset_bottom = 27.0
+text = "CHAT"
+label_settings = SubResource("LabelSettings_title")
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=1164401696]
-layout_mode = 2
+[node name="CloseButton" type="TextureButton" parent="ChatTexture"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 13.0
+offset_top = 20.0
+offset_right = 43.0
+offset_bottom = 50.0
+scale = Vector2(0.8, 0.8)
+texture_normal = ExtResource("6_4r3im")
+texture_hover = ExtResource("7_n1sxu")
+texture_focused = ExtResource("7_n1sxu")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1245201803]
-layout_mode = 2
-size_flags_vertical = 3
+[node name="ChatLog" type="RichTextLabel" parent="ChatTexture"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 14.0
+offset_top = 48.0
+offset_right = 348.0
+offset_bottom = 224.0
+theme_override_constants/outline_size = 2
+theme_override_constants/line_separation = 2
+theme_override_constants/table_h_separation = 0
+theme_override_constants/table_v_separation = 0
+theme_override_font_sizes/normal_font_size = 16
+theme_override_font_sizes/bold_font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxEmpty_log")
 bbcode_enabled = true
+scroll_following = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=2026956224]
+[node name="Divider" type="ColorRect" parent="ChatTexture"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 227.0
+offset_right = 348.0
+offset_bottom = 228.0
+mouse_filter = 2
+color = Color(0, 1, 1, 0.35)
+
+[node name="InputRow" type="HBoxContainer" parent="ChatTexture"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 231.0
+offset_right = 348.0
+offset_bottom = 261.0
+theme_override_constants/separation = 6
+
+[node name="PromptLabel" type="Label" parent="ChatTexture/InputRow"]
 layout_mode = 2
-theme_override_constants/separation = 10
+text = ">"
+label_settings = SubResource("LabelSettings_prompt")
+vertical_alignment = 1
 
-[node name="LineEdit" type="LineEdit" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=934357620]
+[node name="InputField" type="LineEdit" parent="ChatTexture/InputRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 8
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxTexture_fbo3q")
 theme_override_styles/focus = SubResource("StyleBoxTexture_ux7q8")
-placeholder_text = "Type your message..."
+placeholder_text = "Type a message..."
+max_length = 60
 
-[node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1821511328]
+[node name="SendButton" type="Button" parent="ChatTexture/InputRow"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
-size_flags_vertical = 8
 theme_override_styles/normal = SubResource("StyleBoxTexture_f6vue")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_1ktc6")
 theme_override_styles/hover = SubResource("StyleBoxTexture_bptec")
@@ -150,41 +247,3 @@ bus = &"SFX"
 [node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=1629121733]
 stream = ExtResource("13_wmfkg")
 bus = &"SFX"
-
-[node name="BackButton" type="TextureButton" parent="." unique_id=1185848638]
-modulate = Color(1, 1, 1, 0.6627451)
-self_modulate = Color(1, 1, 1, 0.81960785)
-layout_mode = 0
-offset_left = 460.00003
-offset_right = 490.00003
-offset_bottom = 30.000015
-scale = Vector2(2.0020716, 2.0020816)
-texture_normal = ExtResource("6_4r3im")
-texture_hover = ExtResource("7_n1sxu")
-texture_focused = ExtResource("7_n1sxu")
-
-[node name="ScrollBarButton" type="TextureButton" parent="." unique_id=1004020280]
-modulate = Color(1, 1, 1, 0.6901961)
-self_modulate = Color(1, 1, 1, 0.70980394)
-layout_mode = 0
-offset_left = 460.0
-offset_top = 54.0
-offset_right = 490.0
-offset_bottom = 84.0
-scale = Vector2(2.0002022, 2.0402021)
-toggle_mode = true
-texture_normal = ExtResource("13_7w1m1")
-texture_hover = ExtResource("14_wmfkg")
-texture_focused = ExtResource("14_wmfkg")
-
-[connection signal="focus_entered" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_button_focus_entered"]
-[connection signal="mouse_entered" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_button_mouse_entered"]
-[connection signal="focus_entered" from="BackButton" to="." method="_on_back_button_focus_entered"]
-[connection signal="focus_exited" from="BackButton" to="." method="_on_back_button_focus_exited"]
-[connection signal="mouse_entered" from="BackButton" to="." method="_on_back_button_mouse_entered"]
-[connection signal="mouse_exited" from="BackButton" to="." method="_on_back_button_mouse_exited"]
-[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
-[connection signal="focus_entered" from="ScrollBarButton" to="." method="_on_scroll_bar_button_focus_entered"]
-[connection signal="focus_exited" from="ScrollBarButton" to="." method="_on_scroll_bar_button_focus_exited"]
-[connection signal="mouse_entered" from="ScrollBarButton" to="." method="_on_scroll_bar_button_mouse_entered"]
-[connection signal="mouse_exited" from="ScrollBarButton" to="." method="_on_scroll_bar_button_mouse_exited"]
