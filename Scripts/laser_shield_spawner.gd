@@ -5,7 +5,7 @@ extends Node2D
 
 @export var spawn_locator: PathFollow2D 
 ## Shop upgrade that makes this powerup spawn more often in arcade mode
-## (ShopItem.upgrade_stat: shield, timewarp, ally_saw, quad_laser). Empty = never changes.
+## (ShopItem.upgrade_stat, shield here). Empty = never changes.
 @export var upgrade_stat: StringName
 
 @onready var timer = $Timer

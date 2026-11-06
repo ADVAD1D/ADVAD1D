@@ -30,6 +30,7 @@
 [ext_resource type="PackedScene" uid="uid://knamw06tun51" path="res://Scenes/power_up_1_pickup.tscn" id="38_kwxat"]
 [ext_resource type="PackedScene" uid="uid://ddbj5g23l6doc" path="res://Scenes/powerup1.tscn" id="40_aqgau"]
 [ext_resource type="Script" uid="uid://cnmvll76uwvp0" path="res://Scripts/laser_shield_spawner.gd" id="40_kwxat"]
+[ext_resource type="Script" path="res://Scripts/quad_laser_spawner.gd" id="40_quadspawner"]
 [ext_resource type="PackedScene" uid="uid://bn8jtbmvulvxr" path="res://Scenes/laser_shield_pickup.tscn" id="41_kqrg6"]
 [ext_resource type="PackedScene" uid="uid://mjsfrhy7mt7v" path="res://Scenes/time_slow_pickup.tscn" id="42_l5mff"]
 [ext_resource type="PackedScene" uid="uid://cv6iiauo728sf" path="res://Scenes/laser_shield.tscn" id="42_nwwfm"]
@@ -725,7 +726,7 @@ wait_time = 15.0
 autostart = true
 
 [node name="QuadLaserSpawner" type="Node2D" parent="." unique_id=1445880770 node_paths=PackedStringArray("spawn_locator")]
-script = ExtResource("40_kwxat")
+script = ExtResource("40_quadspawner")
 pickup_scene = ExtResource("60_quadpickup")
 reward_scene = ExtResource("61_quadlaser")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
