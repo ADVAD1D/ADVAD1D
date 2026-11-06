@@ -18,29 +18,13 @@
 [ext_resource type="AudioStream" uid="uid://dlu22wl4fxr36" path="res://Assets/Audio/783832__chungus43a__milling-machine-motor.wav" id="12_b3802"]
 [ext_resource type="PackedScene" uid="uid://c0ug0q1fcf453" path="res://Scenes/drone_squad.tscn" id="12_muh8k"]
 [ext_resource type="PackedScene" uid="uid://s72gvn2mqhx2" path="res://Scenes/main_menu.tscn" id="13_536cc"]
-[ext_resource type="PackedScene" path="res://Scenes/UI/pause_menu.tscn" id="70_pausemenu"]
-[ext_resource type="Texture2D" uid="uid://kq3gdmq8xgwi" path="res://Assets/Sprites/resumebutton1.png" id="13_hdf80"]
 [ext_resource type="AudioStream" uid="uid://bwoq355ggrir4" path="res://Assets/Audio/351564__bertrof__game-sound-correct-with-delay.wav" id="13_pdsj5"]
-[ext_resource type="Texture2D" uid="uid://dcwcfbxoxb34h" path="res://Assets/Sprites/resumebutton1hover.png" id="14_jwpg7"]
 [ext_resource type="Script" uid="uid://cn624xhs3jj2a" path="res://Scripts/enemy_spawner.gd" id="14_wsu2k"]
-[ext_resource type="Texture2D" uid="uid://wewd0rykgbgq" path="res://Assets/Sprites/dereasebutton.png" id="15_hpc6h"]
-[ext_resource type="Texture2D" uid="uid://duc8rjasfhdl3" path="res://Assets/Sprites/quitbutton.png" id="15_k2e45"]
-[ext_resource type="Texture2D" uid="uid://cp0lyic4v7nia" path="res://Assets/Sprites/music_icon.png" id="15_neg2b"]
 [ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="15_wsu2k"]
-[ext_resource type="Texture2D" uid="uid://3t8pj8h4rows" path="res://Assets/Sprites/quitbuttonhover.png" id="16_536cc"]
-[ext_resource type="Texture2D" uid="uid://hqqqcwvlavvx" path="res://Assets/Sprites/dereasebutton_pressed.png" id="16_e08e2"]
 [ext_resource type="Script" uid="uid://ddvbqopxphvow" path="res://Scripts/saw_spawner.gd" id="16_k12tt"]
-[ext_resource type="Texture2D" uid="uid://2f41284fn4kq" path="res://Assets/Sprites/dereasebutton_hover.png" id="16_kltya"]
-[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="17_e08e2"]
 [ext_resource type="PackedScene" uid="uid://cljshiwenhoau" path="res://Scenes/saw.tscn" id="17_h1bgf"]
-[ext_resource type="Texture2D" uid="uid://cii3dm47h4k7y" path="res://Assets/Sprites/increasebutton.png" id="18_neg2b"]
-[ext_resource type="Texture2D" uid="uid://bubqny5o8sh8w" path="res://Assets/Sprites/increasebutton_hover.png" id="19_r33sp"]
 [ext_resource type="Script" uid="uid://ch7ngtptk8mma" path="res://Scripts/phase_manager.gd" id="20_hibaj"]
-[ext_resource type="Texture2D" uid="uid://cmntejg0spyap" path="res://Assets/Sprites/increasebutton_pressed.png" id="20_neg2b"]
-[ext_resource type="Texture2D" uid="uid://b21nbsy1pvanx" path="res://Assets/Sprites/sound_icon.png" id="23_hdf80"]
-[ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="23_r33sp"]
 [ext_resource type="PackedScene" uid="uid://bu55k5t5u8pui" path="res://Scenes/trigger_scene.tscn" id="24_3pmx8"]
-[ext_resource type="Texture2D" uid="uid://mxxth36bpaa3" path="res://Assets/Sprites/skull_icon.png" id="28_46h6s"]
 [ext_resource type="PackedScene" uid="uid://mvms73mx4k2i" path="res://Scenes/portal_animation.tscn" id="36_s8vy0"]
 [ext_resource type="Script" uid="uid://cx0bsmcfls2de" path="res://Scripts/power_up_1_spawner.gd" id="37_o1aky"]
 [ext_resource type="PackedScene" uid="uid://knamw06tun51" path="res://Scenes/power_up_1_pickup.tscn" id="38_kwxat"]
@@ -50,12 +34,13 @@
 [ext_resource type="PackedScene" uid="uid://mjsfrhy7mt7v" path="res://Scenes/time_slow_pickup.tscn" id="42_l5mff"]
 [ext_resource type="PackedScene" uid="uid://cv6iiauo728sf" path="res://Scenes/laser_shield.tscn" id="42_nwwfm"]
 [ext_resource type="PackedScene" path="res://Scenes/time_slow.tscn" id="43_46h6s"]
-[ext_resource type="PackedScene" path="res://Scenes/quad_laser_pickup.tscn" id="60_quadpickup"]
-[ext_resource type="PackedScene" path="res://Scenes/quad_laser.tscn" id="61_quadlaser"]
 [ext_resource type="Script" uid="uid://co70ivgmpkwgj" path="res://Scripts/Enemies/laser_gun_spawner.gd" id="44_gunspawner"]
 [ext_resource type="PackedScene" path="res://Scenes/laser_gun.tscn" id="45_laser_gun"]
-[ext_resource type="Shader" path="res://Shaders/background_waves.gdshader" id="46_waves"]
-[ext_resource type="Script" path="res://Scripts/background_waves.gd" id="47_waves_script"]
+[ext_resource type="Shader" uid="uid://crawpgh7ka5x3" path="res://Shaders/background_waves.gdshader" id="46_waves"]
+[ext_resource type="Script" uid="uid://c2lyghocuamhf" path="res://Scripts/background_waves.gd" id="47_waves_script"]
+[ext_resource type="PackedScene" path="res://Scenes/quad_laser_pickup.tscn" id="60_quadpickup"]
+[ext_resource type="PackedScene" path="res://Scenes/quad_laser.tscn" id="61_quadlaser"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/pause_menu.tscn" id="70_pausemenu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_s8vy0"]
 shader = ExtResource("5_nwwfm")
@@ -63,6 +48,14 @@ shader_parameter/grayscale_amount = 0.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_waves"]
 shader = ExtResource("46_waves")
+shader_parameter/fill_color = Color(0, 0.047, 0.027, 1)
+shader_parameter/mid_color = Color(0, 0.114, 0.071, 1)
+shader_parameter/crest_color = Color(0.008, 0.208, 0.125, 1)
+shader_parameter/min_texture_y = 280.0
+shader_parameter/speed = 1.0
+shader_parameter/line_density = 0.38
+shader_parameter/grayscale_amount = 0.0
+shader_parameter/time = 0.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fevyy"]
 atlas = ExtResource("7_fevyy")
@@ -195,7 +188,7 @@ fill_from = Vector2(0.495726, 0.508547)
 
 [sub_resource type="Gradient" id="Gradient_1w6v2"]
 offsets = PackedFloat32Array(0.466667, 0.715151)
-colors = PackedColorArray(0, 0.690196, 0.690196, 1, 0, 0, 0, 1)
+colors = PackedColorArray(0, 0.87058824, 0.5137255, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_pdsj5"]
 gradient = SubResource("Gradient_1w6v2")
@@ -335,7 +328,7 @@ position = Vector2(-15, 1446)
 scale = Vector2(9.67856, 9.7983)
 texture = ExtResource("6_p2wjv")
 
-[node name="BackgroundWaves" type="Sprite2D" parent="Sprite2D"]
+[node name="BackgroundWaves" type="Sprite2D" parent="Sprite2D" unique_id=2130803608]
 material = SubResource("ShaderMaterial_waves")
 texture = ExtResource("6_p2wjv")
 script = ExtResource("47_waves_script")
@@ -469,8 +462,8 @@ texture = SubResource("GradientTexture2D_hibaj")
 
 [node name="BottomLight" type="PointLight2D" parent="MainLight2D" unique_id=499554263]
 texture_filter = 2
-position = Vector2(-0.53191495, 48.210022)
-scale = Vector2(1.39539, 0.648821)
+position = Vector2(-0.53191483, 52.86396)
+scale = Vector2(1.7258972, 0.80249846)
 texture = SubResource("GradientTexture2D_pdsj5")
 
 [node name="AsteroidSpawner" type="Marker2D" parent="." unique_id=1962139469 node_paths=PackedStringArray("player_node")]
@@ -728,14 +721,14 @@ upgrade_stat = &"shield"
 wait_time = 15.0
 autostart = true
 
-[node name="QuadLaserSpawner" type="Node2D" parent="." node_paths=PackedStringArray("spawn_locator")]
+[node name="QuadLaserSpawner" type="Node2D" parent="." unique_id=1445880770 node_paths=PackedStringArray("spawn_locator")]
 script = ExtResource("40_kwxat")
 pickup_scene = ExtResource("60_quadpickup")
 reward_scene = ExtResource("61_quadlaser")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 upgrade_stat = &"quad_laser"
 
-[node name="Timer" type="Timer" parent="QuadLaserSpawner"]
+[node name="Timer" type="Timer" parent="QuadLaserSpawner" unique_id=249856748]
 wait_time = 18.0
 autostart = true
 
