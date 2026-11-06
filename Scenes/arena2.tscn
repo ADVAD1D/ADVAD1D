@@ -30,7 +30,7 @@
 [ext_resource type="PackedScene" uid="uid://knamw06tun51" path="res://Scenes/power_up_1_pickup.tscn" id="38_kwxat"]
 [ext_resource type="PackedScene" uid="uid://ddbj5g23l6doc" path="res://Scenes/powerup1.tscn" id="40_aqgau"]
 [ext_resource type="Script" uid="uid://cnmvll76uwvp0" path="res://Scripts/laser_shield_spawner.gd" id="40_kwxat"]
-[ext_resource type="Script" path="res://Scripts/quad_laser_spawner.gd" id="40_quadspawner"]
+[ext_resource type="Script" uid="uid://cxsgt3vpdrjsv" path="res://Scripts/quad_laser_spawner.gd" id="40_quadspawner"]
 [ext_resource type="PackedScene" uid="uid://bn8jtbmvulvxr" path="res://Scenes/laser_shield_pickup.tscn" id="41_kqrg6"]
 [ext_resource type="PackedScene" uid="uid://mjsfrhy7mt7v" path="res://Scenes/time_slow_pickup.tscn" id="42_l5mff"]
 [ext_resource type="PackedScene" uid="uid://cv6iiauo728sf" path="res://Scenes/laser_shield.tscn" id="42_nwwfm"]
@@ -271,7 +271,7 @@ shader_parameter/pixelate = false
 shader_parameter/discolor = false
 shader_parameter/warp_amount = 0.150000007125
 shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 0.3
+shader_parameter/vignette_intensity = 0.1
 shader_parameter/vignette_opacity = 0.800000038
 shader_parameter/low_quality = false
 
@@ -594,7 +594,7 @@ shape = SubResource("RectangleShape2D_aa8k8")
 debug_color = Color(1, 0.0470588, 0, 0.419608)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2091898546 node_paths=PackedStringArray("player_target")]
-zoom = Vector2(0.23, 0.23)
+zoom = Vector2(0.22, 0.22)
 limit_left = -1915
 limit_top = -1420
 limit_right = 1870
@@ -730,7 +730,6 @@ script = ExtResource("40_quadspawner")
 pickup_scene = ExtResource("60_quadpickup")
 reward_scene = ExtResource("61_quadlaser")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
-upgrade_stat = &"quad_laser"
 
 [node name="Timer" type="Timer" parent="QuadLaserSpawner" unique_id=249856748]
 wait_time = 20.0
