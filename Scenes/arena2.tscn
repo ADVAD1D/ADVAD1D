@@ -732,7 +732,7 @@ spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 upgrade_stat = &"quad_laser"
 
 [node name="Timer" type="Timer" parent="QuadLaserSpawner" unique_id=249856748]
-wait_time = 18.0
+wait_time = 20.0
 autostart = true
 
 [node name="DroneSquad" parent="." unique_id=1217995551 instance=ExtResource("12_muh8k")]

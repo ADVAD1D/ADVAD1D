@@ -11,7 +11,7 @@ description = "+10% SPAWN
 IN ARENA 2"
 icon = ExtResource("2_icon")
 kind = 0
-prices = Array[int]([1000, 1000, 1000, 1000, 1000])
+prices = Array[int]([1000, 1000])
 upgrade_stat = &"quad_laser"
 spawn_rate_per_level = 0.1
 purchase_line = "QUAD LASER UPGRADE INSTALLED."
