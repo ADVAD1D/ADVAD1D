@@ -11,6 +11,16 @@ extends Node2D
 @export var lines: PackedStringArray = [
 	"Welcome to the training program, soldier.",
 	"This simulation is designed for you to learn and master the use of your ship.",
+	"You will face a series of challenges divided into 3 battle arenas, where you must clear 10 phases.",
+	"Each phase has a set of enemies and a requirement to move on to the next one.",
+	"It won't be easy.",
+	"To master the use of your unit, these trials will test your endurance,",
+	"your handling of stress,",
+	"and your reflexes.",
+	"Use the W, A, S, D keys or the arrow keys to move.",
+	"Press E to dash, which grants you 0.5 seconds of invulnerability.",
+	"To shoot, use the F key or the space bar.",
+	"Let's begin with arena 1.",
 ]
 ## Seconds the illustration shows alone before the dialogue box opens.
 @export var dialogue_delay: float = 1.5

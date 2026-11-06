@@ -626,9 +626,12 @@ mouse_filter = 2
 
 [node name="FadeRect" type="ColorRect" parent="UILayer" unique_id=1724897322]
 visible = false
-offset_right = 77.532364
-offset_bottom = 91.99513
-scale = Vector2(6.7068768, 6.7068768)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="PauseMenu" parent="." unique_id=774716050 instance=ExtResource("70_pausemenu")]

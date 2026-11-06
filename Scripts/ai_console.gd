@@ -61,6 +61,10 @@ var _busy: bool = false
 @onready var input_field: LineEdit = %InputField
 ## Shell prompt with the current directory ("adnex@sim:~$").
 @onready var prompt_label: Label = $ChatTexture/InputRow/PromptLabel
+## The chat frame. Laid out for 520x300, so it's re-centred when the viewport grows
+## (phones in expand mode make it wider).
+@onready var chat_frame: TextureRect = $ChatTexture
+@onready var _frame_origin: Vector2 = chat_frame.position
 
 @onready var back_sound: AudioStreamPlayer = $BackSound
 @onready var typing_sound: AudioStreamPlayer = $TypingSound
@@ -68,6 +72,8 @@ var _busy: bool = false
 
 func _ready() -> void:
 	GameManager.can_pause = false
+	get_viewport().size_changed.connect(_center_frame)
+	_center_frame()
 
 	close_button.pressed.connect(_on_back_button_pressed)
 	input_field.text_submitted.connect(func(_text: String): send_message())
@@ -86,6 +92,13 @@ func _ready() -> void:
 
 	add_message("System", "Channel open. Type your message...", COLOR_SYSTEM)
 	input_field.grab_focus()
+
+
+## Keeps the frame in the middle of the visible area: it moves by how far the centre is
+## from the 520x300 design centre (260, 150).
+func _center_frame() -> void:
+	var view: Vector2 = get_viewport().get_visible_rect().size
+	chat_frame.position = (_frame_origin + view * 0.5 - Vector2(260.0, 150.0)).round()
 
 
 func _input(event: InputEvent) -> void:
