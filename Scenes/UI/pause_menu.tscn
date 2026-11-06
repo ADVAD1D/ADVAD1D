@@ -20,14 +20,11 @@ font_color = Color(0.635, 1, 1, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_item"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_plate"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_plate"]
 content_margin_left = 14.0
 content_margin_top = 6.0
 content_margin_right = 14.0
 content_margin_bottom = 8.0
-bg_color = Color(0, 0.015, 0.02, 0.6)
-shadow_color = Color(0, 0.015, 0.02, 0.6)
-shadow_size = 14
 
 [sub_resource type="LabelSettings" id="LabelSettings_skull"]
 font = ExtResource("2_font")
@@ -101,7 +98,7 @@ theme_override_constants/separation = 24
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_plate")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_plate")
 
 [node name="Menu" type="VBoxContainer" parent="Root/Center/Layout/MenuPlate"]
 layout_mode = 2

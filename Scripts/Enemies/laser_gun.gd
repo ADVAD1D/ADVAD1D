@@ -228,8 +228,8 @@ func _hit_player(from: Vector2, to: Vector2) -> Vector2:
 	return to
 
 
-## The beam also destroys the saws, enemy ships and asteroids it crosses (from -> to, after
-## a shield may have cut it short). Their own death functions are used (die_and_respawn(),
+## The beam also destroys the saws, enemy ships, asteroids and the player's ally saws it
+## crosses (from -> to, after a shield may have cut it short). Their own death functions are used (die_and_respawn(),
 ## Asteroid.explode()): they give no score and no "saws destroyed" progress (only the
 ## player's lasers do), and the spawners replace them. Other laser guns and powerups are
 ## left alone.
@@ -251,6 +251,11 @@ func _destroy_enemies(from: Vector2, to: Vector2) -> void:
 		elif (target.is_in_group("saws") or target.is_in_group("enemigos")) \
 				and target.has_method("die_and_respawn"):
 			target.die_and_respawn()
+		# The player's ally saw (powerup1.gd) too. Its die() has no guard of its own and the
+		# beam hits it every frame, so only while it isn't dying already
+		elif target.is_in_group("allies") and target.has_method("die") \
+				and not target.get("is_dying"):
+			target.die()
 
 
 func _has_shield(player: Node) -> bool:

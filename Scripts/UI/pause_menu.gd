@@ -58,7 +58,7 @@ var _buttons: Array[Button] = []
 @onready var header_label: Label = %Header
 @onready var hover_sound: AudioStreamPlayer = $HoverSound
 @onready var select_sound: AudioStreamPlayer = $SelectSound
-## The list's backing plate; dimmed while the settings panel is open.
+## The list's container (no background, only margins); dimmed while the settings panel is open.
 @onready var menu_plate: Control = $Root/Center/Layout/MenuPlate
 
 
