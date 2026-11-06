@@ -1,0 +1,119 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/cinematic_dialogue.gd" id="1_script"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="2_font"]
+[ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="3_blip"]
+[ext_resource type="AudioStream" uid="uid://e74mglwo351x" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="4_next"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_box"]
+bg_color = Color(0, 0.035, 0.05, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0.6, 0.64, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_name"]
+font = ExtResource("2_font")
+font_size = 16
+font_color = Color(0, 0.102, 0.102, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+shadow_size = 4
+shadow_color = Color(0, 1, 1, 0.35)
+shadow_offset = Vector2(0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_text"]
+font = ExtResource("2_font")
+font_size = 16
+font_color = Color(0.82, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_arrow"]
+font = ExtResource("2_font")
+font_size = 16
+font_color = Color(0, 1, 1, 1)
+
+[node name="CinematicDialogue" type="Control"]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -72.0
+offset_right = -16.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_box")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 5
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="NameLabel" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "COMMANDER"
+label_settings = SubResource("LabelSettings_name")
+
+[node name="TextLabel" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 3
+text = "..."
+label_settings = SubResource("LabelSettings_text")
+autowrap_mode = 3
+
+[node name="NextArrow" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -16.0
+offset_top = -20.0
+offset_right = -6.0
+offset_bottom = -2.0
+grow_horizontal = 0
+grow_vertical = 0
+text = ">"
+label_settings = SubResource("LabelSettings_arrow")
+
+[node name="TypeSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_blip")
+volume_db = -10.0
+bus = &"SFX"
+
+[node name="NextSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_next")
+volume_db = -6.0
+bus = &"SFX"

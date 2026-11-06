@@ -6,17 +6,7 @@
 [ext_resource type="Script" uid="uid://5h5vl12ervyf" path="res://Scripts/abduction_sprite_control.gd" id="2_k0sn5"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_lkfcr"]
 [ext_resource type="PackedScene" uid="uid://c8h020vchy722" path="res://Scenes/tutorial.tscn" id="2_s02xp"]
-[ext_resource type="Texture2D" uid="uid://8qwdi0lnhf43" path="res://Assets/Sprites/enterkey.png" id="5_6ude6"]
-[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="5_vkxro"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_tofm5"]
-font = ExtResource("5_vkxro")
-font_size = 20
-font_color = Color(6.617978e-08, 0.14569733, 0.14569727, 1)
-outline_size = 2
-outline_color = Color(0, 1, 1, 1)
-shadow_size = 5
-shadow_color = Color(1.3536774e-07, 0.12474046, 0.12474043, 1)
+[ext_resource type="PackedScene" path="res://Scenes/UI/cinematic_dialogue.tscn" id="3_dialogue"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g50ly"]
 shader = ExtResource("2_lkfcr")
@@ -49,22 +39,7 @@ next_scene = ExtResource("2_s02xp")
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=974017322]
 
-[node name="EnterKey" type="TextureRect" parent="UILayer" unique_id=775833959]
-offset_left = 459.0
-offset_top = 215.00002
-offset_right = 504.0
-offset_bottom = 260.0
-scale = Vector2(0.72236204, 0.72236204)
-texture = ExtResource("5_6ude6")
-
-[node name="SkipLabel" type="Label" parent="UILayer" unique_id=2041649409]
-offset_left = 462.00003
-offset_top = 246.0
-offset_right = 489.00003
-offset_bottom = 262.0
-scale = Vector2(0.99130595, 0.99130595)
-text = "SKIP"
-label_settings = SubResource("LabelSettings_tofm5")
+[node name="Dialogue" parent="UILayer" instance=ExtResource("3_dialogue")]
 
 [node name="ColorRect" type="ColorRect" parent="UILayer" unique_id=220638933]
 material = SubResource("ShaderMaterial_g50ly")
