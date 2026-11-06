@@ -24,7 +24,8 @@ var scene1_specific_playlist: Dictionary = {
 	"res://Scenes/achievements.tscn": preload("res://Assets/Audio/Music/psychronic-ascension-theory-520113.ogg"),
 	"res://Scenes/shop.tscn": preload("res://Assets/Audio/Music/psychronic-steel-dragon-371006.ogg"),
 	"res://Scenes/ai_console.tscn": preload("res://Assets/Audio/Music/psychronic-hypnotic-crystals-415889.ogg"),
-	"res://Scenes/UI/ai_console_subviewport.tscn": preload("res://Assets/Audio/Music/psychronic-hypnotic-crystals-415889.ogg")	
+	"res://Scenes/UI/ai_console_subviewport.tscn": preload("res://Assets/Audio/Music/psychronic-hypnotic-crystals-415889.ogg"),
+	"res://Scenes/test_room_cinematic.tscn": preload("res://Assets/Audio/Music/psychronic-somber-monolith-408777.ogg"),
 }
 
 @onready var sfx_player: AudioStreamPlayer = $SFXPlayer
