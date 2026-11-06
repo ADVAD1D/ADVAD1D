@@ -105,6 +105,7 @@ const deaths_path: String = "user://deaths_count.txt"
 
 var preloaded_main: PackedScene
 var preloaded_tutorial: PackedScene
+var preloaded_tutorial_arena2: PackedScene
 var preloaded_arena2: PackedScene
 
 const SHADER_WARMUP_SCRIPT: GDScript = preload("res://Scripts/shader_warmup.gd")
@@ -144,6 +145,7 @@ func _preload_heavy_scenes():
 	# Godot keeps them in RAM, making get_tree().change_scene_to_file() instantaneous.
 	preloaded_main = load("res://Scenes/main.tscn")
 	preloaded_tutorial = load("res://Scenes/tutorial.tscn")
+	preloaded_tutorial_arena2 = load("res://Scenes/tutorial_arena2.tscn")
 	preloaded_arena2 = load("res://Scenes/arena2.tscn")
 
 ## Compiles the shaders of the heavy scenes little by little while the splash is shown,
@@ -155,6 +157,7 @@ func _start_shader_warmup() -> void:
 	warmup.run([
 		preloaded_tutorial,
 		preloaded_main,
+		preloaded_tutorial_arena2,
 		preloaded_arena2,
 		# Spawned from scripts via preload(), so they are not reachable from the scenes above
 		load("res://Scenes/laser.tscn"),

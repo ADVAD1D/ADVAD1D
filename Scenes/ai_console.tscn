@@ -3,9 +3,9 @@
 [ext_resource type="Theme" uid="uid://kovmblbm60fu" path="res://Resources/font_pixel.tres" id="1_00ofu"]
 [ext_resource type="Script" uid="uid://dw6cbe0t2sfem" path="res://Scripts/ai_console.gd" id="2_i8r7y"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_imyuk"]
-[ext_resource type="Texture2D" uid="uid://c82v2u11001rd" path="res://Assets/Sprites/credits_panel.png" id="3_panel"]
 [ext_resource type="Texture2D" uid="uid://cb2g0qyvdtse" path="res://Assets/Sprites/skinpanel3.png" id="3_bg"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="3_font"]
+[ext_resource type="Texture2D" uid="uid://c82v2u11001rd" path="res://Assets/Sprites/credits_panel.png" id="3_panel"]
 [ext_resource type="Texture2D" uid="uid://r5kd276mo4px" path="res://Assets/Sprites/generalad.png" id="3_vch6u"]
 [ext_resource type="Texture2D" uid="uid://bc241w2jom6bu" path="res://Assets/Sprites/exitbutton.png" id="6_4r3im"]
 [ext_resource type="Texture2D" uid="uid://cjf4fhtm0ta7m" path="res://Assets/Sprites/quitbuttonhover1.png" id="7_n1sxu"]
@@ -21,12 +21,11 @@ outline_color = Color(0.13725491, 1, 1, 1)
 shadow_size = 3
 shadow_color = Color(0, 0.43529412, 0.53333336, 1)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_log"]
+
 [sub_resource type="LabelSettings" id="LabelSettings_prompt"]
 font = ExtResource("3_font")
-font_size = 16
 font_color = Color(0.25, 0.643, 0.957, 1)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_log"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_input"]
 
@@ -53,6 +52,7 @@ shader_parameter/warp_amount = 0.150000007125
 shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.4
 shader_parameter/vignette_opacity = 0.3
+shader_parameter/low_quality = false
 
 [node name="Control" type="Control" unique_id=116682182]
 layout_mode = 3
@@ -64,7 +64,7 @@ grow_vertical = 2
 theme = ExtResource("1_00ofu")
 script = ExtResource("2_i8r7y")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="." unique_id=453635282]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -79,7 +79,7 @@ scale = Vector2(1.1162976, 1.1162976)
 mouse_filter = 2
 texture = ExtResource("3_bg")
 
-[node name="Backdrop" type="ColorRect" parent="."]
+[node name="Backdrop" type="ColorRect" parent="." unique_id=1245793871]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -89,7 +89,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0.03, 0.04, 0.55)
 
-[node name="ChatTexture" type="TextureRect" parent="."]
+[node name="ChatTexture" type="TextureRect" parent="." unique_id=1596363803]
 layout_mode = 0
 offset_left = 79.0
 offset_top = 13.0
@@ -97,7 +97,7 @@ offset_right = 441.0
 offset_bottom = 287.0
 texture = ExtResource("3_panel")
 
-[node name="Emblem" type="TextureRect" parent="ChatTexture"]
+[node name="Emblem" type="TextureRect" parent="ChatTexture" unique_id=699118779]
 modulate = Color(1, 1, 1, 0.08)
 layout_mode = 0
 offset_left = 115.0
@@ -109,18 +109,18 @@ texture = ExtResource("3_vch6u")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TitleLabel" type="Label" parent="ChatTexture"]
+[node name="TitleLabel" type="Label" parent="ChatTexture" unique_id=278098495]
 layout_mode = 0
 offset_left = 121.0
 offset_top = 1.0
 offset_right = 241.0
 offset_bottom = 27.0
-text = "CHAT"
+text = "CONSOLE"
 label_settings = SubResource("LabelSettings_title")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CloseButton" type="TextureButton" parent="ChatTexture"]
+[node name="CloseButton" type="TextureButton" parent="ChatTexture" unique_id=1723833251]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 13.0
@@ -132,15 +132,15 @@ texture_normal = ExtResource("6_4r3im")
 texture_hover = ExtResource("7_n1sxu")
 texture_focused = ExtResource("7_n1sxu")
 
-[node name="ChatLog" type="RichTextLabel" parent="ChatTexture"]
+[node name="ChatLog" type="RichTextLabel" parent="ChatTexture" unique_id=174369134]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 14.0
 offset_top = 48.0
 offset_right = 348.0
 offset_bottom = 224.0
-theme_override_constants/outline_size = 2
 theme_override_constants/line_separation = 2
+theme_override_constants/outline_size = 2
 theme_override_constants/table_h_separation = 0
 theme_override_constants/table_v_separation = 0
 theme_override_font_sizes/normal_font_size = 16
@@ -149,7 +149,7 @@ theme_override_styles/normal = SubResource("StyleBoxEmpty_log")
 bbcode_enabled = true
 scroll_following = true
 
-[node name="Divider" type="ColorRect" parent="ChatTexture"]
+[node name="Divider" type="ColorRect" parent="ChatTexture" unique_id=264695392]
 layout_mode = 0
 offset_left = 14.0
 offset_top = 227.0
@@ -158,7 +158,7 @@ offset_bottom = 228.0
 mouse_filter = 2
 color = Color(0, 1, 1, 0.35)
 
-[node name="InputRow" type="HBoxContainer" parent="ChatTexture"]
+[node name="InputRow" type="HBoxContainer" parent="ChatTexture" unique_id=490467510]
 layout_mode = 0
 offset_left = 14.0
 offset_top = 231.0
@@ -166,13 +166,13 @@ offset_right = 348.0
 offset_bottom = 261.0
 theme_override_constants/separation = 4
 
-[node name="PromptLabel" type="Label" parent="ChatTexture/InputRow"]
+[node name="PromptLabel" type="Label" parent="ChatTexture/InputRow" unique_id=738121332]
 layout_mode = 2
 text = "adnex@sim:~$"
 label_settings = SubResource("LabelSettings_prompt")
 vertical_alignment = 1
 
-[node name="InputField" type="LineEdit" parent="ChatTexture/InputRow"]
+[node name="InputField" type="LineEdit" parent="ChatTexture/InputRow" unique_id=2134518918]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -181,8 +181,8 @@ theme_override_colors/font_color = Color(0.498, 0.847, 0.847, 1)
 theme_override_colors/caret_color = Color(0.498, 0.847, 0.847, 1)
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxEmpty_input")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_input")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_input")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_input")
 max_length = 60
 keep_editing_on_text_submit = true
 caret_blink = true

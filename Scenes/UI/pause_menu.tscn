@@ -107,7 +107,7 @@ theme_override_constants/separation = 0
 [node name="Header" type="Label" parent="Root/Center/Layout/MenuPlate/Menu"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "adnex@sim:~$ pause"
+text = "advad@sim:~$ pause"
 label_settings = SubResource("LabelSettings_header")
 
 [node name="ResumeRow" type="HBoxContainer" parent="Root/Center/Layout/MenuPlate/Menu"]
