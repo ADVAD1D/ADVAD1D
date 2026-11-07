@@ -23,6 +23,7 @@ var back_scene: String = "res://Scenes/skin_selector.tscn"
 	"who am i": "ADNEX, special soldier in a trail simulator",
 	"whoami": "ADNEX, special soldier in a trail simulator",
 	"rm -rf ./": "What are you trying to do???",
+	"doom": "doom: command not found. Did you mean boom? It runs on everything.",
 }
 @export var unknown_reply: String = "UNKNOWN COMMAND."
 
@@ -48,8 +49,22 @@ const TYPE_SPEED: float = 0.03
 ## Seconds between lines of shell output (ls, cat, the pacman log...).
 const LINE_DELAY: float = 0.04
 
+const TerminalGames = preload("res://Scripts/UI/terminal_games.gd")
+const ConsoleGame = preload("res://Scripts/UI/Games/console_game.gd")
+## Real-time games in /usr/games, drawn over the log while they run (ConsoleGame).
+const ARCADE_GAMES: Dictionary = {
+	"invasion": preload("res://Scripts/UI/Games/console_invasion.gd"),
+	"dash": preload("res://Scripts/UI/Games/console_dash.gd"),
+	"boom": preload("res://Scripts/UI/Games/console_boom.gd"),
+}
+
 ## Fake shell (filesystem, current directory) for the terminal commands.
 var terminal: SimTerminal = SimTerminal.new()
+## Code minigames in /usr/games (vim, wat, bin, hack, bughunt). While one runs it gets
+## every input line.
+var games: TerminalGames = TerminalGames.new()
+## The real-time game on screen, null when none.
+var _arcade: ConsoleGame = null
 ## True while a command's output is printing: Enter is ignored until it ends. The field
 ## stays editable so the phone keyboard doesn't close between commands.
 var _busy: bool = false
@@ -103,7 +118,12 @@ func _center_frame() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
-		_on_back_button_pressed()
+		get_viewport().set_input_as_handled()
+		# Esc leaves a real-time game first, then the console
+		if _arcade != null:
+			_arcade.quit()
+		else:
+			_on_back_button_pressed()
 
 
 func send_message() -> void:
@@ -123,18 +143,57 @@ func send_message() -> void:
 	input_field.grab_focus()
 
 
-## Secret codes first (exact match), then the shell commands, then the predefined replies.
+## A running minigame first (it gets the raw text), then the secret codes (exact match),
+## the minigame launchers, the shell commands and the predefined replies.
 func _respond(text: String) -> void:
+	if games.is_active():
+		await _print_output(games.input(text))
+		_update_prompt()
+		return
 	var code: String = text.strip_edges()
 	if achievement_codes.has(code):
 		await _reply(_run_code(code))
 		return
 	var args: PackedStringArray = _normalize(text).split(" ", false)
+	var game: String = games.find_game(args[0], terminal)
+	if ARCADE_GAMES.has(game):
+		await _run_arcade(game)
+		return
+	if not game.is_empty():
+		await _print_output(games.start(game, args))
+		_update_prompt()
+		return
 	if terminal.handles(args[0]):
 		await _print_output(terminal.run(args))
-		prompt_label.text = terminal.get_prompt()
+		_update_prompt()
 		return
 	await _reply(get_reply(text))
+
+
+## Prints the game's intro, puts it over the log (hidden meanwhile, the input line off so
+## arrows and Space reach the game) and waits until it ends to print its summary.
+func _run_arcade(game: String) -> void:
+	var screen: ConsoleGame = (ARCADE_GAMES[game] as GDScript).new()
+	await _print_output(screen.intro())
+	screen.font = chat_display.get_theme_font("normal_font")
+	screen.position = chat_display.position
+	screen.size = chat_display.size
+	input_field.release_focus()
+	input_field.editable = false
+	chat_display.visible = false
+	chat_frame.add_child(screen)
+	_arcade = screen
+	var lines: Array = await screen.finished
+	_arcade = null
+	screen.queue_free()
+	chat_display.visible = true
+	input_field.editable = true
+	await _print_output(lines)
+
+
+## The game's prompt while one runs, the shell's otherwise.
+func _update_prompt() -> void:
+	prompt_label.text = games.get_prompt() if games.is_active() else terminal.get_prompt()
 
 
 func _reply(message: String) -> void:

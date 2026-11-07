@@ -16,7 +16,7 @@ const FILES: Dictionary = {
 	"home": {
 		"adnex": {
 			".profile": "export PILOT=ADNEX\nexport SIM_MODE=TRAINING\nalias fight='./simulate --hard'",
-			".sim_history": "./simulate --arena 01\n./simulate --arena 01\n./simulate --arena 01 --retry\n./simulate --arena 01 --retry\n./simulate --arena 02",
+			".sim_history": "./simulate --arena 01\n./simulate --arena 01\n./simulate --arena 01 --retry\n./simulate --arena 01 --retry\n./simulate --arena 02\nvim orders.txt\nhow do i exit vim\nls /usr/games",
 			".classified": {LOCKED: true},
 			"orders.txt": "TRAINING ORDERS\n1. Survive every phase.\n2. Reach the score before the timer ends.\n3. Do not trust the walls in arena 02.",
 			"missions": {
@@ -35,6 +35,22 @@ const FILES: Dictionary = {
 			"ship.cfg": "speed=500\nfire_rate=high\nmercy=0",
 			"saw.cfg": "rpm=9000\nbounces=infinite",
 			"laser_gun.cfg": "charge=0.9s\nbeam=wall-to-wall",
+		},
+	},
+	# Minigames (TerminalGames, terminal_games.gd): empty files, run by name or path
+	"usr": {
+		"bin": {
+			"vim": "",
+		},
+		"games": {
+			"readme": "Games for bored operators.\nRun one by name: wat, bin, hack, bughunt.\nquit or exit leaves. vim has no README.\nReal-time: invasion, dash, boom. Esc leaves.\nboom runs on everything. Even here.",
+			"bin": "",
+			"boom": "",
+			"bughunt": "",
+			"dash": "",
+			"hack": "",
+			"invasion": "",
+			"wat": "",
 		},
 	},
 	"var": {

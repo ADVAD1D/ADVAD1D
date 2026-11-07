@@ -15,6 +15,8 @@ extends Node2D
 	"Not the simple robots you have been dealing with all this time.",
 	"We want to guarantee excellence in this organization.",
 	"Your results will be used to strengthen future trials for other soldiers.",
+	"We will collect your endurance, your reaction times, your behavior and your overall way of piloting.",
+	"The simulator's artificial intelligence will improve based on the experiences and use of all of you.",
 	"Handling your ship will always feel very close to the simulator experience.",
 	"In the next phase of the trial, you will face a single threat.",
 	"You need to put into practice everything you have learned so far.",
