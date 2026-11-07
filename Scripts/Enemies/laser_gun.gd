@@ -41,6 +41,8 @@ var _direction: float = 1.0
 var _timer: float = 0.0
 var _cooldown_scale: float = 1.0
 var _beam_time: float = 0.0
+## True once this shot's beam has hit the player's laser shield (counted once per shot).
+var _shield_blocked: bool = false
 ## The walls are usually off camera (the arena is wider than the view), so a small icon
 ## with an arrow sits on the screen edge at the gun's height while it can't be seen.
 var _edge_marker: Node2D
@@ -170,6 +172,7 @@ func _start_fire() -> void:
 	_state = State.FIRE
 	_timer = fire_time
 	_beam_time = 0.0
+	_shield_blocked = false
 	aim_line.visible = false
 	beam_glow.visible = true
 	beam_core.visible = true
@@ -222,6 +225,11 @@ func _hit_player(from: Vector2, to: Vector2) -> Vector2:
 	if not hitbox.shape.collide(hitbox.global_transform, _beam_shape, beam_xform):
 		return to
 	if _has_shield(player):
+		# BEAM BLOCKER achievement (ship 35): main mode only, since arcade's shop upgrade
+		# makes shields drop much more often
+		if not _shield_blocked and not GameManager.arcade_mode_active:
+			AchievementManager.add_stat(&"beams_blocked")
+		_shield_blocked = true
 		return Vector2(player.global_position.x, to.y)
 	if player.has_method("die"):
 		player.die()
