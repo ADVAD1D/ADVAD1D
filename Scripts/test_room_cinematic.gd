@@ -14,6 +14,10 @@ extends Node2D
 	"What comes next will be the ultimate test: a deadly enemy.",
 	"Not the simple robots you have been dealing with all this time.",
 	"We want to guarantee excellence in this organization.",
+	"Your results will be used to strengthen future trials for other soldiers.",
+	"Handling your ship will always feel very close to the simulator experience.",
+	"In the next phase of the trial, you will face a single threat.",
+	"You need to put into practice everything you have learned so far.",
 	"Good luck in arena 3.",
 ]
 ## Seconds the pan takes from the right edge of the illustration to the left one.
