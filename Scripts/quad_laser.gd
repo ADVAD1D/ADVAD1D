@@ -25,7 +25,7 @@ const CHARGE_SOUND_LENGTH: float = 0.9
 const FIRE_SOUND_LENGTH: float = 0.55
 
 ## Volleys fired before the cannons retract.
-@export var volleys: int = 3
+@export var volleys: int = 1
 ## Seconds for the cannons to come out / go back in.
 @export var deploy_time: float = 0.25
 ## Seconds of blinking aim lines before each volley.

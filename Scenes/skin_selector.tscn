@@ -11,8 +11,8 @@
 [ext_resource type="Texture2D" uid="uid://cg4wnvam0pwwh" path="res://Assets/Sprites/nextbutton1hover.png" id="5_43pbt"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="10_qwen4"]
 [ext_resource type="Texture2D" uid="uid://x6wso5472seu" path="res://Assets/Sprites/Achievements/icon_lock.png" id="11_lock"]
-[ext_resource type="Texture2D" uid="uid://bjv5mqc5om1an" path="res://Assets/Sprites/chat_button.png" id="12_chatbtn"]
-[ext_resource type="Texture2D" uid="uid://d230384jabs3q" path="res://Assets/Sprites/chat_button_hover.png" id="13_chatbtnh"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/terminal_button.svg" id="12_chatbtn"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/terminal_button_hover.svg" id="13_chatbtnh"]
 [ext_resource type="PackedScene" uid="uid://de50n3nlygj51" path="res://Scenes/UI/ai_console_subviewport.tscn" id="14_chatscene"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1cnro"]

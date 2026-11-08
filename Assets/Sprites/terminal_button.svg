@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" shape-rendering="crispEdges">
+  <!-- Skin selector console button, normal state: a small terminal window with a >_ prompt,
+       same metal frame and palette as the main menu buttons. -->
+  <!-- Frame: cyan outline, metal bevel -->
+  <rect x="3" y="1" width="24" height="28" fill="#00ffd1"/>
+  <rect x="2" y="2" width="26" height="26" fill="#00ffd1"/>
+  <rect x="1" y="3" width="28" height="24" fill="#00ffd1"/>
+  <rect x="3" y="2" width="24" height="26" fill="#528080"/>
+  <rect x="2" y="3" width="26" height="24" fill="#528080"/>
+  <rect x="3" y="3" width="24" height="23" fill="#8db4ae"/>
+  <rect x="3" y="26" width="24" height="1" fill="#627a76"/>
+  <rect x="3" y="27" width="24" height="1" fill="#3a5757"/>
+  <rect x="3" y="3" width="1" height="1" fill="#dbf3f0"/>
+  <rect x="26" y="3" width="1" height="1" fill="#dbf3f0"/>
+  <rect x="3" y="25" width="1" height="1" fill="#dbf3f0"/>
+  <rect x="26" y="25" width="1" height="1" fill="#dbf3f0"/>
+  <rect x="4" y="4" width="22" height="20" fill="#456e67"/>
+  <rect x="4" y="24" width="22" height="1" fill="#2b4641"/>
+  <!-- Rivets and vent grille -->
+  <rect x="5" y="2" width="1" height="1" fill="#8db4ae"/>
+  <rect x="24" y="2" width="1" height="1" fill="#8db4ae"/>
+  <g fill="#243b38">
+    <rect x="11" y="27" width="1" height="1"/>
+    <rect x="13" y="27" width="1" height="1"/>
+    <rect x="16" y="27" width="1" height="1"/>
+    <rect x="18" y="27" width="1" height="1"/>
+  </g>
+  <!-- Screen -->
+  <rect x="5" y="5" width="20" height="18" fill="#121d1b"/>
+  <!-- Window title bar with three buttons -->
+  <rect x="5" y="5" width="20" height="3" fill="#243b38"/>
+  <g fill="#00a88a">
+    <rect x="7" y="6" width="1" height="1"/>
+    <rect x="9" y="6" width="1" height="1"/>
+    <rect x="11" y="6" width="1" height="1"/>
+  </g>
+  <!-- Diagonal glare -->
+  <g fill="#1f2e2c">
+    <rect x="5" y="8" width="1" height="1"/>
+    <rect x="5" y="9" width="2" height="1"/>
+    <rect x="5" y="10" width="3" height="1"/>
+    <rect x="5" y="11" width="4" height="1"/>
+    <rect x="5" y="12" width="5" height="1"/>
+    <rect x="5" y="13" width="6" height="1"/>
+    <rect x="5" y="14" width="7" height="1"/>
+    <rect x="5" y="15" width="8" height="1"/>
+  </g>
+  <!-- Scanlines -->
+  <g fill="#000000" fill-opacity="0.22">
+    <rect x="5" y="9" width="20" height="1"/>
+    <rect x="5" y="11" width="20" height="1"/>
+    <rect x="5" y="13" width="20" height="1"/>
+    <rect x="5" y="15" width="20" height="1"/>
+    <rect x="5" y="17" width="20" height="1"/>
+    <rect x="5" y="19" width="20" height="1"/>
+    <rect x="5" y="21" width="20" height="1"/>
+  </g>
+  <!-- Shadow of the prompt (1 px down-right) -->
+  <g fill="#0b4a42" transform="translate(1,1)">
+    <rect x="8" y="11" width="2" height="1"/>
+    <rect x="9" y="12" width="2" height="1"/>
+    <rect x="10" y="13" width="2" height="1"/>
+    <rect x="11" y="14" width="2" height="1"/>
+    <rect x="10" y="15" width="2" height="1"/>
+    <rect x="9" y="16" width="2" height="1"/>
+    <rect x="8" y="17" width="2" height="1"/>
+    <rect x="15" y="16" width="6" height="2"/>
+  </g>
+  <!-- Prompt: > -->
+  <g fill="#00ffd1">
+    <rect x="8" y="11" width="2" height="1"/>
+    <rect x="9" y="12" width="2" height="1"/>
+    <rect x="10" y="13" width="2" height="1"/>
+    <rect x="11" y="14" width="2" height="1"/>
+    <rect x="10" y="15" width="2" height="1"/>
+    <rect x="9" y="16" width="2" height="1"/>
+    <rect x="8" y="17" width="2" height="1"/>
+  </g>
+  <!-- Cursor: _ -->
+  <rect x="15" y="16" width="6" height="2" fill="#00a88a"/>
+</svg>

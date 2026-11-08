@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" shape-rendering="crispEdges">
+  <!-- Skin selector console button, hover / pressed state: lit screen, bright prompt,
+       corner brackets like the main menu buttons. -->
+  <!-- Corner brackets -->
+  <g fill="#00ffd1">
+    <rect x="0" y="0" width="3" height="1"/><rect x="0" y="1" width="1" height="2"/>
+    <rect x="27" y="0" width="3" height="1"/><rect x="29" y="1" width="1" height="2"/>
+    <rect x="0" y="29" width="3" height="1"/><rect x="0" y="27" width="1" height="2"/>
+    <rect x="27" y="29" width="3" height="1"/><rect x="29" y="27" width="1" height="2"/>
+  </g>
+  <!-- Frame: cyan outline, metal bevel -->
+  <rect x="3" y="1" width="24" height="28" fill="#00ffd1"/>
+  <rect x="2" y="2" width="26" height="26" fill="#00ffd1"/>
+  <rect x="1" y="3" width="28" height="24" fill="#00ffd1"/>
+  <rect x="3" y="2" width="24" height="26" fill="#528080"/>
+  <rect x="2" y="3" width="26" height="24" fill="#528080"/>
+  <rect x="3" y="3" width="24" height="23" fill="#8db4ae"/>
+  <rect x="3" y="26" width="24" height="1" fill="#627a76"/>
+  <rect x="3" y="27" width="24" height="1" fill="#3a5757"/>
+  <rect x="3" y="3" width="1" height="1" fill="#dbf3f0"/>
+  <rect x="26" y="3" width="1" height="1" fill="#dbf3f0"/>
+  <rect x="3" y="25" width="1" height="1" fill="#dbf3f0"/>
+  <rect x="26" y="25" width="1" height="1" fill="#dbf3f0"/>
+  <rect x="4" y="4" width="22" height="20" fill="#456e67"/>
+  <rect x="4" y="24" width="22" height="1" fill="#2b4641"/>
+  <!-- Rivets and vent grille -->
+  <rect x="5" y="2" width="1" height="1" fill="#dbf3f0"/>
+  <rect x="24" y="2" width="1" height="1" fill="#dbf3f0"/>
+  <g fill="#243b38">
+    <rect x="11" y="27" width="1" height="1"/>
+    <rect x="13" y="27" width="1" height="1"/>
+    <rect x="16" y="27" width="1" height="1"/>
+    <rect x="18" y="27" width="1" height="1"/>
+  </g>
+  <!-- Screen (lit) -->
+  <rect x="5" y="5" width="20" height="18" fill="#35514c"/>
+  <!-- Window title bar with three buttons -->
+  <rect x="5" y="5" width="20" height="3" fill="#2b4641"/>
+  <g fill="#00ffd1">
+    <rect x="7" y="6" width="1" height="1"/>
+    <rect x="9" y="6" width="1" height="1"/>
+    <rect x="11" y="6" width="1" height="1"/>
+  </g>
+  <!-- Diagonal glare -->
+  <g fill="#41625c">
+    <rect x="5" y="8" width="1" height="1"/>
+    <rect x="5" y="9" width="2" height="1"/>
+    <rect x="5" y="10" width="3" height="1"/>
+    <rect x="5" y="11" width="4" height="1"/>
+    <rect x="5" y="12" width="5" height="1"/>
+    <rect x="5" y="13" width="6" height="1"/>
+    <rect x="5" y="14" width="7" height="1"/>
+    <rect x="5" y="15" width="8" height="1"/>
+  </g>
+  <!-- Scanlines -->
+  <g fill="#000000" fill-opacity="0.22">
+    <rect x="5" y="9" width="20" height="1"/>
+    <rect x="5" y="11" width="20" height="1"/>
+    <rect x="5" y="13" width="20" height="1"/>
+    <rect x="5" y="15" width="20" height="1"/>
+    <rect x="5" y="17" width="20" height="1"/>
+    <rect x="5" y="19" width="20" height="1"/>
+    <rect x="5" y="21" width="20" height="1"/>
+  </g>
+  <!-- Glow of the prompt (1 px down-right) -->
+  <g fill="#00a88a" transform="translate(1,1)">
+    <rect x="8" y="11" width="2" height="1"/>
+    <rect x="9" y="12" width="2" height="1"/>
+    <rect x="10" y="13" width="2" height="1"/>
+    <rect x="11" y="14" width="2" height="1"/>
+    <rect x="10" y="15" width="2" height="1"/>
+    <rect x="9" y="16" width="2" height="1"/>
+    <rect x="8" y="17" width="2" height="1"/>
+    <rect x="15" y="16" width="6" height="2"/>
+  </g>
+  <!-- Prompt: > -->
+  <g fill="#e6fffa">
+    <rect x="8" y="11" width="2" height="1"/>
+    <rect x="9" y="12" width="2" height="1"/>
+    <rect x="10" y="13" width="2" height="1"/>
+    <rect x="11" y="14" width="2" height="1"/>
+    <rect x="10" y="15" width="2" height="1"/>
+    <rect x="9" y="16" width="2" height="1"/>
+    <rect x="8" y="17" width="2" height="1"/>
+  </g>
+  <!-- Cursor: _ -->
+  <rect x="15" y="16" width="6" height="2" fill="#00ffd1"/>
+</svg>
