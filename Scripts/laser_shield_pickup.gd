@@ -13,13 +13,14 @@ var spawn_time: float = 0.2
 @onready var sprite: Sprite2D = $Sprite2D
 
 var is_collected: bool = false
+var _spawn_tween: Tween
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	scale = Vector2.ZERO
-	var tween = create_tween()
-	tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)
-	tween.tween_property(self, "scale", Vector2(4.5, 4.5), spawn_time)
+	_spawn_tween = create_tween()
+	_spawn_tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)
+	_spawn_tween.tween_property(self, "scale", Vector2(4.5, 4.5), spawn_time)
 	
 func _physics_process(_delta: float) -> void:
 	if is_collected:
@@ -44,4 +45,15 @@ func _equip_shield(player_node):
 	var shield = reward_scene.instantiate()
 	player_node.add_child(shield)
 	shield.position = Vector2.ZERO
-	queue_free()
+	_shrink_and_free()
+
+## The spawn animation backwards: it shrinks away once collected, then frees itself.
+func _shrink_and_free() -> void:
+	set_deferred("monitoring", false)
+	if _spawn_tween:
+		_spawn_tween.kill()
+	var tween: Tween = create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)
+	tween.tween_property(self, "scale", Vector2.ZERO, spawn_time) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	tween.tween_callback(queue_free)

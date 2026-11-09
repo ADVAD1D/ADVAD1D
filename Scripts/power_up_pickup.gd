@@ -6,16 +6,19 @@ extends Area2D
 
 var base_y_position: float
 var spawn_time: float = 0.2
+## Picked up (shrinking away): it can't be collected again.
+var _collected: bool = false
+var _spawn_tween: Tween
 @onready var sprite: Sprite2D = $Sprite2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	body_entered.connect(_on_body_entered) # Replace with function body.
-	
+
 	scale = Vector2.ZERO
-	var tween = create_tween()
-	tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)
-	tween.tween_property(self, "scale", Vector2(4.5, 4.5), spawn_time)
+	_spawn_tween = create_tween()
+	_spawn_tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)
+	_spawn_tween.tween_property(self, "scale", Vector2(4.5, 4.5), spawn_time)
 	
 func _process(_delta: float) -> void:
 	var time = Time.get_ticks_msec() * 0.001
@@ -23,16 +26,27 @@ func _process(_delta: float) -> void:
 	sprite.position.y = base_y_position + displacement
 
 func _on_body_entered(body: Node2D):
+	if _collected:
+		return
 	if body.is_in_group("player"):
 		if reward_scene and "time_slow" in reward_scene.resource_path:
 			if get_tree().get_nodes_in_group("time_slow_effect").size() > 0:
 				return # Skip pickup if time slow is already active
+		_collected = true
 		call_deferred("_handle_pickup")
-		
+
 func _handle_pickup():
 	if reward_scene:
 		var reward_instance = reward_scene.instantiate()
 		get_parent().add_child(reward_instance)
 		reward_instance.global_position = global_position
-		
-	queue_free()
+
+	# The spawn animation backwards: it shrinks away, then frees itself
+	set_deferred("monitoring", false)
+	if _spawn_tween:
+		_spawn_tween.kill()
+	var tween: Tween = create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)
+	tween.tween_property(self, "scale", Vector2.ZERO, spawn_time) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	tween.tween_callback(queue_free)
