@@ -39,7 +39,6 @@ var arena_playlists = {
 		preload("res://Assets/Audio/Music/digital-dream-391529.ogg"),
 		preload("res://Assets/Audio/Music/velvet-malware-454813.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-break-forward-468745.ogg"),
-		preload("res://Assets/Audio/Music/pulsehaven-nexus-382253.ogg"),
 		preload("res://Assets/Audio/Music/blue-light-district-397940.ogg"),
 		preload("res://Assets/Audio/Music/the-fight-left-in-us-391531.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-breakpoint-triumph-468746.ogg"),
@@ -54,6 +53,7 @@ var arena_playlists = {
 		preload("res://Assets/Audio/Music/psychronic-hyperspace-hustle-448682.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-plasma-stream-415882.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-obsidian-surge-382255.ogg"),
+		preload("res://Assets/Audio/Music/psychronic-cyber-spider-407852.ogg"),
 	],
 	2: [
 		preload("res://Assets/Audio/Music/neon-rising-336846.ogg"),
