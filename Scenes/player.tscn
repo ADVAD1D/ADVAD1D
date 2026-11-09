@@ -33,10 +33,10 @@ _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.89393944, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="Gradient" id="Gradient_8erm5"]
-colors = PackedColorArray(0, 0.458667, 0.64, 1, 0, 1, 0.94902, 1)
+colors = PackedColorArray(0.64, 0.64, 0.64, 1, 1, 1, 1, 1)
 
 [sub_resource type="Gradient" id="Gradient_x3wgy"]
-colors = PackedColorArray(0.0784314, 0.356863, 0.454902, 1, 0, 1, 0.94902, 1)
+colors = PackedColorArray(0.454902, 0.454902, 0.454902, 1, 1, 1, 1, 1)
 
 [sub_resource type="Gradient" id="Gradient_vgqql"]
 offsets = PackedFloat32Array(0.053333335, 0.7133333)

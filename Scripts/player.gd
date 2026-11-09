@@ -48,6 +48,8 @@ func _ready() -> void:
 	# Paints the ship with the player's two colours (the material lives in player.tscn
 	# so the shader warm-up compiles it during the splash)
 	SkinManager.apply_ship_colors(sprite, SkinManager.equipped_ship_index)
+	# The trail and dash particles are drawn in greys: tint them with the ship's colour 1
+	engine_trail.self_modulate = _particle_color()
 	main_camera = get_viewport().get_camera_2d()
 	_log_message(player_score)
 	engine_trail.amount = 4
@@ -64,6 +66,10 @@ func _ready() -> void:
 		_log_message("PLAYER HITBOX DISABLED")
 	else:
 		return
+
+## Ship colour 1 (body), used to tint the grey trail and dash particles.
+func _particle_color() -> Color:
+	return SkinManager.get_color(SkinManager.get_ship_color_index(1))
 
 func _physics_process(delta: float) -> void:
 	if player_died:
@@ -188,6 +194,7 @@ func do_dash(direction: Vector2):
 	
 	if dash_particles:
 		var dash_particles_instance = dash_particles.instantiate()
+		dash_particles_instance.self_modulate = _particle_color()
 		get_parent().add_child(dash_particles_instance)
 		dash_particles_instance.global_position = global_position
 	
