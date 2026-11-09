@@ -353,7 +353,7 @@ asteroid_scene = ExtResource("4_kry3j")
 player_node = NodePath("../PlayerInstance")
 
 [node name="Timer" type="Timer" parent="AsteroidSpawner" unique_id=1962402699]
-wait_time = 0.15
+wait_time = 0.11
 autostart = true
 
 [node name="DeathZone" type="Area2D" parent="." unique_id=1357795625]
@@ -495,6 +495,9 @@ nodes_to_remove = [NodePath("../LaserZone/StartBridge")]
 [node name="BossSpawn" type="Marker2D" parent="." unique_id=467433316]
 position = Vector2(-15, 150)
 
+[node name="ArcadePlayerStart" type="Marker2D" parent="." unique_id=815284609]
+position = Vector2(-15, 290)
+
 [node name="MiniBossSpawner" type="Node2D" parent="." unique_id=942725174 node_paths=PackedStringArray("player_node", "spawn_locator")]
 script = ExtResource("82_mini_spawner")
 mini_scene = ExtResource("81_gemela_mini")
@@ -521,7 +524,7 @@ pickup_scene = ExtResource("38_kwxat")
 reward_scene = ExtResource("40_aqgau")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 upgrade_stat = &"ally_saw"
-random_intervals = Array[float]([5.0, 10.0])
+random_intervals = Array[float]([7.0, 12.0])
 
 [node name="Timer" type="Timer" parent="PowerUp1Spawner" unique_id=1088914769]
 wait_time = 10.0
@@ -557,7 +560,7 @@ spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 upgrade_stat = &""
 
 [node name="Timer" type="Timer" parent="TripleShotSpawner" unique_id=205415795]
-wait_time = 20.0
+wait_time = 25.0
 autostart = true
 
 [node name="QuadLaserSpawner" type="Node2D" parent="." unique_id=988315597 node_paths=PackedStringArray("spawn_locator")]
@@ -567,7 +570,7 @@ reward_scene = ExtResource("87_quad_laser")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="Timer" type="Timer" parent="QuadLaserSpawner" unique_id=846087643]
-wait_time = 25.0
+wait_time = 20.0
 autostart = true
 
 [node name="EnemySpawnPath" type="Path2D" parent="." unique_id=1045715568]

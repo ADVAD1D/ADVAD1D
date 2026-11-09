@@ -8,6 +8,7 @@
 [ext_resource type="AudioStream" path="res://Assets/Audio/laser_gun_charge.ogg" id="6_charge"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/laser_gun_fire.ogg" id="7_fire"]
 [ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="8_shot"]
+[ext_resource type="AudioStream" uid="uid://bwoq355ggrir4" path="res://Assets/Audio/351564__bertrof__game-sound-correct-with-delay.wav" id="9_checkpoint"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_h0"]
 atlas = ExtResource("4_head")
@@ -105,4 +106,10 @@ stream = ExtResource("8_shot")
 volume_db = -10.0
 pitch_scale = 0.6
 max_distance = 6000.0
+bus = &"SFX"
+
+[node name="CheckpointSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_checkpoint")
+volume_db = 5.0
+pitch_scale = 0.54
 bus = &"SFX"

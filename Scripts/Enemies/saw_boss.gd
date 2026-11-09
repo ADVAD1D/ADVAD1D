@@ -145,6 +145,8 @@ var _sweep_arrows: Array = []
 @onready var charge_sound: AudioStreamPlayer2D = get_node_or_null("ChargeSound")
 @onready var fire_sound: AudioStreamPlayer2D = get_node_or_null("FireSound")
 @onready var shot_sound: AudioStreamPlayer2D = get_node_or_null("ShotSound")
+## The phase-change sound (the arena's SucessSound, same settings), for the checkpoint.
+@onready var checkpoint_sound: AudioStreamPlayer = get_node_or_null("CheckpointSound")
 
 
 ## Difficulty from the spawner (arcade): "cooldown_scale" < 1 attacks more often.
@@ -462,8 +464,10 @@ func _cast(from: Vector2, dir: Vector2) -> Vector2:
 	return to
 
 
-## Same rules as the laser guns' beam: a disabled hitbox (dash) is never hit, a laser
-## shield blocks it (the beam then ends at the player). Returns where the beam ends.
+## Kills the player when the beam (from -> to) overlaps their Hitbox shape. A disabled
+## hitbox (dash) is never hit. Unlike the laser guns' beam, the laser shield does NOT block
+## it: the player dies and the shield breaks with them (player.die()). Returns where the
+## beam ends (it doesn't stop at the player).
 func _hit_player(from: Vector2, to: Vector2, dir: Vector2) -> Vector2:
 	if not is_instance_valid(_player):
 		return to
@@ -474,8 +478,6 @@ func _hit_player(from: Vector2, to: Vector2, dir: Vector2) -> Vector2:
 	var beam_xform: Transform2D = Transform2D(dir.angle(), (from + to) * 0.5)
 	if not hitbox.shape.collide(hitbox.global_transform, _beam_shape, beam_xform):
 		return to
-	if _has_shield(_player):
-		return from + dir * maxf((_player.global_position - from).dot(dir), 0.0)
 	if _player.has_method("die"):
 		_player.die()
 	return to
@@ -502,12 +504,6 @@ func _destroy_targets(from: Vector2, to: Vector2, dir: Vector2) -> void:
 				and not target.get("is_dying"):
 			target.die()
 
-
-func _has_shield(player: Node) -> bool:
-	for child in player.get_children():
-		if child.is_in_group("player_shield"):
-			return true
-	return false
 
 
 func _build_beam_lines() -> void:
@@ -655,6 +651,8 @@ func _reach_checkpoint() -> void:
 	GameManager.boss_checkpoint_health = roundi(max_health * checkpoint_at)
 	if _health_bar:
 		_health_bar.reach_mark()
+	if checkpoint_sound:
+		checkpoint_sound.play()
 	var pulse: Tween = create_tween()
 	pulse.tween_property(body, "scale", Vector2(1.2, 1.2), 0.12) \
 			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)

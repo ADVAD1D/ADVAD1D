@@ -23,6 +23,24 @@ var base_zoom: Vector2
 # Called when the node enters the scene tree for the first time.
 func _enter_tree() -> void:
 	GameManager.current_arena_index = arena_index
+	_place_arcade_start()
+
+## Arcade only: if the arena has an "ArcadePlayerStart" marker, the player (and the camera)
+## start there instead of at the scene's position. Arena 3: the main mode starts low, away
+## from the boss, but in arcade that is right on the enemies' spawn path, so arcade starts
+## in the middle. Done in _enter_tree, before the children's _ready: the first wave
+## (PhaseManager) already keeps its spawns away from the player's position.
+func _place_arcade_start() -> void:
+	if not GameManager.arcade_mode_active:
+		return
+	var start: Node2D = get_node_or_null("ArcadePlayerStart") as Node2D
+	var player_node: Node2D = get_node_or_null("PlayerInstance") as Node2D
+	if start == null or player_node == null:
+		return
+	player_node.position = start.position
+	var camera: Node2D = get_node_or_null("Camera2D") as Node2D
+	if camera:
+		camera.position = start.position
 
 func _ready() -> void:
 	# Update deaths counter label in pause menu

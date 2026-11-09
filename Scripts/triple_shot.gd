@@ -6,11 +6,11 @@ extends Node2D
 ## itself. It draws three small dots ahead of the ship's nose as the "on" sign, which
 ## blink during the last seconds.
 
-@export var duration: float = 5.0
+@export var duration: float = 3.0
 ## Angle between the middle laser and each side one.
 @export var spread_degrees: float = 12.0
 ## The dots blink during this many seconds at the end.
-@export var warning_time: float = 1.5
+@export var warning_time: float = 1.0
 
 const DOT_COLOR: Color = Color(0.64, 1.0, 1.0)
 ## Dots in the player's local space (the ship points up; its muzzle is at about y -13.5).
