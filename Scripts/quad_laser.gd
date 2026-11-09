@@ -42,6 +42,9 @@ const FIRE_SOUND_LENGTH: float = 0.55
 @export var core_width: float = 5.0
 ## Width of the beam (world units) when testing what it hits.
 @export var hit_width: float = 22.0
+## Damage to a boss (saw_boss.gd, group "bosses") per volley: the beams touch it every
+## physics frame, so each boss takes it once per volley however many beams cross it.
+@export var boss_damage: int = 8
 
 var _state: State = State.DEPLOY
 var _timer: float = 0.0
@@ -53,6 +56,8 @@ var _aims: Array[Line2D] = []
 var _glows: Array[Line2D] = []
 var _cores: Array[Line2D] = []
 var _beam_shape: RectangleShape2D = RectangleShape2D.new()
+## Bosses already hurt by the current volley.
+var _bosses_hit: Array[Node] = []
 
 @onready var charge_sound: AudioStreamPlayer2D = $ChargeSound
 @onready var fire_sound: AudioStreamPlayer2D = $FireSound
@@ -136,6 +141,7 @@ func _start_fire() -> void:
 	_state = State.FIRE
 	_timer = fire_time
 	_beam_time = 0.0
+	_bosses_hit.clear()
 	_hide_lines()
 	for i in _pivots.size():
 		_glows[i].visible = true
@@ -210,7 +216,8 @@ func _set_line(i: int, line: Line2D, global_end: Vector2) -> void:
 
 ## Destroys what beam (from -> to) crosses, scoring like a hit by the player's laser:
 ## asteroids 50, saws 200 (and the saws-destroyed stat), enemy ships 100. Active enemy
-## lasers go back to their pool. Laser guns, ally saws and powerups are left alone.
+## lasers go back to their pool. Bosses take boss_damage once per volley. Laser guns,
+## ally saws and powerups are left alone.
 func _destroy_targets(from: Vector2, to: Vector2) -> void:
 	var length: float = from.distance_to(to)
 	if length <= 0.0:
@@ -243,6 +250,10 @@ func _destroy_targets(from: Vector2, to: Vector2) -> void:
 				node.die_and_respawn()
 		elif node.is_in_group("enemy_laser") and node.get("is_active"):
 			EnemyLaserPool.release(node)
+		elif node.is_in_group("bosses") and node.has_method("take_damage"):
+			if not _bosses_hit.has(node):
+				_bosses_hit.append(node)
+				node.take_damage(boss_damage)
 
 
 # --- Building -----------------------------------------------------------------

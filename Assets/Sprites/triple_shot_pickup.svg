@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 25 25" shape-rendering="crispEdges">
+  <!-- Triple shot pickup icon: 25x25 pixel art drawn at 2x (like the other pickups).
+       Same frame as quad_laser_pickup.svg, three laser bolts fanning out of an emitter. -->
+  <!-- Frame -->
+  <rect x="2" y="1" width="21" height="23" fill="#8aa0a4"/>
+  <rect x="1" y="2" width="23" height="21" fill="#8aa0a4"/>
+  <rect x="2" y="2" width="21" height="21" fill="#1b2629"/>
+  <rect x="3" y="3" width="19" height="19" fill="#050c0e"/>
+  <!-- Left bolt (leaning out) -->
+  <rect x="6" y="5" width="2" height="2" fill="#0fb8d6"/>
+  <rect x="7" y="7" width="2" height="2" fill="#0fb8d6"/>
+  <rect x="8" y="9" width="2" height="2" fill="#0fb8d6"/>
+  <rect x="9" y="11" width="2" height="2" fill="#40a4f4"/>
+  <rect x="6" y="5" width="1" height="1" fill="#ffffff"/>
+  <rect x="7" y="6" width="1" height="2" fill="#a2ffff"/>
+  <rect x="8" y="8" width="1" height="2" fill="#a2ffff"/>
+  <!-- Right bolt -->
+  <rect x="17" y="5" width="2" height="2" fill="#0fb8d6"/>
+  <rect x="16" y="7" width="2" height="2" fill="#0fb8d6"/>
+  <rect x="15" y="9" width="2" height="2" fill="#0fb8d6"/>
+  <rect x="14" y="11" width="2" height="2" fill="#40a4f4"/>
+  <rect x="18" y="5" width="1" height="1" fill="#ffffff"/>
+  <rect x="17" y="6" width="1" height="2" fill="#a2ffff"/>
+  <rect x="16" y="8" width="1" height="2" fill="#a2ffff"/>
+  <!-- Centre bolt -->
+  <rect x="11" y="4" width="3" height="10" fill="#0fb8d6"/>
+  <rect x="12" y="5" width="1" height="8" fill="#a2ffff"/>
+  <rect x="12" y="4" width="1" height="1" fill="#ffffff"/>
+  <rect x="11" y="13" width="3" height="1" fill="#40a4f4"/>
+  <!-- Emitter -->
+  <rect x="10" y="15" width="5" height="1" fill="#0fb8d6"/>
+  <rect x="9" y="16" width="7" height="4" fill="#40a4f4"/>
+  <rect x="10" y="17" width="5" height="2" fill="#0fb8d6"/>
+  <rect x="12" y="17" width="1" height="2" fill="#ffffff"/>
+  <rect x="9" y="20" width="7" height="1" fill="#1b2629"/>
+</svg>

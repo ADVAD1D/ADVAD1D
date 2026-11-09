@@ -171,15 +171,29 @@ func can_start_dash(direction: Vector2) -> bool:
 func shoot():
 	can_shoot = false
 	lsrsound.play()
-	var laser_instance = laser_scene.instantiate()
-	laser_instance.global_position = muzzle.global_position
 	var fire_direction = Vector2.UP.rotated(rotation)
-	laser_instance.start(fire_direction)
-	get_parent().add_child(laser_instance)
-	
+	# Triple shot powerup (triple_shot.gd, a child of the player while it lasts): three
+	# lasers fanned out from the muzzle instead of one
+	var angles: Array[float] = [0.0]
+	var triple_shot: Node = _get_triple_shot()
+	if triple_shot:
+		var spread: float = deg_to_rad(float(triple_shot.get("spread_degrees")))
+		angles = [-spread, 0.0, spread]
+	for angle in angles:
+		var laser_instance = laser_scene.instantiate()
+		laser_instance.global_position = muzzle.global_position
+		laser_instance.start(fire_direction.rotated(angle))
+		get_parent().add_child(laser_instance)
+
 	await get_tree().create_timer(shoot_timerate, false, false, true).timeout
 	can_shoot = true
 	
+func _get_triple_shot() -> Node:
+	for child in get_children():
+		if child.is_in_group("player_triple_shot") and not child.is_queued_for_deletion():
+			return child
+	return null
+
 # --- DASH: EXECUTION AND EFFECTS ---
 # Handles the entire dash sequence: visual effects, invincibility, and physics push.
 func do_dash(direction: Vector2):

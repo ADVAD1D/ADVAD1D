@@ -18,6 +18,16 @@ signal timer_updated(time_left_string)
 @export var saw_enemy_spawner: Node2D
 ## Arena 2's wall guns (LaserGunSpawner); how many per phase comes from "laser_guns".
 @export var laser_gun_spawner: Node2D
+## Arcade arena 3's small GEMELA (MiniBossSpawner); how many per phase comes from "mini_boss".
+@export var mini_boss_spawner: Node2D
+
+@export_group("Boss")
+## Boss arena: in the main mode this boss replaces the phases (no timer, no score goal) and
+## beating it wins the arena. Arcade mode ignores it and plays the phases as usual.
+@export var boss_scene: PackedScene
+## Where the boss appears (and wanders around).
+@export var boss_spawn: Node2D
+@export_group("")
 
 @export var phase_cooldown_timer: float = 1.0 # = 1.0
 
@@ -90,17 +100,19 @@ var arena_enemy_configs = {
 		# Laser guns on the walls: {from phase: how many}
 		"laser_guns": {3: 1, 5: 2, 7: 3, 10: 4} },
 		
-	2: { "min_shoot": 0.4, 
-		"max_shoot": 0.7, 
+	2: { "min_shoot": 0.3, 
+		"max_shoot": 0.6, 
 		"min_ship": 4.0, 
-		"max_ship": 8.0, 
+		"max_ship": 5.0, 
 		"max_saw": 4.0, 
 		"min_ship_spd": 300.0, 
 		"max_ship_spd": 600.0, 
 		"sep_radius": 150.0, 
 		"sep_strength": 300.0, 
 		"can_retreat": true, 
-		"fire_range": 2000.0 }
+		"fire_range": 2000.0,
+		# Arcade only (the main mode is the boss fight): small GEMELAs {from phase: how many}
+		"mini_boss": {1: 1, 6: 2} }
 }
 
 var arena_phase_requirements = {
@@ -200,9 +212,12 @@ func _ready() -> void:
 	#ready in current phase
 	if  restart_from_phase == true:
 		current_phase = GameManager.phase_to_start - 1
-		
-	start_new_phase() # Replace with function body.
-	
+
+	if _is_boss_fight():
+		_start_boss_fight()
+	else:
+		start_new_phase()
+
 	time_progress_bar.max_value = phase_timer
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -249,65 +264,15 @@ func start_new_phase():
 
 	#yes, i don't use elifs
 	if not _has_phase(current_phase):
-		_log_message("You win all phases!")
-		phase_label.text = "ARENA WIN"
-		gray_scale_transition()
-		fade_out_time_bar()
-		if GameManager.is_speedrun_running:
-			GameManager.stop_speedrun()
-		AchievementManager.complete_arena_run(GameManager.current_arena_index)
-
-		if GameManager.mobile_mode_active or OS.has_feature("web") or GameManager.force_web_mode:
-			var ambient = get_node_or_null("../AmbientParticles")
-			if ambient:
-				ambient.emitting = true
-				
-		var codelabel_tween = create_tween()
-		
-		# (object, property, final value, duration)
-		if GameManager.current_arena_index == 1:
-			code_label.text = ">ZGVhdGhhcmVuYQ=="
-			codelabel_tween.tween_property(code_label, "modulate:a", 1.0, 1.0)
-		elif GameManager.current_arena_index == 2:
-			code_label.text = "bWFpbmFyZW5h"
-			codelabel_tween.tween_property(code_label, "modulate:a", 1.0, 1.0)
-		else:
-			codelabel_tween.tween_property(code_label, "modulate:a", 1.0, 1.0)
-		
-		if is_instance_valid(objective_label):
-			fade_out_objective_label()
-		
-		if is_instance_valid(saw_enemy_spawner):
-			saw_enemy_spawner.stop()
-			
-		if is_instance_valid(ship_enemy_spawner):
-			ship_enemy_spawner.stop()
-
-		if is_instance_valid(laser_gun_spawner):
-			laser_gun_spawner.stop()
-
-		call_deferred("_stop_powerup_spawners")
-			
-		if is_instance_valid(wall_to_remove):
-			wall_to_remove.queue_free()
-		for node in nodes_to_remove:
-			if is_instance_valid(node):
-				node.queue_free()
-			
-		if is_instance_valid(sprite_to_remove):
-			start_fade_out_sprite(sprite_to_remove)
-			
-		if is_instance_valid(asteroids_spawner):
-			asteroids_spawner.stop()
-			
+		_win_arena()
 		return
-		
+
 	_log_message(["--- Starting Phase ---", current_phase])
 	GameManager.reset_score()
-	
+
 	if is_instance_valid(phase_label):
 		phase_label.text = "PHASE: " + str(current_phase)
-	
+
 	var current_phase_duration = _get_phase_duration(current_phase)
 
 	phase_timer = current_phase_duration
@@ -322,7 +287,97 @@ func start_new_phase():
 	phase_started.emit(current_phase, current_score_requirement)
 	apply_difficulty()
 	is_phase_active = true
+
+## Every phase cleared (or the boss beaten): the arena turns grey, the spawners stop and the
+## way out opens.
+func _win_arena() -> void:
+	_log_message("You win all phases!")
+	phase_label.text = "ARENA WIN"
+	phase_label.visible = true  # hidden during a boss fight
+	gray_scale_transition()
+	fade_out_time_bar()
+	if GameManager.is_speedrun_running:
+		GameManager.stop_speedrun()
+	AchievementManager.complete_arena_run(GameManager.current_arena_index)
+
+	if GameManager.mobile_mode_active or OS.has_feature("web") or GameManager.force_web_mode:
+		var ambient = get_node_or_null("../AmbientParticles")
+		if ambient:
+			ambient.emitting = true
+			
+	var codelabel_tween = create_tween()
 	
+	# (object, property, final value, duration)
+	if GameManager.current_arena_index == 1:
+		code_label.text = ">ZGVhdGhhcmVuYQ=="
+		codelabel_tween.tween_property(code_label, "modulate:a", 1.0, 1.0)
+	elif GameManager.current_arena_index == 2:
+		code_label.text = "bWFpbmFyZW5h"
+		codelabel_tween.tween_property(code_label, "modulate:a", 1.0, 1.0)
+	else:
+		codelabel_tween.tween_property(code_label, "modulate:a", 1.0, 1.0)
+	
+	if is_instance_valid(objective_label):
+		fade_out_objective_label()
+	
+	if is_instance_valid(saw_enemy_spawner):
+		saw_enemy_spawner.stop()
+		
+	if is_instance_valid(ship_enemy_spawner):
+		ship_enemy_spawner.stop()
+
+	if is_instance_valid(laser_gun_spawner):
+		laser_gun_spawner.stop()
+
+	if is_instance_valid(mini_boss_spawner):
+		mini_boss_spawner.stop()
+
+	call_deferred("_stop_powerup_spawners")
+		
+	if is_instance_valid(wall_to_remove):
+		wall_to_remove.queue_free()
+	for node in nodes_to_remove:
+		if is_instance_valid(node):
+			node.queue_free()
+		
+	if is_instance_valid(sprite_to_remove):
+		start_fade_out_sprite(sprite_to_remove)
+		
+	if is_instance_valid(asteroids_spawner):
+		asteroids_spawner.stop()
+
+# --- Boss arena ---------------------------------------------------------------------
+
+func _is_boss_fight() -> bool:
+	return boss_scene != null and not GameManager.arcade_mode_active
+
+## Main mode of a boss arena: no phase timer or score goal, only the boss. A death reloads
+## the scene and the fight starts over (phase_to_start stays 1); once it is beaten
+## phase_to_start goes past the last table phase, so a reload keeps the arena won.
+## Asteroids and powerups keep coming as usual.
+func _start_boss_fight() -> void:
+	if GameManager.phase_to_start > _last_table_phase():
+		_win_arena()
+		return
+	current_phase = 1
+	var boss = boss_scene.instantiate()
+	if is_instance_valid(boss_spawn):
+		boss.position = boss_spawn.global_position
+	boss.defeated.connect(_on_boss_defeated)
+	get_parent().call_deferred("add_child", boss)
+	# The boss's health bar (with its name) takes the labels' place at the top
+	if is_instance_valid(phase_label):
+		phase_label.visible = false
+	if is_instance_valid(objective_label):
+		objective_label.visible = false
+	if is_instance_valid(time_bar_container):
+		time_bar_container.visible = false
+
+func _on_boss_defeated() -> void:
+	GameManager.phase_to_start = _last_table_phase() + 1
+	success_sound.play()
+	_win_arena()
+
 func _on_score_updated(new_score: int):
 	_log_message(["Score Update: ", new_score])
 	# Arcade: a dead player can't clear the phase, the death already ended the run (restart
@@ -483,12 +538,17 @@ func apply_difficulty():
 	# Laser guns (arena 2): count from the "laser_guns" table, shooting more often later on
 	if is_instance_valid(laser_gun_spawner):
 		var gun_config = {"cooldown_scale": lerp(1.0, 0.7, minf(progress, 1.0))}
-		laser_gun_spawner.configure_for_phase(_get_laser_gun_count(config), gun_config)
-		
-## Smoothly fades out and deletes a target sprite (e.g., arena background elements).
-## Laser guns for the current phase: the value of the highest "from phase" key reached.
-func _get_laser_gun_count(config: Dictionary) -> int:
-	var table: Dictionary = config.get("laser_guns", {})
+		laser_gun_spawner.configure_for_phase(_get_phase_count(config, "laser_guns"), gun_config)
+
+	# Small GEMELA (arcade arena 3): count from the "mini_boss" table, attacking more often later
+	if is_instance_valid(mini_boss_spawner):
+		var mini_config = {"cooldown_scale": lerp(1.0, 0.7, minf(progress, 1.0))}
+		mini_boss_spawner.configure_for_phase(_get_phase_count(config, "mini_boss"), mini_config)
+
+## How many of something the current phase gets from a {from phase: count} table of the
+## arena config ("laser_guns", "mini_boss"): the value of the highest "from phase" reached.
+func _get_phase_count(config: Dictionary, key: String) -> int:
+	var table: Dictionary = config.get(key, {})
 	var best_phase: int = 0
 	var count: int = 0
 	for from_phase in table:
@@ -497,6 +557,7 @@ func _get_laser_gun_count(config: Dictionary) -> int:
 			count = int(table[from_phase])
 	return count
 
+## Smoothly fades out and deletes a target sprite (e.g., arena background elements).
 func start_fade_out_sprite(target_sprite: AnimatedSprite2D):
 	var tween = create_tween()
 	tween.tween_property(target_sprite, "modulate:a", 0.0, 1.0)

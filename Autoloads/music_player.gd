@@ -56,8 +56,10 @@ var arena_playlists = {
 		preload("res://Assets/Audio/Music/psychronic-cyber-spider-407852.ogg"),
 	],
 	2: [
-		preload("res://Assets/Audio/Music/neon-rising-336846.ogg"),
-		preload("res://Assets/Audio/Music/digital-dream-391529.ogg"),
+		preload("res://Assets/Audio/Music/psychronic-alien-commandos-147564.ogg"),
+		preload("res://Assets/Audio/Music/psychronic-sewer-nightclub-21429.ogg"),
+		preload("res://Assets/Audio/Music/psychronic-high-alert-21859.ogg"),
+		preload("res://Assets/Audio/Music/psychronic-night-prowler-21321.ogg")
 	]
 }
 

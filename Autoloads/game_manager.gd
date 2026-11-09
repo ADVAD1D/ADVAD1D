@@ -21,6 +21,10 @@ var deaths_count: int = 0
 
 # Arenas Base Structure
 var current_arena_index: int = 0
+## Boss checkpoint (saw_boss.gd): the health the boss comes back with after the player dies
+## past the middle of its bar; -1 = none. Lives here so it survives the death reload, and
+## is cleared when the boss is beaten or a new run / arena starts. Not saved to disk.
+var boss_checkpoint_health: int = -1
 var arena_names: Array[String] = ["Arena 1", "Arena 2", "Arena 3"]
 ## UI colour of each arena (ArenaUiTint), as a hue rotation in degrees of the original
 ## cyan/blue UI: arena 1 = 0 (blue), arena 2 = -60 (green), arena 3 = 180 (red).
@@ -107,6 +111,7 @@ var preloaded_main: PackedScene
 var preloaded_tutorial: PackedScene
 var preloaded_tutorial_arena2: PackedScene
 var preloaded_arena2: PackedScene
+var preloaded_arena3: PackedScene
 
 const SHADER_WARMUP_SCRIPT: GDScript = preload("res://Scripts/shader_warmup.gd")
 ## True once the gameplay shaders were compiled ahead of time (see shader_warmup.gd).
@@ -147,6 +152,7 @@ func _preload_heavy_scenes():
 	preloaded_tutorial = load("res://Scenes/tutorial.tscn")
 	preloaded_tutorial_arena2 = load("res://Scenes/tutorial_arena2.tscn")
 	preloaded_arena2 = load("res://Scenes/arena2.tscn")
+	preloaded_arena3 = load("res://Scenes/arena3.tscn")
 
 ## Compiles the shaders of the heavy scenes little by little while the splash is shown,
 ## so the first frame of an arena doesn't freeze the game on low-end GPUs.
@@ -159,6 +165,7 @@ func _start_shader_warmup() -> void:
 		preloaded_main,
 		preloaded_tutorial_arena2,
 		preloaded_arena2,
+		preloaded_arena3,
 		# Spawned from scripts via preload(), so they are not reachable from the scenes above
 		load("res://Scenes/laser.tscn"),
 		load("res://Scenes/enemy_laser.tscn"),
@@ -442,6 +449,7 @@ func reset_game_state():
 	# A new run starts from arena 1 (the tutorial doesn't set the index itself)
 	current_arena_index = 0
 	arcade_mode_active = false
+	boss_checkpoint_health = -1
 	reset_score()
 
 var _transition_layer: CanvasLayer

@@ -1,5 +1,6 @@
 extends Node2D
-## Quad laser powerup spawner (arena 2, QuadLaserSpawner node).
+## Quad laser powerup spawner (arena 2, QuadLaserSpawner node). Arena 3's TripleShotSpawner
+## uses it too (triple_shot_pickup.tscn / triple_shot.tscn, no shop upgrade).
 ##
 ## Every time its Timer runs out it drops pickup_scene (quad_laser_pickup.tscn) at a random
 ## point of spawn_locator's path and hands it reward_scene (quad_laser.tscn), which the

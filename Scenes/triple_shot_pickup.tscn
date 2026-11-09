@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://o4qv8bo8076j" path="res://Scripts/laser_shield_pickup.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://Scenes/triple_shot.tscn" id="2_reward"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/triple_shot_pickup.svg" id="3_icon"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pickup"]
+size = Vector2(21.895422, 20)
+
+[node name="TripleShotPickup" type="Area2D"]
+script = ExtResource("1_script")
+reward_scene = ExtResource("2_reward")
+active_group = &"player_triple_shot"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.59694815, 0.59694815)
+texture = ExtResource("3_icon")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(1.3286189, 1.3286189)
+shape = SubResource("RectangleShape2D_pickup")
+debug_color = Color(0, 0.6, 0.69803923, 0.1764706)

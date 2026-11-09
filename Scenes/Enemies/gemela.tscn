@@ -1,0 +1,108 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/Enemies/saw_boss.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Enemies/Boss/gemela_ring.png" id="2_ring"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Enemies/Boss/gemela_star.png" id="3_star"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Enemies/Boss/gemela_head.png" id="4_head"]
+[ext_resource type="PackedScene" uid="uid://5r1c4072iu8o" path="res://Scenes/Particles/saw_particles.tscn" id="5_particles"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/laser_gun_charge.ogg" id="6_charge"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/laser_gun_fire.ogg" id="7_fire"]
+[ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="8_shot"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h0"]
+atlas = ExtResource("4_head")
+region = Rect2(0, 0, 80, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h1"]
+atlas = ExtResource("4_head")
+region = Rect2(80, 0, 80, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h2"]
+atlas = ExtResource("4_head")
+region = Rect2(160, 0, 80, 80)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_head"]
+animations = [{
+"frames": [{
+"duration": 10.0,
+"texture": SubResource("AtlasTexture_h0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h1")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h2")
+}],
+"loop": true,
+"name": &"charge",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_boss"]
+radius = 240.0
+
+[sub_resource type="Gradient" id="Gradient_light"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(0.7, 0.02, 0.06, 1, 0.25, 0, 0.02, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_light"]
+gradient = SubResource("Gradient_light")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[node name="Gemela" type="Area2D"]
+z_index = 2
+collision_layer = 5
+script = ExtResource("1_script")
+explosion_particles = ExtResource("5_particles")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+scale = Vector2(11, 11)
+energy = 1.2
+texture = SubResource("GradientTexture2D_light")
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Ring" type="Sprite2D" parent="Body"]
+scale = Vector2(5, 5)
+texture = ExtResource("2_ring")
+
+[node name="Star" type="Sprite2D" parent="Body"]
+scale = Vector2(5, 5)
+texture = ExtResource("3_star")
+
+[node name="Head" type="AnimatedSprite2D" parent="Body"]
+scale = Vector2(5, 5)
+sprite_frames = SubResource("SpriteFrames_head")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_boss")
+debug_color = Color(0.96652, 0.113815, 0.368096, 0.42)
+
+[node name="ChargeSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_charge")
+pitch_scale = 0.9
+max_distance = 6000.0
+bus = &"SFX"
+
+[node name="FireSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_fire")
+pitch_scale = 0.7
+max_distance = 6000.0
+bus = &"SFX"
+
+[node name="ShotSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_shot")
+volume_db = -10.0
+pitch_scale = 0.6
+max_distance = 6000.0
+bus = &"SFX"

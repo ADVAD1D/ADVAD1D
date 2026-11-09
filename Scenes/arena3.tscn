@@ -1,0 +1,586 @@
+[gd_scene format=3 uid="uid://2e1a5qln6ind"]
+
+[ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
+[ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
+[ext_resource type="PackedScene" uid="uid://dohhwkxxtna34" path="res://Scenes/Particles/laser_particles.tscn" id="2_hptm8"]
+[ext_resource type="PackedScene" uid="uid://df8hpgwrn52l8" path="res://Scenes/Particles/particles.tscn" id="3_d1ilt"]
+[ext_resource type="Script" uid="uid://bia82e1gl8v0j" path="res://Scripts/asteroid_spawner.gd" id="3_jjvhh"]
+[ext_resource type="PackedScene" uid="uid://ct5mpwv8axj52" path="res://Scenes/Particles/enemy_ship_particles.tscn" id="3_jkdf5"]
+[ext_resource type="PackedScene" uid="uid://bthfvcj4v47xh" path="res://Scenes/asteroid.tscn" id="4_kry3j"]
+[ext_resource type="Texture2D" uid="uid://b02bmidunueak" path="res://Assets/Sprites/arena3.png" id="5_arena3"]
+[ext_resource type="Shader" uid="uid://boxy6ygutk3xw" path="res://Shaders/main_grayscale.gdshader" id="5_nwwfm"]
+[ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scripts/camera_2d.gd" id="6_21xkr"]
+[ext_resource type="PackedScene" uid="uid://d1eonx56vybhy" path="res://Scenes/UI/hud.tscn" id="7_6bp64"]
+[ext_resource type="Texture2D" uid="uid://bxi55qpsnclqv" path="res://Assets/Sprites/laserwall.png" id="7_fevyy"]
+[ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="8_344ge"]
+[ext_resource type="AudioStream" uid="uid://iavnej1hm2io" path="res://Assets/Audio/195491__alienxxx__glitch_001.wav" id="9_ynf5e"]
+[ext_resource type="Script" uid="uid://bgumgweqy1b82" path="res://Scripts/ambient_particles.gd" id="12_6iyac"]
+[ext_resource type="AudioStream" uid="uid://dlu22wl4fxr36" path="res://Assets/Audio/783832__chungus43a__milling-machine-motor.wav" id="12_b3802"]
+[ext_resource type="PackedScene" uid="uid://s72gvn2mqhx2" path="res://Scenes/main_menu.tscn" id="13_536cc"]
+[ext_resource type="AudioStream" uid="uid://bwoq355ggrir4" path="res://Assets/Audio/351564__bertrof__game-sound-correct-with-delay.wav" id="13_pdsj5"]
+[ext_resource type="Script" uid="uid://cn624xhs3jj2a" path="res://Scripts/enemy_spawner.gd" id="14_wsu2k"]
+[ext_resource type="PackedScene" uid="uid://rfr1b2fb0o4q" path="res://Scenes/ship_enemy.tscn" id="15_wsu2k"]
+[ext_resource type="Script" uid="uid://ddvbqopxphvow" path="res://Scripts/saw_spawner.gd" id="16_k12tt"]
+[ext_resource type="PackedScene" uid="uid://cljshiwenhoau" path="res://Scenes/saw.tscn" id="17_h1bgf"]
+[ext_resource type="Script" uid="uid://ch7ngtptk8mma" path="res://Scripts/phase_manager.gd" id="20_hibaj"]
+[ext_resource type="PackedScene" uid="uid://bu55k5t5u8pui" path="res://Scenes/trigger_scene.tscn" id="24_3pmx8"]
+[ext_resource type="PackedScene" uid="uid://mvms73mx4k2i" path="res://Scenes/portal_animation.tscn" id="36_s8vy0"]
+[ext_resource type="Script" uid="uid://cx0bsmcfls2de" path="res://Scripts/power_up_1_spawner.gd" id="37_o1aky"]
+[ext_resource type="PackedScene" uid="uid://knamw06tun51" path="res://Scenes/power_up_1_pickup.tscn" id="38_kwxat"]
+[ext_resource type="PackedScene" uid="uid://ddbj5g23l6doc" path="res://Scenes/powerup1.tscn" id="40_aqgau"]
+[ext_resource type="Script" uid="uid://cnmvll76uwvp0" path="res://Scripts/laser_shield_spawner.gd" id="40_kwxat"]
+[ext_resource type="PackedScene" uid="uid://bn8jtbmvulvxr" path="res://Scenes/laser_shield_pickup.tscn" id="41_kqrg6"]
+[ext_resource type="PackedScene" uid="uid://mjsfrhy7mt7v" path="res://Scenes/time_slow_pickup.tscn" id="42_jut3y"]
+[ext_resource type="PackedScene" uid="uid://cv6iiauo728sf" path="res://Scenes/laser_shield.tscn" id="42_nwwfm"]
+[ext_resource type="PackedScene" path="res://Scenes/time_slow.tscn" id="43_time_slow"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/pause_menu.tscn" id="70_pausemenu"]
+[ext_resource type="PackedScene" path="res://Scenes/Enemies/gemela.tscn" id="80_gemela"]
+[ext_resource type="PackedScene" path="res://Scenes/Enemies/gemela_mini.tscn" id="81_gemela_mini"]
+[ext_resource type="Script" uid="uid://e5rp1ok57tq0" path="res://Scripts/Enemies/mini_boss_spawner.gd" id="82_mini_spawner"]
+[ext_resource type="Script" uid="uid://cxsgt3vpdrjsv" path="res://Scripts/quad_laser_spawner.gd" id="83_powerup_spawner"]
+[ext_resource type="PackedScene" path="res://Scenes/triple_shot_pickup.tscn" id="84_triple_pickup"]
+[ext_resource type="PackedScene" path="res://Scenes/triple_shot.tscn" id="85_triple_shot"]
+[ext_resource type="PackedScene" path="res://Scenes/quad_laser_pickup.tscn" id="86_quad_pickup"]
+[ext_resource type="PackedScene" path="res://Scenes/quad_laser.tscn" id="87_quad_laser"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s8vy0"]
+shader = ExtResource("5_nwwfm")
+shader_parameter/grayscale_amount = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fevyy"]
+atlas = ExtResource("7_fevyy")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hibaj"]
+atlas = ExtResource("7_fevyy")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pdsj5"]
+atlas = ExtResource("7_fevyy")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ee4r6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fevyy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hibaj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pdsj5")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_gt3je"]
+offsets = PackedFloat32Array(0.09543569, 0.13692947, 0.80497926)
+colors = PackedColorArray(0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ee4r6"]
+gradient = SubResource("Gradient_gt3je")
+fill = 1
+fill_from = Vector2(0.50427353, 0.47863248)
+fill_to = Vector2(0.982906, 0.047008548)
+
+[sub_resource type="Animation" id="Animation_hibaj"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [3.59]
+}
+
+[sub_resource type="Animation" id="Animation_fevyy"]
+resource_name = "lights"
+length = 4.0
+loop_mode = 1
+step = 0.0333
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.0666667, 2.1333334, 3, 4.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 5.25, 0.0, 3.59, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pdsj5"]
+_data = {
+&"RESET": SubResource("Animation_hibaj"),
+&"lights": SubResource("Animation_fevyy")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate"]
+size = Vector2(440, 60)
+
+[sub_resource type="Gradient" id="Gradient_3pmx8"]
+offsets = PackedFloat32Array(0.318182, 0.639394)
+colors = PackedColorArray(0.713726, 0.05, 0.1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_b3802"]
+gradient = SubResource("Gradient_3pmx8")
+fill = 1
+fill_from = Vector2(0.470085, 0.508547)
+
+[sub_resource type="Gradient" id="Gradient_u50mg"]
+offsets = PackedFloat32Array(0.321212, 0.715151)
+colors = PackedColorArray(0.827451, 0.06, 0.12, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fevyy"]
+gradient = SubResource("Gradient_u50mg")
+fill = 1
+fill_from = Vector2(0.491453, 0.495726)
+
+[sub_resource type="Gradient" id="Gradient_cbgmd"]
+offsets = PackedFloat32Array(0.181818, 0.754545)
+colors = PackedColorArray(0.8, 0.06, 0.12, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_hibaj"]
+gradient = SubResource("Gradient_cbgmd")
+fill = 1
+fill_from = Vector2(0.495726, 0.508547)
+
+[sub_resource type="Gradient" id="Gradient_1w6v2"]
+offsets = PackedFloat32Array(0.466667, 0.715151)
+colors = PackedColorArray(0.690196, 0.05, 0.1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_pdsj5"]
+gradient = SubResource("Gradient_1w6v2")
+fill = 1
+fill_from = Vector2(0.517094, 0.495726)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fdnlq"]
+size = Vector2(3385, 65)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jkdf5"]
+size = Vector2(3367, 68.25)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wsu2k"]
+size = Vector2(129, 4532)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k12tt"]
+size = Vector2(143.75, 4594)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3pmx8"]
+size = Vector2(365, 2365)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bottom"]
+size = Vector2(4600, 60)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_enemygate"]
+size = Vector2(440, 100)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_344ge"]
+shader = ExtResource("8_344ge")
+shader_parameter/overlay = true
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/brightness = 3.5
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.03
+shader_parameter/grille_opacity = 0.2
+shader_parameter/roll = true
+shader_parameter/roll_speed = 0.0
+shader_parameter/roll_size = 0.0
+shader_parameter/roll_variation = 0.5
+shader_parameter/distort_intensity = 0.02
+shader_parameter/aberration = 0.01000004797499998
+shader_parameter/noise_opacity = 0.311
+shader_parameter/noise_speed = 2.0
+shader_parameter/static_noise_intensity = 0.0
+shader_parameter/pixelate = false
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.150000007125
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.3
+shader_parameter/vignette_opacity = 0.800000038
+shader_parameter/low_quality = false
+
+[sub_resource type="Gradient" id="Gradient_d1ilt"]
+offsets = PackedFloat32Array(0, 0.482517, 1)
+colors = PackedColorArray(1, 0.1, 0.2, 0.28627452, 0.95686275, 0.36, 0.4, 0.52156866, 1, 0.75, 0.78, 0.5803922)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6iyac"]
+gradient = SubResource("Gradient_d1ilt")
+
+[sub_resource type="Gradient" id="Gradient_fdnlq"]
+colors = PackedColorArray(0.8235294, 0.06, 0.15, 0.32941177, 1, 1, 1, 0.32941177)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_jkdf5"]
+gradient = SubResource("Gradient_fdnlq")
+
+[sub_resource type="Curve" id="Curve_kqrg6"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.9621212, 0.1685394), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_nwwfm"]
+curve = SubResource("Curve_kqrg6")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_d1ilt"]
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(2280, 3060, 1)
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 1)
+spread = 180.0
+initial_velocity_min = 10.0
+initial_velocity_max = 40.0
+gravity = Vector3(0, 98, 0)
+scale_min = 20.0
+scale_max = 30.0
+scale_curve = SubResource("CurveTexture_nwwfm")
+color_ramp = SubResource("GradientTexture1D_jkdf5")
+color_initial_ramp = SubResource("GradientTexture1D_6iyac")
+
+[sub_resource type="Curve2D" id="Curve2D_wsu2k"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -15, -1068, 0, 0, 0, 0, 1408, 892, 0, 0, 0, 0, -1438, 892, 0, 0, 0, 0, -15, -1068)
+}
+point_count = 4
+
+[node name="Main" type="Node2D" unique_id=410865980]
+script = ExtResource("1_kry3j")
+laser_explosion_particles = ExtResource("2_hptm8")
+enemy_laser_explosion = ExtResource("3_jkdf5")
+asteroids_explosion_particles = ExtResource("3_d1ilt")
+arena_index = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1802188549]
+material = SubResource("ShaderMaterial_s8vy0")
+position = Vector2(-15, 1446)
+scale = Vector2(9.67856, 9.7983)
+texture = ExtResource("5_arena3")
+
+[node name="PlayerInstance" parent="." unique_id=356179399 instance=ExtResource("2_8gbba")]
+position = Vector2(-15, 900)
+speed = 1000.0
+
+[node name="LaserWallAnimation" type="AnimatedSprite2D" parent="." unique_id=2124217709]
+position = Vector2(-15, 1160)
+scale = Vector2(9.1, 6.36322)
+sprite_frames = SubResource("SpriteFrames_ee4r6")
+
+[node name="PointLight2D" type="PointLight2D" parent="LaserWallAnimation" unique_id=61641121]
+position = Vector2(0, -5.230486)
+scale = Vector2(0.78052336, 0.550036)
+energy = 3.59
+texture = SubResource("GradientTexture2D_ee4r6")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LaserWallAnimation/PointLight2D" unique_id=669304003]
+libraries/ = SubResource("AnimationLibrary_pdsj5")
+autoplay = &"lights"
+
+[node name="Walls" type="Node2D" parent="." unique_id=1410781107]
+
+[node name="WallLeft" type="StaticBody2D" parent="Walls" unique_id=1351301686 groups=["colisiones"]]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Walls/WallLeft" unique_id=2099117593]
+polygon = PackedVector2Array(-15, -1800, -15, -1493.5, -1934, 1142, -227.9, 1142, -227.9, 1661.6, -97.3, 1661.6, -97.3, 2112.3, -566.5, 4800, -2300, 4800, -2300, -1800)
+
+[node name="WallRight" type="StaticBody2D" parent="Walls" unique_id=177179685 groups=["colisiones"]]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Walls/WallRight" unique_id=1159942032]
+polygon = PackedVector2Array(-15, -1800, -15, -1493.5, 1904, 1142, 197.9, 1142, 197.9, 1661.6, 67.3, 1661.6, 67.3, 2112.3, 536.5, 4800, 2270, 4800, 2270, -1800)
+
+[node name="WallStartBridge" type="StaticBody2D" parent="Walls" unique_id=838787932]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallStartBridge" unique_id=1563524348]
+position = Vector2(-15, 1170)
+shape = SubResource("RectangleShape2D_gate")
+debug_color = Color(0.043137256, 0.73333335, 0, 0.8980392)
+
+[node name="MainLight2D" type="PointLight2D" parent="." unique_id=231878300]
+texture_filter = 2
+position = Vector2(-6, -475)
+scale = Vector2(22.56, 33.52)
+energy = 0.2
+texture = SubResource("GradientTexture2D_b3802")
+
+[node name="Rightlight" type="PointLight2D" parent="MainLight2D" unique_id=730581408]
+position = Vector2(64.8136, 9.81579)
+rotation = -3.12224
+scale = Vector2(0.3452385, 0.2837792)
+skew = -0.00183356
+energy = 0.5
+texture = SubResource("GradientTexture2D_fevyy")
+
+[node name="Leftlight" type="PointLight2D" parent="MainLight2D" unique_id=186507736]
+position = Vector2(-64.0479, 10.1757)
+rotation = 1.58322
+scale = Vector2(0.25441763, 0.35668346)
+skew = -0.00679803
+energy = 0.5
+texture = SubResource("GradientTexture2D_fevyy")
+
+[node name="UpLightRight" type="PointLight2D" parent="MainLight2D" unique_id=962675866]
+position = Vector2(31.6489, -17.5418)
+rotation = -0.00507933
+scale = Vector2(0.29935735, 0.15089656)
+skew = 0.292145
+texture = SubResource("GradientTexture2D_hibaj")
+
+[node name="UpLightLeft" type="PointLight2D" parent="MainLight2D" unique_id=1125794921]
+position = Vector2(-31.383, -18.7948)
+rotation = -3.09272
+scale = Vector2(0.31581327, -0.12460355)
+skew = -0.251327
+texture = SubResource("GradientTexture2D_hibaj")
+
+[node name="BottomLight" type="PointLight2D" parent="MainLight2D" unique_id=441645671]
+texture_filter = 2
+position = Vector2(-0.132979, 26.7005)
+scale = Vector2(0.89984787, 0.41840646)
+texture = SubResource("GradientTexture2D_pdsj5")
+
+[node name="AsteroidSpawner" type="Marker2D" parent="." unique_id=768936516 node_paths=PackedStringArray("player_node")]
+position = Vector2(3.98833, -460.012)
+scale = Vector2(1.29883, 1.29883)
+script = ExtResource("3_jjvhh")
+asteroid_scene = ExtResource("4_kry3j")
+player_node = NodePath("../PlayerInstance")
+
+[node name="Timer" type="Timer" parent="AsteroidSpawner" unique_id=1962402699]
+wait_time = 0.15
+autostart = true
+
+[node name="DeathZone" type="Area2D" parent="." unique_id=1357795625]
+position = Vector2(3.98833, -460.012)
+scale = Vector2(1.29883, 1.29883)
+
+[node name="upzone" type="CollisionShape2D" parent="DeathZone" unique_id=503506332]
+position = Vector2(-5, -867)
+shape = SubResource("RectangleShape2D_fdnlq")
+debug_color = Color(0.998937, 0, 0.128371, 0.42)
+
+[node name="bottomzone" type="CollisionShape2D" parent="DeathZone" unique_id=947238631]
+position = Vector2(-13.5, 3739.88)
+shape = SubResource("RectangleShape2D_jkdf5")
+debug_color = Color(0.991046, 0, 0.270644, 0.42)
+
+[node name="leftzone" type="CollisionShape2D" parent="DeathZone" unique_id=1218241013]
+position = Vector2(-1625, 1426)
+shape = SubResource("RectangleShape2D_wsu2k")
+debug_color = Color(0.988497, 0, 0.301321, 0.42)
+
+[node name="rightzone" type="CollisionShape2D" parent="DeathZone" unique_id=818829115]
+position = Vector2(1613.13, 1460)
+shape = SubResource("RectangleShape2D_k12tt")
+debug_color = Color(0.94322, 0.158501, 0.453864, 0.42)
+
+[node name="bridgezone" type="CollisionShape2D" parent="DeathZone" unique_id=521488794]
+position = Vector2(-10.5, 2455.5)
+shape = SubResource("RectangleShape2D_3pmx8")
+debug_color = Color(0.997114, 0, 0.172964, 0.42)
+
+[node name="LaserZone" type="Area2D" parent="." unique_id=673068858]
+
+[node name="WallLeft" type="CollisionPolygon2D" parent="LaserZone" unique_id=50175810]
+polygon = PackedVector2Array(-15, -1800, -15, -1493.5, -1934, 1142, -227.9, 1142, -227.9, 1661.6, -97.3, 1661.6, -97.3, 2112.3, -566.5, 4800, -2300, 4800, -2300, -1800)
+
+[node name="WallRight" type="CollisionPolygon2D" parent="LaserZone" unique_id=999975445]
+polygon = PackedVector2Array(-15, -1800, -15, -1493.5, 1904, 1142, 197.9, 1142, 197.9, 1661.6, 67.3, 1661.6, 67.3, 2112.3, 536.5, 4800, 2270, 4800, 2270, -1800)
+
+[node name="bottomMargin" type="CollisionShape2D" parent="LaserZone" unique_id=1168334480]
+position = Vector2(-15, 4780)
+shape = SubResource("RectangleShape2D_bottom")
+debug_color = Color(0.899675, 0.00016942, 0.765051, 0.42)
+
+[node name="StartBridge" type="CollisionShape2D" parent="LaserZone" unique_id=1454803291]
+position = Vector2(-15, 1185)
+shape = SubResource("RectangleShape2D_gate")
+debug_color = Color(0.887305, 0.000282046, 0.802346, 0.42)
+
+[node name="EnemiesDeathZone" type="Area2D" parent="." unique_id=36110826 groups=["enemies_death"]]
+
+[node name="Bridge" type="CollisionShape2D" parent="EnemiesDeathZone" unique_id=393822101]
+position = Vector2(-15, 1200)
+shape = SubResource("RectangleShape2D_enemygate")
+debug_color = Color(1, 0.0470588, 0, 0.419608)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=806383270 node_paths=PackedStringArray("player_target")]
+zoom = Vector2(0.25, 0.25)
+limit_left = -1915
+limit_top = -1420
+limit_right = 1870
+limit_bottom = 4200
+limit_smoothed = true
+position_smoothing_enabled = true
+script = ExtResource("6_21xkr")
+player_target = NodePath("../PlayerInstance")
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=261266884]
+
+[node name="HUD" parent="UILayer" unique_id=948123635 instance=ExtResource("7_6bp64")]
+offset_left = -25.0
+offset_top = 7.0
+offset_right = -25.0
+offset_bottom = 7.0
+
+[node name="ColorRect" type="ColorRect" parent="UILayer" unique_id=1087235234]
+material = SubResource("ShaderMaterial_344ge")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1907.0
+offset_top = -1715.0
+offset_right = 1414.0
+offset_bottom = 3796.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FadeRect" type="ColorRect" parent="UILayer" unique_id=467946278]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="PauseMenu" parent="." unique_id=203940908 instance=ExtResource("70_pausemenu")]
+menu_scene = ExtResource("13_536cc")
+palette = 2
+
+[node name="SucessSound" type="AudioStreamPlayer2D" parent="." unique_id=1376919600]
+stream = ExtResource("13_pdsj5")
+volume_db = 5.0
+pitch_scale = 0.54
+bus = &"SFX"
+
+[node name="GlitchSound" type="AudioStreamPlayer2D" parent="." unique_id=552641930]
+stream = ExtResource("9_ynf5e")
+volume_db = 9.16
+pitch_scale = 0.38
+bus = &"SFX"
+
+[node name="SawSound" type="AudioStreamPlayer2D" parent="." unique_id=1991439169]
+stream = ExtResource("12_b3802")
+bus = &"SFX"
+
+[node name="AmbientParticles" type="GPUParticles2D" parent="." unique_id=745380123]
+z_index = 3
+position = Vector2(-4, 219)
+amount = 200
+lifetime = 1.6
+process_material = SubResource("ParticleProcessMaterial_d1ilt")
+script = ExtResource("12_6iyac")
+
+[node name="PhaseNode" type="Node2D" parent="." unique_id=2007397895 node_paths=PackedStringArray("player_node", "ship_enemy_spawner", "saw_enemy_spawner", "mini_boss_spawner", "boss_spawn", "wall_to_remove", "sprite_to_remove", "nodes_to_remove")]
+script = ExtResource("20_hibaj")
+player_node = NodePath("../PlayerInstance")
+ship_enemy_spawner = NodePath("../EnemySpawner")
+saw_enemy_spawner = NodePath("../SawSpawner")
+mini_boss_spawner = NodePath("../MiniBossSpawner")
+boss_scene = ExtResource("80_gemela")
+boss_spawn = NodePath("../BossSpawn")
+wall_to_remove = NodePath("../Walls/WallStartBridge")
+sprite_to_remove = NodePath("../LaserWallAnimation")
+nodes_to_remove = [NodePath("../LaserZone/StartBridge")]
+
+[node name="BossSpawn" type="Marker2D" parent="." unique_id=467433316]
+position = Vector2(-15, 150)
+
+[node name="MiniBossSpawner" type="Node2D" parent="." unique_id=942725174 node_paths=PackedStringArray("player_node", "spawn_locator")]
+script = ExtResource("82_mini_spawner")
+mini_scene = ExtResource("81_gemela_mini")
+player_node = NodePath("../PlayerInstance")
+spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+
+[node name="EnemySpawner" type="Node2D" parent="." unique_id=257782518 node_paths=PackedStringArray("player_node", "spawn_locator_node") groups=["destructibles"]]
+script = ExtResource("14_wsu2k")
+enemy_scene = ExtResource("15_wsu2k")
+portal_scene = ExtResource("36_s8vy0")
+player_node = NodePath("../PlayerInstance")
+spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+
+[node name="SawSpawner" type="Node2D" parent="." unique_id=1904323796 node_paths=PackedStringArray("player_node", "spawn_locator_node") groups=["destructibles"]]
+script = ExtResource("16_k12tt")
+saw_scene = ExtResource("17_h1bgf")
+portal_scene = ExtResource("36_s8vy0")
+player_node = NodePath("../PlayerInstance")
+spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+
+[node name="PowerUp1Spawner" type="Node2D" parent="." unique_id=1923892494 node_paths=PackedStringArray("spawn_locator")]
+script = ExtResource("37_o1aky")
+pickup_scene = ExtResource("38_kwxat")
+reward_scene = ExtResource("40_aqgau")
+spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+upgrade_stat = &"ally_saw"
+random_intervals = Array[float]([5.0, 10.0])
+
+[node name="Timer" type="Timer" parent="PowerUp1Spawner" unique_id=1088914769]
+wait_time = 10.0
+autostart = true
+
+[node name="TimeSlowSpawner" type="Node2D" parent="." unique_id=1411715478 node_paths=PackedStringArray("spawn_locator")]
+script = ExtResource("37_o1aky")
+pickup_scene = ExtResource("42_jut3y")
+reward_scene = ExtResource("43_time_slow")
+spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+upgrade_stat = &"timewarp"
+
+[node name="Timer" type="Timer" parent="TimeSlowSpawner" unique_id=243161182]
+wait_time = 20.0
+autostart = true
+
+[node name="LaserShieldSpawner" type="Node2D" parent="." unique_id=892688607 node_paths=PackedStringArray("spawn_locator")]
+script = ExtResource("40_kwxat")
+pickup_scene = ExtResource("41_kqrg6")
+reward_scene = ExtResource("42_nwwfm")
+spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+upgrade_stat = &"shield"
+
+[node name="Timer" type="Timer" parent="LaserShieldSpawner" unique_id=1948591384]
+wait_time = 15.0
+autostart = true
+
+[node name="TripleShotSpawner" type="Node2D" parent="." unique_id=304064844 node_paths=PackedStringArray("spawn_locator")]
+script = ExtResource("83_powerup_spawner")
+pickup_scene = ExtResource("84_triple_pickup")
+reward_scene = ExtResource("85_triple_shot")
+spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+upgrade_stat = &""
+
+[node name="Timer" type="Timer" parent="TripleShotSpawner" unique_id=205415795]
+wait_time = 20.0
+autostart = true
+
+[node name="QuadLaserSpawner" type="Node2D" parent="." unique_id=988315597 node_paths=PackedStringArray("spawn_locator")]
+script = ExtResource("83_powerup_spawner")
+pickup_scene = ExtResource("86_quad_pickup")
+reward_scene = ExtResource("87_quad_laser")
+spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
+
+[node name="Timer" type="Timer" parent="QuadLaserSpawner" unique_id=846087643]
+wait_time = 25.0
+autostart = true
+
+[node name="EnemySpawnPath" type="Path2D" parent="." unique_id=1045715568]
+scale = Vector2(1.1944664, 1.1944664)
+curve = SubResource("Curve2D_wsu2k")
+
+[node name="EnemySpawnLocator" type="PathFollow2D" parent="EnemySpawnPath" unique_id=1660581610]
+position = Vector2(-15, -1068)
+rotation = 0.9428196
+
+[node name="TriggerScene" parent="." unique_id=2123189546 instance=ExtResource("24_3pmx8")]
+position = Vector2(-15, 4436)
+
+[connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
+[connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]
+[connection signal="area_entered" from="LaserZone" to="." method="_on_laser_zone_area_entered"]

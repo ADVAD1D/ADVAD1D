@@ -111,7 +111,9 @@ func reset_shader_parameters():
 
 func _on_death_zone_area_entered(area: Area2D) -> void:
 	if area.is_in_group("asteroides"):
-		if arena_index == 1 and asteroids_explosion_particles:
+		# Arenas 2 and 3 have death zones in plain sight (arena 3's bridge zone starts right
+		# under the gate), so the asteroid explodes instead of vanishing
+		if arena_index >= 1 and asteroids_explosion_particles:
 			var ast_exp_instance = asteroids_explosion_particles.instantiate()
 			ast_exp_instance.global_position = area.global_position
 			call_deferred("add_child", ast_exp_instance)

@@ -1,0 +1,85 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/Enemies/saw_boss.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Enemies/Boss/gemela_mini.png" id="2_mini"]
+[ext_resource type="PackedScene" uid="uid://5r1c4072iu8o" path="res://Scenes/Particles/saw_particles.tscn" id="3_particles"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/laser_gun_charge.ogg" id="4_charge"]
+[ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="5_shot"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m0"]
+atlas = ExtResource("2_mini")
+region = Rect2(0, 0, 56, 56)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m1"]
+atlas = ExtResource("2_mini")
+region = Rect2(56, 0, 56, 56)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mini"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m0")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m1")
+}],
+"loop": true,
+"name": &"charge",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mini"]
+radius = 95.0
+
+[node name="GemelaMini" type="Area2D"]
+z_index = 2
+collision_layer = 5
+script = ExtResource("1_script")
+is_mini = true
+display_name = "MINI GEMELA"
+max_health = 10
+score_per_hit = 20
+score_value = 1000
+show_health_bar = false
+explosion_particles = ExtResource("3_particles")
+move_speed = 380.0
+ring_spin = 240.0
+vent_count = 3
+vent_radius_px = 21.5
+vent_angle_offset = 1.5708
+burst_interval = 0.18
+charge_time = 0.6
+attack_cooldown_min = 2.2
+attack_cooldown_max = 3.4
+enter_time = 0.4
+phase_two_at = 0.0
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Ring" type="AnimatedSprite2D" parent="Body"]
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_mini")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_mini")
+debug_color = Color(0.96652, 0.113815, 0.368096, 0.42)
+
+[node name="ChargeSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_charge")
+volume_db = -4.0
+pitch_scale = 1.4
+max_distance = 4000.0
+bus = &"SFX"
+
+[node name="ShotSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_shot")
+volume_db = -10.0
+pitch_scale = 0.8
+max_distance = 4000.0
+bus = &"SFX"
