@@ -51,10 +51,17 @@
 [ext_resource type="PackedScene" uid="uid://mjsfrhy7mt7v" path="res://Scenes/time_slow_pickup.tscn" id="42_jut3y"]
 [ext_resource type="PackedScene" uid="uid://cv6iiauo728sf" path="res://Scenes/laser_shield.tscn" id="42_nwwfm"]
 [ext_resource type="PackedScene" path="res://Scenes/time_slow.tscn" id="43_time_slow"]
+[ext_resource type="Shader" path="res://Shaders/background_clouds.gdshader" id="46_clouds"]
+[ext_resource type="Script" uid="uid://c2lyghocuamhf" path="res://Scripts/background_waves.gd" id="47_clouds_script"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_s8vy0"]
 shader = ExtResource("5_nwwfm")
 shader_parameter/grayscale_amount = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_clouds"]
+shader = ExtResource("46_clouds")
+shader_parameter/back_top = 450.0
+shader_parameter/front_top = 490.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fevyy"]
 atlas = ExtResource("7_fevyy")
@@ -391,6 +398,11 @@ material = SubResource("ShaderMaterial_s8vy0")
 position = Vector2(-15, 1446)
 scale = Vector2(9.67856, 9.7983)
 texture = ExtResource("5_b3802")
+
+[node name="BackgroundClouds" type="Sprite2D" parent="Sprite2D"]
+material = SubResource("ShaderMaterial_clouds")
+texture = ExtResource("5_b3802")
+script = ExtResource("47_clouds_script")
 
 [node name="PlayerInstance" parent="." unique_id=1545542540 instance=ExtResource("2_8gbba")]
 position = Vector2(-15, 9.99994)
