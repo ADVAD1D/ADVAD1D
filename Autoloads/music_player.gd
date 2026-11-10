@@ -12,6 +12,7 @@ var is_fading: bool = false
 var no_music_scenes = [
 	"res://Scenes/tutorial.tscn",
 	"res://Scenes/tutorial_arena2.tscn",
+	"res://Scenes/tutorial_arena3.tscn",
 	"res://Scenes/spash_screen.tscn"
 ]
 

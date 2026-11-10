@@ -110,6 +110,7 @@ const deaths_path: String = "user://deaths_count.txt"
 var preloaded_main: PackedScene
 var preloaded_tutorial: PackedScene
 var preloaded_tutorial_arena2: PackedScene
+var preloaded_tutorial_arena3: PackedScene
 var preloaded_arena2: PackedScene
 var preloaded_arena3: PackedScene
 
@@ -151,6 +152,7 @@ func _preload_heavy_scenes():
 	preloaded_main = load("res://Scenes/main.tscn")
 	preloaded_tutorial = load("res://Scenes/tutorial.tscn")
 	preloaded_tutorial_arena2 = load("res://Scenes/tutorial_arena2.tscn")
+	preloaded_tutorial_arena3 = load("res://Scenes/tutorial_arena3.tscn")
 	preloaded_arena2 = load("res://Scenes/arena2.tscn")
 	preloaded_arena3 = load("res://Scenes/arena3.tscn")
 
@@ -165,6 +167,7 @@ func _start_shader_warmup() -> void:
 		preloaded_main,
 		preloaded_tutorial_arena2,
 		preloaded_arena2,
+		preloaded_tutorial_arena3,
 		preloaded_arena3,
 		# Spawned from scripts via preload(), so they are not reachable from the scenes above
 		load("res://Scenes/laser.tscn"),
