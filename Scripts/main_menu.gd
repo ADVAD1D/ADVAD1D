@@ -162,9 +162,6 @@ func _setup_buttons() -> void:
 	if has_node("SkinSelectorButton"):
 		get_node("SkinSelectorButton").pressed.connect(func(): get_tree().change_scene_to_packed(skin_selector_scene))
 		
-	if has_node("GithubButton"):
-		get_node("GithubButton").pressed.connect(func(): OS.shell_open("https://github.com/ADVAD1D/ADVAD1D"))
-		
 	if has_node("DiscordButton"):
 		get_node("DiscordButton").pressed.connect(func(): OS.shell_open("https://discord.com/invite/ne3U8RS8bA"))
 		

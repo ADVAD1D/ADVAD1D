@@ -12,4 +12,4 @@ icon = ExtResource("2_icon")
 goal_type = 2
 progress_format = 2
 reward_ship_index = 26
-order = -2
+order = -3

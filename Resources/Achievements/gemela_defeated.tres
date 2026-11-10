@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Achievement" format=3]
+
+[ext_resource type="Script" path="res://Scripts/Achievements/achievement.gd" id="1_ach"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/icon_gemela.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_ach")
+id = &"gemela_defeated"
+title = "GEMELA DOWN"
+description = "DEFEAT GEMELA"
+icon = ExtResource("2_icon")
+stat = &"arena_3_clears"
+goal_type = 0
+goal = 1.0
+progress_format = 0
+reward_ship_index = 3
+order = -1

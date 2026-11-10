@@ -22,8 +22,9 @@ const COLOR_PURCHASE_LINE: String = "NEW COLOR ADDED\nTO YOUR PALETTE."
 
 ## Ships kept for future achievements: the mystery ship never gives them.
 ## Ship numbers as in their names ("ship28" = 28), not array indexes.
-## When one of them gets its Achievement (reward_ship_index = number - 1) it can stay here.
-var reserved_ship_numbers: Array[int] = [4, 13, 15, 17, 27, 28, 30, 31]
+## Every achievement reward ship is listed here too (reward_ship_index = number - 1), as a
+## backup in case an Achievement resource fails to load: add the new one's ship here.
+var reserved_ship_numbers: Array[int] = [2, 3, 4, 5, 7, 8, 13, 15, 17, 27, 28, 30, 31, 35]
 
 ## All loaded items, sorted by `order`.
 var items: Array[ShopItem] = []

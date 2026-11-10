@@ -6,37 +6,22 @@
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_48xlc"]
 [ext_resource type="PackedScene" uid="uid://cwrkymd0iykky" path="res://Scenes/Abduction.tscn" id="2_trj04"]
 [ext_resource type="PackedScene" uid="uid://b3erfay7mn45e" path="res://Scenes/skin_selector.tscn" id="3_5n0dv"]
-[ext_resource type="Texture2D" uid="uid://3m1orbh60ase" path="res://Assets/Sprites/specialthanksbutton.png" id="5_m3bi6"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/play_button.svg" id="5_opfnp"]
+[ext_resource type="Texture2D" uid="uid://bevdyhxlwt5hg" path="res://Assets/Sprites/MainMenu/play_button.svg" id="5_opfnp"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="5_vr1f0"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/play_button_hover.svg" id="6_cp0ys"]
-[ext_resource type="Texture2D" uid="uid://ddpugxe2tluy5" path="res://Assets/Sprites/specialthanksbuttonhover.png" id="6_wyh8j"]
+[ext_resource type="Texture2D" uid="uid://bkfdja5ate8f0" path="res://Assets/Sprites/MainMenu/play_button_hover.svg" id="6_cp0ys"]
 [ext_resource type="Texture2D" uid="uid://2x8p7yh4hu8" path="res://Assets/Sprites/godotlogo.png" id="6_xcoo4"]
 [ext_resource type="Texture2D" uid="uid://cvt1ilue7b0ys" path="res://Assets/Sprites/discordpixelicon.png" id="7_mkpwh"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/quit_button.svg" id="7_yhxw7"]
+[ext_resource type="Texture2D" uid="uid://ce683kepvl856" path="res://Assets/Sprites/MainMenu/quit_button.svg" id="7_yhxw7"]
 [ext_resource type="Texture2D" uid="uid://c80ak2c0el2pn" path="res://Assets/Sprites/discordpixeliconhover.png" id="8_4nkqq"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/quit_button_hover.svg" id="8_trj04"]
-[ext_resource type="Texture2D" uid="uid://bu36jnatqthqb" path="res://Assets/Sprites/github_button.png" id="8_tt8ml"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/credits_button.svg" id="9_5egv6"]
-[ext_resource type="Texture2D" uid="uid://caevxyadicjag" path="res://Assets/Sprites/github_button_hover.png" id="9_fmarx"]
-[ext_resource type="Texture2D" uid="uid://bkdv1633hq14x" path="res://Assets/Sprites/fullscreenbutton.png" id="9_jr6u5"]
-[ext_resource type="Texture2D" uid="uid://lnq6a0woe0n8" path="res://Assets/Sprites/fullscreenbuttonhover.png" id="10_6m47u"]
+[ext_resource type="Texture2D" uid="uid://dw5gwsiisqm35" path="res://Assets/Sprites/MainMenu/quit_button_hover.svg" id="8_trj04"]
+[ext_resource type="Texture2D" uid="uid://bjw8jrqpnrc5r" path="res://Assets/Sprites/MainMenu/credits_button.svg" id="9_5egv6"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="10_16hvj"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/credits_button_hover.svg" id="10_vtepg"]
-[ext_resource type="Texture2D" uid="uid://bkumdi5oetady" path="res://Assets/Sprites/fullscreenbuttonhover1.png" id="11_84iac"]
+[ext_resource type="Texture2D" uid="uid://dqloviuv7d5t1" path="res://Assets/Sprites/MainMenu/credits_button_hover.svg" id="10_vtepg"]
 [ext_resource type="Texture2D" uid="uid://b5cdor227lduo" path="res://Assets/Sprites/ship_button.png" id="12_84iac"]
 [ext_resource type="Texture2D" uid="uid://dkfi27m653fqi" path="res://Assets/Sprites/ship_button_hover.png" id="13_5n0dv"]
 [ext_resource type="PackedScene" uid="uid://cj563pbrl44fc" path="res://Scenes/credits.tscn" id="14_vtepg"]
-[ext_resource type="Texture2D" uid="uid://d3k3im72hadw5" path="res://Assets/Sprites/controlsbutton.png" id="17_hkdq0"]
 [ext_resource type="PackedScene" uid="uid://ctpfllc068qt6" path="res://Scenes/special_thanks.tscn" id="17_wyh8j"]
 [ext_resource type="AudioStream" uid="uid://e74mglwo351x" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="18_4nkqq"]
-[ext_resource type="Texture2D" uid="uid://dw0q6hjbb3chm" path="res://Assets/Sprites/controlsbuttonhover.png" id="18_xcoo4"]
-[ext_resource type="Texture2D" uid="uid://7rtdjn2nxt5n" path="res://Assets/Sprites/cronometer_button.png" id="21_aylim"]
-[ext_resource type="Texture2D" uid="uid://bads1tb0f3f4w" path="res://Assets/Sprites/cronometer_button_hover.png" id="22_y82t1"]
-[ext_resource type="Texture2D" uid="uid://3kekm84e6s7l" path="res://Assets/Sprites/fps_button.png" id="25_bmhhk"]
-[ext_resource type="Texture2D" uid="uid://cofvkwairia8d" path="res://Assets/Sprites/fps_button_hover.png" id="26_pddej"]
-[ext_resource type="Texture2D" uid="uid://deyomkrcmj2xp" path="res://Assets/Sprites/shaders_button_unpressed.png" id="27_ko05x"]
-[ext_resource type="Texture2D" uid="uid://bqgh0umjum2y8" path="res://Assets/Sprites/shaders_button_pressed.png" id="28_43km2"]
 [ext_resource type="Texture2D" uid="uid://b18vj48q8gtf6" path="res://Assets/Sprites/Achievements/achievements_button.png" id="29_achbtn"]
 [ext_resource type="Texture2D" uid="uid://dfxn02dppe7jq" path="res://Assets/Sprites/Achievements/achievements_button_hover.png" id="30_achbtnh"]
 [ext_resource type="PackedScene" path="res://Scenes/achievements.tscn" id="31_achscene"]
@@ -53,19 +38,7 @@
 [ext_resource type="PackedScene" path="res://Scenes/shop.tscn" id="42_shopscene"]
 [ext_resource type="Texture2D" uid="uid://ca1ci560uhe23" path="res://Assets/Sprites/Settings/settings_button.png" id="43_setbtn"]
 [ext_resource type="Texture2D" uid="uid://ccudbe2inl76b" path="res://Assets/Sprites/Settings/settings_button_hover.png" id="44_setbtnh"]
-[ext_resource type="Texture2D" uid="uid://dsmardu8q10nk" path="res://Assets/Sprites/Settings/roll_button.png" id="45_roll"]
-[ext_resource type="Texture2D" uid="uid://bg1328eogbv3a" path="res://Assets/Sprites/Settings/roll_button_pressed.png" id="46_rollp"]
-[ext_resource type="Texture2D" uid="uid://cecdsaqjs6eik" path="res://Assets/Sprites/Settings/roll_button_disabled.png" id="47_rolld"]
-[ext_resource type="Script" path="res://Scripts/UI/volume_row.gd" id="48_volrow"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/settings_panel.tscn" id="60_settings"]
-[ext_resource type="Texture2D" uid="uid://cp0lyic4v7nia" path="res://Assets/Sprites/music_icon.png" id="49_musicicon"]
-[ext_resource type="Texture2D" uid="uid://b21nbsy1pvanx" path="res://Assets/Sprites/sound_icon.png" id="50_soundicon"]
-[ext_resource type="Texture2D" uid="uid://wewd0rykgbgq" path="res://Assets/Sprites/dereasebutton.png" id="51_dec"]
-[ext_resource type="Texture2D" uid="uid://hqqqcwvlavvx" path="res://Assets/Sprites/dereasebutton_pressed.png" id="52_decp"]
-[ext_resource type="Texture2D" uid="uid://2f41284fn4kq" path="res://Assets/Sprites/dereasebutton_hover.png" id="53_dech"]
-[ext_resource type="Texture2D" uid="uid://cii3dm47h4k7y" path="res://Assets/Sprites/increasebutton.png" id="54_inc"]
-[ext_resource type="Texture2D" uid="uid://cmntejg0spyap" path="res://Assets/Sprites/increasebutton_pressed.png" id="55_incp"]
-[ext_resource type="Texture2D" uid="uid://bubqny5o8sh8w" path="res://Assets/Sprites/increasebutton_hover.png" id="56_inch"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_48xlc"]
 atlas = ExtResource("1_28flt")
@@ -123,15 +96,6 @@ animations = [{
 "name": &"default",
 "speed": 2.0
 }]
-
-[sub_resource type="LabelSettings" id="LabelSettings_hkdq0"]
-font = ExtResource("5_vr1f0")
-font_size = 20
-font_color = Color(0, 0.30980393, 0.30980393, 1)
-outline_size = 2
-outline_color = Color(0, 1, 1, 1)
-shadow_size = 5
-shadow_color = Color(0, 0.21176471, 0.21176471, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_mkpwh"]
 font = ExtResource("5_vr1f0")
@@ -234,23 +198,12 @@ position = Vector2(449.00003, 275.00003)
 scale = Vector2(0.86131614, 0.86131614)
 texture = ExtResource("6_xcoo4")
 
-[node name="GithubButton" type="TextureButton" parent="." unique_id=306455585]
-layout_mode = 0
-offset_left = 48.000004
-offset_top = 165.0
-offset_right = 98.0
-offset_bottom = 215.0
-scale = Vector2(1.3591198, 1.2314774)
-texture_normal = ExtResource("8_tt8ml")
-texture_pressed = ExtResource("9_fmarx")
-texture_hover = ExtResource("9_fmarx")
-
 [node name="DiscordButton" type="TextureButton" parent="." unique_id=351157286]
 layout_mode = 0
-offset_left = 115.0
-offset_top = 176.0
-offset_right = 1139.0
-offset_bottom = 1200.0
+offset_left = 81.0
+offset_top = 173.0
+offset_right = 1105.0
+offset_bottom = 1197.0
 scale = Vector2(0.05017208, 0.05017208)
 texture_normal = ExtResource("7_mkpwh")
 texture_pressed = ExtResource("8_4nkqq")
@@ -302,22 +255,12 @@ texture_normal = ExtResource("43_setbtn")
 texture_pressed = ExtResource("44_setbtnh")
 texture_hover = ExtResource("44_setbtnh")
 
-[node name="GithubLabel" type="Label" parent="." unique_id=1823666510]
-layout_mode = 0
-offset_left = 57.000004
-offset_top = 219.0
-offset_right = 132.0
-offset_bottom = 235.0
-scale = Vector2(0.6912037, 0.6912037)
-text = "CONTRIBUTE!"
-label_settings = SubResource("LabelSettings_hkdq0")
-
 [node name="DiscordLabel" type="Label" parent="." unique_id=393501622]
 layout_mode = 0
-offset_left = 115.0
-offset_top = 219.0
-offset_right = 195.0
-offset_bottom = 235.0
+offset_left = 81.0
+offset_top = 217.0
+offset_right = 161.0
+offset_bottom = 233.0
 scale = Vector2(0.69024044, 0.69024044)
 text = "JOIN DISCORD!"
 label_settings = SubResource("LabelSettings_mkpwh")
