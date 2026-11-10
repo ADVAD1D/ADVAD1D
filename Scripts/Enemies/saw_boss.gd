@@ -132,7 +132,7 @@ var _cooldown_scale: float = 1.0
 var _player: Node2D
 var _health_bar: BossHealthBar
 var _beam_shape: RectangleShape2D = RectangleShape2D.new()
-## Per cannon: [aim line, glow, core]
+## Per cannon: [aim line (Line2D), glow (Polygon2D), core (Polygon2D)]
 var _beam_lines: Array = []
 ## Per beam: its sweep arrows (Polygon2D), one per SWEEP_ARROW_DISTANCES.
 var _sweep_arrows: Array = []
@@ -376,8 +376,8 @@ func _beam(delta: float, speed_mult: float) -> void:
 		var dir: Vector2 = _cannon_dir(i)
 		var from: Vector2 = _muzzle(i)
 		var end: Vector2 = _cast(global_position, dir)
-		var glow: Line2D = _beam_lines[i][1]
-		var core: Line2D = _beam_lines[i][2]
+		var glow: Polygon2D = _beam_lines[i][1]
+		var core: Polygon2D = _beam_lines[i][2]
 		# Pressed against a wall: the cannon is past it, no beam on that side
 		if (end - global_position).dot(dir) <= (from - global_position).dot(dir):
 			glow.visible = false
@@ -387,10 +387,9 @@ func _beam(delta: float, speed_mult: float) -> void:
 		_destroy_targets(from, end, dir)
 		glow.visible = true
 		core.visible = true
-		_set_line(glow, from, end)
-		_set_line(core, from, end)
-		glow.width = beam_width * 3.0 * flicker
-		core.width = beam_width * flicker
+		var reach: float = (end - global_position).dot(dir)
+		_set_beam(glow, from, dir, reach, beam_width * 3.0 * flicker)
+		_set_beam(core, from, dir, reach, beam_width * flicker)
 	# Phase two also fires the vents while the beams sweep
 	if _phase_two:
 		_shot_timer -= delta
@@ -509,8 +508,8 @@ func _destroy_targets(from: Vector2, to: Vector2, dir: Vector2) -> void:
 func _build_beam_lines() -> void:
 	for i in 2 + 2 * extra_beams_at.size():
 		var aim: Line2D = _make_line(4.0, Color(1.0, 0.25, 0.32, 0.9))
-		var glow: Line2D = _make_line(beam_width * 3.0, Color(1.0, 0.12, 0.22, 0.4))
-		var core: Line2D = _make_line(beam_width, Color(1.0, 0.86, 0.88, 1.0))
+		var glow: Polygon2D = _make_beam(Color(1.0, 0.12, 0.22, 0.4))
+		var core: Polygon2D = _make_beam(Color(1.0, 0.86, 0.88, 1.0))
 		_beam_lines.append([aim, glow, core])
 		var arrows: Array[Polygon2D] = []
 		for _k in SWEEP_ARROW_DISTANCES.size():
@@ -567,6 +566,35 @@ func _make_line(width: float, color: Color) -> Line2D:
 
 func _set_line(line: Line2D, from: Vector2, to: Vector2) -> void:
 	line.points = PackedVector2Array([to_local(from), to_local(to)])
+
+
+## A fired beam's glow or core: a quad redrawn by _set_beam.
+func _make_beam(color: Color) -> Polygon2D:
+	var beam: Polygon2D = Polygon2D.new()
+	beam.color = color
+	beam.z_index = -1  # under the boss
+	beam.visible = false
+	add_child(beam)
+	return beam
+
+
+## Draws a beam `width` wide from the muzzle `from` along `dir` as a quad whose two long
+## edges each end where their own ray meets a wall. A thick line only stops its centre
+## there: sweeping past a slanted wall, its outer edge (and its round cap) went through it.
+## `reach` is the centre's distance to the wall from the boss's centre, along `dir`.
+func _set_beam(beam: Polygon2D, from: Vector2, dir: Vector2, reach: float, width: float) -> void:
+	var side: Vector2 = dir.orthogonal() * (width * 0.5)
+	var start: float = (from - global_position).dot(dir)
+	var ends: Array[Vector2] = []
+	for offset: Vector2 in [-side, side]:
+		var origin: Vector2 = global_position + offset
+		var edge_reach: float = (_cast(origin, dir) - origin).dot(dir)
+		# An edge that slips past a corner (or misses every wall) isn't drawn further than
+		# a little past the centre's hit: shorter is fine, poking out isn't
+		edge_reach = clampf(edge_reach, start, reach + width * 4.0)
+		ends.append(origin + dir * edge_reach)
+	beam.polygon = PackedVector2Array([to_local(from - side), to_local(ends[0]),
+			to_local(ends[1]), to_local(from + side)])
 
 
 func _hide_beams() -> void:
