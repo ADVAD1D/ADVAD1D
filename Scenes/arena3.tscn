@@ -351,6 +351,7 @@ scale = Vector2(1.29883, 1.29883)
 script = ExtResource("3_jjvhh")
 asteroid_scene = ExtResource("4_kry3j")
 player_node = NodePath("../PlayerInstance")
+arcade_wait_time = 0.3
 
 [node name="Timer" type="Timer" parent="AsteroidSpawner" unique_id=1962402699]
 wait_time = 0.11

@@ -64,6 +64,7 @@ var arena_playlists = {
 		preload("res://Assets/Audio/Music/psychronic-continued-investigation-21863.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-unknown-realm-147409.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-internal-reflection-21325.ogg"),
+		preload("res://Assets/Audio/Music/psychronic-futuristic-resources-21861.ogg"),
 	]
 }
 

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Achievement" format=3]
+
+[ext_resource type="Script" path="res://Scripts/Achievements/achievement.gd" id="1_ach"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/icon_arena3.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_ach")
+id = &"arena_3_reached"
+title = "FINAL FRONTIER"
+description = "REACH ARENA 03"
+icon = ExtResource("2_icon")
+goal_type = 2
+progress_format = 2
+reward_ship_index = 30
+order = -1

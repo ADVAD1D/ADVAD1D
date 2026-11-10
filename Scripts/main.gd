@@ -62,6 +62,9 @@ func _ready() -> void:
 	# straight from the editor unlocks it too.
 	if arena_index == 1:
 		AchievementManager.unlock(&"arena_2_reached")
+	# FINAL FRONTIER: reaching arena 3 (ship 31)
+	elif arena_index == 2:
+		AchievementManager.unlock(&"arena_3_reached")
 	base_zoom = cam.zoom
 	player.died.connect(_on_player_died) # Replace with function body.
 	player.connect("dash", Callable(self, "_on_player_dashed"))

@@ -6,8 +6,18 @@ extends Marker2D
 @export var player_node: CharacterBody2D
 @export var safe_radius: float = 1250.0
 @export var speed_multiplier: float = 1.0
+## Arcade mode only: seconds between asteroids, replacing the Timer's wait_time.
+## 0 keeps the Timer's value (arena 3 sets it so arcade isn't flooded with asteroids).
+@export var arcade_wait_time: float = 0.0
 
 @onready var timer: Timer = $Timer
+
+func _ready() -> void:
+	if GameManager.arcade_mode_active and arcade_wait_time > 0.0:
+		timer.wait_time = arcade_wait_time
+		# The Timer autostarted with the old value before this _ready: restart it
+		if not timer.is_stopped():
+			timer.start()
 
 func create_asteroid():
 	if not is_instance_valid(player_node):
