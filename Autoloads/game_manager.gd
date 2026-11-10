@@ -25,6 +25,11 @@ var current_arena_index: int = 0
 ## past the middle of its bar; -1 = none. Lives here so it survives the death reload, and
 ## is cleared when the boss is beaten or a new run / arena starts. Not saved to disk.
 var boss_checkpoint_health: int = -1
+## The boss of a boss arena is beaten: the arena is played again as normal phases (same
+## enemies and values as arcade, but with the main mode's phase retries). Set by
+## PhaseManager, survives the reloads; cleared by a new run and by the test room cinematic.
+## Not saved to disk.
+var post_boss_phases: bool = false
 var arena_names: Array[String] = ["Arena 1", "Arena 2", "Arena 3"]
 ## UI colour of each arena (ArenaUiTint), as a hue rotation in degrees of the original
 ## cyan/blue UI: arena 1 = 0 (blue), arena 2 = -60 (green), arena 3 = 180 (red).
@@ -453,6 +458,7 @@ func reset_game_state():
 	current_arena_index = 0
 	arcade_mode_active = false
 	boss_checkpoint_health = -1
+	post_boss_phases = false
 	reset_score()
 
 var _transition_layer: CanvasLayer

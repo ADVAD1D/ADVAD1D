@@ -25,13 +25,13 @@ func _enter_tree() -> void:
 	GameManager.current_arena_index = arena_index
 	_place_arcade_start()
 
-## Arcade only: if the arena has an "ArcadePlayerStart" marker, the player (and the camera)
-## start there instead of at the scene's position. Arena 3: the main mode starts low, away
-## from the boss, but in arcade that is right on the enemies' spawn path, so arcade starts
-## in the middle. Done in _enter_tree, before the children's _ready: the first wave
-## (PhaseManager) already keeps its spawns away from the player's position.
+## Arcade (and the phases after a boss): if the arena has an "ArcadePlayerStart" marker, the
+## player (and the camera) start there instead of at the scene's position. Arena 3: the boss
+## fight starts low, away from the boss, but with phases that is right on the enemies' spawn
+## path, so they start in the middle. Done in _enter_tree, before the children's _ready: the
+## first wave (PhaseManager) already keeps its spawns away from the player's position.
 func _place_arcade_start() -> void:
-	if not GameManager.arcade_mode_active:
+	if not (GameManager.arcade_mode_active or GameManager.post_boss_phases):
 		return
 	var start: Node2D = get_node_or_null("ArcadePlayerStart") as Node2D
 	var player_node: Node2D = get_node_or_null("PlayerInstance") as Node2D

@@ -42,6 +42,7 @@
 [ext_resource type="PackedScene" path="res://Scenes/triple_shot.tscn" id="85_triple_shot"]
 [ext_resource type="PackedScene" path="res://Scenes/quad_laser_pickup.tscn" id="86_quad_pickup"]
 [ext_resource type="PackedScene" path="res://Scenes/quad_laser.tscn" id="87_quad_laser"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="88_font"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_s8vy0"]
 shader = ExtResource("5_nwwfm")
@@ -244,6 +245,15 @@ scale_max = 30.0
 scale_curve = SubResource("CurveTexture_nwwfm")
 color_ramp = SubResource("GradientTexture1D_jkdf5")
 color_initial_ramp = SubResource("GradientTexture1D_6iyac")
+
+[sub_resource type="LabelSettings" id="LabelSettings_countdown"]
+font = ExtResource("88_font")
+font_size = 64
+font_color = Color(0.17, 0, 0.02, 1)
+outline_size = 4
+outline_color = Color(1, 0.1, 0.2, 1)
+shadow_size = 10
+shadow_color = Color(0.16, 0, 0.02, 0.7411765)
 
 [sub_resource type="Curve2D" id="Curve2D_wsu2k"]
 _data = {
@@ -489,6 +499,8 @@ saw_enemy_spawner = NodePath("../SawSpawner")
 mini_boss_spawner = NodePath("../MiniBossSpawner")
 boss_scene = ExtResource("80_gemela")
 boss_spawn = NodePath("../BossSpawn")
+countdown_settings = SubResource("LabelSettings_countdown")
+boss_defeated_stat = &"gemela_kills"
 wall_to_remove = NodePath("../Walls/WallStartBridge")
 sprite_to_remove = NodePath("../LaserWallAnimation")
 nodes_to_remove = [NodePath("../LaserZone/StartBridge")]

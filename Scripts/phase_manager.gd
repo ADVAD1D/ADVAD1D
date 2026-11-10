@@ -22,11 +22,20 @@ signal timer_updated(time_left_string)
 @export var mini_boss_spawner: Node2D
 
 @export_group("Boss")
-## Boss arena: in the main mode this boss replaces the phases (no timer, no score goal) and
-## beating it wins the arena. Arcade mode ignores it and plays the phases as usual.
+## Boss arena: in the main mode this boss comes before the phases (no timer, no score goal);
+## beating it starts the phases (see post_boss_countdown). Arcade mode ignores it and plays
+## the phases as usual.
 @export var boss_scene: PackedScene
 ## Where the boss appears (and wanders around).
 @export var boss_spawn: Node2D
+## Seconds of the countdown shown after the boss is beaten; then the arena reloads as normal
+## phases (GameManager.post_boss_phases), and clearing them wins it. 0 = beating the boss
+## wins the arena right away.
+@export var post_boss_countdown: float = 5.0
+## Style of that countdown (like the tutorials' countdown).
+@export var countdown_settings: LabelSettings
+## Stat added when the boss is beaten (main mode), e.g. for an achievement.
+@export var boss_defeated_stat: StringName = &""
 @export_group("")
 
 @export var phase_cooldown_timer: float = 1.0 # = 1.0
@@ -102,8 +111,8 @@ var arena_enemy_configs = {
 		
 	2: { "min_shoot": 0.3, 
 		"max_shoot": 0.6, 
-		"min_ship": 4.0, 
-		"max_ship": 5.0, 
+		"min_ship": 3.0, 
+		"max_ship": 4.0, 
 		"max_saw": 4.0, 
 		"min_ship_spd": 300.0, 
 		"max_ship_spd": 600.0, 
@@ -111,7 +120,8 @@ var arena_enemy_configs = {
 		"sep_strength": 300.0, 
 		"can_retreat": true, 
 		"fire_range": 2000.0,
-		# Arcade only (the main mode is the boss fight): small GEMELAs {from phase: how many}
+		# Arcade and the phases after the boss (the main mode starts with the boss fight):
+		# small GEMELAs {from phase: how many}
 		"mini_boss": {1: 1, 6: 2} }
 }
 
@@ -141,16 +151,16 @@ var arena_phase_requirements = {
 		10: 10000 },
 	
 	2: { 
-		1: 2000, 
-		2: 4000, 
-		3: 6000, 
-		4: 8000, 
-		5: 10000, 
-		6: 12000, 
-		7: 14000, 
-		8: 16000, 
-		9: 18000, 
-		10: 20000 }
+		1: 1500, 
+		2: 2500, 
+		3: 3500, 
+		4: 4500, 
+		5: 5500, 
+		6: 6500, 
+		7: 7500, 
+		8: 8500, 
+		9: 9500, 
+		10: 10500 }
 }
 
 var arena_phase_durations = {
@@ -179,15 +189,15 @@ var arena_phase_durations = {
 		10: 105.0 },
 		
 	2: { 
-		1: 20.0, 
-		2: 25.0, 
-		3: 30.0, 
-		4: 40.0, 
-		5: 50.0, 
-		6: 60.0, 
-		7: 70.0, 
-		8: 80.0, 
-		9: 90.0, 
+		1: 25.0, 
+		2: 30.0, 
+		3: 40.0, 
+		4: 50.0, 
+		5: 60.0, 
+		6: 70.0, 
+		7: 80.0, 
+		8: 90.0, 
+		9: 100.0, 
 		10: 110.0 }
 }
 
@@ -198,6 +208,8 @@ var is_phase_active: bool = false
 var last_time_string: String = ""
 var last_seconds_int: int = -1
 var restart_from_phase: bool = true
+var _countdown_timer: Timer
+var _countdown_label: Label
 
 func _ready() -> void:
 	GameManager.score_updated.connect(_on_score_updated)
@@ -225,6 +237,9 @@ func _process(delta: float) -> void:
 	if GameManager.show_debug_menu:
 		if is_instance_valid(background_sprite) and background_sprite.material != null:
 			DebugMenu.track("Arena Grayscale", "%.2f" % background_sprite.material.get_shader_parameter("grayscale_amount"))
+
+	if is_instance_valid(_countdown_label) and is_instance_valid(_countdown_timer):
+		_countdown_label.text = "%0.1f" % _countdown_timer.time_left
 
 	if not is_phase_active:
 		return
@@ -348,13 +363,15 @@ func _win_arena() -> void:
 
 # --- Boss arena ---------------------------------------------------------------------
 
+## Arcade and the phases after the boss (post_boss_phases) skip the boss fight.
 func _is_boss_fight() -> bool:
-	return boss_scene != null and not GameManager.arcade_mode_active
+	return boss_scene != null and not GameManager.arcade_mode_active \
+			and not GameManager.post_boss_phases
 
 ## Main mode of a boss arena: no phase timer or score goal, only the boss. A death reloads
-## the scene and the fight starts over (phase_to_start stays 1); once it is beaten
-## phase_to_start goes past the last table phase, so a reload keeps the arena won.
-## Asteroids and powerups keep coming as usual.
+## the scene and the fight starts over (phase_to_start stays 1). Once it is beaten the
+## arena reloads as phases (post_boss_countdown > 0), or phase_to_start goes past the last
+## table phase so a reload keeps the arena won. Asteroids and powerups keep coming as usual.
 func _start_boss_fight() -> void:
 	if GameManager.phase_to_start > _last_table_phase():
 		_win_arena()
@@ -374,9 +391,63 @@ func _start_boss_fight() -> void:
 		time_bar_container.visible = false
 
 func _on_boss_defeated() -> void:
-	GameManager.phase_to_start = _last_table_phase() + 1
 	success_sound.play()
-	_win_arena()
+	if boss_defeated_stat != &"":
+		AchievementManager.add_stat(boss_defeated_stat)
+	if post_boss_countdown <= 0.0:
+		GameManager.phase_to_start = _last_table_phase() + 1
+		_win_arena()
+		return
+	_start_post_boss_countdown()
+
+## After the boss: a countdown, then the scene reloads as normal phases from phase 1. The
+## state is set right away, so a death during the countdown also reloads into the phases.
+## No new asteroids meanwhile.
+func _start_post_boss_countdown() -> void:
+	GameManager.post_boss_phases = true
+	GameManager.phase_to_start = 1
+	if is_instance_valid(asteroids_spawner):
+		asteroids_spawner.stop()
+
+	_countdown_timer = Timer.new()
+	_countdown_timer.one_shot = true
+	_countdown_timer.wait_time = post_boss_countdown
+	_countdown_timer.timeout.connect(_on_post_boss_countdown_finished)
+	add_child(_countdown_timer)
+	_countdown_timer.start()
+
+	# Centre of the screen (the bottom has the HUD's own timer); anchored so it stays
+	# centred when a phone widens the viewport
+	_countdown_label = Label.new()
+	_countdown_label.label_settings = countdown_settings
+	_countdown_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_countdown_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_countdown_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_countdown_label.anchor_left = 0.5
+	_countdown_label.anchor_right = 0.5
+	_countdown_label.anchor_top = 0.5
+	_countdown_label.anchor_bottom = 0.5
+	_countdown_label.offset_left = -84.0
+	_countdown_label.offset_right = 84.0
+	_countdown_label.offset_top = -24.0
+	_countdown_label.offset_bottom = 24.0
+	_countdown_label.pivot_offset = Vector2(84.0, 24.0)
+	_countdown_label.scale = Vector2(0.6135, 0.6135)
+	_countdown_label.text = "%0.1f" % post_boss_countdown
+	var ui_layer: Node = get_node_or_null("../UILayer")
+	if ui_layer:
+		ui_layer.add_child(_countdown_label)
+		# Under the CRT overlay, like the HUD
+		ui_layer.move_child(_countdown_label, 1)
+
+func _on_post_boss_countdown_finished() -> void:
+	# A player dying right now is already reloading the scene (into the phases)
+	if is_instance_valid(player_node) and player_node.get("player_died"):
+		return
+	_log_message("Boss beaten: the arena restarts as phases")
+	GameManager.is_shader_animation = true
+	GameManager.is_glitch_sound = true
+	get_tree().call_deferred("reload_current_scene")
 
 func _on_score_updated(new_score: int):
 	_log_message(["Score Update: ", new_score])

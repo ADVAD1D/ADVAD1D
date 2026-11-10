@@ -85,6 +85,7 @@ func _finish() -> void:
 	# Arena 2's win leaves phase_to_start past its last phase: arena 3 starts from phase 1
 	GameManager.phase_to_start = 1
 	GameManager.boss_checkpoint_health = -1
+	GameManager.post_boss_phases = false
 	GameManager.reset_score()
 	if next_scene:
 		get_tree().change_scene_to_packed(next_scene)
