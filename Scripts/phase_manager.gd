@@ -111,8 +111,8 @@ var arena_enemy_configs = {
 		
 	2: { "min_shoot": 0.3, 
 		"max_shoot": 0.6, 
-		"min_ship": 3.0, 
-		"max_ship": 4.0, 
+		"min_ship": 2.0, 
+		"max_ship": 3.0, 
 		"max_saw": 4.0, 
 		"min_ship_spd": 300.0, 
 		"max_ship_spd": 600.0, 
