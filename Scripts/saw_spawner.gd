@@ -5,7 +5,9 @@ extends Node2D
 @export var portal_scene: PackedScene
 @export var player_node: CharacterBody2D
 @export var spawn_locator_node: PathFollow2D
-@export var safe_spawn_radius: float = 100.0
+## No saw appears closer than this to the player (world units; the arenas' camera zoom is
+## 0.25, so 500 is about 125 screen pixels). Rejected points retry every RETRY_DELAY.
+@export var safe_spawn_radius: float = 500.0
 @export var spawn_timeout: float = 1.0
 
 var max_enemies: int = 2
