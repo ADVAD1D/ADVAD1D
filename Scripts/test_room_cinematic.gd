@@ -1,5 +1,7 @@
 extends Node2D
-## Test room cinematic: the commander talks to adnex over the test room illustration.
+## Commander cinematic over an illustration: the test room briefing before arena 3
+## (test_room_cinematic.tscn) and the end of the simulation after it (monitor_cinematic.tscn,
+## the monitor illustration). Each scene sets its own illustration, lines and next_scene.
 ##
 ## The illustration fills the screen with some room to spare and pans slowly from its
 ## right edge to its left one. The lines play in the shared CinematicDialogue box (Enter
@@ -81,6 +83,10 @@ func _finish() -> void:
 	fade_out.tween_property(illustration, "modulate:a", 0.0, fade_out_duration)
 	MusicPlayer.fade_out_and_stop(fade_out_duration)
 	await fade_out.finished
+	# The music's fade ends with stop(): let it finish first, or it would stop the next
+	# scene's song (the ending after the monitor cinematic)
+	while MusicPlayer.is_fading:
+		await get_tree().process_frame
 	GameManager.can_pause = true
 	# Arena 2's win leaves phase_to_start past its last phase: arena 3 starts from phase 1
 	GameManager.phase_to_start = 1

@@ -43,6 +43,7 @@
 [ext_resource type="PackedScene" path="res://Scenes/quad_laser_pickup.tscn" id="86_quad_pickup"]
 [ext_resource type="PackedScene" path="res://Scenes/quad_laser.tscn" id="87_quad_laser"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="88_font"]
+[ext_resource type="PackedScene" path="res://Scenes/monitor_cinematic.tscn" id="89_monitor"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_s8vy0"]
 shader = ExtResource("5_nwwfm")
@@ -570,7 +571,7 @@ script = ExtResource("83_powerup_spawner")
 pickup_scene = ExtResource("84_triple_pickup")
 reward_scene = ExtResource("85_triple_shot")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
-upgrade_stat = &""
+upgrade_stat = &"triple_shot"
 
 [node name="Timer" type="Timer" parent="TripleShotSpawner" unique_id=205415795]
 wait_time = 25.0
@@ -596,6 +597,7 @@ rotation = 0.9428196
 
 [node name="TriggerScene" parent="." unique_id=2123189546 instance=ExtResource("24_3pmx8")]
 position = Vector2(-15, 4436)
+target_scene_path = ExtResource("89_monitor")
 
 [connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
 [connection signal="area_entered" from="DeathZone" to="." method="_on_death_zone_area_entered"]

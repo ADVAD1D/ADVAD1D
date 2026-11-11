@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://d4g7oeya88han"]
+
+[ext_resource type="Script" uid="uid://cke4ki7k3e7s4" path="res://Scripts/test_room_cinematic.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://cptq0ygvxf0f2" path="res://Scenes/credits_roll.tscn" id="2_credits"]
+[ext_resource type="Texture2D" uid="uid://cun7vnqbse3as" path="res://Assets/Sprites/sim_monitor.png" id="3_art"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/cinematic_dialogue.tscn" id="4_dialogue"]
+[ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="5_crt"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("5_crt")
+shader_parameter/overlay = true
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/brightness = 5.0
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.03
+shader_parameter/grille_opacity = 0.50000002375
+shader_parameter/roll = true
+shader_parameter/roll_speed = 3.0
+shader_parameter/roll_size = 5.0
+shader_parameter/roll_variation = 0.5
+shader_parameter/distort_intensity = 0.02
+shader_parameter/aberration = 0.01000004797499998
+shader_parameter/noise_opacity = 0.10000000475
+shader_parameter/noise_speed = 2.0
+shader_parameter/static_noise_intensity = 0.0
+shader_parameter/pixelate = false
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.2000000095
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.5
+shader_parameter/vignette_opacity = 1.0
+shader_parameter/low_quality = false
+
+[node name="MonitorCinematic" type="Node2D" unique_id=81921058]
+script = ExtResource("1_script")
+next_scene = ExtResource("2_credits")
+
+[node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=754692170]
+layer = -1
+
+[node name="Black" type="ColorRect" parent="BackgroundLayer" unique_id=82630948]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Illustration" type="Sprite2D" parent="." unique_id=551609714]
+texture = ExtResource("3_art")
+centered = false
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=1342892553]
+
+[node name="Dialogue" parent="UILayer" unique_id=1511932103 instance=ExtResource("4_dialogue")]
+
+[node name="CRT" type="ColorRect" parent="UILayer" unique_id=250878550]
+material = SubResource("ShaderMaterial_crt")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

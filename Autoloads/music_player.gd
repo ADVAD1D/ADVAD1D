@@ -28,6 +28,7 @@ var scene1_specific_playlist: Dictionary = {
 	"res://Scenes/ai_console.tscn": preload("res://Assets/Audio/Music/psychronic-hypnotic-crystals-415889.ogg"),
 	"res://Scenes/UI/ai_console_subviewport.tscn": preload("res://Assets/Audio/Music/psychronic-hypnotic-crystals-415889.ogg"),
 	"res://Scenes/test_room_cinematic.tscn": preload("res://Assets/Audio/Music/psychronic-somber-monolith-408777.ogg"),
+	"res://Scenes/monitor_cinematic.tscn": preload("res://Assets/Audio/Music/psychronic-somber-monolith-408777.ogg"),
 }
 
 @onready var sfx_player: AudioStreamPlayer = $SFXPlayer
