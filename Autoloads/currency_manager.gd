@@ -7,6 +7,8 @@ signal diamonds_changed(total: int)
 
 const SAVE_PATH: String = "user://wallet.json"
 const AUTOSAVE_INTERVAL: float = 5.0
+## Most diamonds the wallet holds: anything earned past it is lost.
+const MAX_DIAMONDS: int = 1000000
 
 var diamonds: int = 0
 ## Every diamond ever earned (spending doesn't lower it). Handy for stats/achievements.
@@ -35,6 +37,8 @@ func _notification(what: int) -> void:
 
 
 func add_diamonds(amount: int) -> void:
+	# Capped at MAX_DIAMONDS (a full wallet takes nothing)
+	amount = mini(amount, MAX_DIAMONDS - diamonds)
 	if amount <= 0:
 		return
 	diamonds += amount
@@ -78,7 +82,7 @@ func _load_wallet() -> void:
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
 	if typeof(data) != TYPE_DICTIONARY:
 		return
-	diamonds = maxi(int(data.get("diamonds", 0)), 0)
+	diamonds = clampi(int(data.get("diamonds", 0)), 0, MAX_DIAMONDS)
 	lifetime_diamonds = maxi(int(data.get("lifetime", diamonds)), diamonds)
 	_log_message(["Wallet loaded:", diamonds, "diamonds"])
 
