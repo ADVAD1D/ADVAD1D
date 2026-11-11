@@ -34,6 +34,7 @@ shader_parameter/low_quality = false
 [node name="MonitorCinematic" type="Node2D" unique_id=81921058]
 script = ExtResource("1_script")
 next_scene = ExtResource("2_credits")
+lines = PackedStringArray("Simulation complete. Congratulations on passing every trial.", "You will now be sent to a real training test.", "SEND IN THE NEXT ONE!")
 
 [node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=754692170]
 layer = -1

@@ -10,20 +10,9 @@ extends Node2D
 
 @export var next_scene: PackedScene
 @export var speaker_name: String = "COMMANDER"
-@export var lines: PackedStringArray = [
-	"Second test completed successfully, soldier.",
-	"We are impressed by the skill you have shown in the first two battle arenas.",
-	"What comes next will be the ultimate test: a deadly enemy.",
-	"Not the simple robots you have been dealing with all this time.",
-	"We want to guarantee excellence in this organization.",
-	"Your results will be used to strengthen future trials for other soldiers.",
-	"We will collect your endurance, your reaction times, your behavior and your overall way of piloting.",
-	"The simulator's artificial intelligence will improve based on the experiences and use of all of you.",
-	"Handling your ship will always feel very close to the simulator experience.",
-	"In the next phase of the trial, you will face a single threat.",
-	"You need to put into practice everything you have learned so far.",
-	"Good luck in arena 3.",
-]
+## Set in each scene (no default, so a scene that loses them doesn't show another scene's
+## lines: it warns and skips to next_scene).
+@export var lines: PackedStringArray = []
 ## Seconds the pan takes from the right edge of the illustration to the left one.
 @export var pan_duration: float = 40.0
 ## Minimum horizontal travel of the pan, in viewport pixels.
@@ -48,8 +37,13 @@ func _ready() -> void:
 	var fade_in: Tween = create_tween()
 	fade_in.tween_property(illustration, "modulate:a", 1.0, fade_in_duration)
 	await fade_in.finished
-	if not _finished:
-		dialogue.play(lines, speaker_name)
+	if _finished:
+		return
+	if lines.is_empty():
+		push_warning("Cinematic without lines: " + scene_file_path)
+		_finish()
+		return
+	dialogue.play(lines, speaker_name)
 
 
 ## Scales the illustration to cover the visible area (wider screens on phones too) with
