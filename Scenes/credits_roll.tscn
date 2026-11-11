@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://cptq0ygvxf0f2"]
+
+[ext_resource type="Script" uid="uid://dhpdm2b7efmpu" path="res://Scripts/credits_roll.gd" id="1_roll"]
+[ext_resource type="Script" uid="uid://b85qrbi75j128" path="res://Scripts/UI/starfield.gd" id="2_stars"]
+[ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="3_font"]
+[ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="4_crt"]
+[ext_resource type="Texture2D" uid="uid://mo8x4kjjhpeb" path="res://Assets/Sprites/logoascii.png" id="5_logo"]
+[ext_resource type="Texture2D" uid="uid://bgs2sn1qmqdrc" path="res://Assets/Sprites/ADVADLOGODEF.png" id="6_advad"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font = ExtResource("3_font")
+font_size = 24
+font_color = Color(0, 0.09, 0.1, 1)
+outline_size = 2
+outline_color = Color(0.13725491, 1, 1, 1)
+shadow_size = 3
+shadow_color = Color(0, 0.43529412, 0.53333336, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_text"]
+font = ExtResource("3_font")
+font_size = 20
+font_color = Color(0, 0.19607843, 0.19607843, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_small"]
+font = ExtResource("3_font")
+font_color = Color(0, 0.19607843, 0.19607843, 1)
+outline_size = 2
+outline_color = Color(0, 1, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("4_crt")
+shader_parameter/overlay = true
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/brightness = 5.0
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.03
+shader_parameter/grille_opacity = 0.50000002375
+shader_parameter/roll = true
+shader_parameter/roll_speed = 3.0
+shader_parameter/roll_size = 5.0
+shader_parameter/roll_variation = 0.5
+shader_parameter/distort_intensity = 0.02
+shader_parameter/aberration = 0.01000004797499998
+shader_parameter/noise_opacity = 0.10000000475
+shader_parameter/noise_speed = 2.0
+shader_parameter/static_noise_intensity = 0.0
+shader_parameter/pixelate = false
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.2000000095
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.25
+shader_parameter/vignette_opacity = 0.6
+shader_parameter/low_quality = false
+
+[node name="CreditsRoll" type="Control" unique_id=148654855]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_roll")
+title_settings = SubResource("LabelSettings_title")
+heading_settings = SubResource("LabelSettings_title")
+text_settings = SubResource("LabelSettings_text")
+small_settings = SubResource("LabelSettings_small")
+end_logo = ExtResource("5_logo")
+title_logo = ExtResource("6_advad")
+
+[node name="Starfield" type="Control" parent="." unique_id=1440401807]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_stars")
+background = Color(0.008, 0.07, 0.08, 1)
+big_star_color = Color(0.06, 0.29, 0.31, 1)
+trail_head = Color(0.36, 0.6, 0.62, 1)
+trail_tail = Color(0.05, 0.15, 0.17, 1)
+
+[node name="Lines" type="VBoxContainer" parent="." unique_id=1691757934]
+layout_mode = 0
+offset_right = 520.0
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=972334617]
+
+[node name="ColorRect" type="ColorRect" parent="UILayer" unique_id=258367019]
+material = SubResource("ShaderMaterial_crt")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1907.0
+offset_top = -1715.0
+offset_right = 1414.0
+offset_bottom = 3796.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Fade" type="ColorRect" parent="UILayer" unique_id=1829861103]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)

@@ -20,6 +20,7 @@ var no_music_scenes = [
 var scene1_specific_playlist: Dictionary = {
 	"res://Scenes/Abduction.tscn": preload("res://Assets/Audio/Music/circuit-pathway-387799.ogg"),
 	"res://Scenes/ending.tscn": preload("res://Assets/Audio/Music/star-runner-411375.ogg"),
+	"res://Scenes/credits_roll.tscn": preload("res://Assets/Audio/Music/psychronic-moon-rider-481779.ogg"),
 	"res://Scenes/main_menu.tscn": preload("res://Assets/Audio/Music/in-time-all-hope-was-lost-411362.ogg"),
 	"res://Scenes/skin_selector.tscn": preload("res://Assets/Audio/Music/where-we-used-to-be-415885.ogg"),
 	"res://Scenes/achievements.tscn": preload("res://Assets/Audio/Music/psychronic-ascension-theory-520113.ogg"),
