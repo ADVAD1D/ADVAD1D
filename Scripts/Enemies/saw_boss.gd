@@ -48,11 +48,18 @@ const EXPLOSION_SOUND: PackedScene = preload(
 @export var explosion_particles: PackedScene
 
 @export_group("Movement")
-@export var move_speed: float = 260.0
+@export var move_speed: float = 320.0
 ## GEMELA wanders around the point it spawned at, inside this ellipse (world units).
 @export var wander_radius: Vector2 = Vector2(550.0, 380.0)
 ## How much each new wander point leans towards the player (0 = none, 1 = on the player).
 @export var follow_player: float = 0.3
+## Each new wander point is at least this far from where it is, so it never hovers in place
+## (an easy target from afar).
+@export var min_wander_step: float = 400.0
+## Seconds before it picks a new wander point even if it hasn't got there (random x..y).
+@export var wander_time: Vector2 = Vector2(1.5, 2.5)
+## Speed kept while charging and firing the beams (fraction of move_speed).
+@export_range(0.0, 1.0) var attack_move_factor: float = 0.65
 ## The mini chases the player instead, with this acceleration (like the saws).
 @export var acceleration: float = 2.0
 
@@ -304,24 +311,34 @@ func _move(delta: float, speed_mult: float) -> void:
 		_pick_wander_target()
 	var speed: float = move_speed * speed_mult
 	if _state == State.BEAM or _state == State.CHARGE:
-		speed *= 0.3
+		speed *= attack_move_factor
 	var wanted: Vector2 = global_position.direction_to(_wander_target) * speed
 	_velocity = _velocity.lerp(wanted, 1.0 - exp(-2.5 * delta))
 	global_position += _velocity * delta
 
 
-## A random point in the wander ellipse, leaning towards the player.
+## A random point in the wander ellipse, leaning towards the player, at least
+## min_wander_step away (the farthest of a few tries if none is).
 func _pick_wander_target() -> void:
-	_wander_timer = randf_range(2.5, 4.0)
-	var angle: float = randf() * TAU
-	var spot: Vector2 = _home + Vector2(cos(angle) * wander_radius.x,
-			sin(angle) * wander_radius.y) * sqrt(randf())
-	spot = spot.lerp(_player.global_position, follow_player)
-	# Keep it inside the ellipse
-	var offset: Vector2 = (spot - _home) / wander_radius
-	if offset.length() > 1.0:
-		spot = _home + offset.normalized() * wander_radius
-	_wander_target = spot
+	_wander_timer = randf_range(wander_time.x, wander_time.y)
+	var best: Vector2 = _home
+	var best_distance: float = -1.0
+	for i in 6:
+		var angle: float = randf() * TAU
+		var spot: Vector2 = _home + Vector2(cos(angle) * wander_radius.x,
+				sin(angle) * wander_radius.y) * sqrt(randf())
+		spot = spot.lerp(_player.global_position, follow_player)
+		# Keep it inside the ellipse
+		var offset: Vector2 = (spot - _home) / wander_radius
+		if offset.length() > 1.0:
+			spot = _home + offset.normalized() * wander_radius
+		var distance: float = global_position.distance_to(spot)
+		if distance > best_distance:
+			best = spot
+			best_distance = distance
+		if distance >= min_wander_step:
+			break
+	_wander_target = best
 
 
 func _burst(delta: float, speed_mult: float) -> void:
