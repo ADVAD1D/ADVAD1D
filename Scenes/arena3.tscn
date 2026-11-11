@@ -43,7 +43,7 @@
 [ext_resource type="PackedScene" path="res://Scenes/quad_laser_pickup.tscn" id="86_quad_pickup"]
 [ext_resource type="PackedScene" path="res://Scenes/quad_laser.tscn" id="87_quad_laser"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="88_font"]
-[ext_resource type="PackedScene" path="res://Scenes/monitor_cinematic.tscn" id="89_monitor"]
+[ext_resource type="PackedScene" uid="uid://d4g7oeya88han" path="res://Scenes/monitor_cinematic.tscn" id="89_monitor"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_s8vy0"]
 shader = ExtResource("5_nwwfm")

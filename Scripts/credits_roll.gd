@@ -18,6 +18,9 @@ ANGELUS11
 
 ## Music
 Psychronic Games
+Naboz
+
+https://soundcloud.com/naboz-815376087/arcade-rider
 
 
 ## CRT Visual Shader
@@ -47,6 +50,7 @@ Cro128
 Odruu
 Juanhez
 Tipito
+Naboz
 
 
 

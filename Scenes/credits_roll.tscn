@@ -67,8 +67,8 @@ title_settings = SubResource("LabelSettings_title")
 heading_settings = SubResource("LabelSettings_title")
 text_settings = SubResource("LabelSettings_text")
 small_settings = SubResource("LabelSettings_small")
-end_logo = ExtResource("5_logo")
 title_logo = ExtResource("6_advad")
+end_logo = ExtResource("5_logo")
 
 [node name="Starfield" type="Control" parent="." unique_id=1440401807]
 layout_mode = 1

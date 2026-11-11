@@ -51,7 +51,7 @@ Global state and cross-scene services live in autoloads. Several are registered 
 - `EnemyLaserPool` — object pool for enemy lasers.
 - `CursorManager` (`Autoloads/cursor_manager.gd`) — custom hardware mouse cursor: a pixel-art arrow drawn from the `ARROW` character map (no image file), scaled by the same whole factor as the game's pixels and rebuilt on window resize; lighter while the left button is held. Off on phones.
 - `DebugMenu` — overlay toggled by the `debug` action (Tab); other scripts feed it via `DebugMenu.track(label, value)`, `watch()`, `register_ray()`, `register_point()`.
-- `MusicPlayer` (a `.tscn`), `SfxManager`, `FontManager`.
+- `MusicPlayer` (a `.tscn`), `SfxManager`, `FontManager`. `MusicPlayer.song_volume_offsets_db` (file name → dB) makes a single song quieter or louder than the rest; every volume set goes through `_song_db()`.
 - `MainManager` is an empty stub. `DialogueManager`, `DiscordRPCLoader`, `EnvParser`, `_mcp_game_helper` come from `addons/`.
 
 ### Scene flow

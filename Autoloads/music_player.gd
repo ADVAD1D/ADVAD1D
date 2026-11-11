@@ -33,6 +33,14 @@ var scene1_specific_playlist: Dictionary = {
 
 @onready var sfx_player: AudioStreamPlayer = $SFXPlayer
 
+## Volume of a single song next to the rest, in dB, by file name (e.g.
+## "psychronic-high-alert-21859.ogg": -4.0). Negative = quieter (-3 is a little, -10 sounds
+## about half as loud).
+## Songs not listed play at the player's volume.
+var song_volume_offsets_db: Dictionary = {
+	"naboz-arcade-rider-_audio_-_UPaxou7mXsQ_.ogg": -8.0,
+}
+
 #the max size for game resource(music) for itchio browser support is 200mb on index.pck
 #ogg format is better for this
 
@@ -67,6 +75,7 @@ var arena_playlists = {
 		preload("res://Assets/Audio/Music/psychronic-continued-investigation-21863.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-internal-reflection-21325.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-futuristic-resources-21861.ogg"),
+		preload("res://Assets/Audio/Music/naboz-arcade-rider-_audio_-_UPaxou7mXsQ_.ogg"),
 	]
 }
 
@@ -90,7 +99,7 @@ func _ready() -> void:
 	# Saved volume (GameManager loads before this autoload)
 	linear_volume = clamp(GameManager.music_volume_percent / 100.0 * max_linear_volume,
 			min_linear_volume, max_linear_volume)
-	volume_db = linear_to_db(linear_volume)
+	volume_db = _song_db()
 	
 	_emit_volume_changed()
 	_on_scene_changed()
@@ -110,7 +119,7 @@ func _on_scene_changed():
 		
 		if stream != specific_song:
 			stream = specific_song
-			volume_db = linear_to_db(linear_volume)
+			volume_db = _song_db()
 			play()
 			var specific_song_path = stream.resource_path.get_file()
 			_log_message(["Playing specific track: ", specific_song_path])
@@ -141,7 +150,7 @@ func play_next_shuffled_song():
 	current_playing_arena_index = GameManager.current_arena_index
 	
 	stream = shuffled_playlist.pop_front()
-	volume_db = linear_to_db(linear_volume)
+	volume_db = _song_db()
 	play()
 	_emit_volume_changed()
 	var next_shuffled_song = stream.resource_path.get_file()
@@ -166,19 +175,19 @@ func fade_out_and_stop(duration: float):
 	
 	stop()
 	# Back to the player's volume (0 dB would be louder than the volume slider's 100%)
-	volume_db = linear_to_db(linear_volume)
+	volume_db = _song_db()
 	is_fading = false
 	_log_message("Music Stopped.")
 	
 func increase_volume():
 	linear_volume = clamp(linear_volume + (max_linear_volume * 0.05), min_linear_volume, max_linear_volume)
-	volume_db = linear_to_db(linear_volume)
+	volume_db = _song_db()
 	_emit_volume_changed()
 	_save_volume()
 
 func decrease_volume():
 	linear_volume = clamp(linear_volume - (max_linear_volume * 0.05), min_linear_volume, max_linear_volume)
-	volume_db = linear_to_db(linear_volume)
+	volume_db = _song_db()
 	_emit_volume_changed()
 	_save_volume()
 
@@ -189,6 +198,13 @@ func _save_volume() -> void:
 
 func get_volume_percent() -> float:
 	return (linear_volume / max_linear_volume) * 100.0
+
+## The player's volume plus the current song's offset from song_volume_offsets_db.
+func _song_db() -> float:
+	var offset: float = 0.0
+	if stream:
+		offset = song_volume_offsets_db.get(stream.resource_path.get_file(), 0.0)
+	return linear_to_db(linear_volume) + offset
 
 func _emit_volume_changed():
 	volume_changed.emit(get_volume_percent())

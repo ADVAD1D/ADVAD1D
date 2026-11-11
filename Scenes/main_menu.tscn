@@ -271,7 +271,7 @@ offset_left = 383.0
 offset_top = 246.0
 offset_right = 488.0
 offset_bottom = 269.0
-text = "ANGELUS11 - 2025"
+text = "ANGELUS11 - 2026"
 label_settings = SubResource("LabelSettings_t1dhk")
 
 [node name="VersionLabel" type="Label" parent="." unique_id=1499426968]
@@ -280,7 +280,7 @@ offset_left = 383.0
 offset_top = 266.0
 offset_right = 423.0
 offset_bottom = 289.0
-text = "v0.1.6.7"
+text = "v1.0.0.0"
 label_settings = SubResource("LabelSettings_4nkqq")
 
 [node name="RelativeLabel" type="Label" parent="." unique_id=195214820]
