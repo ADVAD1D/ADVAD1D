@@ -46,11 +46,30 @@ func _ready() -> void:
 
 
 ## Opens the box and starts with the first line. An empty `speaker` keeps speaker_name.
+## Every "soldier" (the word alone, not "soldiers") becomes "soldier <pilot name>", the
+## name typed in the skin selector (GameManager.player_name). No name: it stays "soldier".
+func _with_pilot_name(lines: PackedStringArray) -> PackedStringArray:
+	var pilot: String = GameManager.player_name.strip_edges()
+	if pilot.is_empty():
+		return lines
+	var word: RegEx = RegEx.create_from_string("(?i)\\bsoldier\\b")
+	var result: PackedStringArray = []
+	for line in lines:
+		# Built by hand (not RegEx.sub) so a "$" in the name isn't read as a group
+		var out: String = ""
+		var last: int = 0
+		for found in word.search_all(line):
+			out += line.substr(last, found.get_end() - last) + " " + pilot
+			last = found.get_end()
+		result.append(out + line.substr(last))
+	return result
+
+
 func play(lines: PackedStringArray, speaker: String = "") -> void:
 	if not speaker.is_empty():
 		speaker_name = speaker
 	name_label.text = speaker_name
-	_lines = lines
+	_lines = _with_pilot_name(lines)
 	_line_index = -1
 	var open: Tween = create_tween()
 	open.tween_property(self, "modulate:a", 1.0, open_duration)
