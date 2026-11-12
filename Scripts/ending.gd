@@ -8,10 +8,18 @@ extends Node2D
 @export var display_duration: float = 10.0
 @export var fade_out_duration: float = 1.5
 @export var speaker_name: String = "COMMANDER"
-## The commander's lines in the shared CinematicDialogue box (UILayer/Dialogue; Enter or a
-## tap advances), set in the scene. The scene fades out after the last one. Empty = the
-## illustration stays display_duration seconds. Esc skips it all.
-@export var lines: PackedStringArray = []
+
+const ENDING_LINES: PackedStringArray = [
+	"You have learned to deal with the 2 main types of bots: ships and saws.",
+	"They will be with you throughout this whole journey.",
+	"The more you destroy in less time, the more your value as a key piece of the organization will rise.",
+	"Get ready for the next arena.",
+	"An enemy stuck to the walls will stalk you for a few phases.",
+	"You have to learn to dodge it while you destroy what is needed.",
+	"Let's begin with arena 2.",
+]
+
+var lines: PackedStringArray = []
 ## Seconds before the dialogue box opens.
 @export var dialogue_delay: float = 1.0
 
@@ -24,6 +32,7 @@ var _finished: bool = false
 @onready var dialogue: DialogueBox = get_node_or_null("UILayer/Dialogue")
 
 func _ready() -> void:
+	lines = ENDING_LINES
 	start_sequence()
 	GameManager.can_pause = false
 

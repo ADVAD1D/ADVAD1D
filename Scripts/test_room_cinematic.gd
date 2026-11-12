@@ -10,9 +10,29 @@ extends Node2D
 
 @export var next_scene: PackedScene
 @export var speaker_name: String = "COMMANDER"
-## Set in each scene (no default, so a scene that loses them doesn't show another scene's
-## lines: it warns and skips to next_scene).
-@export var lines: PackedStringArray = []
+
+const TEST_ROOM_LINES: PackedStringArray = [
+	"Second test completed successfully, soldier.",
+	"We are impressed by the skill you have shown in the first two battle arenas.",
+	"What comes next will be the ultimate test: a deadly enemy.",
+	"Not the simple robots you have been dealing with all this time.",
+	"We want to guarantee excellence in this organization.",
+	"Your results will be used to strengthen future trials for other soldiers.",
+	"We will collect your endurance, your reaction times, your behavior and your overall way of piloting.",
+	"The simulator's artificial intelligence will improve based on the experiences and use of all of you.",
+	"Handling your ship will always feel very close to the simulator experience.",
+	"In the next phase of the trial, you will face a single threat.",
+	"You need to put into practice everything you have learned so far.",
+	"Good luck in arena 3.",
+]
+
+const MONITOR_LINES: PackedStringArray = [
+	"Simulation complete. Congratulations on passing every trial.",
+	"You will now be sent to a real training test.",
+	"SEND IN THE NEXT ONE!",
+]
+
+var lines: PackedStringArray = []
 ## Seconds the pan takes from the right edge of the illustration to the left one.
 @export var pan_duration: float = 40.0
 ## Minimum horizontal travel of the pan, in viewport pixels.
@@ -31,6 +51,7 @@ var _finished: bool = false
 
 func _ready() -> void:
 	GameManager.can_pause = false
+	lines = MONITOR_LINES if name == "MonitorCinematic" or scene_file_path.ends_with("monitor_cinematic.tscn") else TEST_ROOM_LINES
 	dialogue.finished.connect(_finish)
 	_start_pan()
 	illustration.modulate.a = 0.0

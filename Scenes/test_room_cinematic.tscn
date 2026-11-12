@@ -1,8 +1,8 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dhfnr7iqbyg35"]
 
-[ext_resource type="Script" path="res://Scripts/test_room_cinematic.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cke4ki7k3e7s4" path="res://Scripts/test_room_cinematic.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://Scenes/tutorial_arena3.tscn" id="2_arena3"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/test_room.png" id="3_art"]
+[ext_resource type="Texture2D" uid="uid://barietll68qe0" path="res://Assets/Sprites/test_room.png" id="3_art"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/cinematic_dialogue.tscn" id="4_dialogue"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="5_crt"]
 
@@ -31,15 +31,14 @@ shader_parameter/vignette_intensity = 0.5
 shader_parameter/vignette_opacity = 1.0
 shader_parameter/low_quality = false
 
-[node name="TestRoomCinematic" type="Node2D"]
+[node name="TestRoomCinematic" type="Node2D" unique_id=2127642051]
 script = ExtResource("1_script")
 next_scene = ExtResource("2_arena3")
-lines = PackedStringArray("Second test completed successfully, soldier.", "We are impressed by the skill you have shown in the first two battle arenas.", "What comes next will be the ultimate test: a deadly enemy.", "Not the simple robots you have been dealing with all this time.", "We want to guarantee excellence in this organization.", "Your results will be used to strengthen future trials for other soldiers.", "We will collect your endurance, your reaction times, your behavior and your overall way of piloting.", "The simulator's artificial intelligence will improve based on the experiences and use of all of you.", "Handling your ship will always feel very close to the simulator experience.", "In the next phase of the trial, you will face a single threat.", "You need to put into practice everything you have learned so far.", "Good luck in arena 3.")
 
-[node name="BackgroundLayer" type="CanvasLayer" parent="."]
+[node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=1091230323]
 layer = -1
 
-[node name="Black" type="ColorRect" parent="BackgroundLayer"]
+[node name="Black" type="ColorRect" parent="BackgroundLayer" unique_id=538544200]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -48,15 +47,15 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Illustration" type="Sprite2D" parent="."]
+[node name="Illustration" type="Sprite2D" parent="." unique_id=1356684620]
 texture = ExtResource("3_art")
 centered = false
 
-[node name="UILayer" type="CanvasLayer" parent="."]
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=874707006]
 
-[node name="Dialogue" parent="UILayer" instance=ExtResource("4_dialogue")]
+[node name="Dialogue" parent="UILayer" unique_id=1609367398 instance=ExtResource("4_dialogue")]
 
-[node name="CRT" type="ColorRect" parent="UILayer"]
+[node name="CRT" type="ColorRect" parent="UILayer" unique_id=966639765]
 material = SubResource("ShaderMaterial_crt")
 anchors_preset = 15
 anchor_right = 1.0
