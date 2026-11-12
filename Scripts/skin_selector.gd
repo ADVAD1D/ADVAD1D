@@ -56,10 +56,9 @@ func _ready() -> void:
 	SkinManager.ship_colors_changed.connect(_on_ship_colors_changed)
 	_setup_chat_button()
 
-	Network.name_check_completed.connect(_on_name_checked)
-	Network.identity_recovered.connect(_on_identity_recovered)
-	Network.check_my_identity()
-	
+	# The saved pilot name (local only)
+	name_line_edit.text = GameManager.player_name
+
 	if GameManager.mobile_mode_active:
 		_save_original_positions()
 		get_tree().root.size_changed.connect(_on_window_resized)
@@ -82,12 +81,6 @@ func _on_window_resized() -> void:
 		if is_instance_valid(child):
 			child.position.x = original_positions[child].x + offset_x
 	
-func _on_identity_recovered(recovered_name: String):
-	if recovered_name != "":
-		GameManager.player_name = recovered_name
-		_log_message("Identidad confirmada: " + recovered_name)
-		_lock_name_for_veteran(recovered_name)
-
 func _on_ship_selection_changed(ship_data: Dictionary):
 	ship_preview.texture = ship_data["texture"]
 	var index: int = SkinManager.selected_ship_index
@@ -254,9 +247,11 @@ func _register_pilot(entered_text: String):
 		_log_message("The user name cant be empty")
 		return
 		
-	submit_button.disabled = true
-	_log_message(["Pilot registered in memory: ", final_name])
-	Network.check_pilot_name(final_name)
+	GameManager.player_name = final_name
+	GameManager.save_data()
+	name_line_edit.release_focus()
+	_log_message(["Pilot name saved: ", final_name])
+	_show_animated_warning_message("NAME SAVED!")
 	
 func _input(event: InputEvent) -> void:
 	if name_line_edit.has_focus():
@@ -309,30 +304,6 @@ func _on_right_button_pressed():
 func _on_back_button_mouse_entered() -> void:
 	button_sound.play() # Replace with function body.
 	
-func _on_name_checked(is_available: bool, message: String):
-	submit_button.disabled = false
-	if is_available:
-		GameManager.player_name = name_line_edit.text.strip_edges()
-		name_line_edit.text = ""
-		name_line_edit.placeholder_text = "NAME AVAILABLE!"
-		_log_message("Authorization granted. Starting mission")
-		GameManager.save_data()
-		await get_tree().create_timer(1.5).timeout
-		_lock_name_for_veteran(GameManager.player_name)
-	else:
-		_log_message(["The name is already taken", message])
-		name_line_edit.text = ""
-		name_line_edit.placeholder_text = "NAME TAKEN!"
-		
-func _lock_name_for_veteran(pilot_name: String):
-	if GameManager.player_name_field_editable == false:
-		name_line_edit.text = pilot_name
-		name_line_edit.editable = false
-		name_line_edit.focus_mode = Control.FOCUS_NONE
-		_show_animated_warning_message("You cannot change your name!")
-	else:
-		return
-		
 func _show_animated_warning_message(text_msg: String) -> void:
 	system_warning_label.text = text_msg
 	system_warning_label.visible = true

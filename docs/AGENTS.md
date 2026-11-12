@@ -12,7 +12,6 @@
 ## Key Systems
 - **Progression:** `PhaseManager` (in `main.tscn`) controls phases 1-10 with score requirements and time limits.
 - **Global State:** `GameManager` holds score, phase, selected ship, debug flags, speedrun timer.
-- **API Service:** `api_service.gd` handles AI server communication, requires `APP_TOKEN` via `EnvParser`.
 
 ## Controls
 - **Move:** W/A/S/D or Arrow Keys
@@ -32,13 +31,9 @@
 - `phase_manager.gd`: Phase progression, difficulty scaling, timer management.
 - `main.gd`: Scene setup, player death, visual effects.
 - `game_manager.gd`: Global state, score, pause, ship selection.
-- `api_service.gd`: AI server communication via HTTP.
 
 ## Development & Debugging
 - **Debug Flags:** `GameManager.is_debug_text`, `GameManager.show_debug`, `GameManager.show_fps`.
-- **API Server:**
-  - Production: `https://advad-ai-server.onrender.com`
-  - Local: `http://127.0.0.1:10000`
 - **Resetting State:** Use `GameManager.reset_game_state()` to clear progress.
 - **Discord RPC:** Handled via plugins in `/addons`.
 
@@ -55,8 +50,6 @@
 - `phase_started(phase_number, score_requirement)` - Phase begins.
 - `pause(is_paused)` - Pause state toggled.
 - `died` - Player death.
-- `server_status_checked(is_online)` - API server status.
-- `phase_recorded_successfully()` / `phase_record_failed(error_msg)` - Leaderboard phase report result.
 ## Agent Rules & Boundaries
 1. **No Git Commands:** Agents are strictly prohibited from executing Git commands (commit, push, pull, etc.). Version control is exclusively managed by the developer. 
 2. **Ask Permission for Commands:** Agents must ALWAYS ask for explicit permission before executing ANY terminal command on the system.

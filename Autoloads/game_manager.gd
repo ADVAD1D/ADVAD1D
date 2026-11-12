@@ -12,8 +12,8 @@ signal pause(is_paused)
 signal settings_changed
 
 #global variables
+## Pilot name typed in the skin selector (local only, saved with the game).
 var player_name: String
-var player_name_field_editable: bool = false
 var score: int = 0
 var can_add_score: bool = true
 var phase_to_start: int = 1
@@ -85,8 +85,6 @@ var force_web_mode: bool = false
 #IMPORTANT: this bool change the value to _log_message function in some scripts!
 var is_debug_text : bool = false
 var is_scroll_active: bool = false
-var start_server: bool = true
-var production_server_active = true
 
 ## True if the game is running on HTML5/Web. Disables local file saving for config.
 var browser_support: bool = false
@@ -137,8 +135,6 @@ func _ready() -> void:
 	
 	if OS.has_feature("web"):
 		browser_support = true
-	if start_server == true:
-		Network.wake_up_server()
 	load_data()
 	# Saves from before the arena tracker: NEW GROUND means arena 2 was already reached
 	if AchievementManager.is_unlocked(&"arena_2_reached") and not has_visited_arena(1):

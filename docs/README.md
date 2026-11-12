@@ -73,20 +73,6 @@ The project is organized into the following main folders:
 -   **`main.gd`**: Controls the logic of the main game scene, player death, and visual effects.
 -   **`player.gd`**: Defines the player's behavior, including movement, shooting, and the dash mechanic.
 
-**API Service (Autoload [Autoloads/api_service.gd](Autoloads/api_service.gd))**
-
-- **Purpose:** Global HTTP client for the backend: server wake-up ping, pilot identity / name checks and the leaderboard. It no longer talks to any AI model (the chat console only uses predefined replies, see `Scripts/ai_console.gd`).
-- **Signals:** `server_status_checked(is_online: bool)`, `phase_recorded_successfully()`, `phase_record_failed(error_msg: String)`, `name_check_completed(is_available: bool, message: String)`, `identity_recovered(pilot_name: String)`.
-- **Configuration:** Uses `GameManager.production_server_active` to select `BASE_URL` (production: `https://advad-ai-server.onrender.com`, local: `http://127.0.0.1:10000`). The `X-App-Token` header is loaded with `EnvParser.parse("APP_TOKEN")`.
-- **Important variables:** `start_server` (from `GameManager.start_server`, used to auto-start the server) and `headers` (contains `Content-Type` and `X-App-Token`).
-- **Public methods:** `wake_up_server()` —pings the server—, `check_my_identity()`, `check_pilot_name(pilot_name)` and `send_player_phase(player_name, last_phase)` —leaderboard.
-- **Notes for contributors:**
-  - Connect signals to receive responses and errors, for example:
-	- `Network.phase_recorded_successfully.connect(_on_phase_recorded)`
-	- `Network.phase_record_failed.connect(_on_phase_record_failed)`
-  - In debug builds the service logs extra information via `_log_dev()`; those logs are suppressed in release builds.
-  - Make sure `APP_TOKEN` is available via `EnvParser` and configure `GameManager` flags (`production_server_active`, `start_server`) before testing.
-
 ## Web Export Architecture & Performance
 
 ADVAD features a web (HTML5) export that runs entirely within the browser. However, due to WebAssembly and Godot 4 export limitations, the web version operates in **Single-Threaded Mode**.

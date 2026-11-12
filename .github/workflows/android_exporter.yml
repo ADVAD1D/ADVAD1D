@@ -80,13 +80,6 @@ jobs:
           }
           ' export_presets.cfg > tmp_presets.cfg && mv tmp_presets.cfg export_presets.cfg
 
-      - name: Inject Environment Variables (.env)
-        env:
-          MY_APP_TOKEN: ${{ secrets.APP_TOKEN }}
-        run: |
-          echo "Fabric file from .env secrets..."
-          echo "APP_TOKEN=$MY_APP_TOKEN" > .env
-
       - name: Import Godot Assets
         run: |
           echo "Importing assets for the first time..."

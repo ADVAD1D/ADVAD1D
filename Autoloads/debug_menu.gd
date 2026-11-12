@@ -259,17 +259,8 @@ func _update_overlay_text() -> void:
 	else:
 		audio_lines.append("No PhaseNode active")
 
-	# Network Status
-	var network_lines: PackedStringArray = []
-	network_lines.append("== NETWORK ==")
-	if get_tree().root.has_node("Network"):
-		var net = get_node("/root/Network")
-		network_lines.append("URL: %s" % net.BASE_URL)
-		network_lines.append("Online: %s" % str(net.server_online))
-		network_lines.append("Log: %s" % net.last_network_log)
-
 	# Discord Status
-	network_lines.append("")
+	var network_lines: PackedStringArray = []
 	network_lines.append("== DISCORD ==")
 	if Engine.has_singleton("DiscordRPC"):
 		var discord = Engine.get_singleton("DiscordRPC")

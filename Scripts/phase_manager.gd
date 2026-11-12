@@ -266,16 +266,10 @@ func _process(delta: float) -> void:
 	if phase_timer <= 0:
 		_on_phase_failure()
 		
-## Initializes the next phase, updates networking/leaderboard stats, 
-## checks if the arena has been completed, and sets up the timer and requirements.
+## Initializes the next phase, checks if the arena has been completed, and sets up the
+## timer and requirements.
 func start_new_phase():
 	current_phase = current_phase + 1
-	# The leaderboard tracks the main mode only
-	if current_phase > 1 and not GameManager.arcade_mode_active:
-		var current_pilot_name = GameManager.player_name
-		if current_pilot_name.strip_edges().is_empty():
-			current_pilot_name = "Player"
-		Network.send_player_phase(current_pilot_name, current_phase)
 
 	#yes, i don't use elifs
 	if not _has_phase(current_phase):
