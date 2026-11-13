@@ -342,16 +342,16 @@ msgid "CREDITS"
 msgstr "CRÉDITOS"
 
 msgid "Game by: ANGELUS11 and Cro128"
-msgstr "Juego de: ANGELUS11 y Cro128"
+msgstr "Juego por: ANGELUS11 y Cro128"
 
 msgid "Music by: Psychronic Games"
-msgstr "Música de: Psychronic Games"
+msgstr "Música por: Psychronic Games"
 
 msgid "CRT VISUAL SHADER by lord0Sanz"
 msgstr "SHADER VISUAL CRT de lord0Sanz"
 
 msgid "GAME THUMBNAIL BY NESTORGMS"
-msgstr "MINIATURA DEL JUEGO DE NESTORGMS"
+msgstr "MINIATURA DEL JUEGO POR NESTORGMS"
 
 msgid ""
 "Laser4.wav by jobro\n"

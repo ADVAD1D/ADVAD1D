@@ -64,6 +64,9 @@ signal timer_updated(time_left_string)
 @onready var time_progress_bar: TextureProgressBar = $"../UILayer/HUD".get_node("TimeBarContainer/TimeProgressBar")
 @onready var time_bar_container: HBoxContainer = $"../UILayer/HUD".get_node("TimeBarContainer")
 @onready var phase_label: Label = $"../UILayer/HUD".get_node("PhaseLabel")
+## True while the phase label shows "PHASE: n" (not "ARENA WIN"), so a language switch
+## rewrites it.
+var _phase_label_shows_phase: bool = false
 @onready var objective_label: Label = $"../UILayer/HUD".get_node("ObjectiveLabel")
 @onready var code_label: Label = $"../UILayer/HUD".get_node("CodeLabel")
 
@@ -213,6 +216,8 @@ var _countdown_label: Label
 
 func _ready() -> void:
 	GameManager.score_updated.connect(_on_score_updated)
+	# The pause menu's EN/ES switch: "PHASE: n" is built in code, so rewrite it
+	GameManager.language_changed.connect(_update_phase_label.unbind(1))
 
 	# Phases shown in the debug menu are now handled directly by the debug menu script.
 	# Arcade runs have no end, so they don't use the speedrun timer
@@ -266,6 +271,12 @@ func _process(delta: float) -> void:
 	if phase_timer <= 0:
 		_on_phase_failure()
 		
+## "PHASE: n" in the current language (Localization/es.po).
+func _update_phase_label() -> void:
+	if _phase_label_shows_phase and is_instance_valid(phase_label):
+		phase_label.text = tr("PHASE: ") + str(current_phase)
+
+
 ## Initializes the next phase, checks if the arena has been completed, and sets up the
 ## timer and requirements.
 func start_new_phase():
@@ -279,8 +290,8 @@ func start_new_phase():
 	_log_message(["--- Starting Phase ---", current_phase])
 	GameManager.reset_score()
 
-	if is_instance_valid(phase_label):
-		phase_label.text = tr("PHASE: ") + str(current_phase)
+	_phase_label_shows_phase = true
+	_update_phase_label()
 
 	var current_phase_duration = _get_phase_duration(current_phase)
 
@@ -301,6 +312,7 @@ func start_new_phase():
 ## way out opens.
 func _win_arena() -> void:
 	_log_message("You win all phases!")
+	_phase_label_shows_phase = false
 	phase_label.text = "ARENA WIN"
 	phase_label.visible = true  # hidden during a boss fight
 	gray_scale_transition()
