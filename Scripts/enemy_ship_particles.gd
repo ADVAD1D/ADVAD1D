@@ -6,6 +6,8 @@ func _ready() -> void:
 	ArenaEnemySkin.apply(self)
 	if GameManager.mobile_mode_active or OS.has_feature("web") or GameManager.force_web_mode:
 		lifetime = 0.3
+	else:
+		lifetime = 0.7
 		amount = 7
 	fixed_fps = 0
 	fract_delta = true

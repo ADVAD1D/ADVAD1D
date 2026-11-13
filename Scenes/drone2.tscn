@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://daifx8q4u0x65"]
 
 [ext_resource type="Script" uid="uid://cag42omnw12d6" path="res://Scripts/drone_2.gd" id="1_47h8v"]
-[ext_resource type="Texture2D" uid="uid://bohkw8suktfti" path="res://Assets/Sprites/Dronfixed2.png" id="1_excle"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Dronfixed2_blue.png" id="1_excle"]
 [ext_resource type="AudioStream" uid="uid://cyp3ijw40ky0n" path="res://Assets/Audio/laser_sound.wav" id="3_2ogp0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8x5i7"]
