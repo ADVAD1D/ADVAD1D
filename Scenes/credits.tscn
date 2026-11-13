@@ -27,7 +27,7 @@ outline_color = Color(0, 1, 1, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_803yc"]
 font = ExtResource("2_ccovl")
 font_size = 16
-line_spacing = 3.0
+line_spacing = 0.0
 font_color = Color(0, 0.19607843, 0.19607843, 1)
 outline_size = 2
 outline_color = Color(0, 1, 1, 1)
@@ -125,10 +125,12 @@ horizontal_alignment = 1
 [node name="InfoLabel" type="Label" parent="CreditsTexture" unique_id=1167304396]
 layout_mode = 0
 offset_left = 7.0
-offset_top = 136.0
+offset_top = 132.0
 offset_right = 354.0
-offset_bottom = 262.0
-text = "Laser4.wav by jobro
+offset_bottom = 264.0
+text = "Open Source Game Code -- MIT
+https://github.com/ADVAD1D/ADVAD1D
+Laser4.wav by jobro
 https://freesound.org/s/35681/ -- License: Attribution 3.0
 Picked Coin Echo by NenadSimic
 https://freesound.org/s/171696/ -- License: Attribution 4.0
