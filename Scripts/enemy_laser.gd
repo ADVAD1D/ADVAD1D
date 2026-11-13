@@ -25,7 +25,9 @@ func activate(spawn_position: Vector2, start_direction: Vector2) -> void:
 		get_node("Sprite2D").material = null
 	if has_node("PointLight2D"):
 		get_node("PointLight2D").color = Color.WHITE
-		
+	# The arena's enemy colour (pooled lasers move between arenas; arena 3 = original red)
+	ArenaEnemySkin.apply(self)
+
 	# Restaurar grupos por si fue rebotado por el escudo del jugador
 	if is_in_group("lasers"):
 		remove_from_group("lasers")
@@ -90,6 +92,7 @@ func _spawn_impact_particles(at: Vector2) -> void:
 	if not enemy_laser_particles:
 		return
 	var particles = enemy_laser_particles.instantiate()
+	ArenaEnemySkin.apply(particles)
 	particles.global_position = at
 	get_parent().call_deferred("add_child", particles)
 

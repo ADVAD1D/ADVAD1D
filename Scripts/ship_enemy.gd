@@ -71,6 +71,8 @@ func setup(config: Dictionary):
 func _ready() -> void:
 	player = get_tree().get_first_node_in_group("player")
 	hitbox.hit.connect(_on_hit)
+	# The arena's enemy colour (sprite and engine trail)
+	ArenaEnemySkin.apply(self)
 	if is_instance_valid(shoot_timer):
 		shoot_timer.wait_time = current_shoot_timer
 		
@@ -219,6 +221,7 @@ func die_and_respawn():
 	shoot_marker.set_deferred("disabled", true)
 	
 	var particles_instance = explosion_particles.instantiate()
+	ArenaEnemySkin.apply(particles_instance)
 	particles_instance.global_position = global_position
 	get_parent().call_deferred("add_child", particles_instance)
 	
@@ -246,6 +249,7 @@ func die_silently():
 	hide()
 	
 	var particles_instance = explosion_particles.instantiate()
+	ArenaEnemySkin.apply(particles_instance)
 	particles_instance.global_position = global_position
 	get_parent().call_deferred("add_child", particles_instance)
 	

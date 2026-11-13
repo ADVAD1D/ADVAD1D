@@ -31,6 +31,8 @@ func setup(config: Dictionary):
 
 func _ready() -> void:
 	player = get_tree().get_first_node_in_group("player")
+	# The arena's enemy colour (sprite, trail and light)
+	ArenaEnemySkin.apply(self)
 	rotation_speed = randf_range(1400.0, 1600.0)
 	speed = randf_range(900.0, 1000.0)
 	
@@ -122,6 +124,7 @@ func die_and_respawn():
 	collision_shape.set_deferred("disabled", true)
 	
 	var saw_particles_instance = saw_particles.instantiate()
+	ArenaEnemySkin.apply(saw_particles_instance)
 	add_sibling(saw_particles_instance)
 	saw_particles_instance.position = position
 	
@@ -146,6 +149,7 @@ func die_silently():
 	hide()
 	
 	var saw_particles_instance = saw_particles.instantiate()
+	ArenaEnemySkin.apply(saw_particles_instance)
 	add_sibling(saw_particles_instance)
 	saw_particles_instance.position = position
 	

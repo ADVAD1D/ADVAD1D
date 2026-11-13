@@ -17,7 +17,7 @@ msgid "Welcome to the training program, soldier."
 msgstr "Bienvenido al programa de entrenamiento, soldado."
 
 msgid "This simulation is designed for you to learn and master the use of your ship."
-msgstr "Esta simulación está diseñada para que aprendas y domines el uso de tu nave."
+msgstr "Esta simulación está diseñada para que aprendas y domines el uso de su nave."
 
 msgid "You will face a series of challenges divided into 3 battle arenas, where you must clear 10 phases."
 msgstr "Enfrentarás una serie de desafíos divididos en 3 arenas de batalla, donde deberás superar 10 fases."

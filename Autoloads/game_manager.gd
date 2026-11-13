@@ -41,6 +41,15 @@ var arena_names: Array[String] = ["Arena 1", "Arena 2", "Arena 3"]
 ## UI colour of each arena (ArenaUiTint), as a hue rotation in degrees of the original
 ## cyan/blue UI: arena 1 = 0 (blue), arena 2 = -60 (green), arena 3 = 180 (red).
 var arena_ui_hue_shifts: Array[float] = [0.0, -60.0, 180.0]
+## Colour of the enemies of each arena (ArenaEnemySkin): "name" picks the sprite versions
+## ("<sprite>_blue.png"), "channel" is where the red of particle ramps and lights goes
+## (same look as the red ones, another colour), "light_energy" multiplies the energy of
+## their PointLight2Ds (saws, enemy lasers). Arena 1 is blue so enemy lasers don't look
+## like the player's cyan ones. No entry (arena 3) = the original red art.
+var arena_enemy_colors: Dictionary = {
+	0: {"name": "blue", "channel": "blue", "light_energy": 0.75},
+	1: {"name": "green", "channel": "green", "light_energy": 0.75},
+}
 ## Arena indices the player has reached in any mode, sorted and saved (`visited_arenas` in
 ## save_game.json). Arena 1 (index 0) is always there. main.gd adds its arena on load;
 ## ArcadeManager only offers arenas listed here.
