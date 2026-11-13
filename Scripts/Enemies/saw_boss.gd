@@ -765,6 +765,17 @@ func _flash() -> void:
 	tween.tween_property(body, "modulate", Color.WHITE, 0.12)
 
 
+## Radius (world units) enemy ships and saws keep clear of, plus their own boss_margin, so
+## they don't fly under the boss. 0 while it dies (they can pass over the explosion).
+func get_avoid_radius() -> float:
+	if _state == State.DYING:
+		return 0.0
+	var circle: CircleShape2D = collision_shape.shape as CircleShape2D
+	if circle == null:
+		return 0.0
+	return circle.radius * absf(collision_shape.global_scale.x)
+
+
 ## Contract of the "enemies" group: PhaseManager's board clear (arcade phase change).
 func die_silently() -> void:
 	_die(false)

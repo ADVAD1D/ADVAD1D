@@ -5,6 +5,14 @@ extends Area2D
 @export var rotation_speed: float = 1000.0
 @export var separation_strength: float = 150.0
 @export var saw_particles: PackedScene
+## Gap (world units) between a boss's edge and the saw's centre: the saw never gets closer
+## (arena 3's GEMELAs). About the saw's radius plus some room.
+@export var boss_margin: float = 130.0
+
+## Extra distance past boss_margin where the saw already starts steering away.
+const BOSS_STEER_ZONE: float = 150.0
+## How hard that steering pushes, in multiples of the saw's speed.
+const BOSS_PUSH_STRENGTH: float = 1.5
 
 signal died
 
@@ -53,9 +61,42 @@ func _physics_process(delta: float) -> void:
 		separation_vector = -separation_vector.normalized()
 
 	target_velocity += separation_vector * separation_strength
-	
+	target_velocity += _boss_push() * speed * BOSS_PUSH_STRENGTH
+
 	current_velocity = current_velocity.lerp(target_velocity, acceleration * delta)
 	global_position += current_velocity * delta
+	_keep_out_of_bosses()
+
+
+## Arena 3's GEMELAs ("bosses" group): the saw is pushed away when it gets within
+## BOSS_STEER_ZONE of the boss_margin limit, harder the closer it gets.
+func _boss_push() -> Vector2:
+	var push: Vector2 = Vector2.ZERO
+	for boss in get_tree().get_nodes_in_group("bosses"):
+		if not boss.has_method("get_avoid_radius"):
+			continue
+		var away: Vector2 = global_position - boss.global_position
+		var limit: float = boss.get_avoid_radius() + boss_margin
+		var distance: float = away.length()
+		if limit > boss_margin and distance < limit + BOSS_STEER_ZONE and distance > 0.001:
+			push += away / distance * (1.0 - maxf(distance - limit, 0.0) / BOSS_STEER_ZONE)
+	return push
+
+
+## Never closer than boss_margin to a boss's edge (it used to fly under them).
+func _keep_out_of_bosses() -> void:
+	for boss in get_tree().get_nodes_in_group("bosses"):
+		if not boss.has_method("get_avoid_radius"):
+			continue
+		var radius: float = boss.get_avoid_radius()
+		if radius <= 0.0:
+			continue
+		var away: Vector2 = global_position - boss.global_position
+		var limit: float = radius + boss_margin
+		if away.length() < limit:
+			if away.length() < 0.001:
+				away = Vector2.RIGHT
+			global_position = boss.global_position + away.normalized() * limit
 
 
 func _on_area_entered(area: Area2D) -> void:
