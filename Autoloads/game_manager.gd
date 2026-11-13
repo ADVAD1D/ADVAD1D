@@ -51,8 +51,9 @@ var arena_enemy_colors: Dictionary = {
 	0: {"name": "blue", "channel": "blue", "light_energy": 0.75,
 			"ramp_color": Color8(4, 96, 128)},
 	# A true, darker green: the arena's mint lines would hide a brighter one
-	1: {"name": "green", "channel": "green", "light_energy": 0.75,
-			"ramp_color": Color8(30, 150, 30)},
+	# Its lights are much dimmer: a strong green glow on the green floor hides the lasers
+	1: {"name": "green", "channel": "green", "light_energy": 0.3,
+			"ramp_color": Color8(16, 112, 16)},
 }
 ## Arena indices the player has reached in any mode, sorted and saved (`visited_arenas` in
 ## save_game.json). Arena 1 (index 0) is always there. main.gd adds its arena on load;
