@@ -92,7 +92,6 @@ func _spawn_impact_particles(at: Vector2) -> void:
 	if not enemy_laser_particles:
 		return
 	var particles = enemy_laser_particles.instantiate()
-	ArenaEnemySkin.apply(particles)
 	particles.global_position = at
 	get_parent().call_deferred("add_child", particles)
 

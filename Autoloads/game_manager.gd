@@ -47,8 +47,12 @@ var arena_ui_hue_shifts: Array[float] = [0.0, -60.0, 180.0]
 ## their PointLight2Ds (saws, enemy lasers). Arena 1 is blue so enemy lasers don't look
 ## like the player's cyan ones. No entry (arena 3) = the original red art.
 var arena_enemy_colors: Dictionary = {
-	0: {"name": "blue", "channel": "blue", "light_energy": 0.75},
-	1: {"name": "green", "channel": "green", "light_energy": 0.75},
+	# "ramp_color": particle ramps take this colour (the walls' blue, like the sprites)
+	0: {"name": "blue", "channel": "blue", "light_energy": 0.75,
+			"ramp_color": Color8(4, 96, 128)},
+	# A true, darker green: the arena's mint lines would hide a brighter one
+	1: {"name": "green", "channel": "green", "light_energy": 0.75,
+			"ramp_color": Color8(30, 150, 30)},
 }
 ## Arena indices the player has reached in any mode, sorted and saved (`visited_arenas` in
 ## save_game.json). Arena 1 (index 0) is always there. main.gd adds its arena on load;

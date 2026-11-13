@@ -20,6 +20,9 @@ const TEXTURES: Array[String] = [
 	"res://Assets/Sprites/ship_enemy_particles.png",
 	"res://Assets/Sprites/sawparticle.png",
 ]
+## Colours that count as red for "ramp_color": hue this close to red, some saturation.
+const MIN_SATURATION: float = 0.15
+const HUE_RANGE: float = 0.08
 ## The original look of a node, kept once so it can be put back.
 const META_ORIGINAL: StringName = &"_arena_skin_original"
 
@@ -35,7 +38,7 @@ static func apply(root: Node) -> void:
 
 
 static func _apply_node(node: Node, arena: int, skin: Dictionary) -> void:
-	if node is Sprite2D or node is GPUParticles2D or node is PointLight2D:
+	if node is Sprite2D or node is GPUParticles2D:
 		_swap(node, &"texture", arena, skin)
 	if node is GPUParticles2D:
 		_swap(node, &"process_material", arena, skin)
@@ -44,7 +47,8 @@ static func _apply_node(node: Node, arena: int, skin: Dictionary) -> void:
 			_swap(node, property, arena, skin)
 		_swap_color(node, &"color", skin)
 	if node is PointLight2D:
-		_swap_color(node, &"color", skin)
+		_swap(node, &"texture", arena, skin, true)
+		_swap_color(node, &"color", skin, true)
 		# Each arena can tone the enemies' lights down (light_energy multiplier)
 		var energy: float = _original(node, &"energy")
 		node.energy = energy * float(skin.get("light_energy", 1.0))
@@ -53,16 +57,20 @@ static func _apply_node(node: Node, arena: int, skin: Dictionary) -> void:
 
 
 ## Puts the arena version of a resource property (or the original back).
-static func _swap(node: Node, property: StringName, arena: int, skin: Dictionary) -> void:
+## `light`: it belongs to a PointLight2D (see recolor()).
+static func _swap(node: Node, property: StringName, arena: int, skin: Dictionary,
+		light: bool = false) -> void:
 	var original: Variant = _original(node, property)
 	if not original is Resource:
 		return
-	node.set(property, _version(original, arena, skin) if not skin.is_empty() else original)
+	node.set(property,
+			_version(original, arena, skin, light) if not skin.is_empty() else original)
 
 
-static func _swap_color(node: Node, property: StringName, skin: Dictionary) -> void:
+static func _swap_color(node: Node, property: StringName, skin: Dictionary,
+		light: bool = false) -> void:
 	var original: Color = _original(node, property)
-	node.set(property, recolor(original, skin) if not skin.is_empty() else original)
+	node.set(property, recolor(original, skin, light) if not skin.is_empty() else original)
 
 
 static func _original(node: Node, property: StringName) -> Variant:
@@ -74,8 +82,9 @@ static func _original(node: Node, property: StringName) -> Variant:
 
 
 ## The arena version of a texture, particle material or gradient (cached).
-static func _version(resource: Resource, arena: int, skin: Dictionary) -> Resource:
-	var key: String = "%d:%d" % [resource.get_instance_id(), arena]
+static func _version(resource: Resource, arena: int, skin: Dictionary,
+		light: bool = false) -> Resource:
+	var key: String = "%d:%d:%s" % [resource.get_instance_id(), arena, light]
 	if _cache.has(key):
 		return _cache[key]
 	var result: Resource = resource
@@ -85,12 +94,12 @@ static func _version(resource: Resource, arena: int, skin: Dictionary) -> Resour
 			result = load(path)
 	elif resource is GradientTexture2D or resource is GradientTexture1D:
 		result = resource.duplicate()
-		result.gradient = _version(resource.gradient, arena, skin)
+		result.gradient = _version(resource.gradient, arena, skin, light)
 	elif resource is Gradient:
 		result = resource.duplicate()
 		var colors: PackedColorArray = result.colors
 		for i in colors.size():
-			colors[i] = recolor(colors[i], skin)
+			colors[i] = recolor(colors[i], skin, light)
 		result.colors = colors
 	elif resource is ParticleProcessMaterial:
 		result = resource.duplicate()
@@ -102,11 +111,23 @@ static func _version(resource: Resource, arena: int, skin: Dictionary) -> Resour
 	return result
 
 
-## A colour of the scenes' ramps and lights in the arena's colour: the red channel trades
-## places with the arena's channel (blue or green), so lights, trails and explosions look
-## exactly like the red ones (same intensity, glow and fade), only in another colour.
-## Whites, greys and black don't change.
-static func recolor(color: Color, skin: Dictionary) -> Color:
+## A colour of the scenes' ramps and lights in the arena's colour. Particle ramps of an
+## arena with a "ramp_color" (arena 1: its walls' blue) turn their red into that colour,
+## keeping how bright and how washed out to white it was, like the sprite versions.
+## Everything else (lights, which are very intense and would wash out to cyan, and arenas
+## without it) has its red channel traded with the arena's channel (blue or green): same
+## intensity, glow and fade as the red, only in another colour. Whites, greys and black
+## don't change.
+static func recolor(color: Color, skin: Dictionary, light: bool = false) -> Color:
+	if not light and skin.has("ramp_color"):
+		var distance_to_red: float = minf(color.h, 1.0 - color.h)
+		if color.s < MIN_SATURATION or distance_to_red > HUE_RANGE or color.r <= 0.0:
+			return color
+		var whiteness: float = minf(color.g, color.b) / color.r
+		var main: Color = skin["ramp_color"]
+		var tinted: Color = main.lerp(Color.WHITE, whiteness) * color.r
+		tinted.a = color.a
+		return tinted
 	match skin.get("channel", ""):
 		"blue":
 			return Color(color.b, color.g, color.r, color.a)
