@@ -29,13 +29,13 @@ msgid "It won't be easy."
 msgstr "No será fácil."
 
 msgid "To master the use of your unit, these trials will test your endurance,"
-msgstr "Para dominar el uso de tu unidad, estas pruebas medirán tu resistencia,"
+msgstr "Para dominar el uso de su unidad, estas pruebas medirán su resistencia,"
 
 msgid "your handling of stress,"
-msgstr "tu manejo del estrés,"
+msgstr "su manejo del estrés,"
 
 msgid "and your reflexes."
-msgstr "y tus reflejos."
+msgstr "y sus reflejos."
 
 msgid "Use the W, A, S, D keys or the arrow keys to move."
 msgstr "Usa las teclas W, A, S, D o las flechas para moverte."
@@ -57,7 +57,7 @@ msgid "They will be with you throughout this whole journey."
 msgstr "Ellos te acompañarán por todo este recorrido."
 
 msgid "The more you destroy in less time, the more your value as a key piece of the organization will rise."
-msgstr "Mientras más destruyas en menos tiempo, tu valor como pieza clave en la organización irá subiendo."
+msgstr "Mientras más destruyas en menos tiempo, su valor como pieza clave en la organización irá subiendo."
 
 msgid "Get ready for the next arena."
 msgstr "Prepárate para la próxima arena."
@@ -88,16 +88,16 @@ msgid "We want to guarantee excellence in this organization."
 msgstr "Queremos garantizar la excelencia en esta organización."
 
 msgid "Your results will be used to strengthen future trials for other soldiers."
-msgstr "Tus resultados se usarán para reforzar las pruebas futuras de otros soldados."
+msgstr "Sus resultados se usarán para reforzar las pruebas futuras de otros soldados."
 
 msgid "We will collect your endurance, your reaction times, your behavior and your overall way of piloting."
-msgstr "Recopilaremos tu resistencia, tus tiempos de reacción, tu comportamiento y tu forma general de pilotar."
+msgstr "Recopilaremos su resistencia, sus tiempos de reacción, su comportamiento y su forma general de pilotar."
 
 msgid "The simulator's artificial intelligence will improve based on the experiences and use of all of you."
 msgstr "La inteligencia artificial del simulador mejorará con las experiencias y el uso de todos ustedes."
 
 msgid "Handling your ship will always feel very close to the simulator experience."
-msgstr "Manejar tu nave siempre se sentirá muy parecido a la experiencia del simulador."
+msgstr "Manejar su nave siempre se sentirá muy parecido a la experiencia del simulador."
 
 msgid "In the next phase of the trial, you will face a single threat."
 msgstr "En la siguiente fase de la prueba, te enfrentarás a una única amenaza."
