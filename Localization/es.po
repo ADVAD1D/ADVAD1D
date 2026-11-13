@@ -76,13 +76,13 @@ msgid "Second test completed successfully, soldier."
 msgstr "Segunda prueba superada con éxito, soldado."
 
 msgid "We are impressed by the skill you have shown in the first two battle arenas."
-msgstr "Estamos impresionados por la habilidad que has demostrado en las dos primeras arenas de batalla."
+msgstr "Estamos impresionados por la habilidad que ha demostrado en las dos primeras arenas de batalla."
 
 msgid "What comes next will be the ultimate test: a deadly enemy."
 msgstr "Lo que viene será la prueba definitiva: un enemigo mortal."
 
 msgid "Not the simple robots you have been dealing with all this time."
-msgstr "No los simples robots con los que has lidiado todo este tiempo."
+msgstr "No los simples robots con los que ha lidiado todo este tiempo."
 
 msgid "We want to guarantee excellence in this organization."
 msgstr "Queremos garantizar la excelencia en esta organización."
@@ -103,7 +103,7 @@ msgid "In the next phase of the trial, you will face a single threat."
 msgstr "En la siguiente fase de la prueba, te enfrentarás a una única amenaza."
 
 msgid "You need to put into practice everything you have learned so far."
-msgstr "Necesitas poner en práctica todo lo que has aprendido hasta ahora."
+msgstr "Necesitas poner en práctica todo lo que ha aprendido hasta ahora."
 
 msgid "Good luck in arena 3."
 msgstr "Buena suerte en la arena 3."
