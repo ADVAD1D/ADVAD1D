@@ -98,14 +98,14 @@ func _on_ship_selection_changed(ship_data: Dictionary):
 			# Secret achievements don't spoil their name
 			ship_author_label.text = "Get: ???"
 		elif achievement:
-			ship_author_label.text = "Get: " + achievement.title
+			ship_author_label.text = tr("Get: ") + achievement.title
 		elif ShopManager.is_ship_reserved(index):
 			ship_author_label.text = "Get: ???"
 		else:
 			ship_author_label.text = "Get: SHOP"
 	else:
 		ship_name_label.text = ship_data["name"]
-		ship_author_label.text = "By: " + ship_data["author"]
+		ship_author_label.text = tr("By: ") + ship_data["author"]
 	
 # --- Colour picker ---------------------------------------------------------------
 

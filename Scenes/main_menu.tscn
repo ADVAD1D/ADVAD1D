@@ -1,6 +1,13 @@
 [gd_scene format=3 uid="uid://s72gvn2mqhx2"]
 
 [ext_resource type="Texture2D" uid="uid://8n821btsns0g" path="res://Assets/Sprites/firstscene.png" id="1_28flt"]
+[ext_resource type="Script" path="res://Scripts/UI/spanish_textures.gd" id="es_script"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/play_button_es.svg" id="es_play"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/play_button_hover_es.svg" id="es_play_h"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/credits_button_es.svg" id="es_credits"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/credits_button_hover_es.svg" id="es_credits_h"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/quit_button_es.svg" id="es_quit"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/quit_button_hover_es.svg" id="es_quit_h"]
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
 [ext_resource type="Texture2D" uid="uid://bgs2sn1qmqdrc" path="res://Assets/Sprites/ADVADLOGODEF.png" id="2_1ehe0"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_48xlc"]
@@ -416,5 +423,26 @@ layout_mode = 1
 [node name="SpecialThanksPanel" parent="." unique_id=339202290 instance=ExtResource("17_wyh8j")]
 visible = false
 layout_mode = 1
+
+[node name="Spanish" type="Node" parent="VBoxContainer/PlayButton"]
+script = ExtResource("es_script")
+normal = ExtResource("es_play")
+hover = ExtResource("es_play_h")
+pressed = ExtResource("es_play_h")
+focused = ExtResource("es_play_h")
+
+[node name="Spanish" type="Node" parent="VBoxContainer/CreditsButton"]
+script = ExtResource("es_script")
+normal = ExtResource("es_credits")
+hover = ExtResource("es_credits_h")
+pressed = ExtResource("es_credits_h")
+focused = ExtResource("es_credits_h")
+
+[node name="Spanish" type="Node" parent="VBoxContainer/QuitButton"]
+script = ExtResource("es_script")
+normal = ExtResource("es_quit")
+hover = ExtResource("es_quit_h")
+pressed = ExtResource("es_quit_h")
+focused = ExtResource("es_quit_h")
 
 [connection signal="timeout" from="ScrollTimer" to="." method="_on_scroll_timer_timeout"]

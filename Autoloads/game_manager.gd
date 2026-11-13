@@ -10,6 +10,13 @@ signal points_added(points)
 signal pause(is_paused)
 ## Emitted by apply_settings() after a settings panel toggle (the HUD shows/hides the FPS).
 signal settings_changed
+## Emitted by set_language(): UI that swaps images or builds text in code refreshes.
+signal language_changed(language: String)
+
+## Game language: "en" (the default, always on a new save) or "es". Texts are translated
+## by Godot's TranslationServer from Localization/es.po (English text = key).
+var language: String = "en"
+const LANGUAGES: Array[String] = ["en", "es"]
 
 #global variables
 ## Pilot name typed in the skin selector (local only, saved with the game).
@@ -136,6 +143,8 @@ func _ready() -> void:
 	if OS.has_feature("web"):
 		browser_support = true
 	load_data()
+	# Always English unless the player picked Spanish (not the system's language)
+	TranslationServer.set_locale(language)
 	# Saves from before the arena tracker: NEW GROUND means arena 2 was already reached
 	if AchievementManager.is_unlocked(&"arena_2_reached") and not has_visited_arena(1):
 		mark_arena_visited(1)
@@ -214,6 +223,15 @@ func apply_settings() -> void:
 	save_data()
 	settings_changed.emit()
 
+## Switches the language (settings panel EN/ES button), saves it and tells the UI.
+func set_language(new_language: String) -> void:
+	if not LANGUAGES.has(new_language):
+		return
+	language = new_language
+	TranslationServer.set_locale(language)
+	save_data()
+	language_changed.emit(language)
+
 ## Serializes and saves game configuration to user://save_game.json.
 ## On Web builds (browser_support = true), it only saves the player's name
 ## as local file persistence is not fully supported or is constrained in browsers.
@@ -224,7 +242,8 @@ func save_data():
 		#only save player name in web version
 		_log_message("Save ONLY player_name in web version")
 		data = {
-			"pilot_name": player_name
+			"pilot_name": player_name,
+			"language": language
 		}
 		_log_message(["Player name: ", player_name])
 	else:
@@ -243,7 +262,8 @@ func save_data():
 			"crt_roll_enabled": crt_roll_enabled,
 			"music_volume": music_volume_percent,
 			"sfx_volume": sfx_volume_percent,
-			"visited_arenas": visited_arenas
+			"visited_arenas": visited_arenas,
+			"language": language
 		}
 		_log_message(["saved game!, selected skin", SkinManager.equipped_ship_index])
 		_log_message(["Relative controls: ", relative_control_active])
@@ -314,6 +334,9 @@ func load_data():
 	if data and "pilot_name" in data:
 		player_name = String(data["pilot_name"])
 		_log_message(["Loaded player name: ", player_name])
+
+	if data and "language" in data and LANGUAGES.has(String(data["language"])):
+		language = String(data["language"])
 		
 	if data and "mobile_layout" in data:
 		mobile_layout = data["mobile_layout"]

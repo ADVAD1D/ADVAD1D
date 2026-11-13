@@ -78,7 +78,7 @@ func progress_text(value: float, has_value: bool) -> String:
 func reward_text() -> String:
 	if reward_ship_index < 0 or reward_ship_index >= SkinManager.ship_data.size():
 		return ""
-	return "SHIP %02d" % (reward_ship_index + 1)
+	return tr("SHIP %02d") % (reward_ship_index + 1)
 
 
 static func format_time(seconds: float, with_cents: bool = true) -> String:

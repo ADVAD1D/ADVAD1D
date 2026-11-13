@@ -8,7 +8,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _on_score_updated(new_score: int) -> void:
-	text = "SCORE: " + str(GameManager.score)
+	text = tr("SCORE: ") + str(GameManager.score)
 	if new_score > 0:
 		score_sound.play()
 		var tween = create_tween()

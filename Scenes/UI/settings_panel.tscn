@@ -140,6 +140,15 @@ texture_normal = ExtResource("5_m3bi6")
 texture_pressed = ExtResource("6_wyh8j")
 texture_hover = ExtResource("6_wyh8j")
 
+[node name="LanguageButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 68.65
+offset_top = 69.0
+offset_right = 98.65
+offset_bottom = 99.0
+scale = Vector2(0.7886959, 0.7886959)
+focus_mode = 0
+
 [node name="MusicVolume" type="Control" parent="."]
 layout_mode = 0
 offset_left = 5.0

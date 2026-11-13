@@ -1,6 +1,11 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://Scripts/shop_screen.gd" id="1_script"]
+[ext_resource type="Script" path="res://Scripts/UI/spanish_textures.gd" id="es_script"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/buy_button_es.png" id="es_buy"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/buy_button_hover_es.png" id="es_buy_h"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/buy_button_disabled_es.png" id="es_buy_d"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/shop_sign_es.png" id="es_sign"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/shop_bg.png" id="2_bg"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/shopkeeper_idle.png" id="3_keeper"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/shop_counter.png" id="4_counter"]
@@ -199,6 +204,13 @@ texture_pressed = ExtResource("20_buy_h")
 texture_hover = ExtResource("20_buy_h")
 texture_disabled = ExtResource("21_buy_d")
 
+[node name="Spanish" type="Node" parent="Board/BuyButton"]
+script = ExtResource("es_script")
+normal = ExtResource("es_buy")
+hover = ExtResource("es_buy_h")
+pressed = ExtResource("es_buy_h")
+disabled = ExtResource("es_buy_d")
+
 [node name="DialogBox" type="TextureRect" parent="Board"]
 layout_mode = 0
 offset_left = 168.0
@@ -251,6 +263,10 @@ offset_right = 117.0
 offset_bottom = 35.0
 mouse_filter = 2
 texture = ExtResource("22_sign")
+
+[node name="Spanish" type="Node" parent="Board/ShopSign"]
+script = ExtResource("es_script")
+texture = ExtResource("es_sign")
 
 [node name="BalanceGem" type="TextureRect" parent="Board"]
 layout_mode = 0

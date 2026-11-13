@@ -1,0 +1,429 @@
+# Spanish translation of ADVAD. The key (msgid) is the English text exactly as it appears
+# in the scenes, scripts and resources; English is the default and needs no file.
+# Names (ships, authors, GEMELA, ADNEX, achievement and shop item titles, colour names)
+# are not translated on purpose. The secret chat console stays in English.
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: es\n"
+
+# --- Commander dialogues (CinematicDialogue) ---------------------------------------------
+
+msgid "COMMANDER"
+msgstr "COMANDANTE"
+
+# Abduction.tscn (abduction_scene.gd)
+msgid "Welcome to the training program, soldier."
+msgstr "Bienvenido al programa de entrenamiento, soldado."
+
+msgid "This simulation is designed for you to learn and master the use of your ship."
+msgstr "Esta simulación está diseñada para que aprendas y domines el uso de tu nave."
+
+msgid "You will face a series of challenges divided into 3 battle arenas, where you must clear 10 phases."
+msgstr "Enfrentarás una serie de desafíos divididos en 3 arenas de batalla, donde deberás superar 10 fases."
+
+msgid "Each phase has a set of enemies and a requirement to move on to the next one."
+msgstr "Cada fase tiene un grupo de enemigos y un requisito para pasar a la siguiente."
+
+msgid "It won't be easy."
+msgstr "No será fácil."
+
+msgid "To master the use of your unit, these trials will test your endurance,"
+msgstr "Para dominar el uso de tu unidad, estas pruebas medirán tu resistencia,"
+
+msgid "your handling of stress,"
+msgstr "tu manejo del estrés,"
+
+msgid "and your reflexes."
+msgstr "y tus reflejos."
+
+msgid "Use the W, A, S, D keys or the arrow keys to move."
+msgstr "Usa las teclas W, A, S, D o las flechas para moverte."
+
+msgid "Press E to dash, which grants you 0.5 seconds of invulnerability."
+msgstr "Pulsa E para hacer un dash, que te da 0,5 segundos de invulnerabilidad."
+
+msgid "To shoot, use the F key or the space bar."
+msgstr "Para disparar, usa la tecla F o la barra espaciadora."
+
+msgid "Let's begin with arena 1."
+msgstr "Empecemos con la arena 1."
+
+# ending.tscn (after arena 1)
+msgid "You have learned to deal with the 2 main types of bots: ships and saws."
+msgstr "Has aprendido a lidiar con los 2 tipos de bots principales: las naves y las sierras."
+
+msgid "They will be with you throughout this whole journey."
+msgstr "Ellos te acompañarán por todo este recorrido."
+
+msgid "The more you destroy in less time, the more your value as a key piece of the organization will rise."
+msgstr "Mientras más destruyas en menos tiempo, tu valor como pieza clave en la organización irá subiendo."
+
+msgid "Get ready for the next arena."
+msgstr "Prepárate para la próxima arena."
+
+msgid "An enemy stuck to the walls will stalk you for a few phases."
+msgstr "Un enemigo pegado a las paredes te acechará por unas cuantas fases."
+
+msgid "You have to learn to dodge it while you destroy what is needed."
+msgstr "Tienes que aprender a esquivarlo mientras destruyes lo necesario."
+
+msgid "Let's begin with arena 2."
+msgstr "Empecemos con la arena 2."
+
+# test_room_cinematic.tscn (before arena 3)
+msgid "Second test completed successfully, soldier."
+msgstr "Segunda prueba superada con éxito, soldado."
+
+msgid "We are impressed by the skill you have shown in the first two battle arenas."
+msgstr "Estamos impresionados por la habilidad que has demostrado en las dos primeras arenas de batalla."
+
+msgid "What comes next will be the ultimate test: a deadly enemy."
+msgstr "Lo que viene será la prueba definitiva: un enemigo mortal."
+
+msgid "Not the simple robots you have been dealing with all this time."
+msgstr "No los simples robots con los que has lidiado todo este tiempo."
+
+msgid "We want to guarantee excellence in this organization."
+msgstr "Queremos garantizar la excelencia en esta organización."
+
+msgid "Your results will be used to strengthen future trials for other soldiers."
+msgstr "Tus resultados se usarán para reforzar las pruebas futuras de otros soldados."
+
+msgid "We will collect your endurance, your reaction times, your behavior and your overall way of piloting."
+msgstr "Recopilaremos tu resistencia, tus tiempos de reacción, tu comportamiento y tu forma general de pilotar."
+
+msgid "The simulator's artificial intelligence will improve based on the experiences and use of all of you."
+msgstr "La inteligencia artificial del simulador mejorará con las experiencias y el uso de todos ustedes."
+
+msgid "Handling your ship will always feel very close to the simulator experience."
+msgstr "Manejar tu nave siempre se sentirá muy parecido a la experiencia del simulador."
+
+msgid "In the next phase of the trial, you will face a single threat."
+msgstr "En la siguiente fase de la prueba, te enfrentarás a una única amenaza."
+
+msgid "You need to put into practice everything you have learned so far."
+msgstr "Necesitas poner en práctica todo lo que has aprendido hasta ahora."
+
+msgid "Good luck in arena 3."
+msgstr "Buena suerte en la arena 3."
+
+# monitor_cinematic.tscn (after arena 3)
+msgid "Simulation complete. Congratulations on passing every trial."
+msgstr "Simulación terminada. Felicidades por haber superado todas las pruebas."
+
+msgid "You will now be sent to a real training test."
+msgstr "Ahora será dirigido a una prueba de entrenamiento real."
+
+msgid "SEND IN THE NEXT ONE!"
+msgstr "¡QUE PASE EL SIGUIENTE!"
+
+# --- Main menu, settings, pause --------------------------------------------------------
+
+msgid "JOIN DISCORD!"
+msgstr "¡ÚNETE AL DISCORD!"
+
+msgid "RELATIVE CONTROL ACTIVE"
+msgstr "CONTROL RELATIVO ACTIVO"
+
+msgid "GLOBAL CONTROL ACTIVE"
+msgstr "CONTROL GLOBAL ACTIVO"
+
+msgid "resume"
+msgstr "continuar"
+
+msgid "settings"
+msgstr "ajustes"
+
+msgid "quit"
+msgstr "salir"
+
+# --- HUD -------------------------------------------------------------------------------
+
+msgid "PHASE"
+msgstr "FASE"
+
+msgid "PHASE: "
+msgstr "FASE: "
+
+msgid "SCORE: "
+msgstr "PUNTOS: "
+
+msgid "SCORE: 0"
+msgstr "PUNTOS: 0"
+
+msgid "ARENA WIN"
+msgstr "ARENA SUPERADA"
+
+msgid "CONGRATULATIONS!"
+msgstr "¡FELICIDADES!"
+
+# Arcade HUD
+msgid "RUN OVER"
+msgstr "FIN DE PARTIDA"
+
+msgid "PHASE %d   SCORE %d"
+msgstr "FASE %d   PUNTOS %d"
+
+msgid "NEW BEST!"
+msgstr "¡NUEVO RÉCORD!"
+
+msgid "BEST %d"
+msgstr "RÉCORD %d"
+
+# --- Ship selector ---------------------------------------------------------------------
+
+msgid "SHIP SELECTOR"
+msgstr "SELECTOR DE NAVES"
+
+msgid "USERNAME:"
+msgstr "NOMBRE:"
+
+msgid "By: "
+msgstr "Por: "
+
+msgid "Get: "
+msgstr "Obtén: "
+
+msgid "Get: ???"
+msgstr "Obtén: ???"
+
+msgid "Get: SHOP"
+msgstr "Obtén: TIENDA"
+
+msgid "GET IT IN THE SHOP!"
+msgstr "¡CONSÍGUELA EN LA TIENDA!"
+
+msgid "NAME SAVED!"
+msgstr "¡NOMBRE GUARDADO!"
+
+msgid "CONSOLE"
+msgstr "CONSOLA"
+
+# --- Achievements ----------------------------------------------------------------------
+
+msgid "ACHIEVEMENTS"
+msgstr "LOGROS"
+
+msgid "UNLOCKED"
+msgstr "DESBLOQUEADO"
+
+msgid "REWARD"
+msgstr "RECOMPENSA"
+
+msgid "KEEP PLAYING TO REVEAL"
+msgstr "SIGUE JUGANDO PARA DESCUBRIRLO"
+
+msgid "ACHIEVEMENT UNLOCKED"
+msgstr "LOGRO DESBLOQUEADO"
+
+msgid "SHIP %02d"
+msgstr "NAVE %02d"
+
+msgid "%s UNLOCKED"
+msgstr "%s DESBLOQUEADA"
+
+msgid "CLEAR ARENA 01"
+msgstr "SUPERA LA ARENA 01"
+
+msgid "REACH ARENA 02"
+msgstr "LLEGA A LA ARENA 02"
+
+msgid "REACH ARENA 03"
+msgstr "LLEGA A LA ARENA 03"
+
+msgid "SHIELD OFF A GUN BEAM IN NORMAL MODE"
+msgstr "DETÉN UN RAYO CON EL ESCUDO EN MODO NORMAL"
+
+msgid "DECODE THE SECRET TRANSMISSION"
+msgstr "DESCIFRA LA TRANSMISIÓN SECRETA"
+
+msgid "DEFEAT GEMELA"
+msgstr "DERROTA A GEMELA"
+
+msgid "DESTROY A LASER GUN"
+msgstr "DESTRUYE UN CAÑÓN LÁSER"
+
+msgid "DIE 1000 TIMES"
+msgstr "MUERE 1000 VECES"
+
+msgid "SHIELD A LASER BACK INTO ITS SHIP"
+msgstr "DEVUELVE UN LÁSER A SU NAVE CON EL ESCUDO"
+
+msgid "DESTROY 5 SAWS"
+msgstr "DESTRUYE 5 SIERRAS"
+
+msgid "CLEAR ARENA 01 IN UNDER 8:00"
+msgstr "SUPERA LA ARENA 01 EN MENOS DE 8:00"
+
+# --- Shop ------------------------------------------------------------------------------
+
+msgid "SHOPKEEPER"
+msgstr "TENDERO"
+
+msgid "HI, HERE YOU CAN GET UPGRADES\nAND SHIP DESIGNS."
+msgstr "HOLA, AQUÍ PUEDES CONSEGUIR MEJORAS\nY DISEÑOS DE NAVES."
+
+msgid "%s FOR %d DIAMONDS.\nPRESS AGAIN TO CONFIRM."
+msgstr "%s POR %d DIAMANTES.\nPULSA OTRA VEZ PARA CONFIRMAR."
+
+msgid "%s FOR %d DIAMONDS.\nPRESS BUY TO GET IT."
+msgstr "%s POR %d DIAMANTES.\nPULSA COMPRAR PARA OBTENERLO."
+
+msgid "YOU NEED MORE DIAMONDS.\nTHEY ARE EARNED IN ARCADE MODE."
+msgstr "NECESITAS MÁS DIAMANTES.\nSE GANAN EN EL MODO ARCADE."
+
+msgid "THIS UPGRADE IS FULLY INSTALLED."
+msgstr "ESTA MEJORA YA ESTÁ COMPLETA."
+
+msgid "NO SHIP DESIGNS LEFT."
+msgstr "NO QUEDAN DISEÑOS DE NAVES."
+
+msgid "THIS COLOR IS ALREADY\nIN YOUR PALETTE."
+msgstr "ESTE COLOR YA ESTÁ\nEN TU PALETA."
+
+msgid "ONLY ARCADE"
+msgstr "SOLO ARCADE"
+
+msgid "SOLD OUT"
+msgstr "AGOTADO"
+
+msgid "MAX"
+msgstr "MÁX"
+
+msgid "OWNED"
+msgstr "TUYO"
+
+msgid "NEW SHIP"
+msgstr "NAVE NUEVA"
+
+msgid "NEW COLOR"
+msgstr "COLOR NUEVO"
+
+msgid "+10% SPAWN\nCHANCE"
+msgstr "+10% PROB.\nDE APARICIÓN"
+
+msgid "+10% SPAWN\nIN ARENA 2"
+msgstr "+10% APARICIÓN\nEN ARENA 2"
+
+msgid "+10% SPAWN\nIN ARENA 3"
+msgstr "+10% APARICIÓN\nEN ARENA 3"
+
+msgid "MYSTERY\nSHIP"
+msgstr "NAVE\nMISTERIOSA"
+
+msgid "SHIP\nCOLOR"
+msgstr "COLOR\nDE NAVE"
+
+msgid "ALLY SAW UPGRADE INSTALLED."
+msgstr "MEJORA ALLY SAW INSTALADA."
+
+msgid "QUAD LASER UPGRADE INSTALLED."
+msgstr "MEJORA QUAD LASER INSTALADA."
+
+msgid "SHIELD UPGRADE INSTALLED."
+msgstr "MEJORA SHIELD INSTALADA."
+
+msgid "TIMEWARP UPGRADE INSTALLED."
+msgstr "MEJORA TIMEWARP INSTALADA."
+
+msgid "TRIPLE SHOT UPGRADE INSTALLED."
+msgstr "MEJORA TRIPLE SHOT INSTALADA."
+
+msgid "NEW SHIP DESIGN ADDED\nTO YOUR HANGAR."
+msgstr "NUEVO DISEÑO DE NAVE\nAÑADIDO A TU HANGAR."
+
+msgid "NEW COLOR ADDED\nTO YOUR PALETTE."
+msgstr "NUEVO COLOR AÑADIDO\nA TU PALETA."
+
+# --- Credits panel (credits.tscn) and special thanks ------------------------------------
+
+msgid "CREDITS"
+msgstr "CRÉDITOS"
+
+msgid "Game by: ANGELUS11 and Cro128"
+msgstr "Juego de: ANGELUS11 y Cro128"
+
+msgid "Music by: Psychronic Games"
+msgstr "Música de: Psychronic Games"
+
+msgid "CRT VISUAL SHADER by lord0Sanz"
+msgstr "SHADER VISUAL CRT de lord0Sanz"
+
+msgid "GAME THUMBNAIL BY NESTORGMS"
+msgstr "MINIATURA DEL JUEGO DE NESTORGMS"
+
+msgid ""
+"Laser4.wav by jobro\n"
+"https://freesound.org/s/35681/ -- License: Attribution 3.0\n"
+"Picked Coin Echo by NenadSimic\n"
+"https://freesound.org/s/171696/ -- License: Attribution 4.0\n"
+"Glitch_001.wav by AlienXXX\n"
+"https://freesound.org/s/195491/ -- License: Attribution 4.0\n"
+"Game Sound Correct With Delay by Bertrof\n"
+"https://freesound.org/s/351564/ -- License: Attribution 3.0"
+msgstr ""
+"Laser4.wav de jobro\n"
+"https://freesound.org/s/35681/ -- Licencia: Atribución 3.0\n"
+"Picked Coin Echo de NenadSimic\n"
+"https://freesound.org/s/171696/ -- Licencia: Atribución 4.0\n"
+"Glitch_001.wav de AlienXXX\n"
+"https://freesound.org/s/195491/ -- Licencia: Atribución 4.0\n"
+"Game Sound Correct With Delay de Bertrof\n"
+"https://freesound.org/s/351564/ -- Licencia: Atribución 3.0"
+
+msgid "SPECIAL THANKS"
+msgstr "AGRADECIMIENTOS"
+
+# --- End credits (credits_roll.gd, one key per line) ------------------------------------
+
+msgid "Credits"
+msgstr "Créditos"
+
+msgid "Created by ANGELUS11"
+msgstr "Creado por ANGELUS11"
+
+msgid "Programming / Art"
+msgstr "Programación / Arte"
+
+msgid "Music"
+msgstr "Música"
+
+msgid "CRT Visual Shader"
+msgstr "Shader visual CRT"
+
+msgid "Game Thumbnail"
+msgstr "Miniatura del juego"
+
+msgid "Sound Effects"
+msgstr "Efectos de sonido"
+
+msgid "Laser4.wav by jobro"
+msgstr "Laser4.wav de jobro"
+
+msgid "https://freesound.org/s/35681/ - License: Attribution 3.0"
+msgstr "https://freesound.org/s/35681/ - Licencia: Atribución 3.0"
+
+msgid "Picked Coin Echo by NenadSimic"
+msgstr "Picked Coin Echo de NenadSimic"
+
+msgid "https://freesound.org/s/171696/ - License: Attribution 4.0"
+msgstr "https://freesound.org/s/171696/ - Licencia: Atribución 4.0"
+
+msgid "Glitch_001.wav by AlienXXX"
+msgstr "Glitch_001.wav de AlienXXX"
+
+msgid "https://freesound.org/s/195491/ - License: Attribution 4.0"
+msgstr "https://freesound.org/s/195491/ - Licencia: Atribución 4.0"
+
+msgid "Game Sound Correct With Delay by Bertrof"
+msgstr "Game Sound Correct With Delay de Bertrof"
+
+msgid "https://freesound.org/s/351564/ - License: Attribution 3.0"
+msgstr "https://freesound.org/s/351564/ - Licencia: Atribución 3.0"
+
+msgid "Special Thanks to"
+msgstr "Agradecimientos especiales a"
+
+msgid "Made with Godot Engine"
+msgstr "Hecho con Godot Engine"

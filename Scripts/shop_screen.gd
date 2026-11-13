@@ -90,6 +90,9 @@ func _ready() -> void:
 	_mobile = GameManager.mobile_mode_active
 	buy_button.visible = _mobile
 	buy_button.pressed.connect(_on_buy_pressed)
+	# They show part of an already translated line while it's being typed (_say)
+	for label in line_labels:
+		label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	if _mobile:
 		# The page counter moves to the right of the BUY button
 		page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -285,7 +288,7 @@ func _make_card(item: ShopItem, index: int) -> Control:
 	var head: Label = _add_label(card, item.title, Vector2(0, 3), 11, DARK_FILL, CYAN_OUTLINE,
 			CARD_SIZE.x, HORIZONTAL_ALIGNMENT_CENTER)
 	head.name = "Head"
-	var rows: PackedStringArray = item.description.split("\n")
+	var rows: PackedStringArray = tr(item.description).split("\n")
 	for r in mini(rows.size(), 2):
 		_add_label(card, rows[r], Vector2(0, 74 + r * 7), 9, TEXT_DIM, Color.TRANSPARENT,
 				CARD_SIZE.x, HORIZONTAL_ALIGNMENT_CENTER)
@@ -368,7 +371,7 @@ func _activate(index: int) -> void:
 		var item: ShopItem = ShopManager.items[index]
 		_armed = index
 		button_sound.play()
-		_say(LINE_CONFIRM % [item.title, ShopManager.get_price(item)])
+		_say(tr(LINE_CONFIRM) % [item.title, ShopManager.get_price(item)])
 		return
 	_armed = -1
 	_purchase(index)
@@ -380,7 +383,7 @@ func _quote(index: int) -> void:
 	if ShopManager.is_maxed(item):
 		_say(_maxed_line(item))
 	else:
-		_say(LINE_PRICE % [item.title, ShopManager.get_price(item)])
+		_say(tr(LINE_PRICE) % [item.title, ShopManager.get_price(item)])
 
 
 ## Mobile BUY button: buys the selected card in one press.
@@ -543,9 +546,9 @@ func _open_dialog_box() -> void:
 	tween.tween_callback(func(): _say(LINE_WELCOME))
 
 
-## Starts typing a line (two rows max, separated by \n).
+## Starts typing a line (two rows max, separated by \n), translated (Localization/es.po).
 func _say(text: String) -> void:
-	_line_rows = text.split("\n")
+	_line_rows = tr(text).split("\n")
 	_line_length = 0
 	for row in _line_rows:
 		_line_length += row.length()

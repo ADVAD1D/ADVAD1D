@@ -33,6 +33,16 @@ var _toggle_player: AudioStreamPlayer
 @onready var fullscreen_button: TextureButton = $FullScreenButton
 @onready var speedrun_button: TextureButton = $SpeedrunButton
 @onready var special_thanks_button: TextureButton = $SpecialThanksButton
+## Shows the current language (EN / ES); a press switches to the other one.
+@onready var language_button: TextureButton = get_node_or_null("LanguageButton")
+
+## language -> [normal, hover] textures of the language button.
+const LANGUAGE_TEXTURES: Dictionary = {
+	"en": [preload("res://Assets/Sprites/Settings/language_en.png"),
+			preload("res://Assets/Sprites/Settings/language_en_hover.png")],
+	"es": [preload("res://Assets/Sprites/Settings/language_es.png"),
+			preload("res://Assets/Sprites/Settings/language_es_hover.png")],
+}
 
 
 func _ready() -> void:
@@ -92,6 +102,13 @@ func _ready() -> void:
 	special_thanks_button.visible = show_special_thanks
 	special_thanks_button.pressed.connect(special_thanks_requested.emit)
 
+	if language_button:
+		language_button.pressed.connect(func():
+			_play_toggle()
+			GameManager.set_language("es" if GameManager.language == "en" else "en")
+			_update_language_button()
+		)
+
 
 ## Puts every toggle in line with GameManager (without firing their signals). Called on
 ## ready and every time the panel opens, since another scene may have changed something.
@@ -109,6 +126,16 @@ func sync_with_settings() -> void:
 		retro_button.set_pressed_no_signal(GameManager.pc_optimize_shaders)
 	roll_button.set_pressed_no_signal(not GameManager.crt_roll_enabled)
 	_update_roll_button()
+	_update_language_button()
+
+
+func _update_language_button() -> void:
+	if language_button == null:
+		return
+	var textures: Array = LANGUAGE_TEXTURES.get(GameManager.language, LANGUAGE_TEXTURES["en"])
+	language_button.texture_normal = textures[0]
+	language_button.texture_hover = textures[1]
+	language_button.texture_pressed = textures[1]
 
 
 ## Disabled (dimmed) where the CRT never rolls anyway: mobile, web and optimized shaders.

@@ -194,12 +194,13 @@ func _show_results(results: Dictionary) -> void:
 	box.add_theme_constant_override("separation", 0)
 	panel.add_child(box)
 	box.add_child(_centered(_label("RUN OVER", 20, CYAN)))
-	var phase_text: String = "PHASE %d   SCORE %d" % [int(results["phase"]), int(results["score"])]
+	var phase_text: String = tr("PHASE %d   SCORE %d") % [int(results["phase"]),
+			int(results["score"])]
 	box.add_child(_centered(_label(phase_text, 12, Color.TRANSPARENT, LIGHT)))
 	if results["new_best"]:
 		box.add_child(_centered(_label("NEW BEST!", 14, PINK, PINK_DARK)))
 	else:
-		var best_text: String = "BEST %d" % int(results["best_score"])
+		var best_text: String = tr("BEST %d") % int(results["best_score"])
 		box.add_child(_centered(_label(best_text, 12, Color.TRANSPARENT, DIM)))
 
 	var reward_row: HBoxContainer = HBoxContainer.new()

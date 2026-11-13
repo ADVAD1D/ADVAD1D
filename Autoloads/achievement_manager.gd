@@ -384,7 +384,7 @@ func _show_next_toast() -> void:
 	var achievement: Achievement = _toast_queue.pop_front()
 	_toast_title.text = achievement.title
 	var reward: String = achievement.reward_text()
-	_toast_reward.text = (reward + " UNLOCKED") if reward != "" else ""
+	_toast_reward.text = (tr("%s UNLOCKED") % reward) if reward != "" else ""
 	_toast_reward.visible = reward != ""
 	_toast_panel.reset_size()
 	var width: float = _toast_panel.get_combined_minimum_size().x

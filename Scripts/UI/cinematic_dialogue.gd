@@ -39,22 +39,27 @@ func _ready() -> void:
 	modulate.a = 0.0
 	name_label.text = speaker_name
 	text_label.text = ""
+	# The lines are translated in play() (the typing counts the shown text's characters)
+	text_label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	next_arrow.visible = false
 	var arrow_blink: Tween = create_tween().set_loops()
 	arrow_blink.tween_property(next_arrow, "modulate:a", 0.15, 0.4)
 	arrow_blink.tween_property(next_arrow, "modulate:a", 1.0, 0.4)
 
 
-## Opens the box and starts with the first line. An empty `speaker` keeps speaker_name.
-## Every "soldier" (the word alone, not "soldiers") becomes "soldier <pilot name>", the
-## name typed in the skin selector (GameManager.player_name). No name: it stays "soldier".
+## Translates every line (Localization/es.po) and, with a pilot name saved, every
+## "soldier" / "soldado" (the word alone, not the plural) becomes "soldier <pilot name>",
+## the name typed in the skin selector (GameManager.player_name).
 func _with_pilot_name(lines: PackedStringArray) -> PackedStringArray:
+	var translated: PackedStringArray = []
+	for line in lines:
+		translated.append(tr(line))
 	var pilot: String = GameManager.player_name.strip_edges()
 	if pilot.is_empty():
-		return lines
-	var word: RegEx = RegEx.create_from_string("(?i)\\bsoldier\\b")
+		return translated
+	var word: RegEx = RegEx.create_from_string("(?i)\\b(soldier|soldado)\\b")
 	var result: PackedStringArray = []
-	for line in lines:
+	for line in translated:
 		# Built by hand (not RegEx.sub) so a "$" in the name isn't read as a group
 		var out: String = ""
 		var last: int = 0

@@ -280,7 +280,7 @@ func start_new_phase():
 	GameManager.reset_score()
 
 	if is_instance_valid(phase_label):
-		phase_label.text = "PHASE: " + str(current_phase)
+		phase_label.text = tr("PHASE: ") + str(current_phase)
 
 	var current_phase_duration = _get_phase_duration(current_phase)
 
