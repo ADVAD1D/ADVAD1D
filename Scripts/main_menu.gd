@@ -151,34 +151,34 @@ func _setup_buttons() -> void:
 			special_thanks_panel.show()
 		)
 		settings_panel.credits_requested.connect(func():
-			get_tree().change_scene_to_file(credits_roll_path)
+			SceneTransition.change_scene_to_file(credits_roll_path)
 		)
 
 	if has_node("AchievementsButton"):
 		var achievements_btn = get_node("AchievementsButton")
 		achievements_btn.visible = GameManager.achievements_enabled
-		achievements_btn.pressed.connect(func(): get_tree().change_scene_to_packed(achievements_scene))
+		achievements_btn.pressed.connect(func(): SceneTransition.change_scene_to_packed(achievements_scene))
 
 	if has_node("ShopButton"):
 		var shop_btn = get_node("ShopButton")
 		shop_btn.visible = GameManager.shop_enabled
-		shop_btn.pressed.connect(func(): get_tree().change_scene_to_packed(shop_scene))
+		shop_btn.pressed.connect(func(): SceneTransition.change_scene_to_packed(shop_scene))
 
 	if has_node("SkinSelectorButton"):
-		get_node("SkinSelectorButton").pressed.connect(func(): get_tree().change_scene_to_packed(skin_selector_scene))
+		get_node("SkinSelectorButton").pressed.connect(func(): SceneTransition.change_scene_to_packed(skin_selector_scene))
 		
 	if has_node("DiscordButton"):
 		get_node("DiscordButton").pressed.connect(func(): OS.shell_open("https://discord.com/invite/ne3U8RS8bA"))
 		
 func _start_normal_mode() -> void:
 	GameManager.reset_game_state()
-	get_tree().change_scene_to_packed(next_scene)
+	SceneTransition.change_scene_to_packed(next_scene)
 
 ## An endless arena (see ArcadeManager). The arena scenes link back to this menu, so they
 ## come from GameManager's preloads instead of exports (no circular scene reference).
 func _start_arcade_mode(arena: int = 0) -> void:
 	ArcadeManager.start_run(arena)
-	get_tree().change_scene_to_packed(ArcadeManager.get_arena_scene(ArcadeManager.arena_index))
+	SceneTransition.change_scene_to_packed(ArcadeManager.get_arena_scene(ArcadeManager.arena_index))
 
 ## With a single playable arena ARCADE starts it right away; otherwise it opens the picker.
 func _on_arcade_button_pressed() -> void:

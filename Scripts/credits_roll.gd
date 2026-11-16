@@ -231,4 +231,4 @@ func _leave() -> void:
 	while MusicPlayer.is_fading:
 		await get_tree().process_frame
 	GameManager.can_pause = true
-	get_tree().change_scene_to_file(next_scene_path)
+	SceneTransition.change_scene_to_file(next_scene_path)

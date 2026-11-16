@@ -109,7 +109,7 @@ func _finish() -> void:
 	GameManager.post_boss_phases = false
 	GameManager.reset_score()
 	if next_scene:
-		get_tree().change_scene_to_packed(next_scene)
+		SceneTransition.change_scene_to_packed(next_scene)
 	else:
 		_log_message("ERROR: next_scene is not set for the test room cinematic.")
 

@@ -247,9 +247,9 @@ func _on_quit_pressed() -> void:
 			if is_instance_valid(node) and node is CanvasItem:
 				node.modulate = Color.WHITE
 	if menu_scene:
-		get_tree().change_scene_to_packed(menu_scene)
+		SceneTransition.change_scene_to_packed(menu_scene)
 	else:
-		get_tree().change_scene_to_file(MENU_PATH)
+		SceneTransition.change_scene_to_file(MENU_PATH)
 
 
 func _is_press(event: InputEvent) -> bool:

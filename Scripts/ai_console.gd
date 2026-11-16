@@ -278,7 +278,7 @@ func _scroll_to_bottom() -> void:
 
 
 func _on_back_button_pressed() -> void:
-	get_tree().call_deferred("change_scene_to_file", back_scene)
+	SceneTransition.change_scene_to_file(back_scene)
 
 
 func _log_message(message) -> void:

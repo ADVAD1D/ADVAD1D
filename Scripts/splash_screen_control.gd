@@ -49,6 +49,7 @@ func start_sequence():
 	await sprite_tween.finished
 	
 	if next_scene:
+		# Straight to the menu, without the static transition (the splash has its own fade)
 		get_tree().change_scene_to_packed(next_scene)
 	else:
 		print("Error, no se asignó una escena")

@@ -204,4 +204,4 @@ func fade_to_scene(target_scene_path: PackedScene, duration: float = 1.5):
 	await tween.finished
 	
 	if target_scene_path:
-		get_tree().call_deferred("change_scene_to_packed", target_scene_path)
+		SceneTransition.change_scene_to_packed(target_scene_path)

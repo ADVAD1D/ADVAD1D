@@ -60,7 +60,7 @@ func _finish() -> void:
 	await illustration_tween.finished
 	GameManager.can_pause = true
 	if next_scene:
-		get_tree().change_scene_to_packed(next_scene)
+		SceneTransition.change_scene_to_packed(next_scene)
 	else:
 		_log_message("ERROR: Not set a next_scene for the transition.")
 

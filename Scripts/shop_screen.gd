@@ -164,7 +164,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _go_back() -> void:
-	get_tree().change_scene_to_file(back_scene)
+	SceneTransition.change_scene_to_file(back_scene)
 
 
 func _on_window_resized() -> void:

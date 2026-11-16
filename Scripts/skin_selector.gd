@@ -266,7 +266,7 @@ func _input(event: InputEvent) -> void:
 	
 func _on_back_button_pressed():
 	SkinManager.restore_equipped_ship()
-	get_tree().change_scene_to_file(back_scene)
+	SceneTransition.change_scene_to_file(back_scene)
 	
 ## Half-hidden easter-egg button: faint until the mouse finds it (no keyboard focus).
 func _setup_chat_button() -> void:
@@ -289,7 +289,7 @@ func _on_chat_button_pressed() -> void:
 		return
 	# Leaving the selector puts back the equipped ship, like the back button
 	SkinManager.restore_equipped_ship()
-	get_tree().change_scene_to_packed(chat_console_scene)
+	SceneTransition.change_scene_to_packed(chat_console_scene)
 
 func _on_left_button_pressed():
 	SkinManager.select_previous_ship()

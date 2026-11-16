@@ -168,7 +168,7 @@ func _input(event: InputEvent) -> void:
 func change_to_next():
 	var next_scene = ResourceLoader.load_threaded_get(next_scene_path)
 	if next_scene:
-		get_tree().change_scene_to_packed(next_scene)
+		SceneTransition.change_scene_to_packed(next_scene)
 		
 func _log_message(message):
 	if GameManager.is_debug_text == true:

@@ -78,6 +78,6 @@ func _finish() -> void:
 		target = next_scene_by_arena[arena]
 
 	if target:
-		get_tree().change_scene_to_packed(target)
+		SceneTransition.change_scene_to_packed(target)
 	else:
 		print("ERROR: No se asignó una escena para la transición.")
