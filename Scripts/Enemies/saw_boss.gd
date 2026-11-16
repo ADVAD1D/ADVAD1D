@@ -7,7 +7,13 @@ extends Area2D
 ## - BURST: the vents fire small lasers outward while the ring spins, a spiral.
 ## - CHARGE + BEAM: the head turns its cannons at the player (blinking aim lines), then both
 ##   cannons fire a beam like the laser guns' (only walls stop it) and the head sweeps.
-## Below phase_two_at of its health it goes faster and bursts during the beams too.
+## - RUSH: it brakes and shakes while a red band shows the path to the player (it follows
+##   them, then locks), dashes along it (never through a wall) and lands with a ring wave
+##   and a double ring of small lasers. Phase two rushes twice in a row.
+## The attacks go in ATTACK_CYCLE order (burst, beams, rush, beams). Between them (IDLE)
+## the head fires small aimed fans of lasers at the player, so it's never quiet.
+## Below phase_two_at of its health it goes faster, bursts during the beams too and fires
+## the aimed fans while charging the beams as well.
 ## A health bar (Scripts/UI/boss_health_bar.gd) goes into the HUD, so the arena tint
 ## colours it. Beating it emits `defeated` (PhaseManager wins the arena).
 ##
@@ -23,7 +29,13 @@ signal defeated
 signal died(boss: Node)
 signal health_changed(current: int, maximum: int)
 
-enum State { ENTERING, IDLE, BURST, CHARGE, BEAM, DYING }
+enum State { ENTERING, IDLE, BURST, CHARGE, BEAM, RUSH_WINDUP, RUSH, DYING }
+
+## GEMELA's attacks in order, looping (CHARGE = charge + beams, RUSH_WINDUP = rush).
+const ATTACK_CYCLE: Array[State] = [State.BURST, State.CHARGE, State.RUSH_WINDUP, State.CHARGE]
+## Colour of the rush's path band and its centre line.
+const RUSH_BAND_COLOR: Color = Color(1.0, 0.2, 0.3, 0.16)
+const RUSH_LINE_COLOR: Color = Color(1.0, 0.35, 0.42, 0.9)
 
 const BossHealthBar = preload("res://Scripts/UI/boss_health_bar.gd")
 ## Blocked hit (invulnerable): body tint and the spark ring where the shot landed.
@@ -98,6 +110,36 @@ const EXPLOSION_SOUND: PackedScene = preload(
 @export var beam_width: float = 22.0
 @export var beam_range: float = 5000.0
 
+@export_group("Aimed fans")
+## GEMELA, between attacks (and while charging the beams in phase two): every interval
+## (seconds, phase two divides it by phase_two_speed) the head fires `aimed_shot_count`
+## small lasers at the player, fanned over `aimed_shot_spread` degrees. 0 lasers = off.
+@export var aimed_shot_count: int = 3
+@export var aimed_shot_spread: float = 26.0
+@export var aimed_shot_interval: float = 0.7
+## Wait before the first fan of each quiet moment.
+@export var aimed_shot_delay: float = 0.35
+
+@export_group("Rush")
+## Telegraph time before the dash: the path band follows the player for the first
+## `rush_lock_at` of it, then stays put (the player's cue to move).
+@export var rush_windup_time: float = 0.9
+@export_range(0.0, 1.0) var rush_lock_at: float = 0.65
+## Speed of the dash (world units per second; phase two multiplies it too).
+@export var rush_speed: float = 1900.0
+## How far past the player's spot it keeps going.
+@export var rush_overshoot: float = 250.0
+## Room kept between its edge and the wall it dashes towards.
+@export var rush_wall_margin: float = 40.0
+## Rushes in a row in phase two (one before it). The next ones have a shorter windup.
+@export var rush_count_phase_two: int = 2
+@export var rush_repeat_windup: float = 0.55
+## How hard it shakes (body offset, sprite pixels) right before dashing.
+@export var rush_shake: float = 7.0
+## Spin multiplier of the ring and star while it rushes (the windup winds it up); the head
+## spins along with them at ring_spin times this.
+@export var rush_spin_boost: float = 9.0
+
 @export_group("Rhythm")
 @export var attack_cooldown_min: float = 1.4
 @export var attack_cooldown_max: float = 2.2
@@ -118,7 +160,19 @@ var _shot_timer: float = 0.0
 var _shots: int = 0
 var _phase_two: bool = false
 var _invulnerable: bool = true
-var _last_attack: State = State.BEAM
+## Next attack in ATTACK_CYCLE.
+var _attack_step: int = 0
+## Time left to the next aimed fan.
+var _aim_shot_timer: float = 0.0
+## Rush: locked direction, length of the dash, how far it has gone, rushes left in a row
+## and the windup's full time (for the urgency of the blink and shake).
+var _rush_dir: Vector2 = Vector2.RIGHT
+var _rush_distance: float = 0.0
+var _rush_travelled: float = 0.0
+var _rushes_left: int = 0
+var _rush_windup_total: float = 1.0
+var _rush_band: Line2D
+var _rush_line: Line2D
 var _sweep_dir: float = 1.0
 ## Head rotation the cannons turn to while charging (random each shot).
 var _aim_rotation: float = 0.0
@@ -170,6 +224,9 @@ func _ready() -> void:
 	_player = get_tree().get_first_node_in_group("player") as Node2D
 	if head:
 		_build_beam_lines()
+		_rush_band = _make_line(1.0, RUSH_BAND_COLOR)
+		_rush_band.begin_cap_mode = Line2D.LINE_CAP_NONE
+		_rush_line = _make_line(4.0, RUSH_LINE_COLOR)
 		head.play(&"idle")
 	_load_checkpoint()
 	if show_health_bar and not is_mini:
@@ -218,20 +275,27 @@ func _start_idle(wait: float = -1.0) -> void:
 		if _phase_two:
 			wait /= phase_two_speed
 	_timer = wait
+	_aim_shot_timer = aimed_shot_delay
 
 
 func _start_next_attack() -> void:
 	if is_mini or head == null:
 		_start_charge()  # the mini blinks, then fires its volleys
-	elif _last_attack == State.BEAM:
-		_start_burst()
-	else:
-		_start_charge()
+		return
+	var attack: State = ATTACK_CYCLE[_attack_step % ATTACK_CYCLE.size()]
+	_attack_step += 1
+	match attack:
+		State.BURST:
+			_start_burst()
+		State.RUSH_WINDUP:
+			_rushes_left = rush_count_phase_two if _phase_two else 1
+			_start_rush_windup(rush_windup_time)
+		_:
+			_start_charge()
 
 
 func _start_burst() -> void:
 	_state = State.BURST
-	_last_attack = State.BURST
 	_timer = burst_time
 	_shot_timer = 0.0
 	_shots = 0
@@ -255,7 +319,6 @@ func _start_charge() -> void:
 
 func _start_beam() -> void:
 	_state = State.BEAM
-	_last_attack = State.BEAM
 	_timer = beam_time
 	_beam_clock = 0.0
 	_shot_timer = 0.0
@@ -280,22 +343,43 @@ func _physics_process(delta: float) -> void:
 	_move(delta, speed_mult)
 	match _state:
 		State.IDLE:
+			_tick_aimed_shots(delta, speed_mult)
 			_timer -= delta
 			if _timer <= 0.0:
 				_start_next_attack()
 		State.BURST:
 			_burst(delta, speed_mult)
 		State.CHARGE:
+			if _phase_two:
+				_tick_aimed_shots(delta, speed_mult)
 			_charge(delta)
 		State.BEAM:
 			_beam(delta, speed_mult)
+		State.RUSH_WINDUP:
+			_rush_windup(delta)
+		State.RUSH:
+			_rush(delta, speed_mult)
 
 
 func _spin(delta: float) -> void:
-	var spin: float = ring_spin * (4.0 if _state == State.ENTERING else _spin_boost)
+	var rush: float = _rush_spin_factor()
+	var spin: float = ring_spin * (4.0 if _state == State.ENTERING else _spin_boost) \
+			* lerpf(1.0, rush_spin_boost, rush)
 	ring.rotation_degrees += spin * delta
 	if star:
-		star.rotation_degrees += star_spin * delta
+		star.rotation_degrees += star_spin * lerpf(1.0, rush_spin_boost, rush) * delta
+	# Rushing, the head spins with the ring too: the whole saw comes in spinning
+	if head and rush > 0.0:
+		head.rotation_degrees += ring_spin * rush_spin_boost * rush * delta
+
+
+## 0 outside a rush; during the windup it winds up from 0 to 1, full while dashing.
+func _rush_spin_factor() -> float:
+	if _state == State.RUSH:
+		return 1.0
+	if _state == State.RUSH_WINDUP:
+		return 1.0 - clampf(_timer / _rush_windup_total, 0.0, 1.0)
+	return 0.0
 
 
 func _move(delta: float, speed_mult: float) -> void:
@@ -305,6 +389,9 @@ func _move(delta: float, speed_mult: float) -> void:
 		var target: Vector2 = global_position.direction_to(_player.global_position) * move_speed
 		_velocity = _velocity.lerp(target, 1.0 - exp(-acceleration * delta))
 		global_position += _velocity * delta
+		return
+	# The rush moves it on its own (_rush_windup / _rush)
+	if _state == State.RUSH_WINDUP or _state == State.RUSH:
 		return
 	_wander_timer -= delta
 	if _wander_timer <= 0.0 or global_position.distance_to(_wander_target) < 40.0:
@@ -417,7 +504,118 @@ func _beam(delta: float, speed_mult: float) -> void:
 		_start_idle()
 
 
+# --- Rush -----------------------------------------------------------------------------
+
+## Brakes and shows the path band; `windup` seconds later it dashes.
+func _start_rush_windup(windup: float) -> void:
+	_state = State.RUSH_WINDUP
+	_timer = windup
+	_rush_windup_total = maxf(windup, 0.01)
+	_beam_clock = 0.0
+	_aim_rush()
+	_set_charge_look(true)
+	if charge_sound:
+		charge_sound.play()
+
+
+func _rush_windup(delta: float) -> void:
+	_timer -= delta
+	_beam_clock += delta
+	var urgency: float = 1.0 - clampf(_timer / _rush_windup_total, 0.0, 1.0)
+	var blink: float = absf(sin(_beam_clock * (8.0 + 30.0 * urgency)))
+	# Brakes to a stop and shakes harder and harder
+	_velocity = _velocity.lerp(Vector2.ZERO, 1.0 - exp(-8.0 * delta))
+	global_position += _velocity * delta
+	body.position = Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * rush_shake * urgency
+	# Follows the player, then locks so they can get out of the way
+	if urgency < rush_lock_at:
+		_aim_rush()
+	var end: Vector2 = global_position + _rush_dir * _rush_distance
+	_rush_band.width = get_avoid_radius() * 2.0 / maxf(absf(global_scale.x), 0.001)
+	_rush_band.modulate.a = 0.6 + 0.4 * blink
+	_rush_line.modulate.a = 0.35 + 0.45 * blink
+	for line: Line2D in [_rush_band, _rush_line]:
+		line.visible = true
+		_set_line(line, global_position, end)
+	if _timer <= 0.0:
+		_start_rush()
+
+
+## Points the rush at the player, as far as their spot plus rush_overshoot but never into a
+## wall: three rays (the centre and both sides of its body) find the nearest one.
+func _aim_rush() -> void:
+	if not is_instance_valid(_player):
+		return
+	var to_player: Vector2 = _player.global_position - global_position
+	if to_player.length() > 1.0:
+		_rush_dir = to_player.normalized()
+	var radius: float = get_avoid_radius()
+	var room: float = INF
+	for side: float in [0.0, -1.0, 1.0]:
+		var origin: Vector2 = global_position + _rush_dir.orthogonal() * radius * side
+		room = minf(room, (_cast(origin, _rush_dir) - origin).dot(_rush_dir))
+	room -= radius + rush_wall_margin
+	_rush_distance = clampf(to_player.length() + rush_overshoot, 0.0, maxf(room, 0.0))
+
+
+func _start_rush() -> void:
+	_state = State.RUSH
+	_rush_travelled = 0.0
+	body.position = Vector2.ZERO
+	_rush_band.visible = false
+	_rush_line.visible = false
+	if fire_sound:
+		fire_sound.play()
+
+
+func _rush(delta: float, speed_mult: float) -> void:
+	var step: float = minf(rush_speed * speed_mult * delta, _rush_distance - _rush_travelled)
+	global_position += _rush_dir * step
+	_rush_travelled += step
+	if _rush_travelled >= _rush_distance - 0.5:
+		_rush_impact()
+
+
+## Lands: a ring wave and a double ring of small lasers, then rushes again or rests.
+func _rush_impact() -> void:
+	_velocity = _rush_dir * move_speed * 0.4
+	_wander_timer = 0.0  # a new wander point from here
+	_shockwave()
+	_fire_vents(0.0)
+	_fire_vents(0.5)
+	_rushes_left -= 1
+	if _rushes_left > 0:
+		_start_rush_windup(rush_repeat_windup)
+	else:
+		_start_idle()
+
+
 # --- Small lasers -------------------------------------------------------------------
+
+## GEMELA's quiet moments: a small fan of lasers at the player every aimed_shot_interval.
+func _tick_aimed_shots(delta: float, speed_mult: float) -> void:
+	if is_mini or head == null or aimed_shot_count <= 0:
+		return
+	_aim_shot_timer -= delta
+	if _aim_shot_timer > 0.0:
+		return
+	_aim_shot_timer = aimed_shot_interval / speed_mult
+	_fire_aimed()
+
+
+func _fire_aimed() -> void:
+	if not is_instance_valid(_player):
+		return
+	var aim: Vector2 = global_position.direction_to(_player.global_position)
+	var radius: float = head_radius_px * head.global_scale.x
+	var spread: float = deg_to_rad(aimed_shot_spread)
+	for i in aimed_shot_count:
+		var t: float = 0.0 if aimed_shot_count == 1 else float(i) / float(aimed_shot_count - 1) - 0.5
+		var dir: Vector2 = aim.rotated(spread * t)
+		EnemyLaserPool.acquire(get_parent(), global_position + dir * radius, dir, global_position)
+	if shot_sound:
+		shot_sound.play()
+
 
 ## One laser from every vent, straight out from the centre. `stagger` shifts the vents
 ## by that fraction of the gap between two of them.
@@ -619,6 +817,9 @@ func _hide_beams() -> void:
 		for line in lines:
 			line.visible = false
 	_hide_sweep_arrows()
+	for line: Line2D in [_rush_band, _rush_line]:
+		if line:
+			line.visible = false
 
 
 ## The head's charge frame (white-hot eyes and muzzles) / the mini's.
