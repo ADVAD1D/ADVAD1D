@@ -5,6 +5,8 @@ extends Control
 @export var skin_selector_scene: PackedScene
 @export var achievements_scene: PackedScene
 @export var shop_scene: PackedScene
+## Opened by the settings panel's credits button (a path: the credits roll links back here).
+@export_file("*.tscn") var credits_roll_path: String = "res://Scenes/credits_roll.tscn"
 
 @onready var browser_support: bool = GameManager.browser_support
 @onready var is_debug_text: bool = GameManager.is_debug_text
@@ -147,6 +149,9 @@ func _setup_buttons() -> void:
 		settings_panel.special_thanks_requested.connect(func():
 			_hide_settings_panel()
 			special_thanks_panel.show()
+		)
+		settings_panel.credits_requested.connect(func():
+			get_tree().change_scene_to_file(credits_roll_path)
 		)
 
 	if has_node("AchievementsButton"):

@@ -197,6 +197,7 @@ visible = false
 layout_mode = 2
 size_flags_vertical = 4
 show_special_thanks = false
+show_credits = false
 allow_speedrun_toggle = false
 
 [node name="skullIcon" type="Sprite2D" parent="."]

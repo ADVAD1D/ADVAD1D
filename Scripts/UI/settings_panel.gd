@@ -2,7 +2,8 @@ class_name SettingsPanel
 extends NinePatchRect
 ## The settings panel (Scenes/UI/settings_panel.tscn), shared by the main menu (gear
 ## button) and the pause menu: controls, FPS, full screen, retro shader / shader
-## optimization, CRT roll and speedrun toggles, special thanks, music and SFX volume rows.
+## optimization, CRT roll and speedrun toggles, credits, special thanks, language, music and
+## SFX volume rows.
 ## Every toggle writes GameManager and calls GameManager.apply_settings() (saves and emits
 ## settings_changed) so open
 ## scenes can react (the HUD's FPS label); CRT changes are applied to every CRT shader of
@@ -13,6 +14,8 @@ extends NinePatchRect
 signal controls_changed(is_relative: bool)
 ## The special thanks button was pressed (the main menu opens its panel).
 signal special_thanks_requested
+## The credits button was pressed (the main menu opens the credits roll).
+signal credits_requested
 
 ## Played when the mouse enters a button.
 @export var hover_sound: AudioStream
@@ -20,6 +23,8 @@ signal special_thanks_requested
 @export var toggle_sound: AudioStream
 ## Shows the special thanks button (the pause menu has nowhere to open it).
 @export var show_special_thanks: bool = true
+## Shows the credits button (hidden in the pause menu: it would leave the run).
+@export var show_credits: bool = true
 ## The speedrun timer only starts with a run, so mid-run (pause menu) the toggle is locked.
 @export var allow_speedrun_toggle: bool = true
 
@@ -33,6 +38,7 @@ var _toggle_player: AudioStreamPlayer
 @onready var fullscreen_button: TextureButton = $FullScreenButton
 @onready var speedrun_button: TextureButton = $SpeedrunButton
 @onready var special_thanks_button: TextureButton = $SpecialThanksButton
+@onready var credits_button: TextureButton = get_node_or_null("CreditsButton")
 ## Shows the current language (EN / ES); a press switches to the other one.
 @onready var language_button: TextureButton = get_node_or_null("LanguageButton")
 
@@ -101,6 +107,13 @@ func _ready() -> void:
 
 	special_thanks_button.visible = show_special_thanks
 	special_thanks_button.pressed.connect(special_thanks_requested.emit)
+
+	if credits_button:
+		credits_button.visible = show_credits
+		credits_button.pressed.connect(func():
+			_play_toggle()
+			credits_requested.emit()
+		)
 
 	if language_button:
 		language_button.pressed.connect(func():

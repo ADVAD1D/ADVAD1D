@@ -22,6 +22,8 @@
 [ext_resource type="Texture2D" uid="uid://bg1328eogbv3a" path="res://Assets/Sprites/Settings/roll_button_pressed.png" id="46_rollp"]
 [ext_resource type="Texture2D" uid="uid://cecdsaqjs6eik" path="res://Assets/Sprites/Settings/roll_button_disabled.png" id="47_rolld"]
 [ext_resource type="Script" path="res://Scripts/UI/volume_row.gd" id="48_volrow"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Settings/credits_button.png" id="57_credits"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Settings/credits_button_hover.png" id="58_creditsh"]
 [ext_resource type="Texture2D" uid="uid://cp0lyic4v7nia" path="res://Assets/Sprites/music_icon.png" id="49_musicicon"]
 [ext_resource type="Texture2D" uid="uid://b21nbsy1pvanx" path="res://Assets/Sprites/sound_icon.png" id="50_soundicon"]
 [ext_resource type="Texture2D" uid="uid://wewd0rykgbgq" path="res://Assets/Sprites/dereasebutton.png" id="51_dec"]
@@ -129,6 +131,17 @@ toggle_mode = true
 texture_normal = ExtResource("21_aylim")
 texture_pressed = ExtResource("22_y82t1")
 texture_hover = ExtResource("22_y82t1")
+
+[node name="CreditsButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 66.0
+offset_right = 33.0
+offset_bottom = 96.0
+focus_mode = 0
+texture_normal = ExtResource("57_credits")
+texture_pressed = ExtResource("58_creditsh")
+texture_hover = ExtResource("58_creditsh")
 
 [node name="SpecialThanksButton" type="TextureButton" parent="."]
 layout_mode = 0
