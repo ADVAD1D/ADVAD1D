@@ -7,6 +7,9 @@ extends Control
 @onready var fps_label: Label = $FPSContainer/FPSLabel
 @onready var speedrun_label: Label = $SpeedrunLabel
 @onready var mobile_controls_layer: CanvasLayer = $CanvasLayer
+## Mobile pause button (top-left). Shown and hidden with the other touch controls, but
+## pinned to its corner: it isn't draggable like them.
+@onready var pause_button: TouchScreenButton = $CanvasLayer/PauseButton
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -18,7 +21,9 @@ func _ready() -> void:
 	fps_toggled()
 	# The pause menu's settings panel can change it mid-run
 	GameManager.settings_changed.connect(fps_toggled)
-	
+	pause_button.pressed.connect(_on_pause_button_pressed)
+	pause_button.released.connect(_on_pause_button_released)
+
 	if not GameManager.mobile_mode_active:
 		# Hide all virtual buttons and joysticks modularly
 		for control in mobile_controls_layer.get_children():
@@ -86,6 +91,30 @@ func _on_window_resized() -> void:
 	speedrun_label.position.x = center_x + 8.0
 	speedrun_label.position.y = center_y + 93.0
 
+## Touches longer than this on the pause button don't pause: only a tap does, so a thumb
+## resting on the corner mid-fight doesn't open the menu.
+const PAUSE_TAP_MAX_MSEC: int = 350
+
+## When the current touch on the pause button started (-1 = not pressed).
+var _pause_press_msec: int = -1
+
+
+func _on_pause_button_pressed() -> void:
+	_pause_press_msec = Time.get_ticks_msec()
+
+
+## Same as Esc, on the release of a short tap: opens the pause menu (only while the scene
+## allows pausing). The button lives in the pausable layer, so while paused it does
+## nothing: the menu's resume unpauses.
+func _on_pause_button_released() -> void:
+	if _pause_press_msec < 0:
+		return
+	var held: int = Time.get_ticks_msec() - _pause_press_msec
+	_pause_press_msec = -1
+	if held <= PAUSE_TAP_MAX_MSEC and GameManager.can_pause and not get_tree().paused:
+		GameManager.toggle_pause()
+
+
 func _on_phase_started(_phase_number: int, score_requirement: int):
 	objective_label.text = "> " + str(score_requirement)
 
@@ -111,6 +140,8 @@ func _input(event: InputEvent) -> void:
 			if event is InputEventScreenTouch:
 				if event.pressed:
 					for control in mobile_controls_layer.get_children():
+						if control == pause_button:
+							continue
 						if _is_point_inside(control, event.position):
 							dragged_node = control
 							var node_pos = control.global_position if "global_position" in control else control.position

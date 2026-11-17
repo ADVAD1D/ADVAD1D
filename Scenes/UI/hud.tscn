@@ -17,6 +17,8 @@
 [ext_resource type="Script" path="res://Scripts/arcade_hud.gd" id="15_arcade"]
 [ext_resource type="Script" path="res://Scripts/UI/arena_ui_tint.gd" id="16_tint"]
 [ext_resource type="Shader" path="res://Shaders/ui_hue_shift.gdshader" id="17_hue"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Buttons/pause_button.png" id="18_pause"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Buttons/pause_button_pressed.png" id="19_pause_pressed"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_arena_tint"]
 resource_local_to_scene = true
@@ -246,3 +248,8 @@ position = Vector2(410, 140)
 scale = Vector2(1.56, 1.56)
 texture_normal = ExtResource("14_mt778")
 action = "dash"
+
+[node name="PauseButton" type="TouchScreenButton" parent="CanvasLayer"]
+position = Vector2(10, 10)
+texture_normal = ExtResource("18_pause")
+texture_pressed = ExtResource("19_pause_pressed")
