@@ -1,8 +1,9 @@
 class_name SimTerminal
 extends RefCounted
 ## Fake shell behind the chat console (ai_console.gd): the training simulation's
-## computer, logged in as ADNEX. A tiny read-only filesystem with ls, cd, pwd, cat and a
-## fake `sudo pacman -Syu`.
+## computer, logged in as ADNEX. A tiny read-only filesystem with ls, cd, pwd, cat, a
+## fake `sudo pacman -Syu` and `sudo simflow train`: the simulator's AI (a TensorFlow-like
+## log, lore of the cinematics) training on the soldier, with the save's real stats.
 ##
 ## run() returns the output as an Array: each String is a BBCode line (text already
 ## escaped), each float is a pause in seconds before the next line (for the install log).
@@ -27,6 +28,9 @@ const FILES: Dictionary = {
 	},
 	"sim": {
 		"core.bin": "",
+		"ai": {
+			"readme": "SIMFLOW 2.6.1\nBehavioral learning framework of the simulator.\nEvery soldier's run trains the next trial.\nusage: sudo simflow train",
+		},
 		"arenas": {
 			"arena_01.map": "GAUNTLET. One bridge. No way back.",
 			"arena_02.map": "SEALED ROOM. Guns on both walls.",
@@ -66,6 +70,23 @@ const USER: String = "adnex"
 const COLOR_DIR: String = "#40a4f4"
 const COLOR_ERROR: String = "#ff6b6b"
 const COLOR_OK: String = "#7dffb0"
+const COLOR_WARN: String = "#ffd36b"
+
+## SimFlow (sudo simflow train): the simulator's AI, training on the soldier.
+const SIMFLOW_VERSION: String = "2.6.1"
+const SIMFLOW_EPOCHS: int = 5
+## Inputs of the fake model's first layer (for the params count).
+const SIMFLOW_INPUTS: int = 12
+## Layers of the fake model: name, type, units.
+const SIMFLOW_LAYERS: Array = [
+	["reaction_time", "Dense", 64],
+	["dodge_patterns", "LSTM", 128],
+	["aim_bias", "Conv1D", 32],
+	["aggression", "Dense", 16],
+	["next_trial", "Softmax", 3],
+]
+## Arenas in the subject profile (arena_<n>_clears, n = 1..ARENA_COUNT).
+const ARENA_COUNT: int = 3
 
 ## Fake Arch Linux upgrade: lines and pauses (seconds).
 const PACMAN_LOG: Array = [
@@ -135,7 +156,7 @@ var cwd: PackedStringArray = PackedStringArray(HOME_PATH)
 
 ## True when this terminal answers the command (its first word).
 func handles(command_name: String) -> bool:
-	return command_name in ["ls", "cd", "pwd", "cat", "sudo", "fastfetch", "neofetch"]
+	return command_name in ["ls", "cd", "pwd", "cat", "sudo", "fastfetch", "neofetch", "simflow"]
 
 
 func run(args: PackedStringArray) -> Array:
@@ -152,6 +173,8 @@ func run(args: PackedStringArray) -> Array:
 			return _sudo(args)
 		"fastfetch", "neofetch":
 			return [_fastfetch()]
+		"simflow":
+			return [_error("simflow: access to the subject's data requires root. Try sudo.")]
 	return []
 
 
@@ -248,10 +271,169 @@ func _sudo(args: PackedStringArray) -> Array:
 			lines.append(esc(entry) if entry is String else entry)
 		lines.append("[color=%s]:: System is up to date. Simulation patched.[/color]" % COLOR_OK)
 		return lines
+	if args.size() > 1 and args[1] == "simflow":
+		return _simflow(args.slice(1))
 	return [
 		esc("[sudo] password for %s: ********" % USER), 0.6,
 		_error("%s is not in the sudoers file. This incident will be reported." % USER),
 	]
+
+
+# --- SimFlow ------------------------------------------------------------------
+
+## sudo simflow train: loads the soldier's data (the save's real stats), trains the
+## simulator's model on it epoch by epoch and prints the subject profile it learned. The
+## accuracy grows with the player's progress (ships, arenas, achievements, GEMELA).
+func _simflow(args: PackedStringArray) -> Array:
+	var lines: Array = [esc("[sudo] password for %s: ********" % USER), 0.6]
+	if args.size() < 2 or args[1] != "train":
+		lines.append_array([
+			"[color=%s]SimFlow %s[/color] - behavioral learning framework"
+					% [COLOR_DIR, SIMFLOW_VERSION],
+			esc("usage: sudo simflow train"),
+		])
+		return lines
+	var stats: Dictionary = _subject_stats()
+	var pilot: String = GameManager.player_name.strip_edges().to_upper()
+	if pilot.is_empty():
+		pilot = "ADNEX"
+	var samples: int = stats.deaths + stats.saws + stats.guns + stats.clears + stats.gemela
+
+	lines.append_array([
+		"[color=%s]SimFlow %s[/color] (device: sim-core TPU x4)" % [COLOR_DIR, SIMFLOW_VERSION],
+		esc("Loading subject: " + pilot), 0.4,
+		esc("Collecting behavior dataset..."), 0.6,
+		_ok("%d samples (deaths, kills, clears)" % samples), 0.3,
+		esc("Building model \"commander_ai_v7\"..."), 0.4,
+	])
+	var layer_rows: Array = [[_key("Layer"), _key("Type"), _key("Units")]]
+	var params: int = 0
+	var inputs: int = SIMFLOW_INPUTS
+	for layer in SIMFLOW_LAYERS:
+		layer_rows.append([esc(layer[0]), esc(layer[1]), str(layer[2])])
+		params += inputs * int(layer[2]) + int(layer[2])
+		inputs = int(layer[2])
+	lines.append(_table(layer_rows))
+	lines.append_array([esc("Total params: %s" % _thousands(params)), 0.5, ""])
+
+	# Same save, same numbers: the noise is seeded by the stats
+	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	rng.seed = hash(stats)
+	var final_accuracy: float = lerpf(0.42, 0.97, _subject_progress(stats))
+	var steps: int = maxi(1, ceili(samples / 32.0))
+	for epoch in SIMFLOW_EPOCHS:
+		var t: float = float(epoch + 1) / SIMFLOW_EPOCHS
+		var accuracy: float = final_accuracy
+		if epoch < SIMFLOW_EPOCHS - 1:
+			accuracy = lerpf(0.18, final_accuracy, 1.0 - pow(1.0 - t, 2.0)) \
+					+ rng.randf_range(-0.015, 0.015)
+		var loss: float = (1.0 - accuracy) * 1.8 + rng.randf_range(0.0, 0.03)
+		lines.append_array([
+			esc("Epoch %d/%d" % [epoch + 1, SIMFLOW_EPOCHS]), 0.5,
+			esc("%d/%d [==========] loss: %.4f - acc: %.4f" % [steps, steps, loss, accuracy]),
+		])
+
+	lines.append_array([0.4, "", "[color=%s]SUBJECT PROFILE[/color]" % COLOR_DIR])
+	lines.append(_table([
+		[_key("Deaths"), str(stats.deaths)],
+		[_key("Ships unlocked"), "%d/%d" % [stats.ships, stats.ships_total]],
+		[_key("Arenas cleared"),
+				"%d/%d (%d clears)" % [stats.arenas, ARENA_COUNT, stats.clears]],
+		[_key("Achievements"), "%d/%d" % [stats.achievements, stats.achievements_total]],
+		[_key("GEMELA defeated"), str(stats.gemela)],
+		[_key("Saws destroyed"), str(stats.saws)],
+		[_key("Laser guns destroyed"), str(stats.guns)],
+	]))
+	lines.append("")
+	if stats.gemela > 0:
+		lines.append(_warn("GEMELA beaten %d time(s). Retraining GEMELA on this subject."
+				% stats.gemela))
+	else:
+		lines.append(esc("GEMELA undefeated. Boss weights unchanged."))
+	if stats.deaths >= 100:
+		lines.append(_warn("Subject dies often and keeps coming back. Persistence: HIGH."))
+	elif stats.deaths > 0:
+		lines.append(esc("Subject learns from every death."))
+	else:
+		lines.append(esc("No deaths recorded. Subject not tested yet."))
+	lines.append_array([
+		0.5,
+		_ok("[OK] Weights saved to /sim/core.bin"), 0.3,
+		_ok("[OK] Future trials adapted for the next soldier."),
+	])
+	return lines
+
+
+## The save's real numbers for the subject profile.
+func _subject_stats() -> Dictionary:
+	var ships: int = 0
+	for index in SkinManager.ship_data.size():
+		if SkinManager.is_ship_unlocked(index):
+			ships += 1
+	var arenas: int = 0
+	var clears: int = 0
+	for arena in range(1, ARENA_COUNT + 1):
+		var stat: StringName = StringName("arena_%d_clears" % arena)
+		var arena_clears: int = int(AchievementManager.get_stat(stat))
+		clears += arena_clears
+		if arena_clears > 0:
+			arenas += 1
+	return {
+		"deaths": GameManager.deaths_count,
+		"ships": ships,
+		"ships_total": SkinManager.ship_data.size(),
+		"arenas": arenas,
+		"clears": clears,
+		"achievements": AchievementManager.get_unlocked_count(),
+		"achievements_total": AchievementManager.achievements.size(),
+		"gemela": int(AchievementManager.get_stat(&"gemela_kills")),
+		"saws": int(AchievementManager.get_stat(&"saws_destroyed")),
+		"guns": int(AchievementManager.get_stat(&"laser_guns_destroyed")),
+	}
+
+
+## 0 to 1: average of ships, arenas and achievements unlocked, and GEMELA beaten once.
+func _subject_progress(stats: Dictionary) -> float:
+	var progress: float = float(stats.ships) / maxi(stats.ships_total, 1) \
+			+ float(stats.arenas) / ARENA_COUNT \
+			+ float(stats.achievements) / maxi(stats.achievements_total, 1) \
+			+ (1.0 if stats.gemela > 0 else 0.0)
+	return clampf(progress / 4.0, 0.0, 1.0)
+
+
+## Rows of cells (already BBCode) as one table, so columns line up with the proportional
+## font; an invisible "##" after each cell but the last keeps the columns apart.
+func _table(rows: Array) -> String:
+	var columns: int = (rows[0] as Array).size()
+	var table: String = "[table=%d]" % columns
+	for row in rows:
+		for column in columns:
+			var pad: String = "[color=#00000000]##[/color]" if column < columns - 1 else ""
+			table += "[cell]%s%s[/cell]" % [row[column], pad]
+	return table + "[/table]"
+
+
+## 98816 -> "98,816"
+func _thousands(value: int) -> String:
+	var digits: String = str(value)
+	var out: String = ""
+	for i in digits.length():
+		if i > 0 and (digits.length() - i) % 3 == 0:
+			out += ","
+		out += digits[i]
+	return out
+
+
+func _ok(text: String) -> String:
+	return "[color=%s]%s[/color]" % [COLOR_OK, esc(text)]
+
+
+func _warn(text: String) -> String:
+	return "[color=%s]%s[/color]" % [COLOR_WARN, esc(text)]
+
+
+func _key(text: String) -> String:
+	return "[color=%s]%s[/color]" % [COLOR_DIR, esc(text)]
 
 
 ## System info next to the ship 01 logo, as one BBCode table: one cell per logo
