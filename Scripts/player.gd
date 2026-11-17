@@ -61,6 +61,8 @@ func _ready() -> void:
 	DebugMenu.watch(self, "is_dashing", "Dashing")
 	DebugMenu.watch(self, "can_dash", "Can dash")
 	
+	# `sudo hitbox_disable` in the chat console turns it off for the session
+	hitbox_disabled = hitbox_disabled or GameManager.debug_hitbox_disabled
 	if hitbox_disabled == true:
 		hitbox_collider.disabled = true
 		_log_message("PLAYER HITBOX DISABLED")
@@ -225,8 +227,9 @@ func do_dash(direction: Vector2):
 	
 	is_dashing = false
 	
-	# Restore hitbox and wait for cooldown before allowing another dash
-	hitbox_collider.set_deferred("disabled", false)
+	# Restore hitbox (unless it's disabled for debugging) and wait for cooldown before
+	# allowing another dash
+	hitbox_collider.set_deferred("disabled", hitbox_disabled)
 	await get_tree().create_timer(dash_cooldown, false, false, true).timeout
 	can_dash = true
 

@@ -99,6 +99,12 @@ var mobile_low_res_render: bool = false
 var show_debug: bool = false
 var show_debug_menu: bool = false
 var show_fps: bool = false
+## Debug options of the chat console (SimTerminal: sudo hitbox_disable / hitbox_enable,
+## debug_enable / debug_disable), session only. player.gd reads this one in _ready.
+var debug_hitbox_disabled: bool = false
+## show_debug_menu before `sudo debug_enable`, put back by `sudo debug_disable`
+## (null while the console hasn't changed it).
+var show_debug_menu_before_console: Variant = null
 
 ## Forces the game to use Web-mode optimizations (e.g., lightweight shaders).
 ## Used by web_optimizer.gd.

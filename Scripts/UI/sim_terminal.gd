@@ -72,6 +72,9 @@ const COLOR_ERROR: String = "#ff6b6b"
 const COLOR_OK: String = "#7dffb0"
 const COLOR_WARN: String = "#ffd36b"
 
+## Debug options run with sudo (_debug_command).
+const DEBUG_COMMANDS: Array = ["hitbox_disable", "hitbox_enable", "debug_enable", "debug_disable"]
+
 ## SimFlow (sudo simflow train): the simulator's AI, training on the soldier.
 const SIMFLOW_VERSION: String = "2.6.1"
 const SIMFLOW_EPOCHS: int = 5
@@ -273,10 +276,43 @@ func _sudo(args: PackedStringArray) -> Array:
 		return lines
 	if args.size() > 1 and args[1] == "simflow":
 		return _simflow(args.slice(1))
+	if args.size() == 2 and args[1] in DEBUG_COMMANDS:
+		return [esc("[sudo] password for %s: ********" % USER), 0.4, _debug_command(args[1])]
 	return [
 		esc("[sudo] password for %s: ********" % USER), 0.6,
 		_error("%s is not in the sudoers file. This incident will be reported." % USER),
 	]
+
+
+## sudo hitbox_disable / hitbox_enable: the player's Hitbox collider off or back to normal
+## (GameManager.debug_hitbox_disabled, read by player.gd). sudo debug_enable / debug_disable:
+## the debug menu's master switch (GameManager.show_debug_menu, Tab in game) on, or back to
+## what it was before. Session only.
+func _debug_command(command: String) -> String:
+	match command:
+		"hitbox_disable":
+			if GameManager.debug_hitbox_disabled:
+				return esc("Player hitbox already disabled.")
+			GameManager.debug_hitbox_disabled = true
+			return _ok("[OK] Player hitbox disabled. Nothing can touch you.")
+		"hitbox_enable":
+			if not GameManager.debug_hitbox_disabled:
+				return esc("Player hitbox already enabled.")
+			GameManager.debug_hitbox_disabled = false
+			return _ok("[OK] Player hitbox restored.")
+		"debug_enable":
+			if GameManager.show_debug_menu:
+				return esc("Debug menu already enabled. Press Tab in game.")
+			GameManager.show_debug_menu_before_console = GameManager.show_debug_menu
+			GameManager.show_debug_menu = true
+			return _ok("[OK] Debug menu enabled. Press Tab in game.")
+		"debug_disable":
+			if GameManager.show_debug_menu_before_console == null:
+				return esc("Debug menu was not enabled from this console.")
+			GameManager.show_debug_menu = GameManager.show_debug_menu_before_console
+			GameManager.show_debug_menu_before_console = null
+			return _ok("[OK] Debug menu restored.")
+	return ""
 
 
 # --- SimFlow ------------------------------------------------------------------

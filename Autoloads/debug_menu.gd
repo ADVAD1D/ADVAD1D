@@ -205,7 +205,10 @@ func _update_overlay_text() -> void:
 	lines.append("Process frames: %d" % Engine.get_process_frames())
 	lines.append("Nodes: %d" % tree.get_node_count())
 	if tree.current_scene:
-		lines.append("Scene: %s" % tree.current_scene.name)
+		# The file, not the root node's name: every arena's root is "Main" (trigger_scene.gd
+		# looks up /root/Main)
+		var scene_file: String = tree.current_scene.scene_file_path.get_file().get_basename()
+		lines.append("Scene: %s" % (scene_file if not scene_file.is_empty() else tree.current_scene.name))
 	lines.append("Paused: %s" % str(tree.paused))
 	lines.append("Controls: %s" % ("Relative" if GameManager.relative_control_active else "Global"))
 
