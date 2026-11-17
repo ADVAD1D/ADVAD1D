@@ -134,8 +134,14 @@ func _on_player_died() -> void:
 	tutorial_timer.stop()
 	GameManager.play_glitch_sound(glitch_sound)
 	var glitch_tween = GameManager.play_glitch_effect(crt_material)
+	# GameManager's tween and the SceneTree timer finish even if this scene left the tree
+	# meanwhile (the admin skip changed scene): then get_tree() is null
 	await  glitch_tween.finished
+	if not is_inside_tree():
+		return
 	await get_tree().create_timer(0.01).timeout
+	if not is_inside_tree():
+		return
 	get_tree().call_deferred("reload_current_scene")
 	
 func _on_tutorial_timer_timeout():

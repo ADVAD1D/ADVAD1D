@@ -269,6 +269,10 @@ func _process(delta: float) -> void:
 			timer_updated.emit(new_time_string)
 	
 	if phase_timer <= 0:
+		# The player's death is already reloading the scene (main.gd): a second reload from
+		# here would pull the scene out from under that death sequence
+		if is_instance_valid(player_node) and player_node.get("player_died"):
+			return
 		_on_phase_failure()
 		
 ## "PHASE: n" in the current language (Localization/es.po).
@@ -457,6 +461,10 @@ func _on_post_boss_countdown_finished() -> void:
 
 func _on_score_updated(new_score: int):
 	_log_message(["Score Update: ", new_score])
+	# GameManager is an autoload: its signal still reaches this node while the scene is being
+	# reloaded, when it's out of the tree (get_tree() null)
+	if not is_inside_tree():
+		return
 	# Arcade: a dead player can't clear the phase, the death already ended the run (restart
 	# from phase 1). The main mode lets a laser still flying after the death clear it.
 	if GameManager.arcade_mode_active and is_instance_valid(player_node) \

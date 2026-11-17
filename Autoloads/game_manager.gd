@@ -508,6 +508,11 @@ func freeze_frame():
 		add_child(_transition_layer)
 		
 		_transition_rect = TextureRect.new()
+		# The capture is at window resolution, bigger than the 520x300 canvas: stretched to
+		# the screen, not drawn at its own size (that showed only its top-left corner, zoomed)
+		_transition_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_transition_rect.stretch_mode = TextureRect.STRETCH_SCALE
+		_transition_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 		_transition_layer.add_child(_transition_rect)
 		
 	_transition_rect.texture = tex

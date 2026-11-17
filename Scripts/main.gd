@@ -189,11 +189,21 @@ func _on_player_died() -> void:
 	GameManager.stop_scoring()
 	
 	var glitch_tween = GameManager.play_glitch_effect(crt_material)
+	# The glitch tween and the timer belong to GameManager / the SceneTree, so they finish
+	# even if this scene left the tree meanwhile (another scene change got there first):
+	# then get_tree() is null and there is nothing left to reload
 	await glitch_tween.finished
+	if not is_inside_tree():
+		return
 	await get_tree().create_timer(0.01).timeout
-	
+	if not is_inside_tree():
+		return
+
 	GameManager.reset_score()
 	await GameManager.freeze_frame()
+	if not is_inside_tree():
+		GameManager.unfreeze_frame()
+		return
 	get_tree().call_deferred("reload_current_scene")
 	
 func fade_to_scene(target_scene_path: PackedScene, duration: float = 1.5):
