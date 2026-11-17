@@ -229,6 +229,9 @@ msgstr "SUPERA LA ARENA 01"
 msgid "REACH ARENA 02"
 msgstr "LLEGA A LA ARENA 02"
 
+msgid "CLEAR ARENA 02"
+msgstr "SUPERA LA ARENA 02"
+
 msgid "REACH ARENA 03"
 msgstr "LLEGA A LA ARENA 03"
 
