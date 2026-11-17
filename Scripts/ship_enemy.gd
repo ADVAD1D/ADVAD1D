@@ -245,7 +245,11 @@ func die_silently():
 	# OPTIMIZATION: Stagger the explosions randomly over 0.2s so they don't all instantiate
 	# on the exact same frame when clearing the board, preventing massive lag spikes.
 	await get_tree().create_timer(randf_range(0.01, 0.25)).timeout
-	
+	# The scene may have been reloaded meanwhile (timeout or death right after the board was
+	# cleared): out of the tree get_tree() is null, and the old scene frees this ship anyway
+	if not is_inside_tree():
+		return
+
 	hide()
 	
 	var particles_instance = explosion_particles.instantiate()

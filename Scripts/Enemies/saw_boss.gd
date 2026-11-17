@@ -1001,6 +1001,10 @@ func _die(killed: bool) -> void:
 		await _explode_at(global_position)
 	else:
 		await _death_sequence()
+	# The scene may have been reloaded during the death sequence (the player died too): the
+	# old scene frees the boss, and nothing must react to a defeat there
+	if not is_inside_tree():
+		return
 	if killed:
 		died.emit(self)
 		if not is_mini:
@@ -1019,6 +1023,9 @@ func _death_sequence() -> void:
 		body.position = Vector2(randf_range(-12.0, 12.0), randf_range(-12.0, 12.0))
 		body.modulate = Color(3.0, 1.5, 1.5) if i % 2 == 0 else Color.WHITE
 		await get_tree().create_timer(0.16, false).timeout
+		# Out of the tree (scene reload under way): get_tree() would be null
+		if not is_inside_tree():
+			return
 	body.position = Vector2.ZERO
 	var tween: Tween = create_tween().set_parallel(true)
 	tween.tween_property(body, "scale", Vector2(1.3, 1.3), 0.35)

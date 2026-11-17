@@ -76,6 +76,7 @@ var arena_playlists = {
 		preload("res://Assets/Audio/Music/psychronic-internal-reflection-21325.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-futuristic-resources-21861.ogg"),
 		preload("res://Assets/Audio/Music/naboz-arcade-rider-_audio_-_UPaxou7mXsQ_.ogg"),
+		preload("res://Assets/Audio/Music/psychronic-let-the-games-begin-21858.ogg"),
 	]
 }
 

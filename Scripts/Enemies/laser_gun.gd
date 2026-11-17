@@ -317,6 +317,10 @@ func die_silently() -> void:
 	_begin_dying()
 	# Staggered like the other enemies so a board clear doesn't spike
 	await get_tree().create_timer(randf_range(0.01, 0.25)).timeout
+	# The scene may have been reloaded meanwhile: out of the tree get_tree() is null, and the
+	# old scene frees this gun anyway
+	if not is_inside_tree():
+		return
 	await _break_apart()
 	queue_free()
 

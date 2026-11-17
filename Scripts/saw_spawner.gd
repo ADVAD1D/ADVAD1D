@@ -53,6 +53,10 @@ func spawn_initial_wave():
 		# and stuttering on mobile devices when loading a new phase.
 		if current_enemy_count > prev_count:
 			await get_tree().process_frame
+			# The scene may have been reloaded meanwhile (a death right after a phase was
+			# cleared): this spawner is out of the tree and has nothing left to fill
+			if not is_inside_tree():
+				return
 	# If the attempts ran out before the wave was full, keep trying
 	_refill()
 
@@ -64,7 +68,9 @@ func configure_for_phase(new_max_enemies: int, new_config: Dictionary):
 func spawn_enemy():
 	
 	#logica para buscar la posición del spawn
-	if current_enemy_count >= max_enemies or not is_instance_valid(player_node):
+	# Out of the tree (scene reload or change under way)
+	if not is_inside_tree() or current_enemy_count >= max_enemies \
+			or not is_instance_valid(player_node):
 		return
 		
 	spawn_locator_node.progress_ratio = randf()

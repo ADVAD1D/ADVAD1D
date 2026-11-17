@@ -76,5 +76,5 @@ func _on_died(_boss: Node, generation: int) -> void:
 	if not is_active:
 		return
 	await get_tree().create_timer(respawn_delay, false).timeout
-	if generation == _generation:
+	if generation == _generation and is_inside_tree():
 		_spawn()

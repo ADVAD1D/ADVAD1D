@@ -145,7 +145,11 @@ func die_silently():
 	
 	# OPTIMIZATION: Stagger the explosions randomly over 0.2s to prevent lag spikes on mobile
 	await get_tree().create_timer(randf_range(0.01, 0.25)).timeout
-	
+	# The scene may have been reloaded meanwhile: out of the tree get_tree() is null, and the
+	# old scene frees this saw anyway
+	if not is_inside_tree():
+		return
+
 	hide()
 	
 	var saw_particles_instance = saw_particles.instantiate()

@@ -47,7 +47,9 @@ func _ready() -> void:
 			AudioServer.get_bus_effect(master_bus, pitch_idx).pitch_scale = 1.0
 			AudioServer.set_bus_effect_enabled(master_bus, pitch_idx, false)
 	
-	if not is_instance_valid(main_scene):
+	# Scene gone or being reloaded (a death during the slow): time and pitch are back to
+	# normal above, and out of the tree get_tree() would be null
+	if not is_instance_valid(main_scene) or not is_inside_tree():
 		queue_free()
 		return
 		
