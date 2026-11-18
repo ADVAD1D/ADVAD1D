@@ -11,6 +11,21 @@ extends CharacterBody2D
 @export var dash_duration: float = 0.1
 @export var dash_cooldown: float = 1.0
 @export var dash_particles: PackedScene
+## Ghost look while the dash's i-frames last (the hitbox is off): brighter than normal
+## (HDR modulate, so it glows) and see-through, so the short invulnerability reads.
+@export var dash_ghost_color: Color = Color(1.6, 2.4, 3.0, 0.2)
+## How much the ghost's alpha pulses up while it lasts (shimmer).
+@export var dash_ghost_shimmer: float = 0.2
+## When the i-frames end the ship is solid again at once, then loses the glow over this.
+@export var dash_glow_fade: float = 0.45
+## Afterimages: while dashing the ship leaves glowing see-through copies of itself on its
+## path, which fade out after the dash (the i-frames are 0.1 s, too short to read on the
+## ship alone). How many per dash, spread evenly over `dash_duration`.
+@export var dash_afterimage_count: int = 3
+## How long each afterimage takes to fade out.
+@export var dash_afterimage_lifetime: float = 0.4
+## Colour and starting opacity of the afterimages (HDR, so they glow).
+@export var dash_afterimage_color: Color = Color(1.2, 2.2, 3.0, 0.7)
 
 #resources
 @onready var player_collider = $CollisionShape2D
@@ -41,6 +56,10 @@ var main_camera: Camera2D
 var dash_camera_shake: float = 45.0
 var dash_tween: Tween
 var hitbox_disabled: bool = false
+## Time left until the next dash afterimage.
+var _afterimage_timer: float = 0.0
+## Afterimages still to leave in the current dash.
+var _afterimages_left: int = 0
 
 func _ready() -> void:
 	var player_score = GameManager.score
@@ -79,6 +98,10 @@ func _physics_process(delta: float) -> void:
 		
 	if is_dashing:
 		move_and_collide(velocity * delta)
+		_afterimage_timer -= delta
+		if _afterimages_left > 0 and _afterimage_timer <= 0.0:
+			_afterimage_timer = dash_duration / dash_afterimage_count
+			_spawn_afterimage()
 		return
 		
 	var relative_control_active: bool = GameManager.relative_control_active
@@ -214,24 +237,79 @@ func do_dash(direction: Vector2):
 		get_parent().add_child(dash_particles_instance)
 		dash_particles_instance.global_position = global_position
 	
-	# Visual flash effect using Tween
-	if dash_tween:
-		dash_tween.kill()
-	dash_tween = create_tween()
-	dash_tween.tween_property(sprite, "modulate", Color(2, 2, 2, 1), 0.4).set_ease(Tween.EASE_OUT)
-	dash_tween.tween_property(sprite, "modulate", Color.WHITE, 0.3).set_ease(Tween.EASE_IN)
-	
+	# Ghost look for exactly as long as the hitbox is off, and a trail of afterimages
+	# (the first one right at the starting point)
+	_start_dash_ghost()
+	_afterimages_left = dash_afterimage_count
+	if _afterimages_left > 0:
+		_spawn_afterimage()
+		_afterimage_timer = dash_duration / dash_afterimage_count
+
 	# Invincibility frames (i-frames): disable hitbox during dash
 	hitbox_collider.set_deferred("disabled", true)
 	await get_tree().create_timer(dash_duration, false, false, true).timeout
-	
+
 	is_dashing = false
-	
+
 	# Restore hitbox (unless it's disabled for debugging) and wait for cooldown before
 	# allowing another dash
 	hitbox_collider.set_deferred("disabled", hitbox_disabled)
+	_end_dash_ghost()
 	await get_tree().create_timer(dash_cooldown, false, false, true).timeout
 	can_dash = true
+
+## The ship turns bright and see-through, its alpha shimmering, while the i-frames last.
+func _start_dash_ghost() -> void:
+	if dash_tween:
+		dash_tween.kill()
+	sprite.modulate = dash_ghost_color
+	var shimmer_alpha: float = minf(dash_ghost_color.a + dash_ghost_shimmer, 1.0)
+	var half: float = dash_duration * 0.5
+	# Same clock as the dash timer (it ignores the time scale too)
+	dash_tween = create_tween().set_ignore_time_scale(true).set_trans(Tween.TRANS_SINE)
+	dash_tween.tween_property(sprite, "modulate:a", shimmer_alpha, half)
+	dash_tween.tween_property(sprite, "modulate:a", dash_ghost_color.a, half)
+
+## The i-frames are over: solid at once (so the ship looks hittable exactly when it is),
+## keeping the glow, which fades back to normal.
+func _end_dash_ghost() -> void:
+	if player_died or not is_inside_tree():
+		return
+	if dash_tween:
+		dash_tween.kill()
+	var glow: Color = dash_ghost_color
+	glow.a = 1.0
+	sprite.modulate = glow
+	dash_tween = create_tween()
+	dash_tween.tween_property(sprite, "modulate", Color.WHITE, dash_glow_fade).set_ease(Tween.EASE_IN)
+
+## A glowing see-through copy of the ship where it is now, left behind in the arena (under
+## the ship, same z) and fading out. Same texture and colour material as the ship.
+func _spawn_afterimage() -> void:
+	var parent: Node = get_parent()
+	_afterimages_left -= 1
+	if parent == null or sprite.texture == null or not is_inside_tree():
+		return
+	var ghost := Sprite2D.new()
+	ghost.texture = sprite.texture
+	ghost.material = sprite.material
+	ghost.centered = sprite.centered
+	ghost.offset = sprite.offset
+	ghost.flip_h = sprite.flip_h
+	ghost.flip_v = sprite.flip_v
+	ghost.hframes = sprite.hframes
+	ghost.vframes = sprite.vframes
+	ghost.frame = sprite.frame
+	ghost.region_enabled = sprite.region_enabled
+	ghost.region_rect = sprite.region_rect
+	ghost.z_index = z_index
+	ghost.modulate = dash_afterimage_color
+	parent.add_child(ghost)
+	parent.move_child(ghost, get_index())
+	ghost.global_transform = sprite.global_transform
+	var fade: Tween = ghost.create_tween().set_ignore_time_scale(true)
+	fade.tween_property(ghost, "modulate:a", 0.0, dash_afterimage_lifetime).set_ease(Tween.EASE_OUT)
+	fade.tween_callback(ghost.queue_free)
 
 func _draw() -> void:
 	if GameManager.show_debug == false:
