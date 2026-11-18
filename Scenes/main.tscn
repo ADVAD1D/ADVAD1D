@@ -53,6 +53,9 @@
 [ext_resource type="PackedScene" path="res://Scenes/time_slow.tscn" id="43_time_slow"]
 [ext_resource type="Shader" path="res://Shaders/background_clouds.gdshader" id="46_clouds"]
 [ext_resource type="Script" uid="uid://c2lyghocuamhf" path="res://Scripts/background_waves.gd" id="47_clouds_script"]
+[ext_resource type="Script" path="res://Scripts/scanner_spawner.gd" id="90_scanner_spawner"]
+[ext_resource type="PackedScene" path="res://Scenes/scanner_pickup.tscn" id="91_scanner_pickup"]
+[ext_resource type="PackedScene" path="res://Scenes/scanner.tscn" id="92_scanner"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_s8vy0"]
 shader = ExtResource("5_nwwfm")
@@ -895,6 +898,12 @@ upgrade_stat = &"shield"
 [node name="Timer" type="Timer" parent="LaserShieldSpawner" unique_id=1198465110]
 wait_time = 15.0
 autostart = true
+
+[node name="ScannerSpawner" type="Node2D" parent="." node_paths=PackedStringArray("spawn_locator")]
+script = ExtResource("90_scanner_spawner")
+pickup_scene = ExtResource("91_scanner_pickup")
+reward_scene = ExtResource("92_scanner")
+spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
 [node name="EnemySpawnPath" type="Path2D" parent="." unique_id=975837261]
 curve = SubResource("Curve2D_wsu2k")

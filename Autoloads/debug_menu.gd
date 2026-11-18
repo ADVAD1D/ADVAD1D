@@ -242,6 +242,19 @@ func _update_overlay_text() -> void:
 	audio_lines.append("== AUDIO ==")
 	if get_tree().root.has_node("MusicPlayer"):
 		var music_player = get_node("/root/MusicPlayer")
+		# The song playing now (file name, position / length) and its own offset from
+		# MusicPlayer.song_volume_offsets_db; the dB below is the live value (fades too)
+		var song_stream: AudioStream = music_player.stream
+		if song_stream and music_player.playing:
+			var song_file: String = song_stream.resource_path.get_file()
+			audio_lines.append("Song: %s" % song_file)
+			audio_lines.append("Time: %s / %s" % [
+				_format_time(music_player.get_playback_position()),
+				_format_time(song_stream.get_length())])
+			audio_lines.append("Song offset: %+.1f dB" % float(
+				music_player.song_volume_offsets_db.get(song_file, 0.0)))
+		else:
+			audio_lines.append("Song: none")
 		audio_lines.append("Music Vol: %.1f%% (%.2f dB)" % [music_player.get_volume_percent(), music_player.volume_db])
 	if get_tree().root.has_node("SfxManager"):
 		var sfx_manager = get_node("/root/SfxManager")
@@ -344,6 +357,11 @@ func _collision_shapes(node: Node) -> Array:
 	return out
 
 # --- Util ---
+
+## Seconds as m:ss.
+func _format_time(seconds: float) -> String:
+	var total: int = int(seconds)
+	return "%d:%02d" % [floori(total / 60.0), total % 60]
 
 func _expire(arr: Array, delta: float) -> void:
 	var i: int = arr.size() - 1

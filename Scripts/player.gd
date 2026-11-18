@@ -108,7 +108,8 @@ func _physics_process(delta: float) -> void:
 		
 	var is_moving = false
 	
-	if Input.is_action_pressed("Shoot") and can_shoot:
+	# While the scanner powerup has uses, Shoot drives it (scanner.gd) instead of the lasers
+	if Input.is_action_pressed("Shoot") and can_shoot and not _has_scanner():
 			shoot()
 			
 	# --- RELATIVE MOVEMENT (Tank/Asteroids Controls) ---
@@ -213,6 +214,13 @@ func shoot():
 	await get_tree().create_timer(shoot_timerate, false, false, true).timeout
 	can_shoot = true
 	
+## The scanner powerup (scanner.gd) leaves the group as soon as its last use is spent.
+func _has_scanner() -> bool:
+	for child in get_children():
+		if child.is_in_group("player_scanner"):
+			return true
+	return false
+
 func _get_triple_shot() -> Node:
 	for child in get_children():
 		if child.is_in_group("player_triple_shot") and not child.is_queued_for_deletion():
