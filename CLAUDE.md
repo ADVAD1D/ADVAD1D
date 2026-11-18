@@ -108,6 +108,7 @@ One codebase serves desktop, web (single-threaded), and mobile; behavior branche
 - `MobileOptimizer` turns on `mobile_mode_active` for Android/iOS, caps the framerate to an even divisor of the screen refresh rate (60 on 60/120Hz, 90 on 90Hz) and sets the physics tick rate to match, so per-tick smoothing must be written delta-based (`1.0 - pow(1.0 - k, delta * 60.0)`), never as a fixed lerp factor, and switches the window to `CONTENT_SCALE_ASPECT_EXPAND`.
 - UI is laid out with absolute coordinates for 520x300. Instead of anchors, UI scripts (`hud.gd`, `main_menu.gd`, `skin_selector.gd`, splash) store original positions and shift them by the offset from x=260 on `size_changed`. New UI nodes in those scenes follow that pattern.
 - Particle scripts shorten lifetimes and arenas disable light shadows in mobile mode.
+- Web audio: `project.godot` sets `audio/general/default_playback_type.web=0` (Stream). Godot's web default, Sample (Web Audio samples), made sounds played over and over (the player's laser, the instanced explosion sounds sharing one stream) get quieter on every play, only in the browser. Stream mixes in the engine like desktop; on the single-threaded web build that mixing runs on the main thread, so heavy frame drops can crackle the audio (`audio/driver/output_latency.web` is the knob if they do).
 
 ### Localization (EN / ES)
 

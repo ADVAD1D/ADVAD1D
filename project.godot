@@ -28,6 +28,7 @@ config/windows_native_icon="res://Ship2scaled.ico"
 [audio]
 
 buses/default_bus_layout="uid://cn7ss37mcgp38"
+general/default_playback_type.web=0
 
 [autoload]
 
