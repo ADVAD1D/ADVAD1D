@@ -29,6 +29,14 @@ const TEST_ROOM_LINES: PackedStringArray = [
 const MONITOR_LINES: PackedStringArray = [
 	"Simulation complete. Congratulations on passing every trial.",
 	"You will now be sent to a real training test.",
+	"Thank you for your commitment and patience during this test.",
+	"We will now disconnect you and continue with the others.",
+	"(The simulator is only a close approximation of handling a ship.)",
+	"(In real combat, more factors may affect its control and handling.)",
+	"(If you are shot, you will not respawn.)",
+	"(The organization reserves all rights regarding any possible trauma or physical or psychological damage.)",
+	"3hESDFjYJ7tYv1VgZ5ZrPXpGw2X4FEcmUWkDkyt3pUxSx3rhWG6duhVwRtDgW7wvL1",
+	"29abKyAKR7EGtuhoHxZ8y9adgFxE",
 	"SEND IN THE NEXT ONE!",
 ]
 

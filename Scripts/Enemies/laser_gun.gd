@@ -236,7 +236,7 @@ func _hit_player(from: Vector2, to: Vector2) -> Vector2:
 	return to
 
 
-## The beam also destroys the saws, enemy ships, asteroids and the player's ally saws it
+## The beam also destroys the saws, enemy ships, small GEMELAs, asteroids and the player's ally saws it
 ## crosses (from -> to, after a shield may have cut it short). Their own death functions are used (die_and_respawn(),
 ## Asteroid.explode()): they give no score and no "saws destroyed" progress (only the
 ## player's lasers do), and the spawners replace them. Other laser guns and powerups are
@@ -257,6 +257,12 @@ func _destroy_enemies(from: Vector2, to: Vector2) -> void:
 		if target.is_in_group("asteroides") and target.has_method("explode"):
 			target.explode()
 		elif (target.is_in_group("saws") or target.is_in_group("enemigos")) \
+				and target.has_method("die_and_respawn"):
+			target.die_and_respawn()
+		# Small GEMELAs (saw_boss.gd is_mini, group "bosses", not "saws"): destroyed outright
+		# like the saws, no score; its die_and_respawn() ignores repeat hits while it dies.
+		# The big GEMELA is never touched
+		elif target.is_in_group("bosses") and target.get("is_mini") \
 				and target.has_method("die_and_respawn"):
 			target.die_and_respawn()
 		# The player's ally saw (powerup1.gd) too. Its die() has no guard of its own and the

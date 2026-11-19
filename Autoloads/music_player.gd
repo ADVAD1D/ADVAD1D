@@ -92,7 +92,6 @@ var arena_playlists = {
 		preload("res://Assets/Audio/Music/adnex-signal-lost.ogg"),
 		# Three that don't share the others' template (own form, meter and instruments)
 		preload("res://Assets/Audio/Music/adnex-memory-leak.ogg"),
-		preload("res://Assets/Audio/Music/adnex-overclock.ogg"),
 		preload("res://Assets/Audio/Music/adnex-last-protocol.ogg"),
 	]
 }

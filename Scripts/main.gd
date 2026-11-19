@@ -56,15 +56,18 @@ func _ready() -> void:
 	# Arcade runs never clear the arena, so they don't count.
 	if GameManager.phase_to_start <= 1 and not GameManager.arcade_mode_active:
 		AchievementManager.begin_arena_run(arena_index)
-	# Arena tracker: reaching an arena unlocks it in arcade mode (see ArcadeManager)
-	GameManager.mark_arena_visited(arena_index)
-	# NEW GROUND: reaching arena 2 (normally after clearing arena 1). Opening the scene
-	# straight from the editor unlocks it too.
-	if arena_index == 1:
-		AchievementManager.unlock(&"arena_2_reached")
-	# FINAL FRONTIER: reaching arena 3 (ship 31)
-	elif arena_index == 2:
-		AchievementManager.unlock(&"arena_3_reached")
+	# Arena tracker: reaching an arena in the main mode unlocks it in arcade mode (see
+	# ArcadeManager). Not from an arcade run, nor when this scene was run on its own from the
+	# editor (no splash): only the real playthrough counts. Same for the "reached" achievements
+	# (GameManager turns arena_2_reached into a visit to arena 2 at boot, for old saves).
+	if GameManager.is_main_mode_playthrough():
+		GameManager.mark_arena_visited(arena_index)
+		# NEW GROUND: reaching arena 2 (normally after clearing arena 1)
+		if arena_index == 1:
+			AchievementManager.unlock(&"arena_2_reached")
+		# FINAL FRONTIER: reaching arena 3 (ship 31)
+		elif arena_index == 2:
+			AchievementManager.unlock(&"arena_3_reached")
 	base_zoom = cam.zoom
 	player.died.connect(_on_player_died) # Replace with function body.
 	player.connect("dash", Callable(self, "_on_player_dashed"))

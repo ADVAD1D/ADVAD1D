@@ -115,6 +115,24 @@ msgstr "Simulación terminada. Felicidades por haber superado todas las pruebas.
 msgid "You will now be sent to a real training test."
 msgstr "Ahora será dirigido a una prueba de entrenamiento real."
 
+msgid "Thank you for your commitment and patience during this test."
+msgstr "Le agradecemos su compromiso y paciencia en esta prueba."
+
+msgid "We will now disconnect you and continue with the others."
+msgstr "Ahora procederemos a desconectarlo y continuar con los demás."
+
+msgid "(The simulator is only a close approximation of handling a ship.)"
+msgstr "(El simulador actúa solo como una forma cercana de manejo de nave.)"
+
+msgid "(In real combat, more factors may affect its control and handling.)"
+msgstr "(En un combate real puede haber más factores que influyan en el control y manejo de la misma.)"
+
+msgid "(If you are shot, you will not respawn.)"
+msgstr "(Si le disparan, no podrá reaparecer.)"
+
+msgid "(The organization reserves all rights regarding any possible trauma or physical or psychological damage.)"
+msgstr "(La organización se reserva todo el derecho ante posibles traumas o daños físicos o psicológicos.)"
+
 msgid "SEND IN THE NEXT ONE!"
 msgstr "¡QUE PASE EL SIGUIENTE!"
 

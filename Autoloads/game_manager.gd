@@ -60,10 +60,14 @@ var arena_enemy_colors: Dictionary = {
 	3: {"name": "green", "channel": "green", "light_energy": 0.6,
 			"ramp_color": Color8(16, 112, 16)},
 }
-## Arena indices the player has reached in any mode, sorted and saved (`visited_arenas` in
-## save_game.json). Arena 1 (index 0) is always there. main.gd adds its arena on load;
-## ArcadeManager only offers arenas listed here.
+## Arena indices the player has reached in the main mode, sorted and saved (`visited_arenas`
+## in save_game.json). Arena 1 (index 0) is always there. main.gd adds its arena on load,
+## only when is_main_mode_playthrough(); ArcadeManager only offers arenas listed here.
 var visited_arenas: Array[int] = [0]
+## True once the splash screen has run this session, i.e. the game was started normally.
+## False when a single scene is run straight from the editor (F6) or the command line:
+## reaching an arena that way doesn't unlock it in arcade (see is_main_mode_playthrough).
+var booted_from_splash: bool = false
 # --- Feature Flags & Settings ---
 var is_shader_animation: bool = false
 var is_glitch_sound: bool = false
@@ -404,6 +408,11 @@ func mark_arena_visited(index: int) -> void:
 	if _add_visited_arena(index):
 		_log_message(["New arena reached: ", index, visited_arenas])
 		save_data()
+
+## True when an arena being loaded counts as reached in the main mode: the game started
+## from the splash (not one scene run on its own) and this isn't an arcade run.
+func is_main_mode_playthrough() -> bool:
+	return booted_from_splash and not arcade_mode_active
 
 func has_visited_arena(index: int) -> bool:
 	return visited_arenas.has(index)

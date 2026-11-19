@@ -9,6 +9,8 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# The game was started normally (arenas reached from here on unlock in arcade)
+	GameManager.booted_from_splash = true
 	if GameManager.mobile_mode_active:
 		get_tree().root.size_changed.connect(_on_window_resized)
 		_on_window_resized()

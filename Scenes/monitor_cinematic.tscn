@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cun7vnqbse3as" path="res://Assets/Sprites/sim_monitor.png" id="3_art"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/cinematic_dialogue.tscn" id="4_dialogue"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="5_crt"]
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
 shader = ExtResource("5_crt")
 shader_parameter/overlay = true
@@ -33,7 +34,6 @@ shader_parameter/low_quality = false
 [node name="MonitorCinematic" type="Node2D" unique_id=81921058]
 script = ExtResource("1_script")
 next_scene = ExtResource("2_tutorial_arena4")
-lines = PackedStringArray("Simulation complete. Congratulations on passing every trial.", "You will now be sent to a real training test.", "SEND IN THE NEXT ONE!")
 
 [node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=754692170]
 layer = -1
