@@ -181,4 +181,8 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>. The full text is in the `LICENSE` file.
 
+The **source code** is GPL v3. The **original assets** (art, sprites, sound and music made for ADVAD) are licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/): see `LICENSE-ASSETS.md`.
+
+**Mods and community content are welcome.** You may use this source code and the game's original assets for any kind of mod, fan game, translation, video or other community content, as long as it is **not for profit** (no selling it, no paid or paywalled downloads). Credit "ADVAD by ANGELUS11 and Cro128" and share your changes under the same licenses. For commercial use of the assets, the names or the logos, ask the authors first.
+
 Third-party assets and code keep their own licenses: the plugins in `addons/` (each with its own license), the music (Pixabay Content License) and the other assets credited in the game's credits.

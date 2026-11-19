@@ -32,7 +32,7 @@ godot --headless --editor --quit
 godot --headless --export-release "Web" build_web/index.html
 ```
 
-`export_presets.cfg` is gitignored; CI recreates it from the `EXPORT_PRESETS_CFG` secret. The game has no server or online features (the old backend, leaderboard and pilot-name checks were removed).
+Licensing: the code is GPL v3 or later (`LICENSE`); the original assets (art, sound, music made for the game, mostly in `Assets/`) and the names/logos are CC BY-NC-SA 4.0 / non-commercial (`LICENSE-ASSETS.md`); mods and community content are allowed if not for profit; third-party content (`addons/`, Pixabay music, Freesound SFX, Kenney fonts) keeps its own license. `export_presets.cfg` is gitignored; CI recreates it from the `EXPORT_PRESETS_CFG` secret. The game has no server or online features (the old backend, leaderboard and pilot-name checks were removed).
 
 ## Architecture
 

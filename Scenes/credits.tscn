@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cj563pbrl44fc"]
 
-[ext_resource type="Texture2D" path="res://Assets/Sprites/credits_panel.png" id="1_panel"]
+[ext_resource type="Texture2D" uid="uid://c82v2u11001rd" path="res://Assets/Sprites/credits_panel.png" id="1_panel"]
 [ext_resource type="Script" uid="uid://rbogeag5amhd" path="res://Scripts/credits_menu.gd" id="1_uah1q"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="2_ccovl"]
 [ext_resource type="Texture2D" uid="uid://bc241w2jom6bu" path="res://Assets/Sprites/exitbutton.png" id="3_7emq5"]
@@ -25,9 +25,8 @@ outline_size = 2
 outline_color = Color(0, 1, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_803yc"]
-font = ExtResource("2_ccovl")
-font_size = 16
 line_spacing = 0.0
+font = ExtResource("2_ccovl")
 font_color = Color(0, 0.19607843, 0.19607843, 1)
 outline_size = 2
 outline_color = Color(0, 1, 1, 1)
@@ -41,7 +40,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_uah1q")
 
-[node name="Backdrop" type="ColorRect" parent="."]
+[node name="Backdrop" type="ColorRect" parent="." unique_id=237145781]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -128,7 +127,7 @@ offset_left = 7.0
 offset_top = 132.0
 offset_right = 354.0
 offset_bottom = 264.0
-text = "Open Source Game Code -- MIT
+text = "Open Source Game Code -- GPLV3
 https://github.com/ADVAD1D/ADVAD1D
 Laser4.wav by jobro
 https://freesound.org/s/35681/ -- License: Attribution 3.0
