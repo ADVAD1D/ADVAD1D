@@ -437,6 +437,8 @@ func _on_purchased(item: ShopItem, index: int, result: Dictionary) -> void:
 	var card: Control = _cards.get(index)
 	var line: String = item.purchase_line
 	var floating: String = "+%d%%" % roundi(item.spawn_rate_per_level * 100.0)
+	if item.floating_text != "":
+		floating = item.floating_text
 	if item.kind == ShopItem.Kind.MYSTERY_SHIP:
 		floating = "NEW SHIP"
 		var ship_index: int = int(result["ship_index"])

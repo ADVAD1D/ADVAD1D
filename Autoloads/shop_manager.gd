@@ -182,6 +182,18 @@ func get_powerup_interval(stat: StringName, base_interval: float) -> float:
 	return base_interval / (1.0 + bonus)
 
 
+## Levels bought of the upgrades that target this stat (summed), for upgrades that add
+## something per level instead of spawn rate (the scanner's extra uses). 0 outside arcade.
+func get_upgrade_levels(stat: StringName) -> int:
+	if stat == &"" or not GameManager.arcade_mode_active:
+		return 0
+	var total: int = 0
+	for item in items:
+		if item.kind == ShopItem.Kind.UPGRADE and item.upgrade_stat == stat:
+			total += get_level(item)
+	return total
+
+
 # --- Persistence ---------------------------------------------------------------------
 
 func save_progress() -> void:

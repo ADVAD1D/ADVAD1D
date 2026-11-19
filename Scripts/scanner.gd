@@ -23,11 +23,15 @@ const TARGET_GROUPS: Array[StringName] = [&"bosses", &"laser_guns", &"saws", &"e
 const SAW_SCORE: int = 200
 const SHIP_SCORE: int = 100
 const ASTEROID_SCORE: int = 50
+## Achievement stat: the most enemies one blast destroyed (Resources/Achievements/overload.tres).
+const BLAST_STAT: StringName = &"scanner_best_blast"
 
-## Uses (each press of Shoot).
-@export var charges: int = 3
+## Uses (each press of Shoot) in the main mode. Arcade adds one per level bought of the
+## shop upgrades whose upgrade_stat matches (Resources/Shop/scanner_uses.tres, 2 levels).
+@export var charges: int = 1
+@export var upgrade_stat: StringName = &"scanner_uses"
 ## Real seconds the scanner can stay open; past that the use is lost.
-@export var max_hold_time: float = 1.5
+@export var max_hold_time: float = 1.0
 ## Engine.time_scale while scanning.
 @export var slow_time_scale: float = 0.2
 ## Real seconds between two locks.
@@ -65,6 +69,7 @@ var _overlay: ScannerOverlay
 
 func _ready() -> void:
 	add_to_group("player_scanner")
+	charges += ShopManager.get_upgrade_levels(upgrade_stat)
 	max_charges = charges
 	var scene: Node = get_tree().current_scene
 	var hud: Node = scene.get_node_or_null("UILayer/HUD") if scene else null
@@ -200,14 +205,20 @@ func _prune_targets() -> void:
 func _detonate() -> void:
 	_restore_time_scale()
 	var hits: int = 0
+	var enemy_hits: int = 0
 	for target in targets:
 		var node: Node = target.node
 		if not is_valid_target(node):
 			continue
 		if _overlay:
 			_overlay.add_burst((node as Node2D).global_position, target.radius)
+		if not node.is_in_group("asteroides"):
+			enemy_hits += 1
 		_destroy(node)
 		hits += 1
+	# Most enemies (asteroids don't count) destroyed by one blast: OVERLOAD achievement
+	if enemy_hits > 0:
+		AchievementManager.raise_stat(BLAST_STAT, enemy_hits)
 	if hits > 0:
 		detonate_sound.play()
 		var camera: Camera2D = get_viewport().get_camera_2d()

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Achievement" format=3]
+
+[ext_resource type="Script" path="res://Scripts/Achievements/achievement.gd" id="1_ach"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/scanner_pickup.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_ach")
+id = &"overload"
+title = "OVERLOAD"
+description = "DESTROY 3 ENEMIES IN ONE SCAN"
+icon = ExtResource("2_icon")
+stat = &"scanner_best_blast"
+goal_type = 0
+goal = 3.0
+progress_format = 0
+reward_ship_index = 12
+order = 7

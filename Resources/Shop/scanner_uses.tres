@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ShopItem" format=3]
+
+[ext_resource type="Script" path="res://Scripts/Shop/shop_item.gd" id="1_item"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/scanner_pickup.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_item")
+id = &"scanner_uses"
+title = "SCANNER"
+description = "+1 USE
+PER SCANNER"
+icon = ExtResource("2_icon")
+kind = 0
+prices = Array[int]([3000, 3000])
+upgrade_stat = &"scanner_uses"
+spawn_rate_per_level = 0.0
+floating_text = "+1 USE"
+purchase_line = "SCANNER UPGRADE INSTALLED."
+order = 6

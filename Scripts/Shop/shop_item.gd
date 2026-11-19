@@ -26,6 +26,8 @@ enum Kind {
 @export var upgrade_stat: StringName
 ## UPGRADE: extra spawn rate per level (0.1 = +10%).
 @export var spawn_rate_per_level: float = 0.1
+## UPGRADE: text that floats up after buying; empty shows the spawn rate ("+10%").
+@export var floating_text: String = ""
 ## COLOR: index in SkinManager.PALETTE.
 @export var color_index: int = -1
 ## What the shopkeeper says after the purchase (one line per row, two rows max).
