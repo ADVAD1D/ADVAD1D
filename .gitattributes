@@ -1,3 +1,20 @@
 # Normalize EOL for all files that Git considers text files.
 * text=auto eol=lf
-*.gd linguist-language=GDScript
+
+# GitHub language stats (Linguist)
+# Code: always counted in the language bar
+*.gd           linguist-language=GDScript
+*.gdshader     linguist-language=GDShader
+*.gdshaderinc  linguist-language=GDShader
+*.cs           linguist-language=csharp
+
+# Scenes, resources, translations, docs, workflows and vector art: Linguist leaves
+# data, markup and prose out of the bar by default, so they are marked detectable
+*.tscn         linguist-language=Godot-Resource linguist-detectable=true
+*.tres         linguist-language=Godot-Resource linguist-detectable=true
+project.godot  linguist-language=Godot-Resource linguist-detectable=true
+*.po           linguist-language=Gettext-Catalog linguist-detectable=true
+*.pot          linguist-language=Gettext-Catalog linguist-detectable=true
+*.md           linguist-language=Markdown linguist-detectable=true
+*.yml          linguist-language=YAML linguist-detectable=true
+*.svg          linguist-language=SVG linguist-detectable=true
