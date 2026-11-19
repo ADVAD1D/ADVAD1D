@@ -38,6 +38,9 @@ var _burst_peak: float = 0.0
 var _reseed_left: float = 0.0
 ## Last phase PhaseManager started in this scene (0 = none yet).
 var _last_phase: int = 0
+## The shader's animation clock (anim_time). Advanced here instead of the shader's TIME so
+## the room stops with the pause menu (this node is pausable).
+var _anim_time: float = 0.0
 
 
 func _ready() -> void:
@@ -54,6 +57,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if _material == null:
 		return
+	_anim_time += delta
+	_material.set_shader_parameter("anim_time", _anim_time)
 	_corruption = move_toward(_corruption, _target_corruption, corruption_speed * delta)
 
 	var amount: float = 0.0

@@ -33,6 +33,9 @@ uniform vec4 void_color : source_color = vec4(0.008, 0.0, 0.016, 1.0);
 uniform float corruption : hint_range(0.0, 1.0) = 0.0;
 uniform float burst : hint_range(0.0, 1.0) = 0.0;
 uniform float burst_seed = 0.0;
+// Animation clock, advanced by glitch_arena.gd in _process (not TIME, which keeps running
+// while the game is paused)
+uniform float anim_time = 0.0;
 
 float hash(vec2 p) {
 	p = fract(p * vec2(123.34, 456.21));
@@ -129,7 +132,7 @@ vec3 room_at(vec2 p, float t) {
 }
 
 void fragment() {
-	float t = TIME;
+	float t = anim_time;
 	vec2 world = world_origin + UV * world_size;
 	world = (floor(world / pixel_size) + 0.5) * pixel_size;
 

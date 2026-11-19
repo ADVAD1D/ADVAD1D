@@ -28,6 +28,9 @@ extends Control
 const ARENA_PICKER_MARGIN: int = 2
 const ARENA_PICKER_SEPARATION: int = 2
 const ARENA_BUTTON_WIDTH: float = 40.0
+## More arenas than this switch the buttons to a 2-column grid (narrower buttons).
+const ARENA_LIST_MAX: int = 3
+const ARENA_GRID_BUTTON_WIDTH: float = 33.0
 const ARENA_BUTTON_FONT_SIZE: int = 10
 ## Pixels of the preview image per panel unit (the panel is drawn at ~1.83x).
 const ARENA_PREVIEW_PIXEL_SCALE: int = 2
@@ -191,19 +194,26 @@ func _on_arcade_button_pressed() -> void:
 ## player has reached (no picker when only arena 1 is available).
 ##   ArenaPicker (NinePatchRect, mode panel sprite, fixed size)
 ##   └ MarginContainer → HBoxContainer
-##       ├ VBoxContainer: arena buttons, sharing the height evenly
+##       ├ GridContainer: arena buttons sharing the height evenly (1 column, 2 past
+##       │  ARENA_LIST_MAX arenas)
 ##       └ PanelContainer (frame) → TextureRect (preview)
 func _build_arena_picker() -> void:
 	var arenas: Array[int] = ArcadeManager.get_available_arenas()
 	if arenas.size() <= 1:
 		return
 	# Base height = the mode panel's, so both read as one block; the width follows the
-	# preview, which keeps the aspect of the arena room
+	# preview, which keeps the aspect of the arena room. Up to ARENA_LIST_MAX buttons go in
+	# one column; more than that don't fit the height (a button sticking out of the picker's
+	# rect would take the click as one outside the popup, _input, and close the menu), so
+	# they go in a 2-column grid instead.
+	var columns: int = 1 if arenas.size() <= ARENA_LIST_MAX else 2
+	var button_width: float = ARENA_BUTTON_WIDTH if columns == 1 else ARENA_GRID_BUTTON_WIDTH
+	var list_width: float = button_width * columns + ARENA_PICKER_SEPARATION * (columns - 1)
 	var height: float = play_mode_panel.size.y
 	var inner_height: float = height - ARENA_PICKER_MARGIN * 2.0
 	var region: Vector2 = Vector2(ArcadeManager.PREVIEW_REGION.size)
 	var preview_size: Vector2 = Vector2(roundf(inner_height * region.x / region.y), inner_height)
-	var width: float = ARENA_PICKER_MARGIN * 2.0 + ARENA_BUTTON_WIDTH + ARENA_PICKER_SEPARATION + preview_size.x
+	var width: float = ARENA_PICKER_MARGIN * 2.0 + list_width + ARENA_PICKER_SEPARATION + preview_size.x
 
 	var picker: NinePatchRect = NinePatchRect.new()
 	picker.name = "ArenaPicker"
@@ -232,13 +242,17 @@ func _build_arena_picker() -> void:
 	row.add_theme_constant_override("separation", ARENA_PICKER_SEPARATION)
 	margin.add_child(row)
 
-	var list: VBoxContainer = VBoxContainer.new()
+	var list: GridContainer = GridContainer.new()
+	list.columns = columns
 	list.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	list.custom_minimum_size.x = ARENA_BUTTON_WIDTH
-	list.add_theme_constant_override("separation", ARENA_PICKER_SEPARATION)
+	list.custom_minimum_size.x = list_width
+	list.add_theme_constant_override("h_separation", ARENA_PICKER_SEPARATION)
+	list.add_theme_constant_override("v_separation", ARENA_PICKER_SEPARATION)
 	row.add_child(list)
 	for arena in arenas:
 		var button: Button = _make_arena_button(GameManager.arena_names[arena].to_upper())
+		button.custom_minimum_size.x = button_width
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.pressed.connect(_start_arcade_mode.bind(arena))
 		# The mouse moves the focus too (see _make_arena_button), so focus drives the preview
 		button.focus_entered.connect(_show_arena_preview.bind(arena))
