@@ -173,4 +173,12 @@ The following rules apply to any LLM, AI coding assistant, or Agent operating wi
 
 ## License
 
-This project is distributed under the MIT License. See the `LICENSE` file for more details.
+Copyright (C) 2024-2026 ANGELUS11 and Cro128
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>. The full text is in the `LICENSE` file.
+
+Third-party assets and code keep their own licenses: the plugins in `addons/` (each with its own license), the music (Pixabay Content License) and the other assets credited in the game's credits.

@@ -54,7 +54,7 @@ Naboz
 
 
 ## Open Source Game Code
-MIT
+GPLV3
 > https://github.com/ADVAD1D/ADVAD1D
 
 
