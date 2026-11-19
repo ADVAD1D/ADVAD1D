@@ -5,6 +5,11 @@ extends Node
 ## by the same whole factor as the game's pixels and rebuilt when the window is resized.
 ## While the left button is held it lights up. Not used on phones (touch, no cursor).
 ## To change the drawing, edit ARROW: one character per pixel, see COLORS.
+## While playing (an arena or a tutorial, main mode or arcade) the cursor is hidden; it comes
+## back while the game is paused (pause menu) and in every other scene.
+
+## Scenes where the cursor hides: main.gd (every arena) and tutorial.gd join it.
+const GAMEPLAY_GROUP: StringName = &"gameplay_scenes"
 
 const ARROW: Array[String] = [
 	"O........",
@@ -49,9 +54,25 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if _is_touch_device():
 		set_process_input(false)
+		set_process(false)
 		return
 	get_tree().root.size_changed.connect(_rebuild)
 	_rebuild()
+
+
+func _process(_delta: float) -> void:
+	var mode: Input.MouseMode = Input.MOUSE_MODE_HIDDEN if _is_playing() else Input.MOUSE_MODE_VISIBLE
+	if Input.mouse_mode != mode:
+		Input.mouse_mode = mode
+
+
+## In a gameplay scene and not paused. Mobile mode forced on desktop keeps the cursor: its
+## touch buttons are pressed with the mouse there.
+func _is_playing() -> bool:
+	if GameManager.mobile_mode_active or get_tree().paused:
+		return false
+	var scene: Node = get_tree().current_scene
+	return scene != null and scene.is_in_group(GAMEPLAY_GROUP)
 
 
 func _input(event: InputEvent) -> void:

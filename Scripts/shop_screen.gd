@@ -22,6 +22,7 @@ const LINE_NOT_ENOUGH: String = "YOU NEED MORE DIAMONDS.\nTHEY ARE EARNED IN ARC
 const LINE_MAXED: String = "THIS UPGRADE IS FULLY INSTALLED."
 const LINE_SOLD_OUT: String = "NO SHIP DESIGNS LEFT."
 const LINE_OWNED: String = "THIS COLOR IS ALREADY\nIN YOUR PALETTE."
+const LINE_LEVEL_SET: String = "%s: LEVEL %d/%d IN USE.\nBOUGHT LEVELS ARE KEPT."
 ## Tag on the upgrade cards: upgrades only apply in arcade mode.
 const ARCADE_TAG: String = "ONLY ARCADE"
 
@@ -43,6 +44,11 @@ const TEXT_DIM: Color = Color("8db4ae")
 const TEXT_OFF: Color = Color("528080")
 const TEXT_LINE: Color = Color("d0ffff")
 const PIP_OFF: Color = Color("1f2e2c")
+## A level bought but switched off by the player (clicking the pips).
+const PIP_UNUSED: Color = Color("0e4a54")
+## Level pips: spacing (pip width + gap) and the bar's clickable height around them.
+const PIP_STEP: float = 12.0
+const PIP_Y: float = 94.0
 const ORANGE: Color = Color("ffb44a")
 
 ## Where the diamonds fly from (balance gem) and to (the counter), in board pixels.
@@ -294,7 +300,7 @@ func _make_card(item: ShopItem, index: int) -> Control:
 				CARD_SIZE.x, HORIZONTAL_ALIGNMENT_CENTER)
 
 	if item.kind == ShopItem.Kind.UPGRADE:
-		_add_level_pips(card, item)
+		_add_level_pips(card, item, index)
 		_add_arcade_tag(card)
 	elif item.kind == ShopItem.Kind.COLOR:
 		# Swatch where the level pips go
@@ -323,16 +329,57 @@ func _make_card(item: ShopItem, index: int) -> Control:
 	return card
 
 
-func _add_level_pips(card: Control, item: ShopItem) -> void:
+## One pip per level: lit = in use, dark cyan = bought but switched off, grey = not bought.
+## The pips are a clickable bar (`LevelBar`): clicking a bought level sets the level in use
+## (see _on_level_bar_input); clicking a level not bought yet works like the card.
+func _add_level_pips(card: Control, item: ShopItem, index: int) -> void:
 	var count: int = item.max_level()
-	var level: int = ShopManager.get_level(item)
-	var x0: float = roundf((CARD_SIZE.x - (count * 12 - 2)) / 2.0)
+	var bought: int = ShopManager.get_level(item)
+	var active: int = ShopManager.get_active_level(item)
+	var x0: float = roundf((CARD_SIZE.x - (count * PIP_STEP - 2)) / 2.0)
 	for k in count:
-		var pos: Vector2 = Vector2(x0 + k * 12, 94)
-		var on: bool = k < level
-		_add_rect(card, pos, Vector2(10, 4), CYAN if on else PIP_OFF)
-		if on:
+		var pos: Vector2 = Vector2(x0 + k * PIP_STEP, PIP_Y)
+		var color: Color = PIP_OFF
+		if k < active:
+			color = CYAN
+		elif k < bought:
+			color = PIP_UNUSED
+		_add_rect(card, pos, Vector2(10, 4), color)
+		if k < active:
 			_add_rect(card, pos, Vector2(10, 1), CYAN_LIGHT)
+	# Clickable area: one PIP_STEP-wide cell per pip, a few pixels above and below them
+	var bar: Control = Control.new()
+	bar.name = "LevelBar"
+	bar.position = Vector2(x0 - 1.0, PIP_Y - 4.0)
+	bar.size = Vector2(count * PIP_STEP, 12.0)
+	bar.mouse_filter = Control.MOUSE_FILTER_STOP
+	bar.mouse_entered.connect(_select.bind(index))
+	bar.gui_input.connect(_on_level_bar_input.bind(index))
+	card.add_child(bar)
+
+
+## Click on a level pip: a bought level becomes the level in use (lower = longer powerup
+## timers / fewer scanner uses); clicking the highest pip in use switches it off, so every
+## level can be turned off. Nothing is refunded and the bought levels are kept.
+func _on_level_bar_input(event: InputEvent, index: int) -> void:
+	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
+		return
+	var item: ShopItem = ShopManager.items[index]
+	var pip: int = int(event.position.x / PIP_STEP)
+	if pip >= ShopManager.get_level(item):
+		# Not bought yet: same as pressing the card (quote / buy)
+		_on_card_input(event, index)
+		return
+	get_viewport().set_input_as_handled()
+	_select(index)
+	_armed = -1
+	var level: int = pip + 1
+	if ShopManager.get_active_level(item) == level:
+		level = pip
+	ShopManager.set_active_level(item, level)
+	button_sound.play()
+	_show_page(_page, false)
+	_say(tr(LINE_LEVEL_SET) % [item.title, level, ShopManager.get_level(item)])
 
 
 ## Upgrades only work in arcade mode (ShopManager.get_powerup_interval), so their cards

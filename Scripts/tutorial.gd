@@ -28,6 +28,8 @@ var countdown_base_x: float
 # Called when the node enters the scene tree for the first time.
 
 func _ready() -> void:
+	# The mouse cursor hides while playing (CursorManager)
+	add_to_group(CursorManager.GAMEPLAY_GROUP)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if mobile_controls_layer:
 		mobile_controls_layer.process_mode = Node.PROCESS_MODE_PAUSABLE

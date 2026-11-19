@@ -30,6 +30,9 @@ var reserved_ship_numbers: Array[int] = [2, 3, 4, 5, 7, 8, 13, 15, 17, 27, 28, 3
 var items: Array[ShopItem] = []
 var _by_id: Dictionary = {} # StringName -> ShopItem
 var _levels: Dictionary = {} # String id -> int
+## Level in use of an upgrade when the player lowered it in the shop (0..bought level).
+## No entry = every level bought is in use.
+var _active_levels: Dictionary = {} # String id -> int
 var _owned_ships: Dictionary = {} # int ship index -> true
 var _owned_colors: Dictionary = {} # int palette index -> true
 
@@ -87,6 +90,28 @@ func get_item(id: StringName) -> ShopItem:
 
 func get_level(item: ShopItem) -> int:
 	return int(_levels.get(String(item.id), 0))
+
+
+## Level of an upgrade that applies in game: the bought level, unless the player lowered it
+## in the shop (clicking its level pips).
+func get_active_level(item: ShopItem) -> int:
+	var bought: int = get_level(item)
+	return clampi(int(_active_levels.get(String(item.id), bought)), 0, bought)
+
+
+## Lowers (or raises back, up to the bought level) the level of an upgrade in use.
+## Nothing is refunded and nothing is lost: the bought levels stay.
+func set_active_level(item: ShopItem, level: int) -> void:
+	var bought: int = get_level(item)
+	level = clampi(level, 0, bought)
+	if level == get_active_level(item):
+		return
+	if level == bought:
+		_active_levels.erase(String(item.id))
+	else:
+		_active_levels[String(item.id)] = level
+	_log_message(["Shop upgrade level set:", item.id, level, "/", bought])
+	save_progress()
 
 
 ## True when an upgrade is at max level, there are no mystery ships left or the colour
@@ -155,6 +180,8 @@ func buy(item: ShopItem) -> Dictionary:
 	match item.kind:
 		ShopItem.Kind.UPGRADE:
 			_levels[String(item.id)] = get_level(item) + 1
+			# A new level puts the upgrade back at full
+			_active_levels.erase(String(item.id))
 		ShopItem.Kind.MYSTERY_SHIP:
 			var ship_index: int = get_mystery_pool().pick_random()
 			_owned_ships[ship_index] = true
@@ -170,7 +197,7 @@ func buy(item: ShopItem) -> Dictionary:
 
 # --- Powerup upgrades -----------------------------------------------------------------
 
-## Spawn interval for a powerup spawner: each level of the upgrades that target its
+## Spawn interval for a powerup spawner: each level in use of the upgrades that target its
 ## stat adds spawn_rate_per_level to its spawn rate. Only in arcade mode.
 func get_powerup_interval(stat: StringName, base_interval: float) -> float:
 	if stat == &"" or not GameManager.arcade_mode_active:
@@ -178,11 +205,11 @@ func get_powerup_interval(stat: StringName, base_interval: float) -> float:
 	var bonus: float = 0.0
 	for item in items:
 		if item.kind == ShopItem.Kind.UPGRADE and item.upgrade_stat == stat:
-			bonus += get_level(item) * item.spawn_rate_per_level
+			bonus += get_active_level(item) * item.spawn_rate_per_level
 	return base_interval / (1.0 + bonus)
 
 
-## Levels bought of the upgrades that target this stat (summed), for upgrades that add
+## Levels in use of the upgrades that target this stat (summed), for upgrades that add
 ## something per level instead of spawn rate (the scanner's extra uses). 0 outside arcade.
 func get_upgrade_levels(stat: StringName) -> int:
 	if stat == &"" or not GameManager.arcade_mode_active:
@@ -190,7 +217,7 @@ func get_upgrade_levels(stat: StringName) -> int:
 	var total: int = 0
 	for item in items:
 		if item.kind == ShopItem.Kind.UPGRADE and item.upgrade_stat == stat:
-			total += get_level(item)
+			total += get_active_level(item)
 	return total
 
 
@@ -206,6 +233,7 @@ func save_progress() -> void:
 		return
 	var data: Dictionary = {
 		"levels": _levels,
+		"active_levels": _active_levels,
 		"ships": _owned_ships.keys(),
 		"colors": _owned_colors.keys(),
 	}
@@ -222,6 +250,10 @@ func _load_progress() -> void:
 	if typeof(levels) == TYPE_DICTIONARY:
 		for key in levels:
 			_levels[String(key)] = int(levels[key])
+	var active_levels: Variant = data.get("active_levels", {})
+	if typeof(active_levels) == TYPE_DICTIONARY:
+		for key in active_levels:
+			_active_levels[String(key)] = int(active_levels[key])
 	var ships: Variant = data.get("ships", [])
 	if typeof(ships) == TYPE_ARRAY:
 		for index in ships:
@@ -235,6 +267,7 @@ func _load_progress() -> void:
 ## Clears levels and bought ships (debug).
 func reset_progress() -> void:
 	_levels.clear()
+	_active_levels.clear()
 	_owned_ships.clear()
 	_owned_colors.clear()
 	save_progress()

@@ -22,6 +22,8 @@ var base_zoom: Vector2
 
 # Called when the node enters the scene tree for the first time.
 func _enter_tree() -> void:
+	# The mouse cursor hides while playing (CursorManager)
+	add_to_group(CursorManager.GAMEPLAY_GROUP)
 	GameManager.current_arena_index = arena_index
 	_place_arcade_start()
 

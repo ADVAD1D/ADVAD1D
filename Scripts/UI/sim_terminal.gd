@@ -150,6 +150,32 @@ const ART_COLORS: Dictionary = {
 	")": "#ff2fb0",
 }
 const ART_OUTLINE: String = "#a2ffff"
+## "tipito04" easter egg: a plain Geometry Dash style cube (green to blue gradient, two eyes
+## and a flat mouth, no outline) next to a heart. Every cell is a solid "#": K = black,
+## # = the gradient (by row, CUBE_TOP to CUBE_BOTTOM). Cells are about twice as tall as
+## wide, so 14x7 looks square.
+const CUBE_ART: Array = [
+	"##############",
+	"##############",
+	"##############",
+	"##KK######KK##",
+	"##############",
+	"####KKKKKK####",
+	"##############",
+]
+const CUBE_COLORS: Dictionary = {"K": "#05080a"}
+const CUBE_TOP: Color = Color("#7dff10")
+const CUBE_BOTTOM: Color = Color("#1a8cff")
+const HEART_ART: Array = [
+	" ##   ## ",
+	"#### ####",
+	"#########",
+	" ####### ",
+	"  #####  ",
+	"   ###   ",
+	"    #    ",
+]
+const HEART_COLORS: Dictionary = {"#": "#ff4d6d"}
 ## Colour swatches at the bottom of the fastfetch info.
 const PALETTE: Array = ["#0a1418", "#ff6b6b", "#7dffb0", "#ffd36b", "#40a4f4", "#ff2fb0", "#0fb8d6", "#e8ffff"]
 
@@ -159,7 +185,7 @@ var cwd: PackedStringArray = PackedStringArray(HOME_PATH)
 
 ## True when this terminal answers the command (its first word).
 func handles(command_name: String) -> bool:
-	return command_name in ["ls", "cd", "pwd", "cat", "sudo", "fastfetch", "neofetch", "simflow"]
+	return command_name in ["ls", "cd", "pwd", "cat", "sudo", "fastfetch", "neofetch", "simflow", "tipito04"]
 
 
 func run(args: PackedStringArray) -> Array:
@@ -176,6 +202,8 @@ func run(args: PackedStringArray) -> Array:
 			return _sudo(args)
 		"fastfetch", "neofetch":
 			return [_fastfetch()]
+		"tipito04":
+			return [_cube()]
 		"simflow":
 			return [_error("simflow: access to the subject's data requires root. Try sudo.")]
 	return []
@@ -512,11 +540,36 @@ func _field(key: String, value: String) -> String:
 	return "[color=%s]%s:[/color] %s" % [COLOR_DIR, key, esc(value)]
 
 
+## The cube and a heart beside it (vertically centred), one table like _fastfetch.
+func _cube() -> String:
+	var cube_width: int = (CUBE_ART[0] as String).length()
+	var heart_width: int = (HEART_ART[0] as String).length()
+	var heart_top: int = int((CUBE_ART.size() - HEART_ART.size()) / 2.0)
+	var last_row: float = maxf(CUBE_ART.size() - 1.0, 1.0)
+	var gap: String = _art_cell(" ").repeat(3)
+	var table: String = "[table=%d]" % (cube_width + 3 + heart_width)
+	for row in CUBE_ART.size():
+		var cube_row: String = CUBE_ART[row]
+		var fill: String = "#" + CUBE_TOP.lerp(CUBE_BOTTOM, row / last_row).to_html(false)
+		for column in cube_width:
+			var character: String = cube_row[column]
+			if character == " ":
+				table += _art_cell(" ")
+			else:
+				table += "[cell][color=%s]#[/color][/cell]" % CUBE_COLORS.get(character, fill)
+		table += gap
+		var heart_row: int = row - heart_top
+		var heart_line: String = HEART_ART[heart_row] if heart_row >= 0 and heart_row < HEART_ART.size() else ""
+		for column in heart_width:
+			table += _art_cell(heart_line[column] if column < heart_line.length() else " ", HEART_COLORS)
+	return table + "[/table]"
+
+
 ## One logo character; spaces are an invisible "#" so every column keeps its width.
-func _art_cell(character: String) -> String:
+func _art_cell(character: String, colors: Dictionary = ART_COLORS, outline: String = ART_OUTLINE) -> String:
 	if character == " ":
 		return "[cell][color=#00000000]#[/color][/cell]"
-	var color: String = ART_COLORS.get(character, ART_OUTLINE)
+	var color: String = colors.get(character, outline)
 	return "[cell][color=%s]%s[/color][/cell]" % [color, esc(character)]
 
 
