@@ -25,12 +25,14 @@ signal run_ended(results: Dictionary)
 
 const SAVE_PATH: String = "user://arcade.json"
 ## Arena indices that have an arcade scene (see get_arena_scene), in menu order.
-const ARCADE_ARENAS: Array[int] = [0, 1, 2]
+const ARCADE_ARENAS: Array[int] = [0, 1, 2, 3]
 ## Main menu preview of each arcade arena: its background texture...
+## (arena 4 is drawn by a shader, so its preview is a picture made for it, 400x280)
 const ARENA_PREVIEWS: Dictionary = {
 	0: preload("res://Assets/Sprites/gauntletdefinitivo5.png"),
 	1: preload("res://Assets/Sprites/arena2.png"),
 	2: preload("res://Assets/Sprites/arena3.png"),
+	3: preload("res://Assets/Sprites/arena4_preview.svg"),
 }
 ## ...cropped to the room at the top of the texture (both backgrounds are 400x600).
 const PREVIEW_REGION: Rect2i = Rect2i(0, 0, 400, 280)
@@ -122,6 +124,8 @@ func get_arena_scene(arena: int) -> PackedScene:
 			return GameManager.preloaded_arena2
 		2:
 			return GameManager.preloaded_arena3
+		3:
+			return GameManager.preloaded_arena4
 		_:
 			return GameManager.preloaded_main
 

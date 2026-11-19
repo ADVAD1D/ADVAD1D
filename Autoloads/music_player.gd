@@ -13,6 +13,7 @@ var no_music_scenes = [
 	"res://Scenes/tutorial.tscn",
 	"res://Scenes/tutorial_arena2.tscn",
 	"res://Scenes/tutorial_arena3.tscn",
+	"res://Scenes/tutorial_arena4.tscn",
 	"res://Scenes/spash_screen.tscn"
 ]
 
@@ -77,6 +78,18 @@ var arena_playlists = {
 		preload("res://Assets/Audio/Music/psychronic-futuristic-resources-21861.ogg"),
 		preload("res://Assets/Audio/Music/naboz-arcade-rider-_audio_-_UPaxou7mXsQ_.ogg"),
 		preload("res://Assets/Audio/Music/psychronic-let-the-games-begin-21858.ogg"),
+	],
+	# Arena 4 (glitch, the final arena): its own themes, made for the game (synthesized,
+	# 150-186 BPM, each one ends in a tape stop like a reboot)
+	3: [
+		preload("res://Assets/Audio/Music/adnex-final-breach.ogg"),
+		preload("res://Assets/Audio/Music/adnex-kernel-panic.ogg"),
+		preload("res://Assets/Audio/Music/adnex-segfault.ogg"),
+		preload("res://Assets/Audio/Music/adnex-buffer-overflow.ogg"),
+		preload("res://Assets/Audio/Music/adnex-null-pointer.ogg"),
+		preload("res://Assets/Audio/Music/adnex-stack-trace.ogg"),
+		preload("res://Assets/Audio/Music/adnex-root-access.ogg"),
+		preload("res://Assets/Audio/Music/adnex-signal-lost.ogg"),
 	]
 }
 

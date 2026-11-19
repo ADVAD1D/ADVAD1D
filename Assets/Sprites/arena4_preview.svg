@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="280" viewBox="0 0 400 280" shape-rendering="crispEdges">
+  <!-- Arcade arena picker preview of arena 4 (the room is drawn by a shader in game) -->
+  <defs>
+    <pattern id="cells" width="12" height="20.78" patternUnits="userSpaceOnUse">
+      <path d="M6 0 L12 3.46 L12 10.39 L6 13.86 L0 10.39 L0 3.46 Z M6 13.86 L6 20.78" fill="none" stroke="#2b0a3d" stroke-width="1"/>
+    </pattern>
+    <clipPath id="room">
+      <polygon points="200,20 303.9,80 303.9,200 200,260 96.1,200 96.1,80"/>
+    </clipPath>
+  </defs>
+  <rect width="400" height="280" fill="#020004"/>
+  <!-- falling data in the void -->
+  <g fill="#ff2ed1" opacity="0.35">
+    <rect x="24" y="30" width="3" height="3"/><rect x="24" y="48" width="3" height="3"/>
+    <rect x="51" y="112" width="3" height="3"/><rect x="72" y="200" width="3" height="3"/>
+    <rect x="336" y="60" width="3" height="3"/><rect x="351" y="150" width="3" height="3"/>
+    <rect x="372" y="228" width="3" height="3"/><rect x="330" y="246" width="3" height="3"/>
+  </g>
+  <g fill="#26f2ff" opacity="0.35">
+    <rect x="39" y="160" width="3" height="3"/><rect x="60" y="66" width="3" height="3"/>
+    <rect x="345" y="96" width="3" height="3"/><rect x="363" y="186" width="3" height="3"/>
+  </g>
+  <!-- floor -->
+  <g clip-path="url(#room)">
+    <rect width="400" height="280" fill="#09030f"/>
+    <rect width="400" height="280" fill="url(#cells)"/>
+    <!-- corrupted cells -->
+    <rect x="150" y="96" width="12" height="14" fill="#3a0a33"/>
+    <rect x="228" y="168" width="12" height="14" fill="#06303a"/>
+    <rect x="186" y="210" width="12" height="14" fill="#3a0a33"/>
+  </g>
+  <!-- walls: cyan ghost under the magenta line -->
+  <polygon points="196,20 299.9,80 299.9,200 196,260 92.1,200 92.1,80" fill="none" stroke="#26f2ff" stroke-width="3" opacity="0.6"/>
+  <polygon points="200,20 303.9,80 303.9,200 200,260 96.1,200 96.1,80" fill="none" stroke="#ff2ed1" stroke-width="4"/>
+  <!-- the gate at the bottom corner -->
+  <rect x="190" y="248" width="20" height="32" fill="#020004"/>
+  <rect x="190" y="252" width="20" height="2" fill="#ff8cec"/>
+  <!-- torn bands -->
+  <rect x="88" y="120" width="60" height="4" fill="#ff2ed1" opacity="0.7"/>
+  <rect x="262" y="148" width="48" height="3" fill="#26f2ff" opacity="0.7"/>
+  <rect x="230" y="58" width="34" height="2" fill="#ffffff" opacity="0.5"/>
+</svg>

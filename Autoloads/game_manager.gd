@@ -37,10 +37,11 @@ var boss_checkpoint_health: int = -1
 ## PhaseManager, survives the reloads; cleared by a new run and by the test room cinematic.
 ## Not saved to disk.
 var post_boss_phases: bool = false
-var arena_names: Array[String] = ["Arena 1", "Arena 2", "Arena 3"]
+var arena_names: Array[String] = ["Arena 1", "Arena 2", "Arena 3", "Arena 4"]
 ## UI colour of each arena (ArenaUiTint), as a hue rotation in degrees of the original
-## cyan/blue UI: arena 1 = 0 (blue), arena 2 = -60 (green), arena 3 = 180 (red).
-var arena_ui_hue_shifts: Array[float] = [0.0, -60.0, 180.0]
+## cyan/blue UI: arena 1 = 0 (blue), arena 2 = -60 (green), arena 3 = 180 (red),
+## arena 4 = 120 (magenta, the glitch arena).
+var arena_ui_hue_shifts: Array[float] = [0.0, -60.0, 180.0, 120.0]
 ## Colour of the enemies of each arena (ArenaEnemySkin): "name" picks the sprite versions
 ## ("<sprite>_blue.png"), "channel" is where the red of particle ramps and lights goes
 ## (same look as the red ones, another colour), "light_energy" multiplies the energy of
@@ -53,6 +54,10 @@ var arena_enemy_colors: Dictionary = {
 	# A true, darker green: the arena's mint lines would hide a brighter one
 	# Its lights are much dimmer: a strong green glow on the green floor hides the lasers
 	1: {"name": "green", "channel": "green", "light_energy": 0.3,
+			"ramp_color": Color8(16, 112, 16)},
+	# Arena 4 (magenta glitch room): green, its complementary colour, so the enemies stand
+	# out from the walls and the corrupted floor. Its floor is dark, so the lights can glow.
+	3: {"name": "green", "channel": "green", "light_energy": 0.6,
 			"ramp_color": Color8(16, 112, 16)},
 }
 ## Arena indices the player has reached in any mode, sorted and saved (`visited_arenas` in
@@ -143,6 +148,8 @@ var preloaded_tutorial_arena2: PackedScene
 var preloaded_tutorial_arena3: PackedScene
 var preloaded_arena2: PackedScene
 var preloaded_arena3: PackedScene
+var preloaded_tutorial_arena4: PackedScene
+var preloaded_arena4: PackedScene
 
 const SHADER_WARMUP_SCRIPT: GDScript = preload("res://Scripts/shader_warmup.gd")
 ## True once the gameplay shaders were compiled ahead of time (see shader_warmup.gd).
@@ -185,6 +192,8 @@ func _preload_heavy_scenes():
 	preloaded_tutorial_arena3 = load("res://Scenes/tutorial_arena3.tscn")
 	preloaded_arena2 = load("res://Scenes/arena2.tscn")
 	preloaded_arena3 = load("res://Scenes/arena3.tscn")
+	preloaded_tutorial_arena4 = load("res://Scenes/tutorial_arena4.tscn")
+	preloaded_arena4 = load("res://Scenes/arena4.tscn")
 
 ## Compiles the shaders of the heavy scenes little by little while the splash is shown,
 ## so the first frame of an arena doesn't freeze the game on low-end GPUs.
@@ -199,6 +208,8 @@ func _start_shader_warmup() -> void:
 		preloaded_arena2,
 		preloaded_tutorial_arena3,
 		preloaded_arena3,
+		preloaded_tutorial_arena4,
+		preloaded_arena4,
 		# Spawned from scripts via preload(), so they are not reachable from the scenes above
 		load("res://Scenes/laser.tscn"),
 		load("res://Scenes/enemy_laser.tscn"),

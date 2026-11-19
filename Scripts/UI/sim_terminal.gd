@@ -89,7 +89,7 @@ const SIMFLOW_LAYERS: Array = [
 	["next_trial", "Softmax", 3],
 ]
 ## Arenas in the subject profile (arena_<n>_clears, n = 1..ARENA_COUNT).
-const ARENA_COUNT: int = 3
+const ARENA_COUNT: int = 4
 
 ## Fake Arch Linux upgrade: lines and pauses (seconds).
 const PACMAN_LOG: Array = [

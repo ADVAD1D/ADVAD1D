@@ -13,7 +13,7 @@ extends CanvasLayer
 ## Text colours of each arena (set per scene with `palette`). Same style as the HUD
 ## labels: dark fill and bright outline (arena 2 uses the HUD's green outline), plus a
 ## glow in the outline colour.
-enum Palette { BLUE, GREEN, RED }
+enum Palette { BLUE, GREEN, RED, MAGENTA }
 
 const MENU_PATH: String = "res://Scenes/main_menu.tscn"
 const PALETTES: Dictionary = {
@@ -35,6 +35,12 @@ const PALETTES: Dictionary = {
 		"dim": Color(0.46, 0.04, 0.1),
 		"skull": Color(1, 0.55, 0.6),
 	},
+	Palette.MAGENTA: {
+		"fill": Color(0.09, 0, 0.08),
+		"outline": Color(1, 0.2, 0.85),
+		"dim": Color(0.42, 0.05, 0.38),
+		"skull": Color(1, 0.6, 0.92),
+	},
 }
 ## Outline width of the texts (the HUD labels use 2).
 const OUTLINE_SIZE: int = 2
@@ -50,7 +56,8 @@ const SELECTED_FILL_LIGHTEN: float = 0.18
 ## Scene "quit" goes to. Empty = the main menu by path.
 @export var menu_scene: PackedScene
 ## Colours of this scene's pause menu: BLUE in arena 1 and its tutorial, GREEN in arena 2
-## and its tutorial, RED in arena 3 (set on the PauseMenu instance of each scene).
+## and its tutorial, RED in arena 3, MAGENTA in arena 4 and its tutorial (set on the
+## PauseMenu instance of each scene).
 @export var palette: Palette = Palette.BLUE
 
 var _buttons: Array[Button] = []

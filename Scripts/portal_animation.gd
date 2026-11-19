@@ -5,6 +5,8 @@ extends AnimatedSprite2D
 const ARENA_SHEETS: Dictionary = {
 	1: preload("res://Assets/Sprites/PortalAnimation_green.png"),
 	2: preload("res://Assets/Sprites/PortalAnimation_red.png"),
+	# Arena 4's enemies are green (GameManager.arena_enemy_colors)
+	3: preload("res://Assets/Sprites/PortalAnimation_green.png"),
 }
 
 ## The original cyan sheet, read once from the frames.

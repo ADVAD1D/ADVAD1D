@@ -125,7 +125,24 @@ var arena_enemy_configs = {
 		"fire_range": 2000.0,
 		# Arcade and the phases after the boss (the main mode starts with the boss fight):
 		# small GEMELAs {from phase: how many}
-		"mini_boss": {1: 1, 6: 2} }
+		"mini_boss": {1: 1, 6: 2} },
+
+	# Arena 4 (glitch hexagon): everything at once, the simulation breaking apart
+	3: { "min_shoot": 0.3,
+		"max_shoot": 0.55,
+		"min_ship": 3.0,
+		"max_ship": 5.0,
+		"max_saw": 3.0,
+		"min_ship_spd": 350.0,
+		"max_ship_spd": 600.0,
+		"sep_radius": 200.0,
+		"sep_strength": 300.0,
+		"can_retreat": true,
+		"fire_range": 2500.0,
+		# Laser guns on the hexagon's two vertical walls: {from phase: how many}
+		"laser_guns": {3: 1, 6: 2, 9: 3},
+		# Small GEMELAs: {from phase: how many}
+		"mini_boss": {5: 1, 8: 2} }
 }
 
 var arena_phase_requirements = {
@@ -162,8 +179,20 @@ var arena_phase_requirements = {
 		6: 6500, 
 		7: 7500, 
 		8: 8500, 
-		9: 9500, 
-		10: 10500 }
+		9: 9500,
+		10: 10500 },
+
+	3: {
+		1: 2000,
+		2: 3000,
+		3: 4000,
+		4: 5000,
+		5: 6000,
+		6: 7000,
+		7: 8000,
+		8: 9000,
+		9: 10000,
+		10: 11000 }
 }
 
 var arena_phase_durations = {
@@ -200,8 +229,20 @@ var arena_phase_durations = {
 		6: 70.0, 
 		7: 80.0, 
 		8: 90.0, 
-		9: 100.0, 
-		10: 110.0 }
+		9: 100.0,
+		10: 110.0 },
+
+	3: {
+		1: 25.0,
+		2: 30.0,
+		3: 40.0,
+		4: 50.0,
+		5: 60.0,
+		6: 70.0,
+		7: 80.0,
+		8: 90.0,
+		9: 100.0,
+		10: 115.0 }
 }
 
 var current_phase: int = 0

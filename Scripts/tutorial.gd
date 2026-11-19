@@ -68,6 +68,8 @@ func _ready() -> void:
 				
 	if start_from_first_phase:
 		GameManager.phase_to_start = 1
+		# Arena 4's tutorial comes right after arena 3, which leaves its post-boss phases on
+		GameManager.post_boss_phases = false
 		GameManager.reset_score()
 
 	ResourceLoader.load_threaded_request(next_scene_path)
