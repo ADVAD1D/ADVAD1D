@@ -1,13 +1,6 @@
 [gd_scene format=3 uid="uid://s72gvn2mqhx2"]
 
 [ext_resource type="Texture2D" uid="uid://8n821btsns0g" path="res://Assets/Sprites/firstscene.png" id="1_28flt"]
-[ext_resource type="Script" path="res://Scripts/UI/spanish_textures.gd" id="es_script"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/play_button_es.svg" id="es_play"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/play_button_hover_es.svg" id="es_play_h"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/credits_button_es.svg" id="es_credits"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/credits_button_hover_es.svg" id="es_credits_h"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/quit_button_es.svg" id="es_quit"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/quit_button_hover_es.svg" id="es_quit_h"]
 [ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/Menus/main_menu.gd" id="1_ce3w2"]
 [ext_resource type="Texture2D" uid="uid://bgs2sn1qmqdrc" path="res://Assets/Sprites/ADVADLOGODEF.png" id="2_1ehe0"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_48xlc"]
@@ -46,6 +39,13 @@
 [ext_resource type="Texture2D" uid="uid://ca1ci560uhe23" path="res://Assets/Sprites/Settings/settings_button.png" id="43_setbtn"]
 [ext_resource type="Texture2D" uid="uid://ccudbe2inl76b" path="res://Assets/Sprites/Settings/settings_button_hover.png" id="44_setbtnh"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/settings_panel.tscn" id="60_settings"]
+[ext_resource type="Texture2D" uid="uid://b1t4or03kewca" path="res://Assets/Sprites/MainMenu/credits_button_es.svg" id="es_credits"]
+[ext_resource type="Texture2D" uid="uid://ct8uxgwgs1hl0" path="res://Assets/Sprites/MainMenu/credits_button_hover_es.svg" id="es_credits_h"]
+[ext_resource type="Texture2D" uid="uid://drhtrxiq1hnf6" path="res://Assets/Sprites/MainMenu/play_button_es.svg" id="es_play"]
+[ext_resource type="Texture2D" uid="uid://4ukjg67y18fx" path="res://Assets/Sprites/MainMenu/play_button_hover_es.svg" id="es_play_h"]
+[ext_resource type="Texture2D" uid="uid://b05livo8ofvp" path="res://Assets/Sprites/MainMenu/quit_button_es.svg" id="es_quit"]
+[ext_resource type="Texture2D" uid="uid://dlu84ex2ar1ej" path="res://Assets/Sprites/MainMenu/quit_button_hover_es.svg" id="es_quit_h"]
+[ext_resource type="Script" uid="uid://cl6eqavwu642j" path="res://Scripts/UI/spanish_textures.gd" id="es_script"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_48xlc"]
 atlas = ExtResource("1_28flt")
@@ -278,7 +278,7 @@ offset_left = 383.0
 offset_top = 246.0
 offset_right = 488.0
 offset_bottom = 269.0
-text = "ANGELUS11 - 2026"
+text = "ANGELUS11 - 2027"
 label_settings = SubResource("LabelSettings_t1dhk")
 
 [node name="VersionLabel" type="Label" parent="." unique_id=1499426968]
@@ -338,6 +338,13 @@ texture_pressed = ExtResource("6_cp0ys")
 texture_hover = ExtResource("6_cp0ys")
 texture_focused = ExtResource("6_cp0ys")
 
+[node name="Spanish" type="Node" parent="VBoxContainer/PlayButton" unique_id=1629819035]
+script = ExtResource("es_script")
+normal = ExtResource("es_play")
+hover = ExtResource("es_play_h")
+pressed = ExtResource("es_play_h")
+focused = ExtResource("es_play_h")
+
 [node name="CreditsButton" type="TextureButton" parent="VBoxContainer" unique_id=2114862343]
 layout_mode = 2
 texture_normal = ExtResource("9_5egv6")
@@ -345,12 +352,26 @@ texture_pressed = ExtResource("10_vtepg")
 texture_hover = ExtResource("10_vtepg")
 texture_focused = ExtResource("10_vtepg")
 
+[node name="Spanish" type="Node" parent="VBoxContainer/CreditsButton" unique_id=1781979477]
+script = ExtResource("es_script")
+normal = ExtResource("es_credits")
+hover = ExtResource("es_credits_h")
+pressed = ExtResource("es_credits_h")
+focused = ExtResource("es_credits_h")
+
 [node name="QuitButton" type="TextureButton" parent="VBoxContainer" unique_id=111436286]
 layout_mode = 2
 texture_normal = ExtResource("7_yhxw7")
 texture_pressed = ExtResource("8_trj04")
 texture_hover = ExtResource("8_trj04")
 texture_focused = ExtResource("8_trj04")
+
+[node name="Spanish" type="Node" parent="VBoxContainer/QuitButton" unique_id=195388887]
+script = ExtResource("es_script")
+normal = ExtResource("es_quit")
+hover = ExtResource("es_quit_h")
+pressed = ExtResource("es_quit_h")
+focused = ExtResource("es_quit_h")
 
 [node name="PlayModeArrow" type="TextureButton" parent="." unique_id=803568040]
 layout_mode = 0
@@ -423,26 +444,5 @@ layout_mode = 1
 [node name="SpecialThanksPanel" parent="." unique_id=339202290 instance=ExtResource("17_wyh8j")]
 visible = false
 layout_mode = 1
-
-[node name="Spanish" type="Node" parent="VBoxContainer/PlayButton"]
-script = ExtResource("es_script")
-normal = ExtResource("es_play")
-hover = ExtResource("es_play_h")
-pressed = ExtResource("es_play_h")
-focused = ExtResource("es_play_h")
-
-[node name="Spanish" type="Node" parent="VBoxContainer/CreditsButton"]
-script = ExtResource("es_script")
-normal = ExtResource("es_credits")
-hover = ExtResource("es_credits_h")
-pressed = ExtResource("es_credits_h")
-focused = ExtResource("es_credits_h")
-
-[node name="Spanish" type="Node" parent="VBoxContainer/QuitButton"]
-script = ExtResource("es_script")
-normal = ExtResource("es_quit")
-hover = ExtResource("es_quit_h")
-pressed = ExtResource("es_quit_h")
-focused = ExtResource("es_quit_h")
 
 [connection signal="timeout" from="ScrollTimer" to="." method="_on_scroll_timer_timeout"]
