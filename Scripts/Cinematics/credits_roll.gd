@@ -63,7 +63,7 @@ Made with Godot Engine
 
 
 
-ANGELUS11 - 2026"""
+ANGELUS11 - 2027"""
 ## Pixels per second.
 @export var scroll_speed: float = 18.0
 ## Text styles, the same as the main menu's credits panel (Scenes/credits.tscn):
