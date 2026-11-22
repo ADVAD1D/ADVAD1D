@@ -1,4 +1,4 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bpwtfxptt4007"]
 
 [ext_resource type="Script" uid="uid://b1uiotc8w4ru2" path="res://Scripts/main.gd" id="1_kry3j"]
 [ext_resource type="PackedScene" uid="uid://4pkkj4yusrj7" path="res://Scenes/player.tscn" id="2_8gbba"]
@@ -7,8 +7,8 @@
 [ext_resource type="Script" uid="uid://bia82e1gl8v0j" path="res://Scripts/asteroid_spawner.gd" id="3_jjvhh"]
 [ext_resource type="PackedScene" uid="uid://ct5mpwv8axj52" path="res://Scenes/Particles/enemy_ship_particles.tscn" id="3_jkdf5"]
 [ext_resource type="PackedScene" uid="uid://bthfvcj4v47xh" path="res://Scenes/asteroid.tscn" id="4_kry3j"]
-[ext_resource type="Shader" path="res://Shaders/glitch_arena.gdshader" id="5_room"]
-[ext_resource type="Script" path="res://Scripts/glitch_arena.gd" id="5_room_script"]
+[ext_resource type="Shader" uid="uid://mvyw3ubxxar1" path="res://Shaders/glitch_arena.gdshader" id="5_room"]
+[ext_resource type="Script" uid="uid://dlvauglb6ghbt" path="res://Scripts/glitch_arena.gd" id="5_room_script"]
 [ext_resource type="Script" uid="uid://l41ktlx1fvyv" path="res://Scripts/camera_2d.gd" id="6_21xkr"]
 [ext_resource type="PackedScene" uid="uid://d1eonx56vybhy" path="res://Scenes/UI/hud.tscn" id="7_6bp64"]
 [ext_resource type="Texture2D" uid="uid://bxi55qpsnclqv" path="res://Assets/Sprites/laserwall.png" id="7_fevyy"]
@@ -44,13 +44,31 @@
 [ext_resource type="PackedScene" path="res://Scenes/quad_laser_pickup.tscn" id="86_quad_pickup"]
 [ext_resource type="PackedScene" path="res://Scenes/quad_laser.tscn" id="87_quad_laser"]
 [ext_resource type="PackedScene" uid="uid://cptq0ygvxf0f2" path="res://Scenes/credits_roll.tscn" id="89_credits"]
-[ext_resource type="Script" path="res://Scripts/scanner_spawner.gd" id="90_scanner_spawner"]
+[ext_resource type="Script" uid="uid://dlovhrfvxr6dm" path="res://Scripts/scanner_spawner.gd" id="90_scanner_spawner"]
 [ext_resource type="PackedScene" path="res://Scenes/scanner_pickup.tscn" id="91_scanner_pickup"]
 [ext_resource type="PackedScene" path="res://Scenes/scanner.tscn" id="92_scanner"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_room"]
 shader = ExtResource("5_room")
 shader_parameter/grayscale_amount = 0.0
+shader_parameter/world_origin = Vector2(-2600, -2400)
+shader_parameter/world_size = Vector2(5200, 5400)
+shader_parameter/pixel_size = 8.0
+shader_parameter/hex_radius = 1400.0
+shader_parameter/gate_half_width = 220.0
+shader_parameter/gate_top = 1200.0
+shader_parameter/corridor_end = 2500.0
+shader_parameter/wall_width = 56.0
+shader_parameter/cell_size = 150.0
+shader_parameter/floor_color = Color(0.035, 0.012, 0.06, 1)
+shader_parameter/grid_color = Color(0.17, 0.04, 0.24, 1)
+shader_parameter/wall_color = Color(1, 0.18, 0.82, 1)
+shader_parameter/ghost_color = Color(0.15, 0.95, 1, 1)
+shader_parameter/void_color = Color(0.008, 0, 0.016, 1)
+shader_parameter/corruption = 0.0
+shader_parameter/burst = 0.0
+shader_parameter/burst_seed = 0.0
+shader_parameter/anim_time = 0.0
 
 [sub_resource type="Gradient" id="Gradient_room"]
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
@@ -183,7 +201,7 @@ colors = PackedColorArray(1, 0.2, 0.85, 0.28627452, 0.15, 0.95, 1, 0.45, 1, 0.8,
 gradient = SubResource("Gradient_d1ilt")
 
 [sub_resource type="Gradient" id="Gradient_fdnlq"]
-colors = PackedColorArray(1, 0.2, 0.85, 0.32941177, 1, 1, 1, 0.0)
+colors = PackedColorArray(1, 0.2, 0.85, 0.32941177, 1, 1, 1, 0)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_jkdf5"]
 gradient = SubResource("Gradient_fdnlq")
@@ -216,14 +234,14 @@ _data = {
 }
 point_count = 7
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" unique_id=619876599]
 script = ExtResource("1_kry3j")
 laser_explosion_particles = ExtResource("2_hptm8")
 enemy_laser_explosion = ExtResource("3_jkdf5")
 asteroids_explosion_particles = ExtResource("3_d1ilt")
 arena_index = 3
 
-[node name="Sprite2D" type="Sprite2D" parent="." node_paths=PackedStringArray("phase_manager")]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1060388471 node_paths=PackedStringArray("phase_manager")]
 z_index = -2
 material = SubResource("ShaderMaterial_room")
 position = Vector2(0, 300)
@@ -232,102 +250,103 @@ texture = SubResource("GradientTexture2D_room")
 script = ExtResource("5_room_script")
 phase_manager = NodePath("../PhaseNode")
 
-[node name="PlayerInstance" parent="." instance=ExtResource("2_8gbba")]
+[node name="PlayerInstance" parent="." unique_id=943303426 instance=ExtResource("2_8gbba")]
 position = Vector2(0, 450)
 speed = 1000.0
 
-[node name="LaserWallAnimation" type="AnimatedSprite2D" parent="."]
+[node name="LaserWallAnimation" type="AnimatedSprite2D" parent="." unique_id=157635890]
 position = Vector2(0, 1290)
 scale = Vector2(9.1, 6.36322)
 sprite_frames = SubResource("SpriteFrames_ee4r6")
 
-[node name="PointLight2D" type="PointLight2D" parent="LaserWallAnimation"]
+[node name="PointLight2D" type="PointLight2D" parent="LaserWallAnimation" unique_id=917045220]
 position = Vector2(0, -5.230486)
 scale = Vector2(0.78052336, 0.550036)
 energy = 3.59
 texture = SubResource("GradientTexture2D_ee4r6")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="LaserWallAnimation/PointLight2D"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LaserWallAnimation/PointLight2D" unique_id=1609690706]
 libraries/ = SubResource("AnimationLibrary_pdsj5")
 autoplay = &"lights"
 
-[node name="Walls" type="Node2D" parent="."]
+[node name="Walls" type="Node2D" parent="." unique_id=546249097]
 
-[node name="WallLeft" type="StaticBody2D" parent="Walls" groups=["colisiones"]]
+[node name="WallLeft" type="StaticBody2D" parent="Walls" unique_id=1451844185 groups=["colisiones"]]
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Walls/WallLeft"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Walls/WallLeft" unique_id=1915707991]
 polygon = PackedVector2Array(0, -2400, 0, -1400, -1212.44, -700, -1212.44, 700, -220, 1272.98, -220, 2500, 0, 2500, 0, 3200, -2400, 3200, -2400, -2400)
 
-[node name="WallRight" type="StaticBody2D" parent="Walls" groups=["colisiones"]]
+[node name="WallRight" type="StaticBody2D" parent="Walls" unique_id=2144662222 groups=["colisiones"]]
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Walls/WallRight"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Walls/WallRight" unique_id=1748778339]
 polygon = PackedVector2Array(0, -2400, 0, -1400, 1212.44, -700, 1212.44, 700, 220, 1272.98, 220, 2500, 0, 2500, 0, 3200, 2400, 3200, 2400, -2400)
 
-[node name="WallStartBridge" type="StaticBody2D" parent="Walls"]
+[node name="WallStartBridge" type="StaticBody2D" parent="Walls" unique_id=1423637367]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallStartBridge"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallStartBridge" unique_id=278686745]
 position = Vector2(0, 1300)
 shape = SubResource("RectangleShape2D_gate")
 debug_color = Color(0.043137256, 0.73333335, 0, 0.8980392)
 
-[node name="MainLight2D" type="PointLight2D" parent="."]
-enabled = false
+[node name="MainLight2D" type="PointLight2D" parent="." unique_id=204133602]
 texture_filter = 2
+enabled = false
 energy = 0.2
 texture = SubResource("GradientTexture2D_ee4r6")
 
-[node name="AsteroidSpawner" type="Marker2D" parent="." node_paths=PackedStringArray("player_node")]
+[node name="AsteroidSpawner" type="Marker2D" parent="." unique_id=88225550 node_paths=PackedStringArray("player_node")]
 script = ExtResource("3_jjvhh")
 asteroid_scene = ExtResource("4_kry3j")
 player_node = NodePath("../PlayerInstance")
+arcade_wait_time = 0.15
 
-[node name="Timer" type="Timer" parent="AsteroidSpawner"]
+[node name="Timer" type="Timer" parent="AsteroidSpawner" unique_id=1541540528]
 wait_time = 0.15
 autostart = true
 
-[node name="DeathZone" type="Area2D" parent="."]
+[node name="DeathZone" type="Area2D" parent="." unique_id=1689267797]
 
-[node name="upzone" type="CollisionShape2D" parent="DeathZone"]
+[node name="upzone" type="CollisionShape2D" parent="DeathZone" unique_id=1867243790]
 position = Vector2(0, -2500)
 shape = SubResource("RectangleShape2D_horizontal")
 debug_color = Color(0.998937, 0, 0.128371, 0.42)
 
-[node name="bottomzone" type="CollisionShape2D" parent="DeathZone"]
+[node name="bottomzone" type="CollisionShape2D" parent="DeathZone" unique_id=1153228771]
 position = Vector2(0, 3300)
 shape = SubResource("RectangleShape2D_horizontal")
 debug_color = Color(0.991046, 0, 0.270644, 0.42)
 
-[node name="leftzone" type="CollisionShape2D" parent="DeathZone"]
+[node name="leftzone" type="CollisionShape2D" parent="DeathZone" unique_id=988777511]
 position = Vector2(-2500, 400)
 shape = SubResource("RectangleShape2D_vertical")
 debug_color = Color(0.988497, 0, 0.301321, 0.42)
 
-[node name="rightzone" type="CollisionShape2D" parent="DeathZone"]
+[node name="rightzone" type="CollisionShape2D" parent="DeathZone" unique_id=956030629]
 position = Vector2(2500, 400)
 shape = SubResource("RectangleShape2D_vertical")
 debug_color = Color(0.94322, 0.158501, 0.453864, 0.42)
 
-[node name="LaserZone" type="Area2D" parent="."]
+[node name="LaserZone" type="Area2D" parent="." unique_id=450050901]
 
-[node name="WallLeft" type="CollisionPolygon2D" parent="LaserZone"]
+[node name="WallLeft" type="CollisionPolygon2D" parent="LaserZone" unique_id=992334393]
 polygon = PackedVector2Array(0, -2400, 0, -1400, -1212.44, -700, -1212.44, 700, -220, 1272.98, -220, 2500, 0, 2500, 0, 3200, -2400, 3200, -2400, -2400)
 
-[node name="WallRight" type="CollisionPolygon2D" parent="LaserZone"]
+[node name="WallRight" type="CollisionPolygon2D" parent="LaserZone" unique_id=1345219584]
 polygon = PackedVector2Array(0, -2400, 0, -1400, 1212.44, -700, 1212.44, 700, 220, 1272.98, 220, 2500, 0, 2500, 0, 3200, 2400, 3200, 2400, -2400)
 
-[node name="StartBridge" type="CollisionShape2D" parent="LaserZone"]
+[node name="StartBridge" type="CollisionShape2D" parent="LaserZone" unique_id=1150996707]
 position = Vector2(0, 1315)
 shape = SubResource("RectangleShape2D_gate")
 debug_color = Color(0.887305, 0.000282046, 0.802346, 0.42)
 
-[node name="EnemiesDeathZone" type="Area2D" parent="." groups=["enemies_death"]]
+[node name="EnemiesDeathZone" type="Area2D" parent="." unique_id=132538212 groups=["enemies_death"]]
 
-[node name="Bridge" type="CollisionShape2D" parent="EnemiesDeathZone"]
+[node name="Bridge" type="CollisionShape2D" parent="EnemiesDeathZone" unique_id=751608440]
 position = Vector2(0, 1330)
 shape = SubResource("RectangleShape2D_enemygate")
 debug_color = Color(1, 0.0470588, 0, 0.419608)
 
-[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player_target")]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2058055940 node_paths=PackedStringArray("player_target")]
 position = Vector2(0, 450)
 zoom = Vector2(0.25, 0.25)
 limit_left = -1500
@@ -339,15 +358,15 @@ position_smoothing_enabled = true
 script = ExtResource("6_21xkr")
 player_target = NodePath("../PlayerInstance")
 
-[node name="UILayer" type="CanvasLayer" parent="."]
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=56138277]
 
-[node name="HUD" parent="UILayer" instance=ExtResource("7_6bp64")]
+[node name="HUD" parent="UILayer" unique_id=1058723666 instance=ExtResource("7_6bp64")]
 offset_left = -25.0
 offset_top = 7.0
 offset_right = -25.0
 offset_bottom = 7.0
 
-[node name="ColorRect" type="ColorRect" parent="UILayer"]
+[node name="ColorRect" type="ColorRect" parent="UILayer" unique_id=1286277031]
 material = SubResource("ShaderMaterial_344ge")
 anchors_preset = 15
 anchor_right = 1.0
@@ -360,7 +379,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="FadeRect" type="ColorRect" parent="UILayer"]
+[node name="FadeRect" type="ColorRect" parent="UILayer" unique_id=82344132]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -370,34 +389,34 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
-[node name="PauseMenu" parent="." instance=ExtResource("70_pausemenu")]
+[node name="PauseMenu" parent="." unique_id=2122151364 instance=ExtResource("70_pausemenu")]
 menu_scene = ExtResource("13_536cc")
 palette = 3
 
-[node name="SucessSound" type="AudioStreamPlayer2D" parent="."]
+[node name="SucessSound" type="AudioStreamPlayer2D" parent="." unique_id=1005032144]
 stream = ExtResource("13_pdsj5")
 volume_db = 5.0
 pitch_scale = 0.54
 bus = &"SFX"
 
-[node name="GlitchSound" type="AudioStreamPlayer2D" parent="."]
+[node name="GlitchSound" type="AudioStreamPlayer2D" parent="." unique_id=1535936637]
 stream = ExtResource("9_ynf5e")
 volume_db = 9.16
 pitch_scale = 0.38
 bus = &"SFX"
 
-[node name="SawSound" type="AudioStreamPlayer2D" parent="."]
+[node name="SawSound" type="AudioStreamPlayer2D" parent="." unique_id=140123259]
 stream = ExtResource("12_b3802")
 bus = &"SFX"
 
-[node name="AmbientParticles" type="GPUParticles2D" parent="."]
+[node name="AmbientParticles" type="GPUParticles2D" parent="." unique_id=957565491]
 z_index = -1
 amount = 160
 lifetime = 2.0
 process_material = SubResource("ParticleProcessMaterial_d1ilt")
 script = ExtResource("12_6iyac")
 
-[node name="PhaseNode" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "ship_enemy_spawner", "saw_enemy_spawner", "laser_gun_spawner", "mini_boss_spawner", "wall_to_remove", "sprite_to_remove", "nodes_to_remove")]
+[node name="PhaseNode" type="Node2D" parent="." unique_id=240453377 node_paths=PackedStringArray("player_node", "ship_enemy_spawner", "saw_enemy_spawner", "laser_gun_spawner", "mini_boss_spawner", "wall_to_remove", "sprite_to_remove", "nodes_to_remove")]
 script = ExtResource("20_hibaj")
 player_node = NodePath("../PlayerInstance")
 ship_enemy_spawner = NodePath("../EnemySpawner")
@@ -408,7 +427,7 @@ wall_to_remove = NodePath("../Walls/WallStartBridge")
 sprite_to_remove = NodePath("../LaserWallAnimation")
 nodes_to_remove = [NodePath("../LaserZone/StartBridge")]
 
-[node name="LaserGunSpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node")]
+[node name="LaserGunSpawner" type="Node2D" parent="." unique_id=2125019076 node_paths=PackedStringArray("player_node")]
 script = ExtResource("44_gunspawner")
 gun_scene = ExtResource("45_laser_gun")
 player_node = NodePath("../PlayerInstance")
@@ -417,27 +436,27 @@ right_wall_x = 1209.0
 top_y = -570.0
 bottom_y = 570.0
 
-[node name="MiniBossSpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator")]
+[node name="MiniBossSpawner" type="Node2D" parent="." unique_id=165280653 node_paths=PackedStringArray("player_node", "spawn_locator")]
 script = ExtResource("82_mini_spawner")
 mini_scene = ExtResource("81_gemela_mini")
 player_node = NodePath("../PlayerInstance")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
-[node name="EnemySpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node") groups=["destructibles"]]
+[node name="EnemySpawner" type="Node2D" parent="." unique_id=2043576007 node_paths=PackedStringArray("player_node", "spawn_locator_node") groups=["destructibles"]]
 script = ExtResource("14_wsu2k")
 enemy_scene = ExtResource("15_wsu2k")
 portal_scene = ExtResource("36_s8vy0")
 player_node = NodePath("../PlayerInstance")
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
-[node name="SawSpawner" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "spawn_locator_node") groups=["destructibles"]]
+[node name="SawSpawner" type="Node2D" parent="." unique_id=1872725457 node_paths=PackedStringArray("player_node", "spawn_locator_node") groups=["destructibles"]]
 script = ExtResource("16_k12tt")
 saw_scene = ExtResource("17_h1bgf")
 portal_scene = ExtResource("36_s8vy0")
 player_node = NodePath("../PlayerInstance")
 spawn_locator_node = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
-[node name="PowerUp1Spawner" type="Node2D" parent="." node_paths=PackedStringArray("spawn_locator")]
+[node name="PowerUp1Spawner" type="Node2D" parent="." unique_id=1023878692 node_paths=PackedStringArray("spawn_locator")]
 script = ExtResource("37_o1aky")
 pickup_scene = ExtResource("38_kwxat")
 reward_scene = ExtResource("40_aqgau")
@@ -445,65 +464,66 @@ spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 upgrade_stat = &"ally_saw"
 random_intervals = Array[float]([7.0, 12.0])
 
-[node name="Timer" type="Timer" parent="PowerUp1Spawner"]
+[node name="Timer" type="Timer" parent="PowerUp1Spawner" unique_id=1373405346]
 wait_time = 10.0
 autostart = true
 
-[node name="TimeSlowSpawner" type="Node2D" parent="." node_paths=PackedStringArray("spawn_locator")]
+[node name="TimeSlowSpawner" type="Node2D" parent="." unique_id=1182042882 node_paths=PackedStringArray("spawn_locator")]
 script = ExtResource("37_o1aky")
 pickup_scene = ExtResource("42_jut3y")
 reward_scene = ExtResource("43_time_slow")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 upgrade_stat = &"timewarp"
 
-[node name="Timer" type="Timer" parent="TimeSlowSpawner"]
+[node name="Timer" type="Timer" parent="TimeSlowSpawner" unique_id=88136799]
 wait_time = 20.0
 autostart = true
 
-[node name="LaserShieldSpawner" type="Node2D" parent="." node_paths=PackedStringArray("spawn_locator")]
+[node name="LaserShieldSpawner" type="Node2D" parent="." unique_id=917049289 node_paths=PackedStringArray("spawn_locator")]
 script = ExtResource("40_kwxat")
 pickup_scene = ExtResource("41_kqrg6")
 reward_scene = ExtResource("42_nwwfm")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 upgrade_stat = &"shield"
 
-[node name="Timer" type="Timer" parent="LaserShieldSpawner"]
+[node name="Timer" type="Timer" parent="LaserShieldSpawner" unique_id=1804228897]
 wait_time = 15.0
 autostart = true
 
-[node name="TripleShotSpawner" type="Node2D" parent="." node_paths=PackedStringArray("spawn_locator")]
+[node name="TripleShotSpawner" type="Node2D" parent="." unique_id=1570839938 node_paths=PackedStringArray("spawn_locator")]
 script = ExtResource("83_powerup_spawner")
 pickup_scene = ExtResource("84_triple_pickup")
 reward_scene = ExtResource("85_triple_shot")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
-[node name="Timer" type="Timer" parent="TripleShotSpawner"]
+[node name="Timer" type="Timer" parent="TripleShotSpawner" unique_id=2028183161]
 wait_time = 25.0
 autostart = true
 
-[node name="QuadLaserSpawner" type="Node2D" parent="." node_paths=PackedStringArray("spawn_locator")]
+[node name="QuadLaserSpawner" type="Node2D" parent="." unique_id=395841632 node_paths=PackedStringArray("spawn_locator")]
 script = ExtResource("83_powerup_spawner")
 pickup_scene = ExtResource("86_quad_pickup")
 reward_scene = ExtResource("87_quad_laser")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
-[node name="Timer" type="Timer" parent="QuadLaserSpawner"]
+[node name="Timer" type="Timer" parent="QuadLaserSpawner" unique_id=1355977440]
 wait_time = 20.0
 autostart = true
 
-[node name="ScannerSpawner" type="Node2D" parent="." node_paths=PackedStringArray("spawn_locator")]
+[node name="ScannerSpawner" type="Node2D" parent="." unique_id=1259366508 node_paths=PackedStringArray("spawn_locator")]
 script = ExtResource("90_scanner_spawner")
 pickup_scene = ExtResource("91_scanner_pickup")
 reward_scene = ExtResource("92_scanner")
 spawn_locator = NodePath("../EnemySpawnPath/EnemySpawnLocator")
 
-[node name="EnemySpawnPath" type="Path2D" parent="."]
+[node name="EnemySpawnPath" type="Path2D" parent="." unique_id=1796877938]
 curve = SubResource("Curve2D_hex")
 
-[node name="EnemySpawnLocator" type="PathFollow2D" parent="EnemySpawnPath"]
+[node name="EnemySpawnLocator" type="PathFollow2D" parent="EnemySpawnPath" unique_id=328252781]
 position = Vector2(0, -1080)
+rotation = 0.5236022
 
-[node name="TriggerScene" parent="." instance=ExtResource("24_3pmx8")]
+[node name="TriggerScene" parent="." unique_id=1686803862 instance=ExtResource("24_3pmx8")]
 position = Vector2(0, 2250)
 target_scene_path = ExtResource("89_credits")
 

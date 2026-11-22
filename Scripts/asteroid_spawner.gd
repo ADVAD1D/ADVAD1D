@@ -7,8 +7,8 @@ extends Marker2D
 @export var safe_radius: float = 1250.0
 @export var speed_multiplier: float = 1.0
 ## Arcade mode (and the phases after a boss) only: seconds between asteroids, replacing the
-## Timer's wait_time. 0 keeps the Timer's value (arena 3 sets it so its phases aren't flooded
-## with asteroids).
+## Timer's wait_time. 0 keeps the Timer's value (arenas 3 and 4 set it so their phases aren't
+## flooded with asteroids).
 @export var arcade_wait_time: float = 0.0
 
 @onready var timer: Timer = $Timer
