@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://bn8jtbmvulvxr"]
 
-[ext_resource type="Script" uid="uid://o4qv8bo8076j" path="res://Scripts/laser_shield_pickup.gd" id="1_q5ywe"]
+[ext_resource type="Script" uid="uid://o4qv8bo8076j" path="res://Scripts/Powerups/laser_shield_pickup.gd" id="1_q5ywe"]
 [ext_resource type="PackedScene" uid="uid://cv6iiauo728sf" path="res://Scenes/laser_shield.tscn" id="2_e481a"]
 [ext_resource type="Texture2D" uid="uid://c01tg88k47rc" path="res://Assets/Sprites/laser_shield_pickup.png" id="3_5q06t"]
 

@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://Scripts/shop_screen.gd" id="1_script"]
+[ext_resource type="Script" path="res://Scripts/Menus/shop_screen.gd" id="1_script"]
 [ext_resource type="Script" path="res://Scripts/UI/spanish_textures.gd" id="es_script"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/buy_button_es.png" id="es_buy"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Shop/buy_button_hover_es.png" id="es_buy_h"]

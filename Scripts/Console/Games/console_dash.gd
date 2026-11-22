@@ -1,4 +1,4 @@
-extends "res://Scripts/UI/Games/console_game.gd"
+extends "res://Scripts/Console/Games/console_game.gd"
 ## dash: auto-runner. The cube runs by itself and the obstacles are random patterns of
 ## spikes and blocks. Jump with Shoot, Move_Up, Enter or a tap (holding keeps jumping);
 ## blocks can be landed on, but touching a spike or running into a block's side restarts

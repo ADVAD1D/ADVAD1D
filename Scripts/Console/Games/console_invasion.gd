@@ -1,4 +1,4 @@
-extends "res://Scripts/UI/Games/console_game.gd"
+extends "res://Scripts/Console/Games/console_game.gd"
 ## invasion: fixed shooter. Rows of the simulator's drones (ships, saws, rocks) march
 ## sideways and step down at the edges, faster as they thin out; clearing them brings the
 ## next, lower wave. One shot on screen at a time, and it can cancel a falling bomb.

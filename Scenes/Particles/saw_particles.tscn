@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://5r1c4072iu8o"]
 
 [ext_resource type="Texture2D" uid="uid://o81fbjmikfi0" path="res://Assets/Sprites/sawparticle.png" id="1_a7ldg"]
-[ext_resource type="Script" uid="uid://cs70fd85pixj5" path="res://Scripts/saw_particles.gd" id="2_uacgd"]
+[ext_resource type="Script" uid="uid://cs70fd85pixj5" path="res://Scripts/Particles/saw_particles.gd" id="2_uacgd"]
 
 [sub_resource type="Gradient" id="Gradient_uacgd"]
 colors = PackedColorArray(0.697047, 0, 0.0873725, 1, 1, 1, 1, 1)

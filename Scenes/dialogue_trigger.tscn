@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://Scripts/dialogue_trigger.gd" id="1_script"]
+[ext_resource type="Script" path="res://Scripts/Dialogue/dialogue_trigger.gd" id="1_script"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_trigger"]
 size = Vector2(48, 48)

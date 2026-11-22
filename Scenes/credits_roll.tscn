@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cptq0ygvxf0f2"]
 
-[ext_resource type="Script" uid="uid://dhpdm2b7efmpu" path="res://Scripts/credits_roll.gd" id="1_roll"]
+[ext_resource type="Script" uid="uid://dhpdm2b7efmpu" path="res://Scripts/Cinematics/credits_roll.gd" id="1_roll"]
 [ext_resource type="Script" uid="uid://b85qrbi75j128" path="res://Scripts/UI/starfield.gd" id="2_stars"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="3_font"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="4_crt"]

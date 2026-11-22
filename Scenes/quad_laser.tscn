@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://Scripts/quad_laser.gd" id="1_script"]
+[ext_resource type="Script" path="res://Scripts/Powerups/quad_laser.gd" id="1_script"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/laser_gun_charge.ogg" id="2_charge"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/laser_gun_fire.ogg" id="3_fire"]
 

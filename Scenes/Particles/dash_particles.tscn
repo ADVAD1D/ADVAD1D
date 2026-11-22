@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://qfrlx31ingdm"]
 
-[ext_resource type="Script" uid="uid://ch5b5ohdp314i" path="res://Scripts/dash_particles.gd" id="1_r1aea"]
+[ext_resource type="Script" uid="uid://ch5b5ohdp314i" path="res://Scripts/Particles/dash_particles.gd" id="1_r1aea"]
 
 [sub_resource type="Gradient" id="Gradient_kxoxh"]
 colors = PackedColorArray(0.7056719, 0.7056719, 0.7056719, 1, 1, 1, 1, 1)

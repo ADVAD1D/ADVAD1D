@@ -13,7 +13,7 @@ extends RefCounted
 ## SimTerminal.run(): BBCode lines and float pauses.
 
 const GAMES: PackedStringArray = ["bin", "bughunt", "hack", "vim", "wat"]
-## Real-time games (Scripts/UI/Games/): found here too, but run by the console itself.
+## Real-time games (Scripts/Console/Games/): found here too, but run by the console itself.
 const ARCADE_GAMES: PackedStringArray = ["boom", "dash", "invasion"]
 ## Typed in any game except vim to leave it.
 const QUIT_WORDS: PackedStringArray = ["quit", "exit", ":q", ":q!"]

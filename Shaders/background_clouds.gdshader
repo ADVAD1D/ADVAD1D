@@ -1,7 +1,7 @@
 shader_type canvas_item;
 // Two layers of pixel-art clouds drifting sideways over the empty dark area of an arena
 // background, without touching the drawing: it goes on a copy of the background sprite
-// (Scripts/background_waves.gd feeds it time and grayscale) and only draws where the
+// (Scripts/Arena/background_waves.gd feeds it time and grayscale) and only draws where the
 // background has its empty colour, read from `fill_texel` (a texel known to be empty),
 // so the clouds stay behind the ladder, the lines and the room. Elsewhere it's transparent.
 // Everything is in the texture's own pixel grid, like the drawing.

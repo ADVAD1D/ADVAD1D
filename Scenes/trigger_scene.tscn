@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bu55k5t5u8pui"]
 
-[ext_resource type="Script" uid="uid://cpb76ii5ikoxp" path="res://Scripts/trigger_scene.gd" id="1_r0hmj"]
+[ext_resource type="Script" uid="uid://cpb76ii5ikoxp" path="res://Scripts/Arena/trigger_scene.gd" id="1_r0hmj"]
 [ext_resource type="PackedScene" uid="uid://ojsnno8modll" path="res://Scenes/ending.tscn" id="2_tfhjy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ffhth"]

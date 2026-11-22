@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bcnejjeik3wim"]
 
 [ext_resource type="Theme" uid="uid://kovmblbm60fu" path="res://Resources/font_pixel.tres" id="1_00ofu"]
-[ext_resource type="Script" uid="uid://dw6cbe0t2sfem" path="res://Scripts/ai_console.gd" id="2_i8r7y"]
+[ext_resource type="Script" uid="uid://dw6cbe0t2sfem" path="res://Scripts/Console/ai_console.gd" id="2_i8r7y"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_imyuk"]
 [ext_resource type="Texture2D" uid="uid://cb2g0qyvdtse" path="res://Assets/Sprites/skinpanel3.png" id="3_bg"]
 [ext_resource type="FontFile" uid="uid://brqe7mn55rnpq" path="res://Assets/Fonts/Kenney Pixel.ttf" id="3_font"]

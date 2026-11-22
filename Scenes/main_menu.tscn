@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/credits_button_hover_es.svg" id="es_credits_h"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/quit_button_es.svg" id="es_quit"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/MainMenu/quit_button_hover_es.svg" id="es_quit_h"]
-[ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/main_menu.gd" id="1_ce3w2"]
+[ext_resource type="Script" uid="uid://cp5a513ucxy6r" path="res://Scripts/Menus/main_menu.gd" id="1_ce3w2"]
 [ext_resource type="Texture2D" uid="uid://bgs2sn1qmqdrc" path="res://Assets/Sprites/ADVADLOGODEF.png" id="2_1ehe0"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_48xlc"]
 [ext_resource type="PackedScene" uid="uid://cwrkymd0iykky" path="res://Scenes/Abduction.tscn" id="2_trj04"]

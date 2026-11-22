@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bwuxvtyw1050"]
 
-[ext_resource type="Script" uid="uid://dmunocf1vd2ml" path="res://Scripts/splash_screen_control.gd" id="1_oj8hf"]
+[ext_resource type="Script" uid="uid://dmunocf1vd2ml" path="res://Scripts/Cinematics/splash_screen_control.gd" id="1_oj8hf"]
 [ext_resource type="PackedScene" uid="uid://s72gvn2mqhx2" path="res://Scenes/main_menu.tscn" id="2_og3r6"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_oj8hf"]
 [ext_resource type="Texture2D" uid="uid://mo8x4kjjhpeb" path="res://Assets/Sprites/logoascii.png" id="3_og3r6"]

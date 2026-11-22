@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cljshiwenhoau"]
 
-[ext_resource type="Script" uid="uid://d1yd1goxj7d46" path="res://Scripts/saw.gd" id="1_4qbox"]
+[ext_resource type="Script" uid="uid://d1yd1goxj7d46" path="res://Scripts/Enemies/saw.gd" id="1_4qbox"]
 [ext_resource type="PackedScene" uid="uid://5r1c4072iu8o" path="res://Scenes/Particles/saw_particles.tscn" id="2_1kxu7"]
 [ext_resource type="Texture2D" uid="uid://cyee8cnydhuoa" path="res://Assets/Sprites/saw1.png" id="2_4qbox"]
 [ext_resource type="AudioStream" uid="uid://c6g46xp8qj5n0" path="res://Assets/Audio/418194__deleted_user_3656686__hard-glass-impact.wav" id="3_mk2w8"]

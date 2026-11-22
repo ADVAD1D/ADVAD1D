@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://Scripts/dialogue_balloon.gd" id="1_script"]
+[ext_resource type="Script" path="res://Scripts/Dialogue/dialogue_balloon.gd" id="1_script"]
 [ext_resource type="FontFile" path="res://Assets/Fonts/Kenney Pixel.ttf" id="2_font"]
 [ext_resource type="PackedScene" path="res://addons/dialogue_manager/dialogue_label.tscn" id="3_label"]
 [ext_resource type="Script" path="res://addons/dialogue_manager/dialogue_responses_menu.gd" id="4_menu"]

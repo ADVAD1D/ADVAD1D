@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://df8hpgwrn52l8"]
 
 [ext_resource type="Texture2D" uid="uid://cepnfb4qe6mjq" path="res://Assets/Sprites/asteroidparticlebig.png" id="1_bilbs"]
-[ext_resource type="Script" uid="uid://3ifsbbn0rkik" path="res://Scripts/particles.gd" id="2_d1cxn"]
+[ext_resource type="Script" uid="uid://3ifsbbn0rkik" path="res://Scripts/Particles/particles.gd" id="2_d1cxn"]
 
 [sub_resource type="Curve" id="Curve_c5rdd"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.394231, 0.404516), 0.0, 0.0, 0, 0]

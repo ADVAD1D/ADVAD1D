@@ -155,7 +155,7 @@ var preloaded_arena3: PackedScene
 var preloaded_tutorial_arena4: PackedScene
 var preloaded_arena4: PackedScene
 
-const SHADER_WARMUP_SCRIPT: GDScript = preload("res://Scripts/shader_warmup.gd")
+const SHADER_WARMUP_SCRIPT: GDScript = preload("res://Scripts/Core/shader_warmup.gd")
 ## True once the gameplay shaders were compiled ahead of time (see shader_warmup.gd).
 var shader_warmup_done: bool = false
 

@@ -1,6 +1,6 @@
 class_name ScannerOverlay
 extends Control
-## What the scanner powerup (Scripts/scanner.gd) shows, built in code and added to the HUD:
+## What the scanner powerup (Scripts/Powerups/scanner.gd) shows, built in code and added to the HUD:
 ## while scanning, a bracket around each locked target with a line to a THREAT label (number
 ## and kind), corner marks on the screen, a sweeping scan line and a bar with the time left;
 ## when it goes off, a flash and an expanding bracket on each target; when a use is lost, the

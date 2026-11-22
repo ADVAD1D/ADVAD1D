@@ -1,6 +1,6 @@
 shader_type canvas_item;
 // Subtle animated waves over the empty dark areas of an arena background, without touching
-// the drawing: it goes on a copy of the background sprite (Scripts/background_waves.gd) and
+// the drawing: it goes on a copy of the background sprite (Scripts/Arena/background_waves.gd) and
 // only draws where the background has `fill_color` (arena2.png: the #000c07 panels below
 // the room), in that texture's own pixel grid. Everywhere else it's transparent.
 

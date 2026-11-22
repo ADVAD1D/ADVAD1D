@@ -6,7 +6,7 @@ shader_type canvas_item;
 // corner (gate_half_width wide, from gate_top to corridor_end).
 //
 // The simulation is breaking: floor cells drop out into raw data (corruption, which
-// Scripts/glitch_arena.gd raises with the phase), wall blocks flicker into their ghost colour,
+// Scripts/Arena/glitch_arena.gd raises with the phase), wall blocks flicker into their ghost colour,
 // and glitch bursts (burst / burst_seed, also from the script) slide bands of the picture
 // sideways and split its colours. Everything stays on this background layer, under the
 // ships, so the enemies are always clear. grayscale_amount is the arenas' usual parameter

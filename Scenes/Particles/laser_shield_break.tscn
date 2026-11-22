@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bki3b3v25kne5"]
 
 [ext_resource type="Texture2D" uid="uid://b83i0j45sb22j" path="res://Assets/Sprites/laser_shield_particles.png" id="1_yg3in"]
-[ext_resource type="Script" uid="uid://cfn46vj0do2j3" path="res://Scripts/laser_shield_break.gd" id="2_g1t1d"]
+[ext_resource type="Script" uid="uid://cfn46vj0do2j3" path="res://Scripts/Particles/laser_shield_break.gd" id="2_g1t1d"]
 
 [sub_resource type="Curve" id="Curve_0egto"]
 _data = [Vector2(0.022727266, 0.92134833), 0.0, 0.0, 0, 0, Vector2(1, 0.123595595), 0.0, 0.0, 0, 0]

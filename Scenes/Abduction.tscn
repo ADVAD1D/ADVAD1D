@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://cwrkymd0iykky"]
 
 [ext_resource type="Texture2D" uid="uid://cgxfbj1nol3bo" path="res://Assets/Sprites/capitainadabduction.png" id="1_nlkhs"]
-[ext_resource type="Script" uid="uid://dg1y4ht8312sm" path="res://Scripts/abduction_scene.gd" id="1_s02xp"]
-[ext_resource type="Script" uid="uid://lw3vdictts31" path="res://Scripts/scene1_camera_control.gd" id="2_eraxo"]
-[ext_resource type="Script" uid="uid://5h5vl12ervyf" path="res://Scripts/abduction_sprite_control.gd" id="2_k0sn5"]
+[ext_resource type="Script" uid="uid://dg1y4ht8312sm" path="res://Scripts/Cinematics/abduction_scene.gd" id="1_s02xp"]
+[ext_resource type="Script" uid="uid://lw3vdictts31" path="res://Scripts/Cinematics/scene1_camera_control.gd" id="2_eraxo"]
+[ext_resource type="Script" uid="uid://5h5vl12ervyf" path="res://Scripts/Cinematics/abduction_sprite_control.gd" id="2_k0sn5"]
 [ext_resource type="Shader" uid="uid://lffl0flh7g82" path="res://Shaders/CRT.gdshader" id="2_lkfcr"]
 [ext_resource type="PackedScene" uid="uid://c8h020vchy722" path="res://Scenes/tutorial.tscn" id="2_s02xp"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/cinematic_dialogue.tscn" id="3_dialogue"]

@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://Scripts/dialogue_test.gd" id="1_script"]
+[ext_resource type="Script" path="res://Scripts/Dialogue/dialogue_test.gd" id="1_script"]
 [ext_resource type="Resource" path="res://Dialogues/prototype.dialogue" id="2_dialogue"]
 [ext_resource type="FontFile" path="res://Assets/Fonts/Kenney Pixel.ttf" id="3_font"]
 

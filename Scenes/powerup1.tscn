@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ddbj5g23l6doc"]
 
-[ext_resource type="Script" uid="uid://codmfplgpr5m4" path="res://Scripts/powerup1.gd" id="1_ms4dl"]
+[ext_resource type="Script" uid="uid://codmfplgpr5m4" path="res://Scripts/Powerups/powerup1.gd" id="1_ms4dl"]
 [ext_resource type="PackedScene" uid="uid://cmcsvsmm6ibwi" path="res://Scenes/Particles/power_up_particles.tscn" id="2_0jewr"]
 [ext_resource type="Texture2D" uid="uid://c7pvxb8dx60an" path="res://Assets/Sprites/powerup1.png" id="2_2ev7k"]
 [ext_resource type="AudioStream" uid="uid://c6g46xp8qj5n0" path="res://Assets/Audio/418194__deleted_user_3656686__hard-glass-impact.wav" id="3_0jewr"]

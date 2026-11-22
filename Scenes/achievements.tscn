@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://Scripts/achievements_screen.gd" id="1_script"]
+[ext_resource type="Script" path="res://Scripts/Menus/achievements_screen.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/ach_bg.png" id="2_bg"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Achievements/trophy.png" id="3_trophy"]
 [ext_resource type="Texture2D" uid="uid://bc241w2jom6bu" path="res://Assets/Sprites/exitbutton.png" id="4_exit"]

@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://Scripts/scanner.gd" id="1_script"]
+[ext_resource type="Script" path="res://Scripts/Powerups/scanner.gd" id="1_script"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/610282__brickdeveloper171__activate-2.wav" id="2_scan"]
 [ext_resource type="AudioStream" uid="uid://cymml2savhmwu" path="res://Assets/Audio/344297__musiclegends__blip_select46.wav" id="3_lock"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/609587-unfa-grenade-explosion-sfx-medium-sized-meaty-realistic_wlTs6upp1.wav" id="4_boom"]

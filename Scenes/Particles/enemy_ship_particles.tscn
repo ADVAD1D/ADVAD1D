@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ct5mpwv8axj52"]
 
 [ext_resource type="Texture2D" uid="uid://c8m6laqobfju7" path="res://Assets/Sprites/enemy_laser.png" id="1_1wrnq"]
-[ext_resource type="Script" uid="uid://c56mbp7t8fey7" path="res://Scripts/enemy_ship_particles.gd" id="2_1wrnq"]
+[ext_resource type="Script" uid="uid://c56mbp7t8fey7" path="res://Scripts/Particles/enemy_ship_particles.gd" id="2_1wrnq"]
 
 [sub_resource type="Curve" id="Curve_1wrnq"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.746795, 0.270323), 0.0, 0.0, 0, 0]

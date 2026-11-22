@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cmcsvsmm6ibwi"]
 
 [ext_resource type="Texture2D" uid="uid://by6s0mv3si4wy" path="res://Assets/Sprites/powerup1particle.png" id="1_ymdje"]
-[ext_resource type="Script" uid="uid://d4ex72b5igd2e" path="res://Scripts/power_up_particles.gd" id="2_t0td2"]
+[ext_resource type="Script" uid="uid://d4ex72b5igd2e" path="res://Scripts/Particles/power_up_particles.gd" id="2_t0td2"]
 
 [sub_resource type="Gradient" id="Gradient_b7nqq"]
 colors = PackedColorArray(0, 0.7019608, 0.7019608, 1, 1, 1, 1, 1)

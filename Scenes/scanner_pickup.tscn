@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://o4qv8bo8076j" path="res://Scripts/laser_shield_pickup.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://o4qv8bo8076j" path="res://Scripts/Powerups/laser_shield_pickup.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://Scenes/scanner.tscn" id="2_reward"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/scanner_pickup.svg" id="3_icon"]
 

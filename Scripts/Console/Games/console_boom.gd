@@ -1,4 +1,4 @@
-extends "res://Scripts/UI/Games/console_game.gd"
+extends "res://Scripts/Console/Games/console_game.gd"
 ## boom: first person shooter drawn with a raycaster, because everything has to be able
 ## to run one. One map (MAP) with sentry robots; destroy them all to clear the area.
 ##

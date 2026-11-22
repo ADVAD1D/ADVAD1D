@@ -49,13 +49,13 @@ const TYPE_SPEED: float = 0.03
 ## Seconds between lines of shell output (ls, cat, the pacman log...).
 const LINE_DELAY: float = 0.04
 
-const TerminalGames = preload("res://Scripts/UI/terminal_games.gd")
-const ConsoleGame = preload("res://Scripts/UI/Games/console_game.gd")
+const TerminalGames = preload("res://Scripts/Console/terminal_games.gd")
+const ConsoleGame = preload("res://Scripts/Console/Games/console_game.gd")
 ## Real-time games in /usr/games, drawn over the log while they run (ConsoleGame).
 const ARCADE_GAMES: Dictionary = {
-	"invasion": preload("res://Scripts/UI/Games/console_invasion.gd"),
-	"dash": preload("res://Scripts/UI/Games/console_dash.gd"),
-	"boom": preload("res://Scripts/UI/Games/console_boom.gd"),
+	"invasion": preload("res://Scripts/Console/Games/console_invasion.gd"),
+	"dash": preload("res://Scripts/Console/Games/console_dash.gd"),
+	"boom": preload("res://Scripts/Console/Games/console_boom.gd"),
 }
 
 ## Fake shell (filesystem, current directory) for the terminal commands.

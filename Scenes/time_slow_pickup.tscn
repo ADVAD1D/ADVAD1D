@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://mjsfrhy7mt7v"]
 
-[ext_resource type="Script" uid="uid://cocl5bb5b7seu" path="res://Scripts/power_up_pickup.gd" id="1_novpv"]
+[ext_resource type="Script" uid="uid://cocl5bb5b7seu" path="res://Scripts/Powerups/power_up_pickup.gd" id="1_novpv"]
 [ext_resource type="Texture2D" uid="uid://bw3odgujjc0cv" path="res://Assets/Sprites/time_slow_pickup.png" id="2_3fch6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8daol"]

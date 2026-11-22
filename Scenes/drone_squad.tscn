@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c0ug0q1fcf453"]
 
-[ext_resource type="Script" uid="uid://oeg03lonoq6t" path="res://Scripts/drone_squad.gd" id="1_7h03e"]
+[ext_resource type="Script" uid="uid://oeg03lonoq6t" path="res://Scripts/Enemies/drone_squad.gd" id="1_7h03e"]
 [ext_resource type="Texture2D" uid="uid://bb6sx2kfcrcwd" path="res://Assets/Sprites/Drones/drone1.png" id="2_4rmg0"]
 [ext_resource type="Texture2D" uid="uid://deycby2u22urt" path="res://Assets/Sprites/Drones/drone2.png" id="3_d2w4k"]
 [ext_resource type="Texture2D" uid="uid://cndhxhynukyac" path="res://Assets/Sprites/Drones/drone3.png" id="4_et0pg"]
