@@ -13,7 +13,7 @@ extends Area2D
 ## Speed multiplier when the saw is at proximity_near (or closer) to the player, per arena
 ## (index = GameManager.current_arena_index: arena 1, 2, 3, 4). 1.0 turns the effect off;
 ## an arena past the end of the list uses 1.0.
-@export var proximity_max_multiplier_by_arena: Array[float] = [1.0, 1.05, 1.10, 1.10]
+@export var proximity_max_multiplier_by_arena: Array[float] = [1.0, 1.05, 1.06, 1.07]
 ## Distance (world units) from the player where the saw reaches the full multiplier.
 @export var proximity_near: float = 250.0
 ## Distance (world units) from the player where the boost starts; farther it moves at its base speed.
