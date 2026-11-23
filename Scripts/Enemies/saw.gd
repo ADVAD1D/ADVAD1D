@@ -10,9 +10,10 @@ extends Area2D
 @export var boss_margin: float = 130.0
 
 @export_group("Proximity speed")
-## Speed multiplier when the saw is at proximity_near (or closer) to the player.
-## 1.0 turns the effect off.
-@export var proximity_max_multiplier: float = 1.25
+## Speed multiplier when the saw is at proximity_near (or closer) to the player, per arena
+## (index = GameManager.current_arena_index: arena 1, 2, 3, 4). 1.0 turns the effect off;
+## an arena past the end of the list uses 1.0.
+@export var proximity_max_multiplier_by_arena: Array[float] = [1.0, 1.05, 1.10, 1.10]
 ## Distance (world units) from the player where the saw reaches the full multiplier.
 @export var proximity_near: float = 250.0
 ## Distance (world units) from the player where the boost starts; farther it moves at its base speed.
@@ -33,6 +34,8 @@ signal died
 var metal_sound: AudioStreamPlayer2D = preload("res://Assets/Audio/AudioScenes/saw_explosion_sound.tscn").instantiate()
 
 var player: Node2D
+## This arena's entry of proximity_max_multiplier_by_arena, read in _ready.
+var proximity_max_multiplier: float = 1.0
 var current_velocity: Vector2 = Vector2.ZERO
 var is_dying: bool = false
 
@@ -45,7 +48,10 @@ func _ready() -> void:
 	ArenaEnemySkin.apply(self)
 	rotation_speed = randf_range(1400.0, 1600.0)
 	speed = randf_range(900.0, 1000.0)
-	
+	var arena: int = GameManager.current_arena_index
+	if arena >= 0 and arena < proximity_max_multiplier_by_arena.size():
+		proximity_max_multiplier = proximity_max_multiplier_by_arena[arena]
+
 	scale = Vector2.ZERO
 	var tween = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_BOUND)
