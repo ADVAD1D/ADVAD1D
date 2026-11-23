@@ -113,7 +113,7 @@ var arena_enemy_configs = {
 		"laser_guns": {3: 1, 5: 2, 7: 3, 10: 4} },
 		
 	2: { "min_shoot": 0.3, 
-		"max_shoot": 0.6, 
+		"max_shoot": 0.5, 
 		"min_ship": 2.0, 
 		"max_ship": 3.0, 
 		"max_saw": 4.0, 

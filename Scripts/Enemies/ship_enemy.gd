@@ -111,7 +111,7 @@ func _physics_process(delta: float) -> void:
 
 	if distance_to_player > ideal_distance + distance_margin:
 		target_velocity = vector_to_player.normalized() * speed
-			
+
 	elif distance_to_player < ideal_distance - distance_margin and can_retreat:
 		target_velocity = -vector_to_player.normalized() * speed
 	else:
@@ -136,7 +136,7 @@ func _physics_process(delta: float) -> void:
 	velocity = velocity.lerp(target_velocity, acceleration * delta)
 	move_and_slide()
 	_keep_out_of_bosses()
-	
+
 ## Arena 3's GEMELAs ("bosses" group): the ship is pushed away when it gets within
 ## BOSS_STEER_ZONE of the boss_margin limit, harder the closer it gets.
 func _boss_push() -> Vector2:

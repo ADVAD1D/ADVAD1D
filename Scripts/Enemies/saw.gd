@@ -9,6 +9,16 @@ extends Area2D
 ## (arena 3's GEMELAs). About the saw's radius plus some room.
 @export var boss_margin: float = 130.0
 
+@export_group("Proximity speed")
+## Speed multiplier when the saw is at proximity_near (or closer) to the player.
+## 1.0 turns the effect off.
+@export var proximity_max_multiplier: float = 1.25
+## Distance (world units) from the player where the saw reaches the full multiplier.
+@export var proximity_near: float = 250.0
+## Distance (world units) from the player where the boost starts; farther it moves at its base speed.
+@export var proximity_far: float = 1000.0
+@export_group("")
+
 ## Extra distance past boss_margin where the saw already starts steering away.
 const BOSS_STEER_ZONE: float = 150.0
 ## How hard that steering pushes, in multiples of the saw's speed.
@@ -49,10 +59,13 @@ func _physics_process(delta: float) -> void:
 	rotation_degrees += rotation_speed * delta
 
 	var target_velocity = Vector2.ZERO
+	var current_speed: float = speed
 	if is_instance_valid(player):
 		var direction_to_player = global_position.direction_to(player.global_position)
-		target_velocity = direction_to_player * speed
-		
+		# Faster the closer it gets to the player
+		current_speed = speed * _proximity_multiplier(global_position.distance_to(player.global_position))
+		target_velocity = direction_to_player * current_speed
+
 	var separation_vector = Vector2.ZERO
 	var neighbors = separation_area.get_overlapping_areas()
 	
@@ -63,11 +76,20 @@ func _physics_process(delta: float) -> void:
 		separation_vector = -separation_vector.normalized()
 
 	target_velocity += separation_vector * separation_strength
-	target_velocity += _boss_push() * speed * BOSS_PUSH_STRENGTH
+	target_velocity += _boss_push() * current_speed * BOSS_PUSH_STRENGTH
 
 	current_velocity = current_velocity.lerp(target_velocity, acceleration * delta)
 	global_position += current_velocity * delta
 	_keep_out_of_bosses()
+
+
+## 1.0 at proximity_far or farther, proximity_max_multiplier at proximity_near or closer,
+## a straight ramp in between.
+func _proximity_multiplier(distance: float) -> float:
+	if proximity_far <= proximity_near:
+		return 1.0
+	var closeness: float = 1.0 - clampf((distance - proximity_near) / (proximity_far - proximity_near), 0.0, 1.0)
+	return lerpf(1.0, proximity_max_multiplier, closeness)
 
 
 ## Arena 3's GEMELAs ("bosses" group): the saw is pushed away when it gets within
