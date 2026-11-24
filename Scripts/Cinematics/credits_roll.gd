@@ -66,6 +66,8 @@ Made with Godot Engine
 ANGELUS11 - 2027"""
 ## Pixels per second.
 @export var scroll_speed: float = 18.0
+## Pixels moved per mouse wheel notch (down = forward, up = back). The roll keeps going after.
+@export var wheel_step: float = 24.0
 ## Text styles, the same as the main menu's credits panel (Scenes/credits.tscn):
 ## the "CREDITS" title, its lines and its small sound credits.
 @export var title_settings: LabelSettings
@@ -202,15 +204,37 @@ func _place_logo() -> void:
 func _process(delta: float) -> void:
 	if not _finished:
 		_scroll_y -= scroll_speed * delta
-		_place_lines()
+	_clamp_scroll()
+	_place_lines()
 	_place_logo()
 	# Every line gone off the top: the logo stays in the middle, with the music, until the
-	# player leaves (click, tap, Enter or Esc)
-	if not _finished and _text_bottom() < 0.0:
-		_finished = true
+	# player leaves (click, tap, Enter or Esc). Scrolling back with the wheel brings the text
+	# back and the roll goes on from there.
+	_finished = _text_bottom() <= 0.0
+
+
+## Between the start (text just below the screen) and the end (every line off the top).
+func _clamp_scroll() -> void:
+	_scroll_y = clampf(_scroll_y, -lines.get_combined_minimum_size().y, size.y)
+
+
+## Mouse wheel: down moves the text forward, up brings it back.
+func _scroll_wheel(event: InputEventMouseButton) -> void:
+	var notches: float = event.factor if event.factor > 0.0 else 1.0
+	if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+		_scroll_y -= wheel_step * notches
+	else:
+		_scroll_y += wheel_step * notches
+	_clamp_scroll()
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	# The wheel scrolls (it arrives as a mouse button press, which would leave)
+	if event is InputEventMouseButton and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+		if event.pressed and not _leaving:
+			_scroll_wheel(event)
+		get_viewport().set_input_as_handled()
+		return
 	var pressed: bool = event.is_action_pressed("Skip") or event.is_action_pressed("pause") \
 			or (event is InputEventMouseButton and event.pressed) \
 			or (event is InputEventScreenTouch and event.pressed)
