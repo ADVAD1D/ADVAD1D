@@ -32,6 +32,7 @@ var _bytes := 0
 var _directories: Dictionary = {}
 var _fingerprints: Dictionary = {}
 var _large_owners: Dictionary = {}
+var _anchors: Array[String] = []
 var _fault := ""
 var _fault_code := ""
 var _io: Callable
@@ -77,6 +78,7 @@ func run(params: Dictionary, operation: String, active: Callable = Callable()) -
 	_directories.clear()
 	_fingerprints.clear()
 	_large_owners.clear()
+	_anchors.clear()
 	_fault = ""
 	_fault_code = ""
 	var result := await _run(params, operation)
@@ -118,6 +120,7 @@ func _run(params: Dictionary, operation: String) -> Dictionary:
 		return _unchanged("Permanent directory removal is unsupported; use the default OS trash")
 	if not _confined_without_links(source) or (operation != "remove" and not _confined_without_links(destination)):
 		return _unchanged(_fault)
+	_anchors.assign([source] if operation == "remove" else [source, destination])
 	var files: Array[String] = []
 	if not await _collect_tree("res://", files):
 		return _fault_result()
@@ -261,17 +264,20 @@ func _collect_tree(root: String, files: Array[String]) -> bool:
 				# Engine metadata, VCS internals and the immutable loaded plugin
 				# implementation are outside the user-resource owner scan.
 				if child not in ["res://.godot", "res://.git", PLUGIN_TREE]:
-					if not dir.has_method("is_link") or bool(dir.call("is_link", child)):
+					var skipped := dir.current_is_dir() and not _scanned(child, FileAccess.get_hidden_attribute(child))
+					if not skipped and (not dir.has_method("is_link") or bool(dir.call("is_link", child))):
 						_fault = "Cannot establish ownership through a linked entry: %s" % child
 						dir.list_dir_end()
 						return false
-					if dir.current_is_dir():
+					if skipped:
+						pass
+					elif dir.current_is_dir():
 						pending.append(child)
 					else:
 						files.append(child)
 					count += 1
 					if count > MAX_ENTRIES:
-						_set_fault("Project discovery exceeds %d entries; nothing changed" % MAX_ENTRIES, Errors.FILESYSTEM_DISCOVERY_FAILED)
+						_set_fault("Project discovery exceeds %d entries; nothing changed. Hidden folders and folders holding a .gdignore are not scanned" % MAX_ENTRIES, Errors.FILESYSTEM_DISCOVERY_FAILED)
 						dir.list_dir_end()
 						return false
 			if not await _yield_if_needed():
@@ -282,6 +288,27 @@ func _collect_tree(root: String, files: Array[String]) -> bool:
 		entries.sort()
 		_directories[path] = entries
 	return true
+
+
+## Godot's EditorFileSystem neither imports nor tracks anything inside a hidden
+## folder or one holding a `.gdignore`, so neither holds owners; art sources or
+## tool links kept there would otherwise exceed MAX_ENTRIES or refuse every
+## mutation. Such a folder is still walked when it holds or lies inside a
+## mutation path, so mutating there keeps the full census. `hidden` carries
+## the platform flag (FILE_ATTRIBUTE_HIDDEN on Windows, UF_HIDDEN on macOS),
+## which EditorFileSystem also skips; DirAccess.current_is_hidden() is not
+## exposed to GDScript. Anchors match case-insensitively: on a case-insensitive volume
+## a differently cased mutation path still lies inside the folder, and on a
+## case-sensitive one the looser match only walks an extra folder.
+func _scanned(directory: String, hidden: bool) -> bool:
+	if not hidden and not directory.get_file().begins_with(".") and not FileAccess.file_exists(directory.path_join(".gdignore")):
+		return true
+	var folder := directory.to_lower() + "/"
+	for anchor: String in _anchors:
+		var path := anchor.to_lower() + "/"
+		if path.begins_with(folder) or folder.begins_with(path):
+			return true
+	return false
 
 
 func _read_bounded(path: String) -> Variant:
@@ -532,7 +559,7 @@ func _editor_state_guard(targets: Dictionary) -> Dictionary:
 		return _unchanged("Project settings reference this resource; update those settings explicitly before mutating it", {"settings": settings})
 	for scene in EditorInterface.get_open_scenes():
 		if targets.has(scene):
-			return _unchanged("Close affected scene tabs before mutating their files", {"scene": scene})
+			return _unchanged("Close affected scene tabs (scene_manage(op=\"close\")) before mutating their files", {"scene": scene})
 	for target: String in targets:
 		var uid: int = targets[target].uid
 		if uid != ResourceUID.INVALID_ID and (not ResourceUID.has_id(uid) or ResourceUID.get_id_path(uid) != target):
