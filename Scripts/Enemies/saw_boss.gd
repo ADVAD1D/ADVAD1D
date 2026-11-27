@@ -143,6 +143,8 @@ const EXPLOSION_SOUND: PackedScene = preload(
 @export_group("Rhythm")
 @export var attack_cooldown_min: float = 1.4
 @export var attack_cooldown_max: float = 2.2
+## Multiplies the rest after the rush (before the beams that follow it in ATTACK_CYCLE).
+@export var after_rush_cooldown_scale: float = 0.5
 @export var enter_time: float = 1.2
 ## Health fraction where phase two starts (0 = never).
 @export var phase_two_at: float = 0.5
@@ -271,11 +273,17 @@ func _start_idle(wait: float = -1.0) -> void:
 	_hide_beams()
 	_set_charge_look(false)
 	if wait < 0.0:
-		wait = randf_range(attack_cooldown_min, attack_cooldown_max) * _cooldown_scale
-		if _phase_two:
-			wait /= phase_two_speed
+		wait = _random_cooldown()
 	_timer = wait
 	_aim_shot_timer = aimed_shot_delay
+
+
+## The rest between two attacks (shorter in arcade's harder phases and in phase two).
+func _random_cooldown() -> float:
+	var wait: float = randf_range(attack_cooldown_min, attack_cooldown_max) * _cooldown_scale
+	if _phase_two:
+		wait /= phase_two_speed
+	return wait
 
 
 func _start_next_attack() -> void:
@@ -587,7 +595,7 @@ func _rush_impact() -> void:
 	if _rushes_left > 0:
 		_start_rush_windup(rush_repeat_windup)
 	else:
-		_start_idle()
+		_start_idle(_random_cooldown() * after_rush_cooldown_scale)
 
 
 # --- Small lasers -------------------------------------------------------------------

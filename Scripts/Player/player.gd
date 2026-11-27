@@ -50,8 +50,6 @@ var can_shoot: bool = true
 var player_died: bool = false
 var is_dashing: bool = false
 var can_dash: bool = true
-var dash_buffered: bool = false
-var buffered_direction: Vector2 = Vector2.ZERO
 var main_camera: Camera2D
 var dash_camera_shake: float = 45.0
 var dash_tween: Tween
@@ -150,26 +148,16 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity = velocity.lerp(Vector2.ZERO, friction * delta)
 			
-		# --- DASH BUFFERING SYSTEM ---
+		# --- DASH ---
+		# Only the cooldown limits it: it goes right away towards the input direction (or
+		# where the ship faces if there's no input), whatever the ship's current rotation;
+		# do_dash() snaps the ship to face it.
 		if Input.is_action_just_pressed("dash") and can_dash:
-			var move_direction = Input.get_vector("Move_Left", "Move_Right", "Move_Up", "Move_Down")
-			
+			var move_direction = direction
 			if move_direction == Vector2.ZERO:
 				move_direction = -transform.y
-			
-			# If the ship is already facing the right way, dash immediately.
-			# Otherwise, buffer the dash input so it triggers as soon as the ship finishes rotating.
-			if can_start_dash(move_direction):
-				do_dash(move_direction.normalized())
-			else:
-				dash_buffered = true
-				buffered_direction = move_direction.normalized()
-			
-		# Execute the buffered dash once rotation aligns with the intended direction
-		if dash_buffered and can_dash and can_start_dash(buffered_direction):
-			do_dash(buffered_direction)
-			dash_buffered = false
-			
+			do_dash(move_direction.normalized())
+
 	engine_trail.emitting = is_moving
 		
 	# --- APPLY MOVEMENT AND COLLISIONS ---
@@ -183,17 +171,6 @@ func _physics_process(delta: float) -> void:
 	if GameManager.show_debug:
 		queue_redraw()
 		
-# --- DASH: ALIGNMENT CHECK ---
-# Ensures the ship is visually facing the intended dash direction before dashing.
-# Returns true if the current rotation is within 6 degrees of the target direction.
-func can_start_dash(direction: Vector2) -> bool:
-	if direction == Vector2.ZERO:
-		return false
-		
-	var target_rotation = direction.angle() + PI/2
-	var diff = abs(wrapf(rotation - target_rotation, -PI, PI))
-	return diff < deg_to_rad(6) 
-
 func shoot():
 	can_shoot = false
 	lsrsound.play()
